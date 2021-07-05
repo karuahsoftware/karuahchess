@@ -1,0 +1,120 @@
+﻿<UserControl
+    x:Class="KaruahChess.CustomControl.EngineSettings"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:KaruahChess.CustomControl"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    d:DesignHeight="300"
+    d:DesignWidth="400">
+
+    <UserControl.Resources>
+        <ResourceDictionary x:Name="CustomStyleDefaultResourceDictionary">
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="/CustomControl/CustomStyleDefault.xaml"/>
+                <ResourceDictionary Source="/Common/Styles.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </UserControl.Resources>
+
+
+    <Popup x:Name="PagePopup" VerticalAlignment="Center" HorizontalAlignment="Center" >
+        <Grid x:Name="PageGrid"                     
+        Background="{x:Bind StyleTemplate.Background}"
+        BorderBrush="{x:Bind StyleTemplate.BorderBrush}"
+        BorderThickness="{x:Bind StyleTemplate.BorderThickness}"
+        CornerRadius="{x:Bind StyleTemplate.CornerRadius}"
+        MinWidth="{x:Bind StyleTemplate.MinWidth}"
+        MinHeight="{x:Bind StyleTemplate.MinHeight}"
+        MaxWidth="{x:Bind StyleTemplate.MaxWidth}"
+        MaxHeight="{x:Bind StyleTemplate.MaxHeight}"
+        Width="{x:Bind StyleTemplate.Width, Mode=OneWay}"
+        Height="{x:Bind StyleTemplate.Height, Mode=OneWay}"
+        Margin="{x:Bind StyleTemplate.Margin}"
+        Padding="{x:Bind StyleTemplate.Padding}">
+
+
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="50" />
+                <RowDefinition Height="*" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+
+            <StackPanel Orientation="Horizontal" Grid.Row="0" Grid.Column="0">
+                <TextBlock x:Name="PageIcon" FontFamily="Segoe MDL2 Assets" FontSize="{x:Bind StyleTemplate.IconFontSize}" Text="&#xE115;" VerticalAlignment="Center" Margin="0,0,5,0"/>
+                <TextBlock  TextWrapping="WrapWholeWords" FontSize="{x:Bind StyleTemplate.FontSize}" FontWeight="Bold" VerticalAlignment="Center"> 
+                        Engine Settings
+                </TextBlock>
+            </StackPanel>
+
+            <ScrollViewer x:Name="MainTextScrollViewer"  VerticalScrollBarVisibility="Visible" Grid.Row="1" Grid.Column="0" Style="{StaticResource InfoScrollViewer}" BorderThickness="0">
+                <StackPanel Orientation="Vertical">
+                    <CheckBox x:Name="ComputerPlayerCheckBox" Content="Computer player enabled" Style="{StaticResource CheckBoxStyle}" Click="ComputerPlayerCheckBox_Click" />
+                    <CheckBox x:Name="ComputerMoveFirstCheckBox" Content="Computer moves first" Style="{StaticResource CheckBoxStyle}" />
+                    <CheckBox x:Name="LevelAutoCheckBox" Content="Increase strength after win" Style="{StaticResource CheckBoxStyle}" />
+                    <StackPanel Orientation="Horizontal" Margin="0,10,0,0">
+                        <TextBlock Text="Strength" Style="{StaticResource TextBlockStyle}"/>
+                        <ComboBox x:Name="ComputerStrengthCombo" Margin="3,0,0,0" FontSize="{x:Bind StyleTemplate.FontSize}" ItemsSource="{x:Bind strengthLabelList}"/>
+                    </StackPanel>
+                    
+                    <CheckBox x:Name="ComputerAdvancedSettingsCheckBox" Margin="0,20,0,0" Content="Advanced search settings" Style="{StaticResource CheckBoxStyle}" Click="ComputerAdvancedSettingsCheckBox_Click"/>
+
+                    <Grid x:Name="AdvancedSettingsGrid" Margin="0,10,0,0">
+
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="60" />
+                            <RowDefinition Height="60" />
+                            <RowDefinition Height="60" />
+                            <RowDefinition Height="60" />
+                        </Grid.RowDefinitions>
+
+                        <StackPanel Orientation="Vertical" Grid.Row="0" Grid.Column="0" HorizontalAlignment="Right">
+                            <TextBlock x:Name="DepthLimitText" HorizontalAlignment="Right">Depth Limit</TextBlock>
+                            <TextBlock x:Name="DepthLimitValueText" HorizontalAlignment="Right" Margin="0,0,10,0" Text="{x:Bind getValueZeroOff(DepthLimitSlider.Value), Mode=OneWay}" />
+                        </StackPanel>
+                        <Slider x:Name="DepthLimitSlider" Grid.Row="0" Grid.Column="1" Width="90" HorizontalAlignment="Left" Margin="3,0,10,0" Minimum="0" Maximum="35" TickFrequency="5" TickPlacement="BottomRight" StepFrequency="1"  SnapsTo="StepValues" IsThumbToolTipEnabled="False"/>
+                        
+                        
+                        <StackPanel Orientation="Vertical" Grid.Row="1" Grid.Column="0" HorizontalAlignment="Right">
+                            <TextBlock x:Name="NodeLimitText" HorizontalAlignment="Right">Node limit</TextBlock>
+                            <TextBlock x:Name="NodeLimitValueText" HorizontalAlignment="Right" Margin="0,0,15,0" Text="{x:Bind getValueZeroOff(NodeLimitSlider.Value), Mode=OneWay}" />
+                        </StackPanel>
+                        <Slider x:Name="NodeLimitSlider" Grid.Row="1" Grid.Column="1" HorizontalAlignment="Stretch" Margin="3,0,15,0" Minimum="10" Maximum="2000000000" TickFrequency="10000000" TickPlacement="BottomRight" StepFrequency="1"  SnapsTo="StepValues" IsThumbToolTipEnabled="False"/>
+
+
+                        <StackPanel Orientation="Vertical" Grid.Row="2" Grid.Column="0" HorizontalAlignment="Right">
+                            <TextBlock x:Name="MoveDurationLimitText" HorizontalAlignment="Right">Move time limit</TextBlock>
+                            <TextBlock x:Name="MoveDurationLimitValueText" HorizontalAlignment="Right" Margin="0,0,15,0" Text="{x:Bind getDurationStr(MoveDurationLimitSlider.Value), Mode=OneWay}" />
+                        </StackPanel>
+                        <Slider x:Name="MoveDurationLimitSlider" Grid.Row="2" Grid.Column="1" HorizontalAlignment="Stretch" Margin="3,0,15,0" Minimum="0" Maximum="600000" TickFrequency="60000" TickPlacement="BottomRight" StepFrequency="1"  SnapsTo="StepValues" IsThumbToolTipEnabled="False"/>
+
+                        <StackPanel Orientation="Vertical" Grid.Row="3" Grid.Column="0" HorizontalAlignment="Right">
+                            <TextBlock x:Name="ThreadsText" HorizontalAlignment="Right" >CPU threads</TextBlock>
+                            <TextBlock x:Name="ThreadsValueText" HorizontalAlignment="Right" Margin="0,0,10,0" Text="{x:Bind getValueZeroOff(ThreadsSlider.Value), Mode=OneWay}" />
+                        </StackPanel>
+                        <Slider x:Name="ThreadsSlider" Grid.Row="3" Grid.Column="1" Width="90" HorizontalAlignment="Left" Margin="3,0,15,0" Minimum="1" Maximum="15" TickFrequency="1" TickPlacement="BottomRight" StepFrequency="1"  SnapsTo="StepValues" IsThumbToolTipEnabled="False"/>
+                        
+                    </Grid>
+
+                </StackPanel>
+            </ScrollViewer>
+
+            
+            <VariableSizedWrapGrid Orientation="Horizontal" ItemWidth="137" Grid.Row="2" Grid.Column="0">
+                <Button x:Name="btnCloseButton" Content="Close" Width="80" Click="Close_Click" FontSize="{x:Bind StyleTemplate.FontSize}" Style="{StaticResource ButtonStyle}" />
+                <Button  x:Name="btnStopSearchButton" Content="Stop search" Click="StopSearch_Click" FontSize="{x:Bind StyleTemplate.FontSize}" Style="{StaticResource ButtonStyle}" Width="135" />
+                <Button  x:Name="btnDefaultButton" Content="Reset to default" Click="ResetToDefault_Click" FontSize="{x:Bind StyleTemplate.FontSize}" Style="{StaticResource ButtonStyle}" Width="135"/>
+            </VariableSizedWrapGrid>
+            
+
+        </Grid>
+    </Popup>
+</UserControl>

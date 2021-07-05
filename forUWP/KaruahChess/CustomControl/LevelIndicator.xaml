@@ -1,0 +1,31 @@
+﻿<UserControl
+    x:Class="KaruahChess.CustomControl.LevelIndicator"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:KaruahChess.CustomControl"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    d:DesignHeight="50"
+    d:DesignWidth="50">
+
+    <UserControl.Resources>
+        <ResourceDictionary x:Name="CustomStyleDefaultResourceDictionary">
+            <ResourceDictionary.MergedDictionaries>                
+                <ResourceDictionary Source="/Common/Styles.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </UserControl.Resources>
+
+    
+    <Button x:Name="LevelIndicatorButton" Style="{StaticResource ButtonCommandLeftStyle}" Click="LevelIndicatorButton_Click">
+        <StackPanel x:Name="LevelIndicatorPanel" Orientation="Horizontal" VerticalAlignment="Center">
+            <TextBlock Text="&#xE713;" Margin="0" FontFamily="Segoe MDL2 Assets" FontSize="15" />
+            <TextBlock Text="{x:Bind getLevelText(_boardVM.limitEngineStrengthELO), Mode=OneWay}" Margin="3,0,0,0" FontSize="12" />
+        </StackPanel>
+    </Button>
+
+    
+
+
+</UserControl>

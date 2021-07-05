@@ -1,0 +1,158 @@
+﻿<grammar xml:lang="en-CA"
+         root="mainRule"
+         version="1.0"
+         tag-format="semantics/1.0"
+         xmlns="http://www.w3.org/2001/06/grammar">
+
+  <rule id="mainRule">
+    <one-of>
+      <item>
+        <ruleref uri="#moveRuleA"/>
+      </item>
+      <item>
+        <ruleref uri="#moveRuleB"/>
+      </item>
+      <item>
+        <ruleref uri="#pieceRule"/>
+      </item>
+      <item>
+        <ruleref uri="#helpRule"/>
+      </item>
+    </one-of>
+  </rule>
+
+  <!-- The following rules recognize coordinates. -->
+  <rule id="moveRuleA">
+
+    <item repeat="0-1">
+      <one-of>
+        <item>move</item>
+      </one-of>
+    </item>
+
+    <one-of>
+      <item>
+        <ruleref uri="#coordinate"/>
+      </item>
+      <item>
+        <ruleref uri="#coordinatePhonetic"/>
+      </item>
+    </one-of>
+
+    <item repeat="0-1">
+      <one-of>
+        <item>to</item>
+      </one-of>
+    </item>
+
+    <one-of>
+      <item>
+        <ruleref uri="#coordinate"/>
+      </item>
+      <item>
+        <ruleref uri="#coordinatePhonetic"/>
+      </item>
+    </one-of>
+
+  </rule>
+
+  <rule id="moveRuleB">
+
+    <item repeat="0-1">
+      <one-of>
+        <item>move</item>
+      </one-of>
+    </item>
+
+    <ruleref uri="#pieceRule"/>
+
+    <item repeat="0-1">
+      <one-of>
+        <item>to</item>
+      </one-of>
+    </item>
+
+    <one-of>
+      <item>
+        <ruleref uri="#coordinate"/>
+      </item>
+      <item>
+        <ruleref uri="#coordinatePhonetic"/>
+      </item>
+    </one-of>
+
+  </rule>
+
+  <rule id="coordinate">
+    <one-of>
+      <item>a</item>
+      <item>b</item>
+      <item>c</item>
+      <item>d</item>
+      <item>e</item>
+      <item>f</item>
+      <item>g</item>
+      <item>h</item>
+    </one-of>
+    <one-of>
+      <item>1</item>
+      <item>2</item>
+      <item>3</item>
+      <item>4</item>
+      <item>5</item>
+      <item>6</item>
+      <item>7</item>
+      <item>8</item>
+    </one-of>
+  </rule>
+
+  <rule id="coordinatePhonetic">
+    <one-of>
+      <item>alfa</item>
+      <item>bravo</item>
+      <item>charlie</item>
+      <item>delta</item>
+      <item>echo</item>
+      <item>foxtrot</item>
+      <item>golf</item>
+      <item>hotel</item>
+    </one-of>
+    <one-of>
+      <item>1</item>
+      <item>2</item>
+      <item>3</item>
+      <item>4</item>
+      <item>5</item>
+      <item>6</item>
+      <item>7</item>
+      <item>8</item>
+    </one-of>
+  </rule>
+
+  <!-- The following rules recognize piece names. -->
+  <rule id="pieceRule">
+    <item repeat="0-1">
+      <one-of>
+        <item>White</item>
+        <item>Black</item>
+      </one-of>
+    </item>
+    <one-of>
+      <item>King</item>
+      <item>Queen</item>
+      <item>Rook</item>
+      <item>Bishop</item>
+      <item>Knight</item>
+      <item>Pawn</item>
+    </one-of>
+  </rule>
+
+
+  <!-- The following rules recognize piece names. -->
+  <rule id="helpRule">
+    <one-of>
+      <item>Help</item>
+    </one-of>
+  </rule>
+
+</grammar>

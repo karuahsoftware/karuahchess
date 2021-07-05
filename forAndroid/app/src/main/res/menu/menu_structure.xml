@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/backward_pawns_item"
+        android:title="Backward Pawns" />
+    <item
+        android:id="@+id/isolated_pawns_item"
+        android:title="Isolated Pawns"/>
+    <item
+        android:id="@+id/white_attack_item"
+        android:title="White Attack"/>
+    <item
+        android:id="@+id/black_attack_item"
+        android:title="Black Attack"/>
+</menu>

@@ -1,0 +1,20 @@
+﻿<UserControl
+    x:Class="KaruahChess.Common.SplitViewCustom"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:KaruahChess.Common"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    d:DesignHeight="300"
+    d:DesignWidth="400">
+
+    <StackPanel>
+        <ContentPresenter x:Name="PanelAContent" Content="{x:Bind PanelA}" />
+        <ContentPresenter x:Name="PanelBContent" Content="{x:Bind PanelB}" />
+        <ContentPresenter x:Name="PanelCContent" Content="{x:Bind PanelC}" />
+        <ContentPresenter x:Name="PanelDContent" Content="{x:Bind PanelD}" />
+        <ContentPresenter x:Name="PanelEContent" Content="{x:Bind PanelE}" />
+    </StackPanel>
+    
+</UserControl>
