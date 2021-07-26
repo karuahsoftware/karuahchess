@@ -20,4 +20,8 @@ package purpletreesoftware.karuahchess.engine
 
 class SearchOptions {
     var limitStrengthELO: Int = 1350
+    var limitDepth: Int = 0
+    var limitNodes: Int = 0
+    var limitMoveDuration: Int = 0
+    var limitThreads: Int = 1
 }

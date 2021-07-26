@@ -21,5 +21,6 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 	namespace Engine {
 		extern void init();
+		extern void setThreads(unsigned int pMaxThreads);
 	}
 

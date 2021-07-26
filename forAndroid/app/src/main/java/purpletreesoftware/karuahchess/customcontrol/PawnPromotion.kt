@@ -18,76 +18,55 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 package purpletreesoftware.karuahchess.customcontrol
 
-import android.content.DialogInterface
 import android.os.Bundle
 import android.view.*
 import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.LinearLayout
 import androidx.fragment.app.DialogFragment
+import androidx.lifecycle.ViewModelProvider
 import purpletreesoftware.karuahchess.R
 import purpletreesoftware.karuahchess.common.Constants
 import purpletreesoftware.karuahchess.databinding.FragmentPawnpromotionBinding
+import purpletreesoftware.karuahchess.viewmodel.PawnPromotionViewModel
 
 @ExperimentalUnsignedTypes
-class PawnPromotionDialog : DialogFragment() {
-
-    private var _promotionColour : Int  = 0
-    private var _buttonSize : Float = 0f
+class PawnPromotion : DialogFragment() {
     private var _pawnPromotionListener: OnPawnPromotionInteractionListener? = null
+    private lateinit var fragmentBinding: FragmentPawnpromotionBinding
+    private lateinit var pawnPromotionVM: PawnPromotionViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setStyle(DialogFragment.STYLE_NORMAL,0)
-        retainInstance = true
         isCancelable = false
-
-
     }
-
-    override fun onStart() {
-        super.onStart()
-    }
-
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-
         // Inflate the layout for this fragment
-        val fragmentBinding = FragmentPawnpromotionBinding.inflate(inflater, container, false)
-        val promotionLayout = fragmentBinding.pawnPromotionLinearLayout
-
-        // Create the buttons
-        createPieceButtons(_promotionColour, promotionLayout)
-
+        fragmentBinding = FragmentPawnpromotionBinding.inflate(inflater, container, false)
         return fragmentBinding.root
-    }
-
-
-    override fun onDismiss(dialog: DialogInterface) {
-        super.onDismiss(dialog)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        pawnPromotionVM = ViewModelProvider(requireActivity()).get(PawnPromotionViewModel::class.java)
 
-    }
+        val promotionColour = pawnPromotionVM.promotionColour.value
+        val buttonSize = pawnPromotionVM.buttonSize.value
 
-
-    override fun onDestroyView() {
-
-        if (retainInstance) {
-            dialog?.setDismissMessage(null)
+        if (promotionColour != null && buttonSize != null) {
+            createPieceButtons(promotionColour, buttonSize)
         }
-        super.onDestroyView()
     }
 
     /**
      * Create piece buttons
      */
-    private fun createPieceButtons(pColour : Int, pLayout: LinearLayout) {
+    private fun createPieceButtons(pColour : Int, pButtonSize: Float) {
         val promotionList : List<Char>
-
-        pLayout.removeAllViews()
+        val promotionLayout = fragmentBinding.pawnPromotionLinearLayout
+        promotionLayout.removeAllViews()
 
         if (pColour == Constants.BLACKPIECE) {
             promotionList = listOf('r', 'n', 'b', 'q')
@@ -96,7 +75,7 @@ class PawnPromotionDialog : DialogFragment() {
             promotionList = listOf('R', 'N', 'B', 'Q')
         }
 
-        val params = LinearLayout.LayoutParams(_buttonSize.toInt(), _buttonSize.toInt())
+        val params = LinearLayout.LayoutParams(pButtonSize.toInt(), pButtonSize.toInt())
 
         for (fen in promotionList)
         {
@@ -110,7 +89,7 @@ class PawnPromotionDialog : DialogFragment() {
             pieceBtn.setOnClickListener {
                 _pawnPromotionListener?.onPawnPromotionClick(fen,this)
             }
-            pLayout.addView(pieceBtn)
+            promotionLayout.addView(pieceBtn)
         }
 
     }
@@ -135,10 +114,6 @@ class PawnPromotionDialog : DialogFragment() {
 
     }
 
-    override fun onSaveInstanceState(outState: Bundle) {
-        super.onSaveInstanceState(outState)
-    }
-
     /**
      * Sets the interaction listener
      */
@@ -152,13 +127,10 @@ class PawnPromotionDialog : DialogFragment() {
 
     companion object {
 
-        fun newInstance(pButtonSize: Float, pPromotionColour: Int): PawnPromotionDialog {
-            val frag = PawnPromotionDialog()
+        fun newInstance(): PawnPromotion {
+            val frag = PawnPromotion()
             val args = Bundle()
             frag.arguments = args
-            frag._promotionColour = pPromotionColour
-            frag._buttonSize = pButtonSize
-
             return frag
         }
     }

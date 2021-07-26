@@ -18,23 +18,21 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 package purpletreesoftware.karuahchess.customcontrol
 
-import android.content.DialogInterface
+import android.app.Dialog
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.Window
 import androidx.fragment.app.DialogFragment
+import androidx.lifecycle.ViewModelProvider
 import purpletreesoftware.karuahchess.databinding.FragmentAboutBinding
-import purpletreesoftware.karuahchess.R
-
-
+import purpletreesoftware.karuahchess.viewmodel.AboutViewModel
 
 class About : DialogFragment() {
     private var _binding: FragmentAboutBinding? = null
     private val binding get() = _binding!!
-
-    private lateinit var versionStr: String
+    private lateinit var aboutVM: AboutViewModel
 
     override fun onStart() {
         super.onStart()
@@ -42,13 +40,13 @@ class About : DialogFragment() {
         dialog?.window?.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
     }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        retainInstance = true
+    override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
+        val dialog = super.onCreateDialog(savedInstanceState)
+        dialog.window?.requestFeature(Window.FEATURE_NO_TITLE)
+        return dialog
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-
         // Inflate the layout for this fragment
         val fragmentBinding = FragmentAboutBinding.inflate(inflater, container, false)
         _binding = fragmentBinding
@@ -56,41 +54,26 @@ class About : DialogFragment() {
     }
 
 
-    override fun onDismiss(dialog: DialogInterface) {
-        super.onDismiss(dialog)
-    }
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        dialog?.window?.requestFeature(Window.FEATURE_NO_TITLE)
 
-        binding.versionText.text = "Version: $versionStr \n"
+        aboutVM = ViewModelProvider(requireActivity()).get(AboutViewModel::class.java)
+        binding.versionText.text = "Version: ${aboutVM.versionStr.value} \n"
 
         // Connect button events
         binding.doneButton.setOnClickListener { dismiss() }
-
     }
 
-
     override fun onDestroyView() {
-        if (retainInstance) {
-            dialog?.setDismissMessage(null)
-        }
-
         super.onDestroyView()
-
         _binding = null
     }
 
-
-
-
     companion object {
-        fun newInstance(pVersionStr: String): About {
+        fun newInstance(): About {
             val frag = About()
             val args = Bundle()
             frag.arguments = args
-            frag.versionStr = pVersionStr
             return frag
         }
     }

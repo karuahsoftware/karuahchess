@@ -25,6 +25,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #include <vector>
 
 
+
 using namespace helper;
 
 // Constructor
@@ -59,7 +60,7 @@ BitBoard::BitBoard()
 	_positions[10] = &_positionWhiteRook;
 	_positions[11] = &_positionWhiteQueen;
 	_positions[12] = &_positionWhiteKing;
-		
+
 	_xRayAttacksBySpin[0] = &_blank64;
 	_xRayAttacksBySpin[1] = &_blackQueenXRay;
 	_xRayAttacksBySpin[2] = &_blackRookXRay;
@@ -76,7 +77,7 @@ BitBoard::BitBoard()
 
 	_whiteMajorPieceMaterialValue = 0;
 	_blackMajorPieceMaterialValue = 0;
-	
+
 
 	Hash = 0ULL;
 	HashPawn = 0ULL;
@@ -106,7 +107,7 @@ void BitBoard::CalculateAttackPaths()
 	_blackPos = _positionBlackPawn | _positionBlackKnight | _positionBlackBishop | _positionBlackRook | _positionBlackQueen | _positionBlackKing;
 	uint64_t blockers = _whitePos | _blackPos;
 
-	// 0 to 63 are squares.             
+	// 0 to 63 are squares.
 	int whiteKingIndex = -1;
 	int blackKingIndex = -1;
 	_whiteAttack = 0ULL;
@@ -141,13 +142,13 @@ void BitBoard::CalculateAttackPaths()
 
 	_whiteMajorPieceMaterialValue = 0;
 	_blackMajorPieceMaterialValue = 0;
-	
+
 
 	uint64_t occupiedScan = blockers;
 	int sqIndex = 0;
 	int posScan = 0;
 
-	// Zero attack path		
+	// Zero attack path
 	std::fill(std::begin(_attackPath), std::end(_attackPath), 0uLL);
 	std::fill(std::begin(_attackPathXRay), std::end(_attackPathXRay), 0uLL);
 	std::fill(std::begin(_nonAttackPawnPath), std::end(_nonAttackPawnPath), 0uLL);
@@ -169,14 +170,14 @@ void BitBoard::CalculateAttackPaths()
 			_nonAttackPawnPath[sqIndex] = PiecePattern::PawnMove<WHITEPIECE>(sqIndex, blockers);
 			_potentialAttackPawnPath[sqIndex] = PiecePattern::PawnPotentialAttack<WHITEPIECE>(sqIndex);
 			_attackPath[sqIndex] = PiecePattern::PawnAttack<WHITEPIECE>(sqIndex, blockers);
-			_attackPath[sqIndex] |= PiecePattern::PawnEnpassant<WHITEPIECE>(sqIndex, StateEnpassantIndex);		
+			_attackPath[sqIndex] |= PiecePattern::PawnEnpassant<WHITEPIECE>(sqIndex, StateEnpassantIndex);
 			_whiteAttackTwice |= _whiteAttack & _attackPath[sqIndex];
 			_whiteAttack |= _attackPath[sqIndex];
 			_whitePawnAttack |= _attackPath[sqIndex];
 			_whitePotentialAttackPawnTwice |= _whitePotentialAttackPawn & _potentialAttackPawnPath[sqIndex];
-			_whitePotentialAttackPawn |= _potentialAttackPawnPath[sqIndex];			
+			_whitePotentialAttackPawn |= _potentialAttackPawnPath[sqIndex];
 			if ((_nonAttackPawnPath[sqIndex] | _attackPath[sqIndex]) == 0ULL) _whiteBlockedPawn |= sqMask;
-			
+
 		}
 		else if ((sqMask & _positionWhiteBishop) > 0)
 		{
@@ -187,15 +188,15 @@ void BitBoard::CalculateAttackPaths()
 			_whiteAttackTwice |= _whiteAttack & _attackPath[sqIndex];
 			_whiteAttack |= _attackPath[sqIndex];
 			_whiteMajorPieceMaterialValue += EvalWeights::BishopValueMg;
-				
+
 		}
 		else if ((sqMask & _positionWhiteQueen) > 0)
 		{
-			// Queen pattern is the bishop pattern xor with rook pattern                  
+			// Queen pattern is the bishop pattern xor with rook pattern
 			_attackPath[sqIndex] = (helper::DiagonalMove[sqIndex][((helper::DiagonalRay[sqIndex] & blockers) * helper::DiagonalMagic[sqIndex]) >> 52] ^
-				helper::HorizontalVerticalMove[sqIndex][((helper::HorizontalVerticalRay[sqIndex] & blockers) * helper::HorizontalVerticalMagic[sqIndex]) >> 52]);
+									helper::HorizontalVerticalMove[sqIndex][((helper::HorizontalVerticalRay[sqIndex] & blockers) * helper::HorizontalVerticalMagic[sqIndex]) >> 52]);
 			_attackPathXRay[sqIndex] = (helper::DiagonalMoveXRay[sqIndex][((helper::DiagonalRay[sqIndex] & blockers) * helper::DiagonalMagic[sqIndex]) >> 52] ^
-				helper::HorizontalVerticalMoveXRay[sqIndex][((helper::HorizontalVerticalRay[sqIndex] & blockers) * helper::HorizontalVerticalMagic[sqIndex]) >> 52]);
+										helper::HorizontalVerticalMoveXRay[sqIndex][((helper::HorizontalVerticalRay[sqIndex] & blockers) * helper::HorizontalVerticalMagic[sqIndex]) >> 52]);
 			_whiteQueenXRay |= _attackPathXRay[sqIndex];
 			_whiteQueenAttack |= _attackPath[sqIndex];
 			_whiteAttackTwice |= _whiteAttack & _attackPath[sqIndex];
@@ -251,11 +252,11 @@ void BitBoard::CalculateAttackPaths()
 		}
 		else if (((sqMask & _positionBlackQueen)) > 0)
 		{
-			// Queen pattern is the bishop pattern xor with rook pattern                   
+			// Queen pattern is the bishop pattern xor with rook pattern
 			_attackPath[sqIndex] = (helper::DiagonalMove[sqIndex][((helper::DiagonalRay[sqIndex] & blockers) * helper::DiagonalMagic[sqIndex]) >> 52] ^
-				helper::HorizontalVerticalMove[sqIndex][((helper::HorizontalVerticalRay[sqIndex] & blockers) * helper::HorizontalVerticalMagic[sqIndex]) >> 52]);
+									helper::HorizontalVerticalMove[sqIndex][((helper::HorizontalVerticalRay[sqIndex] & blockers) * helper::HorizontalVerticalMagic[sqIndex]) >> 52]);
 			_attackPathXRay[sqIndex] = (helper::DiagonalMoveXRay[sqIndex][((helper::DiagonalRay[sqIndex] & blockers) * helper::DiagonalMagic[sqIndex]) >> 52] ^
-				helper::HorizontalVerticalMoveXRay[sqIndex][((helper::HorizontalVerticalRay[sqIndex] & blockers) * helper::HorizontalVerticalMagic[sqIndex]) >> 52]);
+										helper::HorizontalVerticalMoveXRay[sqIndex][((helper::HorizontalVerticalRay[sqIndex] & blockers) * helper::HorizontalVerticalMagic[sqIndex]) >> 52]);
 			_blackQueenXRay |= _attackPathXRay[sqIndex];
 			_blackQueenAttack |= _attackPath[sqIndex];
 			_blackAttackTwice |= _blackAttack & _attackPath[sqIndex];
@@ -306,7 +307,7 @@ void BitBoard::CalculateAttackPaths()
 	}
 
 
-	// Do material Hash Key	
+	// Do material Hash Key
 	_hashMaterial = _positionWhitePawn ? RandomBoardArray[WHITE_PAWN_INDEX_64 + (popcount(_positionWhitePawn) - 1)] : 0ULL;
 	_hashMaterial ^= _positionWhiteKnight ? RandomBoardArray[WHITE_KNIGHT_INDEX_64 + (popcount(_positionWhiteKnight) - 1)] : 0ULL;
 	_hashMaterial ^= _positionWhiteBishop ? RandomBoardArray[WHITE_BISHOP_INDEX_64 + (popcount(_positionWhiteBishop) - 1)] : 0ULL;
@@ -327,12 +328,11 @@ void BitBoard::CalculateAttackPaths()
 /// Get all attack paths of a given colour
 /// </summary>
 template<int Colour> uint64_t BitBoard::GetAllAttackPaths() {
-    if (!_attackPathReady) CalculateAttackPaths();
+	if (!_attackPathReady) CalculateAttackPaths();
 	if constexpr (Colour == WHITEPIECE) {
 		return (_whiteAttack | _whitePotentialAttackPawn) & (~_whitePos);
 	}
 	else {
-
 		return (_blackAttack | _blackPotentialAttackPawn) & (~_blackPos);
 	}
 }
@@ -344,8 +344,8 @@ template<int Colour, int Spin> uint64_t BitBoard::GetPieceAttackPaths() {
 	static_assert(Spin == PAWN_SPIN || Spin == KNIGHT_SPIN || Spin == BISHOP_SPIN || Spin == ROOK_SPIN || Spin == QUEEN_SPIN || Spin == KING_SPIN, "Invalid piece type");
 
 	if (!_attackPathReady) CalculateAttackPaths();
-	
-	if constexpr (Spin == PAWN_SPIN && Colour == WHITEPIECE) {		
+
+	if constexpr (Spin == PAWN_SPIN && Colour == WHITEPIECE) {
 		return (_whitePawnAttack | _whitePotentialAttackPawn) & (~_whitePos);
 	}
 	else if constexpr (Spin == PAWN_SPIN && Colour == BLACKPIECE) {
@@ -432,7 +432,7 @@ uint64_t BitBoard::GetSliderBlockers()
 /// Gets the attacks on the square from sliders of the given colour
 /// </summary>
 template<int Colour> uint64_t BitBoard::GetSliderAttackers(int pSqIndex) {
-    if (!_attackPathReady) CalculateAttackPaths();
+	if (!_attackPathReady) CalculateAttackPaths();
 	if constexpr (Colour == WHITEPIECE) {
 		uint64_t blockers = GetOccupied<WHITEPIECE>() | GetOccupied<BLACKPIECE>();
 		uint64_t attackers = PiecePattern::Pattern(helper::PatternEnum::Bishop, pSqIndex, blockers) & (_positionWhiteBishop | _positionWhiteQueen);
@@ -503,7 +503,7 @@ template<int Colour> uint64_t BitBoard::GetSliderBlockers(int pSqIndex) {
 
 /// <summary>
 /// Gets the XRay attack path
-/// </summary>	
+/// </summary>
 /// <returns></returns>
 uint64_t BitBoard::GetXRayAttackPathAll() {
 	if (!_attackPathReady) CalculateAttackPaths();
@@ -514,7 +514,7 @@ uint64_t BitBoard::GetXRayAttackPathAll() {
 
 /// <summary>
 /// Gets the XRay attack path of a given spin value
-/// </summary>	
+/// </summary>
 /// <returns></returns>
 uint64_t BitBoard::GetXRayAttackPathBySpin(int pSpin) {
 	if (!_attackPathReady) CalculateAttackPaths();
@@ -523,7 +523,7 @@ uint64_t BitBoard::GetXRayAttackPathBySpin(int pSpin) {
 
 /// <summary>
 /// Gets the XRay attack path of a given square
-/// </summary>	
+/// </summary>
 /// <returns></returns>
 uint64_t BitBoard::GetXRayAttackPathOfSquare(int pSqIndex) {
 	if (!_attackPathReady) CalculateAttackPaths();
@@ -532,7 +532,7 @@ uint64_t BitBoard::GetXRayAttackPathOfSquare(int pSqIndex) {
 
 /// <summary>
 /// Gets the attack path of a given square
-/// </summary>	
+/// </summary>
 /// <returns></returns>
 uint64_t BitBoard::GetAttackPathOfSquare(int pSqIndex) {
 	if (!_attackPathReady) CalculateAttackPaths();
@@ -541,10 +541,10 @@ uint64_t BitBoard::GetAttackPathOfSquare(int pSqIndex) {
 
 /// <summary>
 /// Gets blocked pawns
-/// </summary>	
+/// </summary>
 template<int Colour> uint64_t BitBoard::GetBlockedPawns() {
 	if (!_attackPathReady) CalculateAttackPaths();
-	
+
 	if constexpr (Colour == WHITEPIECE) {
 		return _whiteBlockedPawn;
 	}
@@ -612,7 +612,7 @@ void BitBoard::Update(const int pSqIndex, const int pSpin)
 
 	// Remove square from hash by XOR
 	Hash = Hash ^ ZobristSquareHash(pSqIndex);
-	
+
 	// Update pawn hash key if update involves a pawn
 	if (((_positionWhitePawn | _positionBlackPawn) & (helper::BITMASK >> pSqIndex)) > 0ULL) HashPawn = HashPawn ^ ZobristSquareHash(pSqIndex);
 
@@ -658,7 +658,7 @@ void BitBoard::GetBoardArray(uint64_t pData[])
 	if (_attackPathReady) pData[79] = 1ULL;
 	else pData[79] = 0ULL;
 
-	//  Source Start,  source end,  destination + offset           
+	//  Source Start,  source end,  destination + offset
 	std::copy(_nonAttackPawnPath, _nonAttackPawnPath + 64, pData + 80);
 	std::copy(_castlePath, _castlePath + 64, pData + 144);
 	std::copy(_potentialAttackPawnPath, _potentialAttackPawnPath + 64, pData + 208);
@@ -702,7 +702,7 @@ void BitBoard::GetBoardArray(uint64_t pData[])
 	// Major piece value data
 	pData[364] = _whiteMajorPieceMaterialValue;
 	pData[365] = _blackMajorPieceMaterialValue;
-	
+
 }
 
 /// <summary>
@@ -749,18 +749,10 @@ std::string BitBoard::GetFullFEN()
 	std::string boardFENStr = GetBoard();
 	std::string activeStr = StateActiveColour == 1 ? "w" : "b";
 
-	// Check that the rook and king are in valid positions for castling
-	bool wKS = KingIndex<WHITEPIECE>() == 60 && GetSpin(63) == WHITE_ROOK_SPIN;
-	bool wQS = KingIndex<WHITEPIECE>() == 60 && GetSpin(56) == WHITE_ROOK_SPIN;
-	bool bKS = KingIndex<BLACKPIECE>() == 4 && GetSpin(7) == BLACK_ROOK_SPIN;
-	bool bQS = KingIndex<BLACKPIECE>() == 4 && GetSpin(0) == BLACK_ROOK_SPIN;
-
-	// Castling availability
-	std::string whiteCastleKingSide = wKS && ((StateCastlingAvailability & 0b000010) > 0) ? "K" : "";
-	std::string whiteCastleQueenSide = wQS && ((StateCastlingAvailability & 0b000001) > 0) ? "Q" : "";
-	std::string blackCastleKingSide = bKS && ((StateCastlingAvailability & 0b001000) > 0) ? "k" : "";
-	std::string blackCastleQueenSide = bQS && ((StateCastlingAvailability & 0b000100) > 0) ? "q" : "";
-
+	std::string whiteCastleKingSide = (StateCastlingAvailability & 0b000010) > 0 ? "K" : "";
+	std::string whiteCastleQueenSide = (StateCastlingAvailability & 0b000001) > 0 ? "Q" : "";
+	std::string blackCastleKingSide = (StateCastlingAvailability & 0b001000) > 0 ? "k" : "";
+	std::string blackCastleQueenSide = (StateCastlingAvailability & 0b000100) > 0 ? "q" : "";
 
 	std::string castleAvailability = whiteCastleKingSide + whiteCastleQueenSide + blackCastleKingSide + blackCastleQueenSide;
 	castleAvailability = castleAvailability == "" ? "-" : castleAvailability;
@@ -822,19 +814,19 @@ void BitBoard::SetBoardArray(const uint64_t pData[])
 	HashPawn = pData[13];
 	_hashMaterial = pData[14];
 
-	// Source start + offset, source end + offset + size, destination             
+	// Source start + offset, source end + offset + size, destination
 	std::copy(pData + 15, pData + 15 + 64, _attackPath);
 
 	_attackPathReady = pData[79] == 1uLL;
 
-	// Source start + offset, source end + offset + size, destination             
+	// Source start + offset, source end + offset + size, destination
 	std::copy(pData + 80, pData + 80 + 64, _nonAttackPawnPath);
 	std::copy(pData + 144, pData + 144 + 64, _castlePath);
 	std::copy(pData + 208, pData + 208 + 64, _potentialAttackPawnPath);
 
 	_whiteAttack = pData[272];
-	_blackAttack = pData[273];	
-	
+	_blackAttack = pData[273];
+
 	_whitePawnAttack = pData[274];
 	_blackPawnAttack = pData[275];
 	_whitePotentialAttackPawn = pData[276];
@@ -849,7 +841,7 @@ void BitBoard::SetBoardArray(const uint64_t pData[])
 	_blackQueenAttack = pData[285];
 	_whiteKingAttack = pData[286];
 	_blackKingAttack = pData[287];
-	
+
 	_whiteBlockedPawn = pData[288];
 	_blackBlockedPawn = pData[289];
 	_whiteAttackTwice = pData[290];
@@ -865,7 +857,7 @@ void BitBoard::SetBoardArray(const uint64_t pData[])
 	_blackRookXRay = pData[298];
 	_blackQueenXRay = pData[299];
 
-	// Source start + offset, source end + offset + size, destination             
+	// Source start + offset, source end + offset + size, destination
 	std::copy(pData + 300, pData + 300 + 64, _attackPathXRay);
 
 	// Major piece value data
@@ -945,7 +937,7 @@ void BitBoard::SetSpin(const int pSqIndex, const int pSpin)
 	_positionBlackBishop &= sqMaskComp;
 	_positionBlackQueen &= sqMaskComp;
 	_positionBlackKing &= sqMaskComp;
-	
+
 	_positionWhitePawn &= sqMaskComp;
 	_positionWhiteRook &= sqMaskComp;
 	_positionWhiteKnight &= sqMaskComp;
@@ -954,7 +946,7 @@ void BitBoard::SetSpin(const int pSqIndex, const int pSpin)
 	_positionWhiteKing &= sqMaskComp;
 
 
-	// Set spin  
+	// Set spin
 	*_positions[pSpin + 6] |= sqMask;
 
 	// Invalidate move paths
@@ -1083,7 +1075,7 @@ uint64_t BitBoard::GetOccupiedBySpin(const int pSpin)
 template<int Colour> uint64_t BitBoard::GetOccupiedBySpin(const int pSpin)
 {
 	static_assert(Colour == WHITEPIECE || Colour == BLACKPIECE, "Invalid piece colour");
-	
+
 	if constexpr (Colour == WHITEPIECE) {
 		return *_positions[pSpin + 6];
 	}
@@ -1151,7 +1143,7 @@ bool BitBoard::OnlyKingsRemain()
 
 
 /// <summary>
-/// Gets major piece count 
+/// Gets major piece count
 /// </summary>
 /// <param name="pColour"></param>
 /// <returns></returns>
@@ -1159,7 +1151,7 @@ int BitBoard::MajorPieceCount()
 {
 	// all pieces except for pawns
 	return popcount(_positionWhiteKnight | _positionWhiteBishop | _positionWhiteRook | _positionWhiteQueen | _positionWhiteKing | _positionBlackKnight | _positionBlackBishop | _positionBlackRook | _positionBlackQueen | _positionBlackKing);
-	
+
 }
 
 /// <summary>
@@ -1231,19 +1223,19 @@ bool BitBoard::IsPositionArrayValid()
 }
 
 /// <summary>
-/// Gets all the current state public getters and setters.        
+/// Gets all the current state public getters and setters.
 /// </summary>
 std::string BitBoard::GetState()
 {
 	std::string state;
 	state = std::to_string(StateActiveColour) + "|" +
-		std::to_string(StateCastlingAvailability) + "|" +
-		std::to_string(StateEnpassantIndex) + "|" +
-		std::to_string(StateHalfMoveCount) + "|" +
-		std::to_string(StateFullMoveCount) + "|" +
-		std::to_string(StateGameStatus) + "|" +
-		std::to_string(StateWhiteClockOffset) + "|" +
-		std::to_string(StateBlackClockOffset);
+			std::to_string(StateCastlingAvailability) + "|" +
+			std::to_string(StateEnpassantIndex) + "|" +
+			std::to_string(StateHalfMoveCount) + "|" +
+			std::to_string(StateFullMoveCount) + "|" +
+			std::to_string(StateGameStatus) + "|" +
+			std::to_string(StateWhiteClockOffset) + "|" +
+			std::to_string(StateBlackClockOffset);
 
 
 	return state;
@@ -1251,7 +1243,7 @@ std::string BitBoard::GetState()
 
 
 /// <summary>
-/// Set current board state from string     
+/// Set current board state from string
 /// </summary>
 void BitBoard::SetState(const std::string pState)
 {
@@ -1292,7 +1284,7 @@ void BitBoard::GetStateArray(int pState[])
 }
 
 /// <summary>
-/// Set current board state from array        
+/// Set current board state from array
 /// </summary>
 void BitBoard::SetStateArray(const int pState[])
 {
@@ -1373,7 +1365,7 @@ void BitBoard::Copy(BitBoard& pDestBoard)
 	// Copy attack paths
 	pDestBoard._attackPathReady = this->_attackPathReady;
 
-	//  Source Start,  source end,  destination 
+	//  Source Start,  source end,  destination
 	std::copy(this->_attackPath, _attackPath + 64, pDestBoard._attackPath);
 
 	std::copy(this->_nonAttackPawnPath, _nonAttackPawnPath + 64, pDestBoard._nonAttackPawnPath);
@@ -1443,20 +1435,20 @@ template<int Colour> int BitBoard::Count() {
 	static_assert(Colour == WHITEPIECE || Colour == BLACKPIECE, "Invalid piece colour");
 
 	if constexpr (Colour == WHITEPIECE) {
-		return popcount(*_positions[WHITE_PAWN_SPIN + 6]) 
-				+ popcount(*_positions[WHITE_KNIGHT_SPIN + 6])
-				+ popcount(*_positions[WHITE_BISHOP_SPIN + 6])
-				+ popcount(*_positions[WHITE_ROOK_SPIN + 6])
-				+ popcount(*_positions[WHITE_QUEEN_SPIN + 6])
-				+ popcount(*_positions[WHITE_KING_SPIN + 6]);
+		return popcount(*_positions[WHITE_PAWN_SPIN + 6])
+			   + popcount(*_positions[WHITE_KNIGHT_SPIN + 6])
+			   + popcount(*_positions[WHITE_BISHOP_SPIN + 6])
+			   + popcount(*_positions[WHITE_ROOK_SPIN + 6])
+			   + popcount(*_positions[WHITE_QUEEN_SPIN + 6])
+			   + popcount(*_positions[WHITE_KING_SPIN + 6]);
 	}
 	else {
 		return popcount(*_positions[BLACK_PAWN_SPIN + 6])
-			+ popcount(*_positions[BLACK_KNIGHT_SPIN + 6])
-			+ popcount(*_positions[BLACK_BISHOP_SPIN + 6])
-			+ popcount(*_positions[BLACK_ROOK_SPIN + 6])
-			+ popcount(*_positions[BLACK_QUEEN_SPIN + 6])
-			+ popcount(*_positions[BLACK_KING_SPIN + 6]);
+			   + popcount(*_positions[BLACK_KNIGHT_SPIN + 6])
+			   + popcount(*_positions[BLACK_BISHOP_SPIN + 6])
+			   + popcount(*_positions[BLACK_ROOK_SPIN + 6])
+			   + popcount(*_positions[BLACK_QUEEN_SPIN + 6])
+			   + popcount(*_positions[BLACK_KING_SPIN + 6]);
 	}
 }
 
@@ -1481,6 +1473,73 @@ template<int Colour> int BitBoard::GetMajorPieceMaterialValue() {
 	}
 }
 
+/// <summary>
+/// Verifies the board configuration, returns 0 if ok, otherwise returns an integer which represents an issue
+/// </summary>
+int BitBoard::VerifyBoardConfiguration() {
+	int errorCode = 0;
+
+	if (Count<WHITEPIECE>(KING_SPIN) != 1) errorCode = 1;
+	else if (Count<BLACKPIECE>(KING_SPIN) != 1) errorCode = 2;
+	else if (Count<WHITEPIECE>() > 16) errorCode = 3;
+	else if (Count<BLACKPIECE>() > 16) errorCode = 4;
+	else if ((Count<WHITEPIECE>(QUEEN_SPIN) + Count<WHITEPIECE>(PAWN_SPIN)) > 9) errorCode = 5;
+	else if ((Count<BLACKPIECE>(QUEEN_SPIN) + Count<BLACKPIECE>(PAWN_SPIN)) > 9) errorCode = 6;
+	else if ((Count<WHITEPIECE>(BISHOP_SPIN) + Count<WHITEPIECE>(PAWN_SPIN)) > 10) errorCode = 7;
+	else if ((Count<BLACKPIECE>(BISHOP_SPIN) + Count<BLACKPIECE>(PAWN_SPIN)) > 10) errorCode = 8;
+	else if ((Count<WHITEPIECE>(KNIGHT_SPIN) + Count<WHITEPIECE>(PAWN_SPIN)) > 10) errorCode = 9;
+	else if ((Count<BLACKPIECE>(KNIGHT_SPIN) + Count<BLACKPIECE>(PAWN_SPIN)) > 10) errorCode = 10;
+	else if ((Count<WHITEPIECE>(ROOK_SPIN) + Count<WHITEPIECE>(PAWN_SPIN)) > 10) errorCode = 11;
+	else if ((Count<BLACKPIECE>(ROOK_SPIN) + Count<BLACKPIECE>(PAWN_SPIN)) > 10) errorCode = 12;
+	else if (Count<WHITEPIECE>(PAWN_SPIN) > 8) errorCode = 13;
+	else if (Count<BLACKPIECE>(PAWN_SPIN) > 8) errorCode = 14;
+	else if ((GetOccupiedBySpin<WHITEPIECE>(PAWN_SPIN) & (RANK1 | RANK8)) > 0) errorCode = 15;
+	else if ((GetOccupiedBySpin<BLACKPIECE>(PAWN_SPIN) & (RANK1 | RANK8)) > 0) errorCode = 16;
+	else if (IsKingCheck(WHITEPIECE) && StateActiveColour == BLACKPIECE) errorCode = 17;
+	else if (IsKingCheck(BLACKPIECE) && StateActiveColour == WHITEPIECE) errorCode = 18;
+	else if ((GetSpin(63) != helper::WHITE_ROOK_SPIN || GetSpin(60) != helper::WHITE_KING_SPIN) && ((StateCastlingAvailability & 0b000010) > 0)) errorCode = 19;
+	else if ((GetSpin(56) != helper::WHITE_ROOK_SPIN || GetSpin(60) != helper::WHITE_KING_SPIN) && ((StateCastlingAvailability & 0b000001) > 0)) errorCode = 20;
+	else if ((GetSpin(7) != helper::BLACK_ROOK_SPIN || GetSpin(4) != helper::BLACK_KING_SPIN) && ((StateCastlingAvailability & 0b001000) > 0)) errorCode = 21;
+	else if ((GetSpin(0) != helper::BLACK_ROOK_SPIN || GetSpin(4) != helper::BLACK_KING_SPIN) && ((StateCastlingAvailability & 0b000100) > 0)) errorCode = 22;
+
+	return errorCode;
+}
+
+/// <summary>
+/// Sets the castling availability if it is valid
+/// </summary>
+template<int Colour> bool BitBoard::setStateCastlingAvailability(const int pCastlingAvailability)
+{
+	// Check that castling availability is valid
+	if constexpr (Colour == WHITEPIECE) {
+		if (((GetSpin(63) != helper::WHITE_ROOK_SPIN || GetSpin(60) != helper::WHITE_KING_SPIN) &&
+			 ((pCastlingAvailability & 0b000010) > 0)) ||
+			((GetSpin(56) != helper::WHITE_ROOK_SPIN || GetSpin(60) != helper::WHITE_KING_SPIN) &&
+			 ((pCastlingAvailability & 0b000001) > 0)))
+			 {
+			return false;
+
+		} else {
+			_attackPathReady = false;
+			StateCastlingAvailability = (StateCastlingAvailability & 0b111100) | (0b000011 & pCastlingAvailability);
+			return true;
+		}
+	}
+	else {
+		if (((GetSpin(7) != helper::BLACK_ROOK_SPIN || GetSpin(4) != helper::BLACK_KING_SPIN) &&
+			 ((pCastlingAvailability & 0b001000) > 0)) ||
+			((GetSpin(0) != helper::BLACK_ROOK_SPIN || GetSpin(4) != helper::BLACK_KING_SPIN) &&
+			 ((pCastlingAvailability & 0b000100) > 0))) {
+			return false;
+		}
+		else {
+			_attackPathReady = false;
+			StateCastlingAvailability = (StateCastlingAvailability & 0b110011) | (0b001100 & pCastlingAvailability);
+			return true;
+		}
+	}
+
+}
 
 
 // Explicit template instantiation
@@ -1522,7 +1581,8 @@ template int BitBoard::Count<WHITEPIECE>();
 template int BitBoard::Count<BLACKPIECE>();
 template int BitBoard::GetMajorPieceMaterialValue<WHITEPIECE>();
 template int BitBoard::GetMajorPieceMaterialValue<BLACKPIECE>();
-
+template bool BitBoard::setStateCastlingAvailability<WHITEPIECE>(const int pCastlingAvailability);
+template bool BitBoard::setStateCastlingAvailability<BLACKPIECE>(const int pCastlingAvailability);
 
 
 

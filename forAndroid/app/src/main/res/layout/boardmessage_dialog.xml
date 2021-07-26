@@ -9,16 +9,16 @@
         android:background="@drawable/dialog_background"
         android:orientation="horizontal">
 
-    <ImageView xmlns:android="http://schemas.android.com/apk/res/android"
-               android:id="@+id/iconImageView"
-               android:layout_width="48dp"
-               android:layout_height="48dp"
-               android:adjustViewBounds="true"
-               android:background="@drawable/ic_info_outline"
-               android:contentDescription="Info"
-               android:text=""
-               android:layout_margin="0dp"
-               android:layout_gravity="center_vertical"
+    <ImageView
+        android:id="@+id/iconImageView"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:adjustViewBounds="true"
+        android:background="@drawable/ic_info_outline"
+        android:contentDescription="Info"
+        android:text=""
+        android:layout_margin="0dp"
+        android:layout_gravity="center_vertical"
     />
 
     <TextView

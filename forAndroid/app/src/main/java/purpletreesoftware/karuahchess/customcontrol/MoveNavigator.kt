@@ -21,17 +21,14 @@ package purpletreesoftware.karuahchess.customcontrol
 import android.content.Context
 import android.content.res.Configuration
 import android.graphics.Rect
-import android.os.Bundle
 import android.util.AttributeSet
 import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import android.widget.FrameLayout
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.recyclerview.widget.RecyclerView
 import purpletreesoftware.karuahchess.MainActivity
-import purpletreesoftware.karuahchess.R
 import purpletreesoftware.karuahchess.databinding.MovenavigatorpanelBinding
 
 

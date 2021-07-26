@@ -821,10 +821,21 @@ Java_purpletreesoftware_karuahchess_engine_KaruahChessEngineC_searchStart (
 
         jclass mSearchOptions = pEnv->GetObjectClass(pSearchOptions);
 
-
-        // Limit field strength ELO
         jfieldID limitStrengthELOFieldID = pEnv->GetFieldID(mSearchOptions, "limitStrengthELO","I");
         options.limitStrengthELO = pEnv->GetIntField(pSearchOptions, limitStrengthELOFieldID);
+
+        jfieldID limitDepthFieldID = pEnv->GetFieldID(mSearchOptions, "limitDepth","I");
+        options.limitDepth = pEnv->GetIntField(pSearchOptions, limitDepthFieldID);
+
+        jfieldID limitNodesFieldID = pEnv->GetFieldID(mSearchOptions, "limitNodes","I");
+        options.limitNodes = pEnv->GetIntField(pSearchOptions, limitNodesFieldID);
+
+        jfieldID limitMoveDurationFieldID = pEnv->GetFieldID(mSearchOptions, "limitMoveDuration","I");
+        options.limitMoveDuration = pEnv->GetIntField(pSearchOptions, limitMoveDurationFieldID);
+
+        jfieldID limitThreadsFieldID = pEnv->GetFieldID(mSearchOptions, "limitThreads","I");
+        options.limitThreads = pEnv->GetIntField(pSearchOptions, limitThreadsFieldID);
+
 
         // Search for a move
         Search::GetBestMove(*searchItr->second, options, bestMove, statistics);
@@ -836,11 +847,13 @@ Java_purpletreesoftware_karuahchess_engine_KaruahChessEngineC_searchStart (
         jfieldID moveToIndexFieldID = pEnv->GetFieldID(mResultClass, "moveToIndex", "I");
         jfieldID promotionPieceTypeFieldID = pEnv->GetFieldID(mResultClass, "promotionPieceType", "I");
         jfieldID cancelledFieldID = pEnv->GetFieldID(mResultClass, "cancelled", "Z");
-        jfieldID errorFieldID = pEnv->GetFieldID(mResultClass, "error", "Z");
+        jfieldID errorFieldID = pEnv->GetFieldID(mResultClass, "error", "I");
+        jfieldID errorMessageFieldID = pEnv->GetFieldID(mResultClass, "errorMessage", "Ljava/lang/String;");
 
         pEnv->SetIntField(mResultObj, moveFromIndexFieldID, bestMove.moveFromIndex);
         pEnv->SetIntField(mResultObj, moveToIndexFieldID, bestMove.moveToIndex);
         pEnv->SetIntField(mResultObj, promotionPieceTypeFieldID, bestMove.promotionPieceType);
+
 
 
         if (bestMove.cancelled) {
@@ -849,11 +862,8 @@ Java_purpletreesoftware_karuahchess_engine_KaruahChessEngineC_searchStart (
             pEnv->SetBooleanField(mResultObj, cancelledFieldID, JNI_FALSE);
         }
 
-        if (bestMove.error) {
-            pEnv->SetBooleanField(mResultObj, errorFieldID, JNI_TRUE);
-        } else {
-            pEnv->SetBooleanField(mResultObj, errorFieldID, JNI_FALSE);
-        }
+        pEnv->SetIntField(mResultObj, errorFieldID, bestMove.error);
+        pEnv->SetObjectField(mResultObj, errorMessageFieldID, pEnv->NewStringUTF(helper::SearchErrorMessage.at(bestMove.error).c_str()));
 
         return mResultObj;
     } else {
@@ -886,7 +896,39 @@ Java_purpletreesoftware_karuahchess_engine_KaruahChessEngineC_getFeatureL (
     }
 }
 
+/// <summary>
+///  Sets the castling availability if it is valid
+/// </summary>
+extern "C"
+JNIEXPORT jboolean JNICALL
+Java_purpletreesoftware_karuahchess_engine_KaruahChessEngineC_setStateCastlingAvailability (
+        JNIEnv* pEnv,
+        jobject pThis,
+        jint pCastlingAvailability,
+        jint pColour,
+        jint pId
+)
+{
 
+    auto boardItr = MainBoardMap.find(pId);
+    if(boardItr != MainBoardMap.end()) {
+        bool success = false;
+        if (pColour == helper::WHITEPIECE) {
+            success = boardItr->second->setStateCastlingAvailability<helper::WHITEPIECE>(pCastlingAvailability);
+        }
+        else {
+            success = boardItr->second->setStateCastlingAvailability<helper::BLACKPIECE>(pCastlingAvailability);
+        }
+
+        if (success) return  JNI_TRUE;
+        else return JNI_FALSE;
+
+    }
+    else {
+        return JNI_FALSE;
+    }
+
+}
 
 /// <summary>
 ///  Cleans up objects created. Called by finalize from kotlin side

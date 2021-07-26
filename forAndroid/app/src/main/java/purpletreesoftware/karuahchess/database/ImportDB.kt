@@ -100,9 +100,8 @@ class ImportDB {
 
                 }
 
-                GameRecordDataService.reloadAllInstances()
+                GameRecordDataService.load()
             }
-
 
         }
         else {

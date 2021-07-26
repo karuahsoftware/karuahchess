@@ -16,13 +16,14 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-package purpletreesoftware.karuahchess.engine
+package purpletreesoftware.karuahchess.viewmodel
 
-class SearchResult {
-    var moveFromIndex: Int = 0
-    var moveToIndex: Int = 0
-    var promotionPieceType: Int = 0
-    var cancelled: Boolean = false
-    var error: Int = 0
-    var errorMessage: String = ""
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
+import purpletreesoftware.karuahchess.customcontrol.Tile
+
+class PieceEditToolViewModel() : ViewModel() {
+    val tile = MutableLiveData<Tile>()
+    val pieceEditToolColour = MutableLiveData<Int>()
 }
+

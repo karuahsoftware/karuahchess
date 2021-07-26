@@ -18,8 +18,8 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 package purpletreesoftware.karuahchess.customcontrol
 
+import android.app.Dialog
 import android.content.Context
-import android.content.DialogInterface
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
@@ -27,7 +27,6 @@ import android.provider.Settings
 import androidx.fragment.app.DialogFragment
 import android.view.*
 import androidx.core.content.ContextCompat
-import purpletreesoftware.karuahchess.R
 import purpletreesoftware.karuahchess.databinding.FragmentVoicehelpBinding
 
 @ExperimentalUnsignedTypes
@@ -41,9 +40,12 @@ class VoiceHelp : DialogFragment() {
         dialog?.window?.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
     }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        retainInstance = true
+
+    override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
+        val dialog = super.onCreateDialog(savedInstanceState)
+        dialog.window?.requestFeature(Window.FEATURE_NO_TITLE)
+
+        return dialog
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -56,13 +58,9 @@ class VoiceHelp : DialogFragment() {
     }
 
 
-    override fun onDismiss(dialog: DialogInterface) {
-        super.onDismiss(dialog)
-    }
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        dialog?.window?.requestFeature(Window.FEATURE_NO_TITLE)
+
         val theContext: Context? = context
 
         // Connect button events
@@ -74,12 +72,7 @@ class VoiceHelp : DialogFragment() {
 
 
     override fun onDestroyView() {
-        if (retainInstance) {
-            dialog?.setDismissMessage(null)
-        }
-
         super.onDestroyView()
-
         _binding = null
     }
 

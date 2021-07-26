@@ -22,6 +22,8 @@ package purpletreesoftware.karuahchess.model.gamerecord
 @ExperimentalUnsignedTypes
 interface IGameRecordDataService {
 
+    fun load()
+
     fun getCurrentGame(): GameRecordArray
 
     fun get(pId: Int): GameRecordArray?

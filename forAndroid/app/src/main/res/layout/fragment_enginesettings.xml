@@ -15,7 +15,6 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
-
         <TextView android:id="@+id/fragmentTitleText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -26,63 +25,266 @@
             style="@style/TextAppearance.MaterialComponents.Headline6"
             />
 
-        <LinearLayout
-            android:id="@+id/mainFragmentLayout"
-            android:layout_width="match_parent"
+
+
+        <CheckBox android:id="@+id/computerPlayerEnabledCheckBox"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:text="Computer player enabled"
+            style="@style/TextAppearance.MaterialComponents.Body1"
             app:layout_constraintTop_toBottomOf="@id/fragmentTitleText"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
             android:layout_marginTop="20dp"
-            android:orientation="vertical">
+            android:padding="0dp"
+            />
 
-            <CheckBox android:id="@+id/computerPlayerEnabledCheckBox"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Computer player enabled"
-                style="@style/TextAppearance.MaterialComponents.Body1"
-                />
+        <CheckBox android:id="@+id/computerMoveFirstCheckBox"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Computer moves first"
+            style="@style/TextAppearance.MaterialComponents.Body1"
+            app:layout_constraintTop_toBottomOf="@id/computerPlayerEnabledCheckBox"
+            app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginTop="0dp"
+            android:layout_marginBottom="0dp"
+            />
 
-            <CheckBox android:id="@+id/computerMoveFirstCheckBox"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Computer moves first"
-                style="@style/TextAppearance.MaterialComponents.Body1"
-                />
+        <CheckBox android:id="@+id/levelAutoCheckBox"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Increase strength after win"
+            style="@style/TextAppearance.MaterialComponents.Body1"
+            app:layout_constraintTop_toBottomOf="@id/computerMoveFirstCheckBox"
+            app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginTop="0dp"
+            android:layout_marginBottom="0dp"
+            />
+
+        <TextView android:id="@+id/eloStrengthTitleText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Strength"
+            style="@style/TextAppearance.MaterialComponents.Body1"
+            app:layout_constraintTop_toBottomOf="@id/levelAutoCheckBox"
+            app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="0dp"
+            android:paddingTop="5dp"
+            />
+
+        <Spinner
+            android:id="@+id/elospinner"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:popupElevation="3dp"
+            android:spinnerMode="dropdown"
+            style="@style/TextAppearance.MaterialComponents.Body1"
+            app:layout_constraintTop_toBottomOf="@id/levelAutoCheckBox"
+            app:layout_constraintStart_toEndOf="@id/eloStrengthTitleText"
+            android:layout_marginTop="10dp"
+            android:layout_marginStart="5dp"
+            android:layout_marginBottom="0dp"
+            android:background="@drawable/bordergreen"
+            android:padding="5dp"
+            />
+
+        <androidx.constraintlayout.widget.Barrier
+            android:id="@+id/eloBarrier"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:barrierDirection="bottom"
+            app:constraint_referenced_ids="elospinner,eloStrengthTitleText" />
+
+        <CheckBox android:id="@+id/computerAdvancedSettingsCheckBox"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Advanced search settings"
+            style="@style/TextAppearance.MaterialComponents.Body1"
+            app:layout_constraintTop_toBottomOf="@id/eloBarrier"
+            app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginTop="20dp"
+            android:layout_marginBottom="0dp"
+            />
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/advancedSettingsGuideline"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_begin="25dp"
+             />
+
+        <TextView android:id="@+id/depthLimitText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Depth limit"
+            style="@style/TextAppearance.MaterialComponents.Body1"
+            app:layout_constraintTop_toBottomOf="@id/computerAdvancedSettingsCheckBox"
+            app:layout_constraintEnd_toStartOf="@id/firstColumnBarrier"
+            app:layout_constraintStart_toStartOf="@id/advancedSettingsGuideline"
+            app:layout_constraintHorizontal_bias="1.0"
+            android:paddingTop="5dp"
+            />
+
+        <TextView android:id="@+id/depthLimitValueText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Value"
+            style="@style/TextAppearance.MaterialComponents.Body1"
+            app:layout_constraintTop_toBottomOf="@id/depthLimitText"
+            app:layout_constraintEnd_toStartOf="@id/firstColumnBarrier"
+            app:layout_constraintStart_toStartOf="@id/advancedSettingsGuideline"
+            app:layout_constraintHorizontal_bias="1.0"
+            android:paddingTop="0dp"
+            />
+
+        <com.google.android.material.slider.Slider
+            android:id="@+id/depthLimitSlider"
+            app:layout_constraintWidth_max="180dp"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:valueFrom="0"
+            android:valueTo="35"
+            android:stepSize="1"
+            app:tickVisible="true"
+            app:layout_constraintTop_toBottomOf="@id/computerAdvancedSettingsCheckBox"
+            app:layout_constraintStart_toEndOf="@id/firstColumnBarrier"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0"
+            app:trackColor="@color/colorSecondary"
+            app:thumbColor="@color/colorSecondary"
+            android:paddingTop="0dp"
+            android:layout_marginTop="0dp"
+            app:labelBehavior="gone"
+            />
+
+        <TextView android:id="@+id/nodeLimitText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Node limit"
+            style="@style/TextAppearance.MaterialComponents.Body1"
+            app:layout_constraintTop_toBottomOf="@id/depthLimitValueText"
+            app:layout_constraintEnd_toStartOf="@id/firstColumnBarrier"
+            app:layout_constraintStart_toStartOf="@id/advancedSettingsGuideline"
+            app:layout_constraintHorizontal_bias="1.0"
+            android:paddingTop="15dp"
+            />
 
 
-            <TextView android:id="@+id/eloStrengthTitleText"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="15dp"
-                android:layout_marginBottom="0dp"
-                android:text="Computer Strength"
-                style="@style/TextAppearance.MaterialComponents.Body1"
-                />
+        <EditText android:id="@+id/nodeLimitValueEditText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            style="@style/TextAppearance.MaterialComponents.Body1"
+            app:layout_constraintTop_toBottomOf="@id/depthLimitValueText"
+            app:layout_constraintStart_toEndOf="@id/firstColumnBarrier"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0"
+            android:digits="0123456789"
+            android:inputType="number"
+            android:importantForAutofill="no"
+            android:minWidth="150dp"
+            android:layout_marginStart="5dp"
+            android:tooltipText="Valid values are 10 to 2,000,000,000"
+            />
 
-            <Spinner
-                android:id="@+id/elospinner"
-                android:paddingTop="6dp"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:popupElevation="3dp"
-                android:spinnerMode="dropdown"
-                style="@style/TextAppearance.MaterialComponents.Body1"
-                />
+        <TextView android:id="@+id/moveDurationLimitText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Move time limit (ms)"
+            style="@style/TextAppearance.MaterialComponents.Body1"
+            app:layout_constraintTop_toBottomOf="@id/nodeLimitText"
+            app:layout_constraintEnd_toStartOf="@id/firstColumnBarrier"
+            app:layout_constraintStart_toStartOf="@id/advancedSettingsGuideline"
+            app:layout_constraintHorizontal_bias="1.0"
+            android:paddingTop="20dp"
+            />
+
+        <EditText android:id="@+id/moveDurationLimitValueEditText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            style="@style/TextAppearance.MaterialComponents.Body1"
+            app:layout_constraintTop_toBottomOf="@id/nodeLimitText"
+            app:layout_constraintStart_toEndOf="@id/firstColumnBarrier"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0"
+            android:digits="0123456789"
+            android:inputType="number"
+            android:importantForAutofill="no"
+            android:minWidth="100dp"
+            android:layout_marginStart="5dp"
+            android:layout_marginTop="5dp"
+            android:tooltipText="Valid values are 1 to 600,000ms. Leave blank for no limit."
+            />
+
+        <TextView android:id="@+id/threadsLimitText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="CPU threads"
+            style="@style/TextAppearance.MaterialComponents.Body1"
+            app:layout_constraintTop_toBottomOf="@id/moveDurationLimitText"
+            app:layout_constraintEnd_toStartOf="@id/firstColumnBarrier"
+            app:layout_constraintStart_toStartOf="@id/advancedSettingsGuideline"
+            app:layout_constraintHorizontal_bias="1.0"
+            android:paddingTop="20dp"
+
+            />
+
+        <TextView android:id="@+id/threadsLimitValueText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Value"
+            style="@style/TextAppearance.MaterialComponents.Body1"
+            app:layout_constraintTop_toBottomOf="@id/threadsLimitText"
+            app:layout_constraintEnd_toStartOf="@id/firstColumnBarrier"
+            app:layout_constraintStart_toStartOf="@id/advancedSettingsGuideline"
+            app:layout_constraintHorizontal_bias="1.0"
+            android:paddingTop="0dp"
+            />
+
+        <com.google.android.material.slider.Slider
+            android:id="@+id/threadsLimitSlider"
+            app:layout_constraintWidth_max="180dp"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:valueFrom="1"
+            android:valueTo="15"
+            android:stepSize="1"
+            app:tickVisible="true"
+            app:layout_constraintTop_toBottomOf="@id/moveDurationLimitText"
+            app:layout_constraintStart_toEndOf="@id/firstColumnBarrier"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0"
+            app:trackColor="@color/colorSecondary"
+            app:thumbColor="@color/colorSecondary"
+            android:paddingTop="0dp"
+            android:layout_marginTop="15dp"
+            app:labelBehavior="gone"
+            />
+
+        <androidx.constraintlayout.widget.Barrier
+            android:id="@+id/firstColumnBarrier"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:barrierDirection="end"
+            app:constraint_referenced_ids="depthLimitText,depthLimitValueText,nodeLimitText,moveDurationLimitText,threadsLimitText,threadsLimitValueText" />
 
 
-        </LinearLayout>
+        <androidx.constraintlayout.widget.Barrier
+            android:id="@+id/bottomBarrier"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:barrierDirection="bottom"
+            app:constraint_referenced_ids="threadsLimitValueText,threadsLimitSlider" />
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:layout_marginTop="60dp"
-            app:layout_constraintTop_toBottomOf="@id/mainFragmentLayout"
+            app:layout_constraintTop_toBottomOf="@id/bottomBarrier"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-
             >
 
             <Button
@@ -91,6 +293,22 @@
                 android:layout_height="wrap_content"
                 style="@style/ButtonDialogStyle"
                 android:text="Close"/>
+
+            <Button
+                android:id="@+id/stopSearchButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                style="@style/ButtonDialogStyle"
+                android:layout_marginStart="40dp"
+                android:text="Stop search"/>
+
+            <Button
+                android:id="@+id/defaultButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                style="@style/ButtonDialogStyle"
+                android:layout_marginStart="5dp"
+                android:text="Reset to default"/>
 
         </LinearLayout>
 

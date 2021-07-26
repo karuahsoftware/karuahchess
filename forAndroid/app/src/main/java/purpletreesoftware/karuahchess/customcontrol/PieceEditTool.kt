@@ -18,6 +18,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 package purpletreesoftware.karuahchess.customcontrol
 
+import android.app.Dialog
 import android.content.DialogInterface
 import android.graphics.Rect
 import android.os.Bundle
@@ -26,36 +27,33 @@ import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.LinearLayout
 import androidx.fragment.app.DialogFragment
+import androidx.lifecycle.ViewModelProvider
 import purpletreesoftware.karuahchess.R
 import purpletreesoftware.karuahchess.common.Constants
 import purpletreesoftware.karuahchess.databinding.FragmentPieceedittoolBinding
+import purpletreesoftware.karuahchess.viewmodel.PieceEditToolViewModel
 
 
 @ExperimentalUnsignedTypes
 class PieceEditTool : DialogFragment() {
 
-    private lateinit var _tile : Tile
-    private var _buttonSize : Float = 0f
+
     private var _pieceEditToolListener: OnPieceEditToolInteractionListener? = null
     private val _tileRect : Rect = Rect()
-    private lateinit var _toolSelectLinearLayout : LinearLayout
-    private lateinit var _pieceEditToolLinearLayout : LinearLayout
-
+    private lateinit var pieceEditToolVM: PieceEditToolViewModel
+    private lateinit var fragmentBinding: FragmentPieceedittoolBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setStyle(DialogFragment.STYLE_NORMAL, R.style.FullScreenDialogStyle)
-        retainInstance = true
 
-        // Get rectangle coordinates of tile (this is done as it is always the same no matter what the tile rotation is)
-        _tile.getGlobalVisibleRect(_tileRect)
+    }
 
-        // Calculate buttons size
-        _buttonSize = calcButtonSize(_tile.height.toFloat())
+    override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
+        val dialog = super.onCreateDialog(savedInstanceState)
+        dialog.window?.requestFeature(Window.FEATURE_NO_TITLE)
 
-        // Highlight square being modified
-        _tile.panel.setHighlightFull(Constants.BITMASK shr _tile.index)
-
+        return dialog
     }
 
     override fun onStart() {
@@ -64,78 +62,79 @@ class PieceEditTool : DialogFragment() {
         dialog?.window?.setLayout(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT)
         dialog?.window?.setFlags(WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN, WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN)
         dialog?.window?.clearFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND)
-
     }
-
-
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
 
         // Inflate the layout for this fragment
-        val fragmentBinding = FragmentPieceedittoolBinding.inflate(inflater, container, false)
-
-        // Set the layout variables
-        _toolSelectLinearLayout = fragmentBinding.toolSelectLinearLayout
-        _pieceEditToolLinearLayout = fragmentBinding.pieceEditToolLinearLayout
-
-        // Create the buttons
-        createButtonsEditMode()
-        createPieceButtons(pieceEditToolColour)
-
-        // Calculate position
-        val totalButtonCount = _toolSelectLinearLayout.childCount + _pieceEditToolLinearLayout.childCount
-        var posX : Float = (_tileRect.left + (_tileRect.width() / 2)) - totalButtonCount * _buttonSize / 2
-        if (posX < 0f) posX = 0f
-
-        val posY : Float
-        if(_tileRect.top - _buttonSize > 0) posY = _tileRect.top - _buttonSize
-        else posY = _tileRect.top + _buttonSize
-
-        val param: WindowManager.LayoutParams? = dialog?.window?.attributes
-        if(param != null) {
-            param.alpha = 1f
-            param.horizontalMargin = 0f
-            param.verticalMargin = 0f
-            param.gravity = Gravity.TOP or Gravity.START
-            param.x = posX.toInt()
-            param.y = posY.toInt()
-
-            dialog?.window?.attributes = param
-        }
-
+        fragmentBinding = FragmentPieceedittoolBinding.inflate(inflater, container, false)
 
         return fragmentBinding.root
     }
 
 
     override fun onDismiss(dialog: DialogInterface) {
-        _tile.panel.setHighlightFull(0UL)
+        pieceEditToolVM.tile.value?.panel?.setHighlightFull(0UL)
         super.onDismiss(dialog)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        dialog?.window?.requestFeature(Window.FEATURE_NO_TITLE)
 
-    }
+        pieceEditToolVM = ViewModelProvider(requireActivity()).get(PieceEditToolViewModel::class.java)
+        val tile = pieceEditToolVM.tile.value
+        val pieceEditToolColour = pieceEditToolVM.pieceEditToolColour.value
 
+        if (tile != null && pieceEditToolColour != null) {
+            // Get rectangle coordinates of tile (this is done as it is always the same no matter what the tile rotation is)
+            tile.getGlobalVisibleRect(_tileRect)
 
-    override fun onDestroyView() {
-        if (retainInstance) {
-            dialog?.setDismissMessage(null)
+            // Calculate buttons size
+            val buttonSize = calcButtonSize(tile.height.toFloat())
+
+            // Highlight square being modified
+            tile.panel.setHighlightFull(Constants.BITMASK shr tile.index)
+
+            // Create the buttons
+            createButtonsEditMode(tile, buttonSize)
+            createPieceButtons(tile, buttonSize, pieceEditToolColour)
+
+            // Calculate position
+            val totalButtonCount =
+                fragmentBinding.toolSelectLinearLayout.childCount + fragmentBinding.pieceEditToolLinearLayout.childCount
+            var posX: Float =
+                (_tileRect.left + (_tileRect.width() / 2)) - totalButtonCount * buttonSize / 2
+            if (posX < 0f) posX = 0f
+
+            val posY: Float
+            if (_tileRect.top - (_tileRect.height()) > _tileRect.height()) posY =
+                _tileRect.top.toFloat() - (_tileRect.height().toFloat() * 1.07.toFloat())
+            else posY = _tileRect.bottom.toFloat() - (_tileRect.height().toFloat() * 0.20.toFloat())
+
+            val param: WindowManager.LayoutParams? = dialog?.window?.attributes
+            if (param != null) {
+                param.alpha = 1f
+                param.horizontalMargin = 0f
+                param.verticalMargin = 0f
+                param.gravity = Gravity.TOP or Gravity.START
+                param.x = posX.toInt()
+                param.y = posY.toInt()
+
+                dialog?.window?.attributes = param
+            }
+
         }
 
-        super.onDestroyView()
     }
 
 
     /**
      * Create the edit buttons
      */
-    private fun createButtonsEditMode() {
+    private fun createButtonsEditMode(pTile: Tile, pButtonSize: Float) {
 
         // Button size
-        val params = LinearLayout.LayoutParams(_buttonSize.toInt(), _buttonSize.toInt())
+        val params = LinearLayout.LayoutParams(pButtonSize.toInt(), pButtonSize.toInt())
         params.setMargins(0,0,0,0)
 
         // Delete button
@@ -147,10 +146,10 @@ class PieceEditTool : DialogFragment() {
         deleteBtn.setPadding(0,0,0,0)
         deleteBtn.tag = ' '
         deleteBtn.setOnClickListener{
-            _pieceEditToolListener?.onPieceEditToolClick(' ',_tile.index, this)
+            _pieceEditToolListener?.onPieceEditToolClick(' ',pTile.index, this)
         }
 
-        _toolSelectLinearLayout.addView(deleteBtn)
+        fragmentBinding.toolSelectLinearLayout.addView(deleteBtn)
 
         // Colour select button
         val colourSelectBtn = ImageButton(this.context, null, R.style.ButtonCustomStyle)
@@ -160,21 +159,25 @@ class PieceEditTool : DialogFragment() {
         colourSelectBtn.scaleType = ImageView.ScaleType.FIT_CENTER
         colourSelectBtn.setPadding(0,0,0,0)
         colourSelectBtn.setOnClickListener{
-            pieceEditToolColour *= -1
-            createPieceButtons(pieceEditToolColour)
+            var pieceEditToolColour = pieceEditToolVM.pieceEditToolColour.value
+            if (pieceEditToolColour != null) {
+                pieceEditToolColour *= -1
+                pieceEditToolVM.pieceEditToolColour.value = pieceEditToolColour
+                createPieceButtons(pTile, pButtonSize, pieceEditToolColour,)
+            }
         }
-        _toolSelectLinearLayout.addView(colourSelectBtn)
-
+        fragmentBinding.toolSelectLinearLayout.addView(colourSelectBtn)
 
     }
 
     /**
      * Create piece buttons
      */
-    private fun createPieceButtons(pColour : Int) {
+    private fun createPieceButtons(pTile: Tile, pButtonSize: Float, pColour : Int) {
         val pieceEditList : List<Char>
 
-        _pieceEditToolLinearLayout.removeAllViews()
+        // Set the layout variables
+        fragmentBinding.pieceEditToolLinearLayout.removeAllViews()
 
         if (pColour == Constants.BLACKPIECE) {
             pieceEditList = listOf('p', 'r', 'n', 'b', 'q')
@@ -183,7 +186,7 @@ class PieceEditTool : DialogFragment() {
             pieceEditList = listOf('P', 'R', 'N', 'B', 'Q')
         }
 
-        val params = LinearLayout.LayoutParams(_buttonSize.toInt(), _buttonSize.toInt())
+        val params = LinearLayout.LayoutParams(pButtonSize.toInt(), pButtonSize.toInt())
         params.setMargins(0,0,0,0)
 
         for (fen in pieceEditList)
@@ -196,9 +199,9 @@ class PieceEditTool : DialogFragment() {
             pieceBtn.setPadding(0,0,0,0)
             pieceBtn.tag = fen
             pieceBtn.setOnClickListener {
-                _pieceEditToolListener?.onPieceEditToolClick(fen,_tile.index, this)
+                _pieceEditToolListener?.onPieceEditToolClick(fen, pTile.index, this)
             }
-            _pieceEditToolLinearLayout.addView(pieceBtn)
+            fragmentBinding.pieceEditToolLinearLayout.addView(pieceBtn)
         }
 
     }
@@ -249,19 +252,10 @@ class PieceEditTool : DialogFragment() {
     }
 
     companion object {
-
-        var pieceEditToolColour: Int = Constants.WHITEPIECE
-
-
-        fun newInstance(pTile: Tile): PieceEditTool {
+        fun newInstance(): PieceEditTool {
             val frag = PieceEditTool()
             val args = Bundle()
             frag.arguments = args
-            frag._tile =  pTile
-
-            if (pTile.spin > 0) pieceEditToolColour = Constants.WHITEPIECE
-            else if (pTile.spin < 0) pieceEditToolColour = Constants.BLACKPIECE
-
             return frag
         }
     }

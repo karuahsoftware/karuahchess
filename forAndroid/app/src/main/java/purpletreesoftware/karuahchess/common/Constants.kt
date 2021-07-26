@@ -91,21 +91,28 @@ class Constants {
             "1" to intArrayOf( 56, 57, 58, 59, 60, 61, 62, 63)
         )
 
-        val eloarray = arrayListOf(1350, 1425, 1500, 1575, 1650, 1725, 1800, 1875, 1950, 2025, 2100, 2175, 2250, 2850)
+        val eloarray = arrayListOf(1350, 1425, 1500, 1575, 1650, 1725, 1800, 1875, 1950, 2025, 2100, 2175, 2250, 2325, 2400, 2475, 2550, 2625, 2700, 2775, 2850)
         val strengthArrayLabel = arrayListOf(
             "Beginner",
-            "Level 2,  Elo 1425 ",
-            "Level 3,  Elo 1500 ",
-            "Level 4,  Elo 1575 ",
-            "Level 5,  Elo 1650 ",
-            "Level 6,  Elo 1725 ",
-            "Level 7,  Elo 1800 ",
-            "Level 8,  Elo 1875 ",
-            "Level 9,  Elo 1950 ",
-            "Level 10,  Elo 2025 ",
-            "Level 11,  Elo 2100 ",
-            "Level 12,  Elo 2175 ",
-            "Level 13,  Elo 2250 ",
-            "Maximum")
+            "Level 2, Elo 1425",
+            "Level 3, Elo 1500",
+            "Level 4, Elo 1575",
+            "Level 5, Elo 1650",
+            "Level 6, Elo 1725",
+            "Level 7, Elo 1800",
+            "Level 8, Elo 1875",
+            "Level 9, Elo 1950",
+            "Level 10, Elo 2025",
+            "Level 11, Elo 2100",
+            "Level 12, Elo 2175",
+            "Level 13, Elo 2250",
+            "Level 14, Elo 2325",
+            "Level 15, Elo 2400",
+            "Level 16, Elo 2475",
+            "Level 17, Elo 2550",
+            "Level 18, Elo 2625",
+            "Level 19, Elo 2700",
+            "Level 20, Elo 2775",
+            "Level 21, Elo 2850")
     }
 }

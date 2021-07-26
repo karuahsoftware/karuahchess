@@ -20,8 +20,6 @@ package purpletreesoftware.karuahchess.model.parameter
 
 interface IParameterDataService {
 
-
-
     fun load()
 
     fun <T: Any> get(pParameterClass: Class<T>): T

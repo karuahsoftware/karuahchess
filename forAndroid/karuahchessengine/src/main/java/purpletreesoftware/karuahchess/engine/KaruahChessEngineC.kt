@@ -189,6 +189,11 @@ class KaruahChessEngineC {
     }
     private external fun getFeatureL(pFeatureId: Int, pId: Int): Long
 
+    fun setStateCastlingAvailability(pCastlingAvailability: Int, pColour: Int): Boolean {
+        return setStateCastlingAvailability(pCastlingAvailability, pColour, id)
+    }
+    private external fun setStateCastlingAvailability(pCastlingAvailability: Int, pColour: Int, pId: Int): Boolean
+
 
     private external fun cleanup(pId: Int)
 

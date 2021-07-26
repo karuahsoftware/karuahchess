@@ -22,6 +22,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #include <cstdint>
 #include <chrono>
 
+
 namespace Search {
 
 	struct SearchTreeNode {
@@ -30,7 +31,7 @@ namespace Search {
 		int moveToIndex = -1;
 		int promotionPieceType = 0;
 		bool cancelled = false;
-        bool error = false;
+		int error = 0;
 
 	};
 
@@ -43,6 +44,11 @@ namespace Search {
 
 	struct SearchOptions {
 		int limitStrengthELO = 1350;
+		int limitDepth = 0;
+		int limitNodes = 0;
+		int limitMoveDuration = 0;
+		int limitThreads = 1;
+
 	};
 
 	// Functions
@@ -52,3 +58,4 @@ namespace Search {
 	extern void Cancel();
 	extern void ClearCache();
 }
+

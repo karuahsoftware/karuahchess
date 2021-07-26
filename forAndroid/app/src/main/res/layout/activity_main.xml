@@ -129,15 +129,19 @@
             android:visibility="gone"
             />
 
-        <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:id="@+id/structureAction"
+        <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+            android:id="@+id/engineSettingsAction"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:fabSize="normal"
-            android:src="@drawable/ic_person_outline"
+            android:minWidth="50dp"
+            app:icon="@drawable/ic_settings"
             android:layout_margin="10dp"
             android:elevation="8dp"
-            app:maxImageSize="36dp"
+            app:iconSize="36dp"
+            app:fabSize="normal"
+            android:text=""
+            app:iconPadding="0dp"
+            android:padding="0dp"
             />
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton

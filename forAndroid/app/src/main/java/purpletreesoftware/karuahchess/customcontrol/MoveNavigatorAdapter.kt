@@ -21,7 +21,6 @@ package purpletreesoftware.karuahchess.customcontrol
 import android.content.res.ColorStateList
 import androidx.core.content.ContextCompat.getColor
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import kotlinx.coroutines.Dispatchers

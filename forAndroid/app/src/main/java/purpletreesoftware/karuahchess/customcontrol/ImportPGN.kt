@@ -18,8 +18,8 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 package purpletreesoftware.karuahchess.customcontrol
 
+import android.app.Dialog
 import android.content.ContentValues
-import android.content.DialogInterface
 import android.os.Bundle
 import androidx.fragment.app.DialogFragment
 import android.view.*
@@ -27,22 +27,19 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import purpletreesoftware.karuahchess.MainActivity
-import purpletreesoftware.karuahchess.R
 import purpletreesoftware.karuahchess.common.Constants
 import purpletreesoftware.karuahchess.database.DatabaseHelper
 import purpletreesoftware.karuahchess.databinding.FragmentImportpgnBinding
 import purpletreesoftware.karuahchess.engine.KaruahChessEngineC
 import purpletreesoftware.karuahchess.engine.MoveResult
-import purpletreesoftware.karuahchess.model.parameter.ParameterDataService
 import purpletreesoftware.karuahchess.model.gamerecord.GameRecordArray
 import purpletreesoftware.karuahchess.model.gamerecord.GameRecordDataService
+
 
 @ExperimentalUnsignedTypes
 class ImportPGN : DialogFragment() {
     private var _binding: FragmentImportpgnBinding? = null
     private val binding get() = _binding!!
-
-    private lateinit var _parameterDS:ParameterDataService
     private val _board = KaruahChessEngineC()
 
     override fun onStart() {
@@ -51,9 +48,11 @@ class ImportPGN : DialogFragment() {
         dialog?.window?.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
     }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        retainInstance = true
+    override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
+        val dialog = super.onCreateDialog(savedInstanceState)
+        dialog.window?.requestFeature(Window.FEATURE_NO_TITLE)
+
+        return dialog
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -64,14 +63,9 @@ class ImportPGN : DialogFragment() {
         return fragmentBinding.root
     }
 
-    override fun onDismiss(dialog: DialogInterface) {
-        super.onDismiss(dialog)
-    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        dialog?.window?.requestFeature(Window.FEATURE_NO_TITLE)
-
 
         // Connect button events
         binding.doneButton.setOnClickListener { dismiss() }
@@ -80,10 +74,6 @@ class ImportPGN : DialogFragment() {
 
 
     override fun onDestroyView() {
-        if (retainInstance) {
-            dialog?.setDismissMessage(null)
-        }
-
         super.onDestroyView()
 
         _binding = null
@@ -371,7 +361,7 @@ class ImportPGN : DialogFragment() {
 
             }
 
-            GameRecordDataService.reloadAllInstances()
+            GameRecordDataService.load()
             val mainactivity = activity as MainActivity
             GlobalScope.launch(Dispatchers.Main) {
                 mainactivity.navigateMaxRecord()
@@ -384,11 +374,10 @@ class ImportPGN : DialogFragment() {
 
 
     companion object {
-        fun newInstance(pParameterDS: ParameterDataService): ImportPGN {
+        fun newInstance(): ImportPGN {
             val frag = ImportPGN()
             val args = Bundle()
             frag.arguments = args
-            frag._parameterDS = pParameterDS
             return frag
         }
     }

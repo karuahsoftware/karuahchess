@@ -19,6 +19,6 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 package purpletreesoftware.karuahchess.model.parameterobj
 
 class ParamLimitEngineStrengthELO :  java.io.Serializable{
-    var eloRating: Int = 1800
+    var eloRating: Int = 1350
 
 }

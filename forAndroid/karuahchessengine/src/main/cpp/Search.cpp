@@ -21,6 +21,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #include "BitBoard.h"
 #include "PiecePattern.h"
 #include "helper.h"
+#include "Engine.h"
 #include "SFposition.h"
 #include "SFthread.h"
 #include "SFuci.h"
@@ -33,11 +34,11 @@ namespace Search {
 
     using namespace helper;
 
-	bool _cancel = false;
+    bool _cancel = false;
 
-	/// <summary>
-	/// Gets top move for a given board
-	/// </summary>
+    /// <summary>
+    /// Gets top move for a given board
+    /// </summary>
     void GetBestMove(BitBoard& pBoard, SearchOptions pSearchOptions, SearchTreeNode& pBestMove, SearchStatistics& pStatistics)
     {
         _cancel = false;
@@ -45,19 +46,13 @@ namespace Search {
         pStatistics.StartTime = std::chrono::steady_clock::now();
 
         // Don't perform a search if the engine can't cope with the board configuration
-        bool searchError = false;
-        if (pBoard.Count<WHITEPIECE>(KING_SPIN) != 1 || pBoard.Count<BLACKPIECE>(KING_SPIN) != 1) searchError = true;
-        else if ((pBoard.Count<WHITEPIECE>() > 16) || (pBoard.Count<BLACKPIECE>() > 16)) searchError = true;
-        else if (((pBoard.Count<WHITEPIECE>(QUEEN_SPIN) + pBoard.Count<WHITEPIECE>(PAWN_SPIN)) > 9) || ((pBoard.Count<BLACKPIECE>(QUEEN_SPIN) + pBoard.Count<BLACKPIECE>(PAWN_SPIN)) > 9)) searchError = true;
-        else if (((pBoard.Count<WHITEPIECE>(BISHOP_SPIN) + pBoard.Count<WHITEPIECE>(PAWN_SPIN)) > 10) || ((pBoard.Count<BLACKPIECE>(BISHOP_SPIN) + pBoard.Count<BLACKPIECE>(PAWN_SPIN)) > 10)) searchError = true;
-        else if (((pBoard.Count<WHITEPIECE>(KNIGHT_SPIN) + pBoard.Count<WHITEPIECE>(PAWN_SPIN)) > 10) || ((pBoard.Count<BLACKPIECE>(KNIGHT_SPIN) + pBoard.Count<BLACKPIECE>(PAWN_SPIN)) > 10)) searchError = true;
-        else if (((pBoard.Count<WHITEPIECE>(ROOK_SPIN) + pBoard.Count<WHITEPIECE>(PAWN_SPIN)) > 10) || ((pBoard.Count<BLACKPIECE>(ROOK_SPIN) + pBoard.Count<BLACKPIECE>(PAWN_SPIN)) > 10)) searchError = true;
-        else if ((pBoard.Count<WHITEPIECE>(PAWN_SPIN) > 8) || (pBoard.Count<BLACKPIECE>(PAWN_SPIN) > 8)) searchError = true;
-        else if (((pBoard.GetOccupiedBySpin<WHITEPIECE>(PAWN_SPIN) | pBoard.GetOccupiedBySpin<BLACKPIECE>(PAWN_SPIN)) & (RANK1 | RANK8)) > 0) searchError = true;
-        else if ((pBoard.IsKingCheck(WHITEPIECE) && pBoard.StateActiveColour == BLACKPIECE)) searchError = true;
-        else if ((pBoard.IsKingCheck(BLACKPIECE) && pBoard.StateActiveColour == WHITEPIECE)) searchError = true;
+        int searchError = pBoard.VerifyBoardConfiguration();
 
-        if (!searchError) {
+
+        if (searchError == 0) {
+            // Set engine threads
+            Engine::setThreads(pSearchOptions.limitThreads);
+
             // Set options
             if (pSearchOptions.limitStrengthELO >= 1350 && pSearchOptions.limitStrengthELO < 2850) {
                 // Limit engine strength
@@ -82,7 +77,14 @@ namespace Search {
             // Do the search
             SF::Search::LimitsType limits;
             limits.startTime = SF::now();
-            limits.depth = 10;
+
+            // Set the limits from the GUI
+            limits.depth = pSearchOptions.limitDepth;
+            limits.nodes = pSearchOptions.limitNodes;
+            limits.movetime = pSearchOptions.limitMoveDuration;
+
+
+
             SF::Threads.start_thinking(pos, states, limits, false);
             SF::Threads.main()->wait_for_search_finished();
             SF::Search::RootMoves rootMoves = mainThread->rootMoves;
@@ -131,7 +133,7 @@ namespace Search {
             }
         }
         else {
-            pBestMove.error = true;
+            pBestMove.error = searchError;
         }
 
         pStatistics.EndTime = std::chrono::steady_clock::now();
@@ -142,23 +144,23 @@ namespace Search {
     }
 
 
-	/// <summary>
-	/// Reset
-	/// </summary>
-	/// <returns></returns>
-	void Cancel() {
-		_cancel = true;
-		SF::Threads.stop = true;
-	}
+    /// <summary>
+    /// Reset
+    /// </summary>
+    /// <returns></returns>
+    void Cancel() {
+        _cancel = true;
+        SF::Threads.stop = true;
+    }
 
-	/// <summary>
-	/// Clears the cache
-	/// </summary>
-	/// <returns></returns>
-	void ClearCache()
-	{
-		SF::Search::clear();
-	}
+    /// <summary>
+    /// Clears the cache
+    /// </summary>
+    /// <returns></returns>
+    void ClearCache()
+    {
+        SF::Search::clear();
+    }
 
 }
 

@@ -38,3 +38,4 @@ inline fun ViewGroup.afterMeasured(crossinline f: ViewGroup.() -> Unit) {
 fun Float.spToPx(): Int = (TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, this, Resources.getSystem().displayMetrics)).toInt()
 
 fun Float.dpToPx(): Int = (TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, this, Resources.getSystem().displayMetrics)).toInt()
+

@@ -232,13 +232,8 @@ class BoardAnimation {
             // Limit to two changes
             if (moveDict.count() > 2) moveDict.clear()
 
-
-
             return moveDict
         }
-
-
-
 
     }
 
