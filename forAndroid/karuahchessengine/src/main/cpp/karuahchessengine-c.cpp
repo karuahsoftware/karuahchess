@@ -21,7 +21,6 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #include "BitBoard.h"
 #include "Search.h"
 #include "MoveRules.h"
-#include "PieceStructure.h"
 #include <unordered_map>
 #include <jni.h>
 
@@ -145,20 +144,20 @@ Java_purpletreesoftware_karuahchess_engine_KaruahChessEngineC_getBoardArrayL (
 {
     auto boardItr = MainBoardMap.find(pId);
     if(boardItr != MainBoardMap.end()) {
-        uint64_t boardArray[366];
+        uint64_t boardArray[276];
         boardItr->second->GetBoardArray(boardArray);
 
         // Copy the array to native array
-        jlong jboardArray[366] = {0};
-        for (int i = 0; i < 366; ++i) jboardArray[i] = boardArray[i];
-        jlongArray outArray = pEnv->NewLongArray(366);
-        pEnv->SetLongArrayRegion(outArray, 0, 366, jboardArray);
+        jlong jboardArray[276] = {0};
+        for (int i = 0; i < 276; ++i) jboardArray[i] = boardArray[i];
+        jlongArray outArray = pEnv->NewLongArray(276);
+        pEnv->SetLongArrayRegion(outArray, 0, 276, jboardArray);
 
         return outArray;
     } else{
-        jlong jboardArray[366] = {0};
-        jlongArray outArray = pEnv->NewLongArray(366);
-        pEnv->SetLongArrayRegion(outArray, 0, 366, jboardArray);
+        jlong jboardArray[276] = {0};
+        jlongArray outArray = pEnv->NewLongArray(276);
+        pEnv->SetLongArrayRegion(outArray, 0, 276, jboardArray);
         return outArray;
     }
 
@@ -208,11 +207,11 @@ Java_purpletreesoftware_karuahchess_engine_KaruahChessEngineC_setBoardArrayL (
     auto boardItr = MainBoardMap.find(pId);
     if(boardItr != MainBoardMap.end()) {
 
-        jlong jboardArray[366] = {0};
-        pEnv->GetLongArrayRegion(pBoardArray, 0, 366, jboardArray);
+        jlong jboardArray[276] = {0};
+        pEnv->GetLongArrayRegion(pBoardArray, 0, 276, jboardArray);
 
-        uint64_t boardArray[366];
-        for (int i = 0; i < 366; ++i) boardArray[i] = (uint64_t) jboardArray[i];
+        uint64_t boardArray[276];
+        for (int i = 0; i < 276; ++i) boardArray[i] = (uint64_t) jboardArray[i];
         boardItr->second->SetBoardArray(boardArray);
     }
 }
@@ -805,7 +804,7 @@ Java_purpletreesoftware_karuahchess_engine_KaruahChessEngineC_searchStart (
     auto searchItr = SearchBoardMap.find(pId);
     if (boardItr != MainBoardMap.end() && searchItr != SearchBoardMap.end()) {
 
-        uint64_t boardArray[366];
+        uint64_t boardArray[276];
         int32_t stateArray[8];
 
 
@@ -874,27 +873,7 @@ Java_purpletreesoftware_karuahchess_engine_KaruahChessEngineC_searchStart (
 
 }
 
-/// <summary>
-///  Gets all backward white pawns
-/// </summary>
-extern "C"
-JNIEXPORT jlong JNICALL
-Java_purpletreesoftware_karuahchess_engine_KaruahChessEngineC_getFeatureL (
-        JNIEnv* pEnv,
-        jobject pThis,
-        jint pFeatureId,
-        jint pId)
-{
 
-    auto boardItr = MainBoardMap.find(pId);
-    if(boardItr != MainBoardMap.end()) {
-
-        return PieceStructure::GetFeature(*boardItr->second, pFeatureId);
-    }
-    else {
-        return 0;
-    }
-}
 
 /// <summary>
 ///  Sets the castling availability if it is valid

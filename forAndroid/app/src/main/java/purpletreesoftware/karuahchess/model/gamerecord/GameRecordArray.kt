@@ -21,6 +21,6 @@ package purpletreesoftware.karuahchess.model.gamerecord
 @ExperimentalUnsignedTypes
 class GameRecordArray {
     var id: Int = 0
-    var boardArray: ULongArray =  ULongArray(366)
+    var boardArray: ULongArray =  ULongArray(276)
     var stateArray: IntArray = IntArray(8)
 }

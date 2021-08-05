@@ -22,6 +22,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import purpletreesoftware.karuahchess.customcontrol.Tile
 
+@ExperimentalUnsignedTypes
 class PieceEditToolViewModel() : ViewModel() {
     val tile = MutableLiveData<Tile>()
     val pieceEditToolColour = MutableLiveData<Int>()

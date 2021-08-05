@@ -31,6 +31,7 @@ import android.view.animation.AnimationUtils
 import android.graphics.drawable.GradientDrawable
 import android.graphics.drawable.Drawable
 import android.view.DragEvent
+import android.view.HapticFeedbackConstants
 import android.view.LayoutInflater
 import purpletreesoftware.karuahchess.R
 import purpletreesoftware.karuahchess.common.Constants
@@ -136,6 +137,8 @@ class TilePanel: ConstraintLayout {
             tile.setOnLongClickListener { v: View ->
                 val fromIndexStr = tile.index.toString()
                 val fromIndexClipItem = ClipData.Item(fromIndexStr)
+
+                tile.performHapticFeedback(HapticFeedbackConstants.LONG_PRESS)
 
                 val dragData = ClipData(
                     fromIndexStr,

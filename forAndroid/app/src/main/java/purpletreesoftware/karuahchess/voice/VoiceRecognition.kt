@@ -26,7 +26,7 @@ class VoiceRecognition (pContext : Context) : RecognitionListener  {
     }
 
     override fun onReadyForSpeech(params: Bundle?) {
-        voiceRecognitionListener?.onVoiceRecogntionActive()
+        voiceRecognitionListener?.onVoiceRecognitionActive()
     }
 
     override fun onRmsChanged(rmsdB: Float) {
@@ -51,7 +51,7 @@ class VoiceRecognition (pContext : Context) : RecognitionListener  {
 
     override fun onEndOfSpeech() {
         listening = false
-        voiceRecognitionListener?.onVoiceRecogntionInActive()
+        voiceRecognitionListener?.onVoiceRecognitionInActive()
     }
 
     override fun onError(error: Int) {
@@ -99,7 +99,7 @@ class VoiceRecognition (pContext : Context) : RecognitionListener  {
      */
     fun stop() {
         speechRecogniser?.stopListening()
-        voiceRecognitionListener?.onVoiceRecogntionInActive()
+        voiceRecognitionListener?.onVoiceRecognitionInActive()
         listening = false
     }
 
@@ -116,7 +116,7 @@ class VoiceRecognition (pContext : Context) : RecognitionListener  {
      * Apply grammar rules to restrict limit possible words detected
      */
     private fun applyGrammar(pSpeechText: String) : String {
-        val str = when(pSpeechText.toLowerCase(Locale.ENGLISH)) {
+        val str = when(pSpeechText.lowercase(Locale.ENGLISH)) {
             "help" -> "help"
             "new game", "new", "u", "news" -> "new"
             "resign" -> "resign"
@@ -139,8 +139,8 @@ class VoiceRecognition (pContext : Context) : RecognitionListener  {
      */
     interface OnVoiceRecognitionInteractionListener {
         fun onVoiceCommandAction(pCmdText: String)
-        fun onVoiceRecogntionActive()
-        fun onVoiceRecogntionInActive()
+        fun onVoiceRecognitionActive()
+        fun onVoiceRecognitionInActive()
     }
 
 }

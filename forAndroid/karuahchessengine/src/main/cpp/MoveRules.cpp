@@ -263,7 +263,7 @@ namespace MoveRules {
 		bool isKingCheck = pBoard.IsKingCheck(pBoard.StateActiveColour);
 		if (!isKingCheck) return false;
 
-		uint64_t originalBoardArray[366];
+		uint64_t originalBoardArray[276];
 		pBoard.GetBoardArray(originalBoardArray);
 
 		int originalStateArray[8];
@@ -334,7 +334,7 @@ namespace MoveRules {
 		int fromIndex;
 		int toIndex;
 
-		uint64_t originalBoardArray[366];
+		uint64_t originalBoardArray[276];
 		pBoard.GetBoardArray(originalBoardArray);
 
 		int originalStateArray[8];

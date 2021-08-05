@@ -22,7 +22,7 @@ import android.content.DialogInterface
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.content.res.Configuration
-import android.graphics.drawable.Drawable
+import android.media.SoundPool
 import android.net.Uri
 import android.os.Bundle
 import android.speech.SpeechRecognizer
@@ -32,11 +32,9 @@ import android.widget.LinearLayout
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.widget.PopupMenu
 import androidx.core.content.FileProvider
 import androidx.core.view.MenuCompat
 import androidx.fragment.app.DialogFragment
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import kotlinx.coroutines.*
@@ -63,7 +61,7 @@ import purpletreesoftware.karuahchess.sound.TextReader
 import purpletreesoftware.karuahchess.viewmodel.*
 import purpletreesoftware.karuahchess.voice.VoiceRecognition
 import java.io.InputStream
-
+import android.media.AudioAttributes
 
 @ExperimentalUnsignedTypes
 class MainActivity : AppCompatActivity(), TilePanel.OnTilePanelInteractionListener, PieceEditTool.OnPieceEditToolInteractionListener, VoiceRecognition.OnVoiceRecognitionInteractionListener, PawnPromotion.OnPawnPromotionInteractionListener {
@@ -80,6 +78,8 @@ class MainActivity : AppCompatActivity(), TilePanel.OnTilePanelInteractionListen
     private val _pieceChannel = Channel<Int>()
     private val _mainjob = SupervisorJob()
     private val _uiScope = CoroutineScope(Dispatchers.Main + _mainjob)
+    private var sndPool: SoundPool? = null
+    private var sndMove: Int = 0
     lateinit var binding: ActivityMainBinding
 
     // Public variables
@@ -161,6 +161,18 @@ class MainActivity : AppCompatActivity(), TilePanel.OnTilePanelInteractionListen
             ParameterDataService.set(voiceParam)
         }
 
+        // Sounds
+        val audioAttributes = AudioAttributes.Builder()
+            .setUsage(AudioAttributes.USAGE_GAME)
+            .setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION)
+            .build()
+        sndPool = SoundPool.Builder()
+            .setMaxStreams(1)
+            .setAudioAttributes(audioAttributes)
+            .build()
+
+        sndMove = sndPool?.load(this,R.raw.piecesound,1) ?: 0
+
         // Initialise board
         BoardSquareDataService.update(binding.boardPanelLayout, GameRecordDataService.getCurrentGame())
 
@@ -195,7 +207,6 @@ class MainActivity : AppCompatActivity(), TilePanel.OnTilePanelInteractionListen
         menu.findItem(R.id.action_highlight).isChecked = ParameterDataService.get(ParamMoveHighlight::class.java).enabled
         _editMenuItem = menu.findItem(R.id.action_edit)
         _editMenuItem?.isChecked = ParameterDataService.get(ParamArrangeBoard::class.java).enabled
-        menu.findItem(R.id.action_sound).isChecked = ParameterDataService.get(ParamSound::class.java).enabled
         menu.findItem(R.id.action_coordinates).isChecked = ParameterDataService.get(ParamBoardCoord::class.java).enabled
         menu.findItem(R.id.action_voice).isChecked = ParameterDataService.get(ParamVoiceCommand::class.java).enabled
         menu.findItem(R.id.action_navigator).isChecked = ParameterDataService.get(ParamNavigator::class.java).enabled
@@ -257,13 +268,8 @@ class MainActivity : AppCompatActivity(), TilePanel.OnTilePanelInteractionListen
 
                 true
             }
-            R.id.action_sound -> {
-                val sound = ParameterDataService.get(ParamSound::class.java)
-                sound.enabled = !item.isChecked
-                item.isChecked = sound.enabled
-                ParameterDataService.set(sound)
-                if(sound.enabled) showMessage("${item.title} is enabled","", Toast.LENGTH_SHORT)
-                else showMessage("${item.title} is disabled","", Toast.LENGTH_SHORT)
+            R.id.action_soundsettings -> {
+                showSoundSettingsDialog()
                 true
             }
             R.id.action_about -> {
@@ -348,6 +354,7 @@ class MainActivity : AppCompatActivity(), TilePanel.OnTilePanelInteractionListen
         _userInteracted = true
         _move.Clear()
 
+
         if (pFromTile != null && pToTile != null && !_lockPanel) {
             if(!arrangeBoardEnabled) {
                 _uiScope.launch(Dispatchers.Main) {
@@ -358,6 +365,8 @@ class MainActivity : AppCompatActivity(), TilePanel.OnTilePanelInteractionListen
             else {
                 arrangeUpdate(pFromTile.index, pToTile.index)
             }
+
+
         }
 
     }
@@ -481,6 +490,7 @@ class MainActivity : AppCompatActivity(), TilePanel.OnTilePanelInteractionListen
             val moveResult = GameRecordDataService.currentGame.move(_move.fromIndex, _move.toIndex, promotionPiece, true, true)
 
             if (moveResult.success) {
+
                 if (moveResult.returnMessage != "") {
                     showMessage(moveResult.returnMessage,"", Toast.LENGTH_SHORT)
                 }
@@ -509,6 +519,9 @@ class MainActivity : AppCompatActivity(), TilePanel.OnTilePanelInteractionListen
                 // Record game state
                 recordCurrentGameState()
 
+                // Piece move sound effect
+                playPieceMoveSoundEffect()
+
                 // Update score if checkmate occurred
                 if (gameStatusBeforeMove == BoardStatusEnum.Ready.value && GameRecordDataService.currentGame.getStateGameStatus() == BoardStatusEnum.Checkmate.value)
                 {
@@ -517,6 +530,8 @@ class MainActivity : AppCompatActivity(), TilePanel.OnTilePanelInteractionListen
                     startPieceAnimation(true, kingFallSeq, 3000L)
                     afterCheckMate(GameRecordDataService.currentGame)
                 }
+
+
 
                 // Start computer move task
                 startComputerMoveTask()
@@ -615,6 +630,9 @@ class MainActivity : AppCompatActivity(), TilePanel.OnTilePanelInteractionListen
                     // Record game state
                     recordCurrentGameState()
 
+                    // Piece move sound effect
+                    playPieceMoveSoundEffect()
+
                     // do if checkmate occurred
                     if (gameStatusBeforeMove == BoardStatusEnum.Ready.value && GameRecordDataService.currentGame.getStateGameStatus() == BoardStatusEnum.Checkmate.value) {
                         val kingFallIndex = GameRecordDataService.currentGame.getKingIndex(GameRecordDataService.currentGame.getStateActiveColour())
@@ -663,8 +681,8 @@ class MainActivity : AppCompatActivity(), TilePanel.OnTilePanelInteractionListen
      * Converts a text string to speech
      */
     private fun readText(pText: String) {
-        val sound = ParameterDataService.get(ParamSound::class.java)
-        if (_textReader.ready && sound.enabled) {
+        val soundRead = ParameterDataService.get(ParamSoundRead::class.java)
+        if (_textReader.ready && soundRead.enabled) {
             _textReader.tts?.speak(pText, TextToSpeech.QUEUE_ADD, null, "")
         }
     }
@@ -1077,6 +1095,17 @@ class MainActivity : AppCompatActivity(), TilePanel.OnTilePanelInteractionListen
     }
 
     /**
+     * Show sound settings dialog
+     */
+    private fun showSoundSettingsDialog() {
+
+        val fm = supportFragmentManager
+        val soundSettingsDialogFragment = SoundSettings.newInstance()
+        soundSettingsDialogFragment.show(fm, null)
+    }
+
+
+    /**
      * Show piece type select dialog
      */
     private fun showPieceEditToolDialog(pTile: Tile) {
@@ -1448,14 +1477,14 @@ class MainActivity : AppCompatActivity(), TilePanel.OnTilePanelInteractionListen
     /**
      * Indicates voice recognition is listening
      */
-    override fun onVoiceRecogntionActive() {
+    override fun onVoiceRecognitionActive() {
         binding.voiceRecognitionAction.backgroundTintList = resources.getColorStateList(R.color.colorSecondary, null)
     }
 
     /**
      * Indicates voice recognition speech has ended
      */
-    override fun onVoiceRecogntionInActive() {
+    override fun onVoiceRecognitionInActive() {
         binding.voiceRecognitionAction.backgroundTintList = resources.getColorStateList(R.color.colorInactive, null)
     }
 
@@ -1525,35 +1554,22 @@ class MainActivity : AppCompatActivity(), TilePanel.OnTilePanelInteractionListen
 
 
     /**
-     * Highlight features
-     */
-    private fun highlightFeature(pRecord: GameRecordArray, pFeatureIdList: ArrayList<Int>) {
-        val board = KaruahChessEngineC()
-
-        board.setBoardArray(pRecord.boardArray)
-        board.setStateArray(pRecord.stateArray)
-
-        // Combine features in the list
-        var allFeatures: ULong  = 0UL
-        for(featureId in pFeatureIdList)
-        {
-            allFeatures = allFeatures or board.getFeature(featureId)
-        }
-
-        if (allFeatures != 0uL) {
-            binding.boardPanelLayout.setRedHighlightFullFadeOut(allFeatures)
-        }
-        else {
-            showMessage("None found.","", Toast.LENGTH_SHORT)
-        }
-
-    }
-
-    /**
      * Refresh the level indicator
      */
     fun refreshEngineSettingsLevelIndicator() {
         binding.engineSettingsAction.text = (Constants.eloarray.indexOf(ParameterDataService.get(ParamLimitEngineStrengthELO::class.java).eloRating) + 1).toString()
     }
 
+    /**
+     * Play piece move sound effect
+     */
+    private fun playPieceMoveSoundEffect() {
+        val soundEffect = ParameterDataService.get(ParamSoundEffect::class.java)
+        if (soundEffect.enabled) {
+            // Sounds
+            sndPool?.play(sndMove,1F,1F,0,0,1F)
+
+        }
+
+    }
 }

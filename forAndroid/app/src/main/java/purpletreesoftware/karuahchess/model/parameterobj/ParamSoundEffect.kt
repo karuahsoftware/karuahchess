@@ -16,24 +16,8 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-#pragma once
-#include "helper.h"
+package purpletreesoftware.karuahchess.model.parameterobj
 
-
-	namespace EvalWeights {
-				
-
-		// Piece weights
-		constexpr int PawnValueMg = 126;
-		constexpr int PawnValueEg = 208;
-		constexpr int KnightValueMg = 781;
-		constexpr int KnightValueEg = 854;
-		constexpr int BishopValueMg = 825;
-		constexpr int BishopValueEg = 915;
-		constexpr int RookValueMg = 1276; 
-		constexpr int RookValueEg = 1380;
-		constexpr int QueenValueMg = 2538;
-		constexpr int QueenValueEg = 2682;
-		
-	}
-
+class ParamSoundEffect : java.io.Serializable {
+    var enabled: Boolean = true
+}

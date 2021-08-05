@@ -43,9 +43,9 @@
                     app:showAsAction="never" />
         </group>
         <group android:id="@+id/grp3">
-                <item android:id="@+id/action_sound"
-                      android:title="Sound"
-                      android:checkable="true"
+                <item android:id="@+id/action_soundsettings"
+                      android:title="Sound Settings"
+                      android:checkable="false"
                       android:orderInCategory="106"
                       app:showAsAction="never" />
                 <item android:id="@+id/action_voice"

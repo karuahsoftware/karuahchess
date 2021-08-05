@@ -13,15 +13,12 @@ add_library(karuahchessengine-c
         src/main/cpp/BitBoard.cpp
         src/main/cpp/Engine.h
         src/main/cpp/Engine.cpp
-        src/main/cpp/EvalWeights.h
         src/main/cpp/helper.h
         src/main/cpp/helper.cpp
         src/main/cpp/MoveRules.h
         src/main/cpp/MoveRules.cpp
         src/main/cpp/PiecePattern.h
         src/main/cpp/PiecePattern.cpp
-        src/main/cpp/PieceStructure.h
-        src/main/cpp/PieceStructure.cpp
         src/main/cpp/Search.h
         src/main/cpp/Search.cpp
         src/main/cpp/SFbitbase.cpp

@@ -226,7 +226,6 @@
             app:layout_constraintStart_toStartOf="@id/advancedSettingsGuideline"
             app:layout_constraintHorizontal_bias="1.0"
             android:paddingTop="20dp"
-
             />
 
         <TextView android:id="@+id/threadsLimitValueText"
@@ -274,43 +273,52 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:barrierDirection="bottom"
-            app:constraint_referenced_ids="threadsLimitValueText,threadsLimitSlider" />
+            app:constraint_referenced_ids="threadsLimitValueText,threadsLimitSlider"
 
-        <LinearLayout
-            android:layout_width="match_parent"
+            />
+
+
+
+        <Button
+            android:id="@+id/doneButton"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_marginTop="60dp"
+            style="@style/ButtonDialogStyle"
+            android:text="Close"
+            />
+
+
+        <Button
+            android:id="@+id/stopSearchButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            style="@style/ButtonDialogStyle"
+            android:text="Stop search"
+            />
+
+        <Button
+            android:id="@+id/defaultButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            style="@style/ButtonDialogStyle"
+            android:text="Reset to default"
+            />
+
+        <androidx.constraintlayout.helper.widget.Flow
+            android:id="@+id/buttonFlow"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:constraint_referenced_ids="doneButton,stopSearchButton,defaultButton"
+            app:flow_horizontalBias="0"
+            app:flow_horizontalGap="5dp"
+            app:flow_horizontalStyle="packed"
+            app:flow_verticalBias="0"
+            app:flow_wrapMode="chain"
             app:layout_constraintTop_toBottomOf="@id/bottomBarrier"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            >
-
-            <Button
-                android:id="@+id/doneButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                style="@style/ButtonDialogStyle"
-                android:text="Close"/>
-
-            <Button
-                android:id="@+id/stopSearchButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                style="@style/ButtonDialogStyle"
-                android:layout_marginStart="40dp"
-                android:text="Stop search"/>
-
-            <Button
-                android:id="@+id/defaultButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                style="@style/ButtonDialogStyle"
-                android:layout_marginStart="5dp"
-                android:text="Reset to default"/>
-
-        </LinearLayout>
+            app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginTop="40dp"
+             />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </ScrollView>

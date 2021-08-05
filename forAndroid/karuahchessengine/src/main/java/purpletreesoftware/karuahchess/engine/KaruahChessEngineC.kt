@@ -184,12 +184,7 @@ class KaruahChessEngineC {
     }
     external fun searchStart(pSearchOptions: SearchOptions, pId: Int): SearchResult
 
-    fun getFeature(pFeatureId: Int): ULong {
-        return getFeatureL(pFeatureId, id).toULong()
-    }
-    private external fun getFeatureL(pFeatureId: Int, pId: Int): Long
-
-    fun setStateCastlingAvailability(pCastlingAvailability: Int, pColour: Int): Boolean {
+        fun setStateCastlingAvailability(pCastlingAvailability: Int, pColour: Int): Boolean {
         return setStateCastlingAvailability(pCastlingAvailability, pColour, id)
     }
     private external fun setStateCastlingAvailability(pCastlingAvailability: Int, pColour: Int, pId: Int): Boolean

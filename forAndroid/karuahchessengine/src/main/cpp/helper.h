@@ -31,9 +31,6 @@ namespace helper {
 	enum class PawnPromotionEnum : int { Knight = 2, Bishop = 3, Rook = 4, Queen = 5 };
 	enum class PatternEnum : int { Knight = 2, Bishop = 3, Rook = 4, Queen = 5 };
 
-	constexpr int SCALING = 0;
-	constexpr int EVALUATION = 1;
-
 	constexpr int BLACK_PAWN_INDEX = 0;
 	constexpr int BLACK_ROOK_INDEX = 1;
 	constexpr int BLACK_KNIGHT_INDEX = 2;
@@ -63,26 +60,6 @@ namespace helper {
 	constexpr int WHITE_KING_INDEX_64 = WHITE_KING_INDEX * 64;
 
 
-
-	// Rank and file indexes
-	constexpr int FileAIndex = 0;
-	constexpr int FileBIndex = 1;
-	constexpr int FileCIndex = 2;
-	constexpr int FileDIndex = 3;
-	constexpr int FileEIndex = 4;
-	constexpr int FileFIndex = 5;
-	constexpr int FileGIndex = 6;
-	constexpr int FileHIndex = 7;
-	constexpr int Rank1Index = 0;
-	constexpr int Rank2Index = 1;
-	constexpr int Rank3Index = 2;
-	constexpr int Rank4Index = 3;
-	constexpr int Rank5Index = 4;
-	constexpr int Rank6Index = 5;
-	constexpr int Rank7Index = 6;
-	constexpr int Rank8Index = 7;
-
-
 	constexpr uint64_t BITMASK = 0b10000000'00000000'00000000'00000000'00000000'00000000'00000000'00000000uLL;
 	constexpr int32_t BLOCKERBITMASK = 0b00000000'00000000'00000000'00000001u;
 	constexpr uint64_t EDGEMASK_NS = 0b11111111'00000000'00000000'00000000'00000000'00000000'00000000'11111111uLL;
@@ -91,40 +68,9 @@ namespace helper {
 	constexpr uint64_t EDGEMASK_S = 0b00000000'00000000'00000000'00000000'00000000'00000000'00000000'11111111uLL;
 	constexpr uint64_t EDGEMASK_E = 0b00000001'00000001'00000001'00000001'00000001'00000001'00000001'00000001uLL;
 	constexpr uint64_t EDGEMASK_W = 0b10000000'10000000'10000000'10000000'10000000'10000000'10000000'10000000uLL;
-	constexpr uint64_t ALLSQUARES = 0b11111111'11111111'11111111'11111111'11111111'11111111'11111111'11111111uLL;
-	constexpr uint64_t BLACKSQUARES = 0b01010101'10101010'01010101'10101010'01010101'10101010'01010101'10101010uLL;
-	constexpr uint64_t WHITESQUARES = 0b10101010'01010101'10101010'01010101'10101010'01010101'10101010'01010101uLL;
 	constexpr uint64_t RANK1 = 0b00000000'00000000'00000000'00000000'00000000'00000000'00000000'11111111uLL;
-	constexpr uint64_t RANK2 = 0b00000000'00000000'00000000'00000000'00000000'00000000'11111111'00000000uLL;
-	constexpr uint64_t RANK3 = 0b00000000'00000000'00000000'00000000'00000000'11111111'00000000'00000000uLL;
-	constexpr uint64_t RANK4 = 0b00000000'00000000'00000000'00000000'11111111'00000000'00000000'00000000uLL;
-	constexpr uint64_t RANK5 = 0b00000000'00000000'00000000'11111111'00000000'00000000'00000000'00000000uLL;
-	constexpr uint64_t RANK6 = 0b00000000'00000000'11111111'00000000'00000000'00000000'00000000'00000000uLL;
-	constexpr uint64_t RANK7 = 0b00000000'11111111'00000000'00000000'00000000'00000000'00000000'00000000uLL;
 	constexpr uint64_t RANK8 = 0b11111111'00000000'00000000'00000000'00000000'00000000'00000000'00000000uLL;
-	constexpr uint64_t RANK1FWDWHITE = 0b11111111'11111111'11111111'11111111'11111111'11111111'11111111'00000000uLL;
-	constexpr uint64_t RANK2FWDWHITE = 0b11111111'11111111'11111111'11111111'11111111'11111111'00000000'00000000uLL;
-	constexpr uint64_t RANK3FWDWHITE = 0b11111111'11111111'11111111'11111111'11111111'00000000'00000000'00000000uLL;
-	constexpr uint64_t RANK4FWDWHITE = 0b11111111'11111111'11111111'11111111'00000000'00000000'00000000'00000000uLL;
-	constexpr uint64_t RANK5FWDWHITE = 0b11111111'11111111'11111111'00000000'00000000'00000000'00000000'00000000uLL;
-	constexpr uint64_t RANK6FWDWHITE = 0b11111111'11111111'00000000'00000000'00000000'00000000'00000000'00000000uLL;
-	constexpr uint64_t RANK7FWDWHITE = 0b11111111'00000000'00000000'00000000'00000000'00000000'00000000'00000000uLL;
-	constexpr uint64_t RANK8FWDWHITE = 0b00000000'00000000'00000000'00000000'00000000'00000000'00000000'00000000uLL;
-	constexpr uint64_t RANK8FWDBLACK = 0b00000000'11111111'11111111'11111111'11111111'11111111'11111111'11111111uLL;
-	constexpr uint64_t RANK7FWDBLACK = 0b00000000'00000000'11111111'11111111'11111111'11111111'11111111'11111111uLL;
-	constexpr uint64_t RANK6FWDBLACK = 0b00000000'00000000'00000000'11111111'11111111'11111111'11111111'11111111uLL;
-	constexpr uint64_t RANK5FWDBLACK = 0b00000000'00000000'00000000'00000000'11111111'11111111'11111111'11111111uLL;
-	constexpr uint64_t RANK4FWDBLACK = 0b00000000'00000000'00000000'00000000'00000000'11111111'11111111'11111111uLL;
-	constexpr uint64_t RANK3FWDBLACK = 0b00000000'00000000'00000000'00000000'00000000'00000000'11111111'11111111uLL;
-	constexpr uint64_t RANK2FWDBLACK = 0b00000000'00000000'00000000'00000000'00000000'00000000'00000000'11111111uLL;
-	constexpr uint64_t RANK1FWDBLACK = 0b00000000'00000000'00000000'00000000'00000000'00000000'00000000'00000000uLL;
 	constexpr uint64_t FILEA = 0b10000000'10000000'10000000'10000000'10000000'10000000'10000000'10000000uLL;
-	constexpr uint64_t FILEB = 0b01000000'01000000'01000000'01000000'01000000'01000000'01000000'01000000uLL;
-	constexpr uint64_t FILEC = 0b00100000'00100000'00100000'00100000'00100000'00100000'00100000'00100000uLL;
-	constexpr uint64_t FILED = 0b00010000'00010000'00010000'00010000'00010000'00010000'00010000'00010000uLL;
-	constexpr uint64_t FILEE = 0b00001000'00001000'00001000'00001000'00001000'00001000'00001000'00001000uLL;
-	constexpr uint64_t FILEF = 0b00000100'00000100'00000100'00000100'00000100'00000100'00000100'00000100uLL;
-	constexpr uint64_t FILEG = 0b00000010'00000010'00000010'00000010'00000010'00000010'00000010'00000010uLL;
 	constexpr uint64_t FILEH = 0b00000001'00000001'00000001'00000001'00000001'00000001'00000001'00000001uLL;
 
 
@@ -157,49 +103,28 @@ namespace helper {
 	// Colours
 	constexpr int WHITEPIECE = 1;
 	constexpr int BLACKPIECE = -1;
-	constexpr int FORWARD = 1;
-	constexpr int BACK = 0;
-	constexpr int EAST = 2;
-	constexpr int WEST = 3;
-	constexpr int WHITEARRAYINDEX = 1;
-	constexpr int BLACKARRAYINDEX = 0;
-
-	constexpr uint64_t QueenSide = FILEA | FILEB | FILEC | FILED;
-	constexpr uint64_t CenterFiles = FILEC | FILED | FILEE | FILEF;
-	constexpr uint64_t KingSide = FILEE | FILEF | FILEG | FILEH;
-	constexpr uint64_t Center = (FILED | FILEE) & (RANK4 | RANK5);
-
-	constexpr uint64_t KingFlank[8] = {
-			QueenSide ^ FILED, QueenSide, QueenSide,
-			CenterFiles, CenterFiles,
-			KingSide, KingSide, KingSide ^ FILEE
-	};
 
 
-	extern std::vector<uint64_t> RowMask;
-	extern std::vector<uint64_t> NorthRay;
-	extern std::vector<uint64_t> SouthRay;
-	extern std::vector<uint64_t> EastRay;
-	extern std::vector<uint64_t> WestRay;
-	extern std::vector<uint64_t> NorthWestRay;
-	extern std::vector<uint64_t> NorthEastRay;
-	extern std::vector<uint64_t> SouthWestRay;
-	extern std::vector<uint64_t> SouthEastRay;
+	extern uint64_t RowMask[64];
+	extern uint64_t NorthRay[64];
+	extern uint64_t SouthRay[64];
+	extern uint64_t EastRay[64];
+	extern uint64_t WestRay[64];
+	extern uint64_t NorthWestRay[64];
+	extern uint64_t NorthEastRay[64];
+	extern uint64_t SouthWestRay[64];
+	extern uint64_t SouthEastRay[64];
 
-	extern std::vector<uint64_t> PawnStructureNorthRay;
-	extern std::vector<uint64_t> PawnStructureSouthRay;
+	extern int CastleIndex[64][2];
 
-	extern std::vector<std::vector<int>> CastleIndex;
-
-	extern std::vector<uint64_t> DiagonalRay;
-	extern std::vector<uint64_t> HorizontalVerticalRay;
-	extern std::vector<std::vector<uint64_t>> HorizontalVerticalMove;
-	extern std::vector<std::vector<uint64_t>> HorizontalVerticalMoveXRay;
-	extern std::vector<std::vector<uint64_t>> DiagonalMove;
-	extern std::vector<std::vector<uint64_t>> DiagonalMoveXRay;
-	extern std::vector<uint64_t> KnightMove;
-	extern std::vector<uint64_t> KingMove;
-	extern std::vector<uint64_t> KingRing;
+	extern uint64_t DiagonalRay[64];
+	extern uint64_t HorizontalVerticalRay[64];
+	extern uint64_t HorizontalVerticalMove[64][4097];
+	extern uint64_t HorizontalVerticalMoveXRay[64][4097];
+	extern uint64_t DiagonalMove[64][4097];
+	extern uint64_t DiagonalMoveXRay[64][4097];
+	extern uint64_t KnightMove[64];
+	extern uint64_t KingMove[64];
 
 	extern const std::map<int, std::string> BoardCoordinateDict;
 
@@ -337,40 +262,6 @@ namespace helper {
 			0b01011010'10000000'10100110'11010010'00100100'10111011'00011101'11010101uLL
 	};
 
-	/// <summary>
-	/// Unique random numbers for enpassant
-	/// </summary>
-	constexpr uint64_t RandomEnpassantArray[64] = {
-			10120885400424664815uLL,7822809992295113240uLL,659134471424694129uLL,11229060271550943951uLL,13011382462635238900uLL,12245147114017877394uLL,4086240974139875832uLL,8483318650966685353uLL,
-			13403826392294786189uLL,5736727515434239557uLL,13049094583343814115uLL,14220043696760546864uLL,257434996374305459uLL,13182267645595846109uLL,15786182252921094425uLL,9751505972570293869uLL,
-			5443642827280999791uLL,6710743690518899458uLL,16836301274073349109uLL,10232005110468823271uLL,7234650874328274481uLL,1443182362849879158uLL,16192957128044628708uLL,11519026127488435518uLL,
-			5816806882637677740uLL,12696267234300736724uLL,4744320276372219329uLL,12117461735660613021uLL,8145191536788121288uLL,799546174808058385uLL,8536352043890488339uLL,17658995684971407789uLL,
-			4045358836144489738uLL,1026351508076324699uLL,10499109099995292757uLL,13073506237692530862uLL,1341639677827350233uLL,6283711849904573584uLL,13176271445518963242uLL,17262298999989391505uLL,
-			16060260533498339065uLL,8425715772478339014uLL,6027169958460927003uLL,10274542001096212771uLL,12140000175277181692uLL,7628058231420971505uLL,3011422746186907361uLL,4997451138088309049uLL,
-			3070656233608342432uLL,15332728101035921330uLL,4793597468555854565uLL,7877461849473182144uLL,13246930102152433934uLL,8012201518861965024uLL,6396612341067631432uLL,6150184939981524453uLL,
-			6347165687511545853uLL,12857158648390271979uLL,13359011463050304312uLL,583686736030851276uLL,11519867416393500540uLL,1778106226788785973uLL,4481315123049389279uLL,4637199565942551058uLL
-
-	};
-
-	/// <summary>
-	/// Unique random numbers for castling
-	/// </summary>
-	constexpr uint64_t RandomCastlingAvailabilityArray[64] = {
-			2858917742723716869uLL,12501886423189716038uLL,2998496477297623521uLL,13757985587555700761uLL,16198690885502771171uLL,8950639773711338282uLL,4095743783943110162uLL,1740905924632572219uLL,
-			10530339373988758157uLL,700023047043921396uLL,16247151535285974873uLL,4119055565638633288uLL,14672129617827165154uLL,4681555990460456538uLL,1358583264790449979uLL,2331610383481964360uLL,
-			8710531122418313867uLL,1045936802174983705uLL,4247503793460919439uLL,14952311205642371225uLL,3843870110515486211uLL,6780164301570582316uLL,6984576351433392004uLL,15106975979193663351uLL,
-			7245885963021014620uLL,11437042174747420260uLL,14960944221762816489uLL,7609238355393160048uLL,17688304385270748289uLL,17158119985145996145uLL,7589080113530901703uLL,17540269382778424502uLL,
-			7890179537160999309uLL,10202508904481465743uLL,12484266734720159366uLL,16348972988843271107uLL,4211409195397494263uLL,2278034657226493973uLL,9691471887493406069uLL,6277292305312111695uLL,
-			10895596304573234625uLL,10248713925454462236uLL,17333615534291113477uLL,12115694013556192437uLL,9584230722126785651uLL,10413339074670044009uLL,7122841721910910113uLL,9517151202201056496uLL,
-			18338453166366959322uLL,1817543261091862355uLL,637930889683912560uLL,12893201172927897298uLL,6670161086584316432uLL,13504746215395153245uLL,8701074171451983611uLL,8779385121083254732uLL,
-			4894894616077768234uLL,6045840559628189237uLL,11805935877859789043uLL,13266743209964602402uLL,15133032861341119743uLL,12215120238166635736uLL,961367638102847872uLL,4943591078217557695uLL
-	};
-
-	/// <summary>
-	/// Unique random numbers for turn
-	/// </summary>
-	constexpr uint64_t RandomTurnArray[3] = { 17403388157561231176uLL, 0uLL, 3440476563958287954uLL };
-
 
 	/// <summary>
 	/// Unique random numbers for board
@@ -480,99 +371,6 @@ namespace helper {
 		return pSqIndex ^ 56;
 	}
 
-	// Returns the square index mirrored by file
-	constexpr int mirrorfile(int pSqIndex) {
-		return pSqIndex ^ 7;
-	}
-
-	// Gets the rank index from a given square index
-	constexpr int RANKSQUAREINDEX[64] = {
-			7, 7, 7, 7, 7, 7, 7, 7,
-			6, 6, 6, 6, 6, 6, 6, 6,
-			5, 5, 5, 5, 5, 5, 5, 5,
-			4, 4, 4, 4, 4, 4, 4, 4,
-			3, 3, 3, 3, 3, 3, 3, 3,
-			2, 2, 2, 2, 2, 2, 2, 2,
-			1, 1, 1, 1, 1, 1, 1, 1,
-			0, 0, 0, 0, 0, 0 ,0 ,0
-	};
-
-	// Gets the file index from a given square index
-	constexpr int FILESQUAREINDEX[64] = {
-			0, 1, 2, 3, 4, 5, 6, 7,
-			0, 1, 2, 3, 4, 5, 6, 7,
-			0, 1, 2, 3, 4, 5, 6, 7,
-			0, 1, 2, 3, 4, 5, 6, 7,
-			0, 1, 2, 3, 4, 5, 6, 7,
-			0, 1, 2, 3, 4, 5, 6, 7,
-			0, 1, 2, 3, 4, 5, 6, 7,
-			0, 1, 2, 3, 4, 5, 6, 7
-	};
-
-	// Get Square Index from file and rank index intersection
-	constexpr int GetSqIndex(int pFileIndex, int pRankIndex) {
-		return ((pRankIndex << 3) + pFileIndex) ^ 56;
-	}
-
-	// Gets the file bits from a given square index
-	constexpr uint64_t FILE[64] = {
-			FILEA, FILEB, FILEC, FILED, FILEE, FILEF, FILEG, FILEH,
-			FILEA, FILEB, FILEC, FILED, FILEE, FILEF, FILEG, FILEH,
-			FILEA, FILEB, FILEC, FILED, FILEE, FILEF, FILEG, FILEH,
-			FILEA, FILEB, FILEC, FILED, FILEE, FILEF, FILEG, FILEH,
-			FILEA, FILEB, FILEC, FILED, FILEE, FILEF, FILEG, FILEH,
-			FILEA, FILEB, FILEC, FILED, FILEE, FILEF, FILEG, FILEH,
-			FILEA, FILEB, FILEC, FILED, FILEE, FILEF, FILEG, FILEH,
-			FILEA, FILEB, FILEC, FILED, FILEE, FILEF, FILEG, FILEH
-	};
-
-	// Gets the rank bits from a given square index
-	constexpr uint64_t RANK[64] = {
-			RANK8, RANK8, RANK8, RANK8, RANK8, RANK8, RANK8, RANK8,
-			RANK7, RANK7, RANK7, RANK7, RANK7, RANK7, RANK7, RANK7,
-			RANK6, RANK6, RANK6, RANK6, RANK6, RANK6, RANK6, RANK6,
-			RANK5, RANK5, RANK5, RANK5, RANK5, RANK5, RANK5, RANK5,
-			RANK4, RANK4, RANK4, RANK4, RANK4, RANK4, RANK4, RANK4,
-			RANK3, RANK3, RANK3, RANK3, RANK3, RANK3, RANK3, RANK3,
-			RANK2, RANK2, RANK2, RANK2, RANK2, RANK2, RANK2, RANK2,
-			RANK1, RANK1, RANK1, RANK1, RANK1, RANK1, RANK1, RANK1
-	};
-
-	// Gets the all the ranks forward of given square index for a white piece
-	constexpr uint64_t RANKFWDSQUAREWHITE[64] = {
-			RANK8FWDWHITE, RANK8FWDWHITE, RANK8FWDWHITE, RANK8FWDWHITE, RANK8FWDWHITE, RANK8FWDWHITE, RANK8FWDWHITE, RANK8FWDWHITE,
-			RANK7FWDWHITE, RANK7FWDWHITE, RANK7FWDWHITE, RANK7FWDWHITE, RANK7FWDWHITE, RANK7FWDWHITE, RANK7FWDWHITE, RANK7FWDWHITE,
-			RANK6FWDWHITE, RANK6FWDWHITE, RANK6FWDWHITE, RANK6FWDWHITE, RANK6FWDWHITE, RANK6FWDWHITE, RANK6FWDWHITE, RANK6FWDWHITE,
-			RANK5FWDWHITE, RANK5FWDWHITE, RANK5FWDWHITE, RANK5FWDWHITE, RANK5FWDWHITE, RANK5FWDWHITE, RANK5FWDWHITE, RANK5FWDWHITE,
-			RANK4FWDWHITE, RANK4FWDWHITE, RANK4FWDWHITE, RANK4FWDWHITE, RANK4FWDWHITE, RANK4FWDWHITE, RANK4FWDWHITE, RANK4FWDWHITE,
-			RANK3FWDWHITE, RANK3FWDWHITE, RANK3FWDWHITE, RANK3FWDWHITE, RANK3FWDWHITE, RANK3FWDWHITE, RANK3FWDWHITE, RANK3FWDWHITE,
-			RANK2FWDWHITE, RANK2FWDWHITE, RANK2FWDWHITE, RANK2FWDWHITE, RANK2FWDWHITE, RANK2FWDWHITE, RANK2FWDWHITE, RANK2FWDWHITE,
-			RANK1FWDWHITE, RANK1FWDWHITE, RANK1FWDWHITE, RANK1FWDWHITE, RANK1FWDWHITE, RANK1FWDWHITE, RANK1FWDWHITE, RANK1FWDWHITE
-	};
-
-	// Gets the all the ranks forward of given square index for a black piece
-	constexpr uint64_t RANKFWDSQUAREBLACK[64] = {
-			RANK8FWDBLACK, RANK8FWDBLACK, RANK8FWDBLACK, RANK8FWDBLACK, RANK8FWDBLACK, RANK8FWDBLACK, RANK8FWDBLACK, RANK8FWDBLACK,
-			RANK7FWDBLACK, RANK7FWDBLACK, RANK7FWDBLACK, RANK7FWDBLACK, RANK7FWDBLACK, RANK7FWDBLACK, RANK7FWDBLACK, RANK7FWDBLACK,
-			RANK6FWDBLACK, RANK6FWDBLACK, RANK6FWDBLACK, RANK6FWDBLACK, RANK6FWDBLACK, RANK6FWDBLACK, RANK6FWDBLACK, RANK6FWDBLACK,
-			RANK5FWDBLACK, RANK5FWDBLACK, RANK5FWDBLACK, RANK5FWDBLACK, RANK5FWDBLACK, RANK5FWDBLACK, RANK5FWDBLACK, RANK5FWDBLACK,
-			RANK4FWDBLACK, RANK4FWDBLACK, RANK4FWDBLACK, RANK4FWDBLACK, RANK4FWDBLACK, RANK4FWDBLACK, RANK4FWDBLACK, RANK4FWDBLACK,
-			RANK3FWDBLACK, RANK3FWDBLACK, RANK3FWDBLACK, RANK3FWDBLACK, RANK3FWDBLACK, RANK3FWDBLACK, RANK3FWDBLACK, RANK3FWDBLACK,
-			RANK2FWDBLACK, RANK2FWDBLACK, RANK2FWDBLACK, RANK2FWDBLACK, RANK2FWDBLACK, RANK2FWDBLACK, RANK2FWDBLACK, RANK2FWDBLACK,
-			RANK1FWDBLACK, RANK1FWDBLACK, RANK1FWDBLACK, RANK1FWDBLACK, RANK1FWDBLACK, RANK1FWDBLACK, RANK1FWDBLACK, RANK1FWDBLACK
-	};
-
-	// Gets the file bits from a given square index
-	constexpr uint64_t ADJACENTFILE[64] = {
-			FILEB, FILEA | FILEC, FILEB | FILED, FILEC | FILEE, FILED | FILEF, FILEE | FILEG, FILEF | FILEH, FILEG,
-			FILEB, FILEA | FILEC, FILEB | FILED, FILEC | FILEE, FILED | FILEF, FILEE | FILEG, FILEF | FILEH, FILEG,
-			FILEB, FILEA | FILEC, FILEB | FILED, FILEC | FILEE, FILED | FILEF, FILEE | FILEG, FILEF | FILEH, FILEG,
-			FILEB, FILEA | FILEC, FILEB | FILED, FILEC | FILEE, FILED | FILEF, FILEE | FILEG, FILEF | FILEH, FILEG,
-			FILEB, FILEA | FILEC, FILEB | FILED, FILEC | FILEE, FILED | FILEF, FILEE | FILEG, FILEF | FILEH, FILEG,
-			FILEB, FILEA | FILEC, FILEB | FILED, FILEC | FILEE, FILED | FILEF, FILEE | FILEG, FILEF | FILEH, FILEG,
-			FILEB, FILEA | FILEC, FILEB | FILED, FILEC | FILEE, FILED | FILEF, FILEE | FILEG, FILEF | FILEH, FILEG,
-			FILEB, FILEA | FILEC, FILEB | FILED, FILEC | FILEE, FILED | FILEF, FILEE | FILEG, FILEF | FILEH, FILEG
-	};
 
 	// Functions
 	extern void init();
@@ -582,351 +380,44 @@ namespace helper {
 	extern char GetFENCharFromSpin(int pSpin);
 	extern int GetSpinFromChar(char pFENChar);
 	extern uint64_t GetRay(int pSqIndex, RayTypeEnum pRayType, bool pExcludeEdge);
-	extern void CreateRay(int pIndex, std::vector<uint64_t> &pRays);
-	extern void CreateStructureRay(int pIndex, std::vector<uint64_t> &pRays);
+	extern void CreateRay(int pIndex, uint64_t pRays[8]);
+	extern void CreateStructureRay(int pIndex, uint64_t pRays[2]);
 	extern uint64_t GetRowMask(int pSqIndex);
 	extern std::string GetBinaryStr(uint64_t pInt);
 	extern void CreateMoveLookupTable();
-	extern int CreateBlockerCombinationForRay(uint64_t pRays_NoEdge, std::vector<uint64_t> &pAllBlockerCombinations);
+	extern int CreateBlockerCombinationForRay(uint64_t pRays_NoEdge, uint64_t pAllBlockerCombinations[4096]);
 
 	extern void Split(const std::string& pStr, char pDelim, std::vector<std::string> &pReturnVector);
 	extern int GetSpinFromPieceName(std::string pPieceName);
 	extern std::string GetPieceNameFromChar(char pFENChar);
 
-	extern int endGameValue(int pScore);
-	extern int midGameValue(int pScore);
 
-	/// <summary>
-	/// Makes a score, from combining two 16 bit values
-	/// </summary>
-	constexpr int makeWeight(int16_t pMidGame, int16_t pEndGame) {
-		return (int)((unsigned int)pEndGame << 16) + pMidGame;
-	}
+	static const std::map<int, std::string> SearchErrorMessage = {
+			{0, ""},
+			{1, "Incorrect number of White Kings" },
+			{2, "Incorrect number of Black Kings" },
+			{3, "Incorrect number of White Pieces" },
+			{4, "Incorrect number of Black Pieces" },
+			{5, "Total number of White Pawns plus White Queens is too high"},
+			{6, "Total number of Black Pawns plus Black Queens is too high"},
+			{7, "Total number of White Pawns plus White Bishops is too high"},
+			{8, "Total number of Black Pawns plus Black Bishops is too high"},
+			{9, "Total number of White Pawns plus White Knights is too high"},
+			{10, "Total number of Black Pawns plus Black Knights is too high"},
+			{11, "Total number of White Pawns plus White Rooks is too high"},
+			{12, "Total number of Black Pawns plus Black Rooks is too high"},
+			{13, "Total White Pawn count too high"},
+			{14, "Total Black Pawn count too high"},
+			{15, "White Pawns not allowed on Ranks 1 or 8"},
+			{16, "Black Pawns not allowed on Ranks 1 or 8"},
+			{17, "White King is in Check, but it is Black's turn to move"},
+			{18, "Black King is in Check, but it is White's turn to move"},
+			{19, "White King side castling availability is not correctly set"},
+			{20, "White Queen side castling availability is not correctly set"},
+			{21, "Black King side castling availability is not correctly set"},
+			{22, "Black Queen side castling availability is not correctly set"},
 
-	/// <summary>
-	/// Gets the distance to the nearest file edge
-	/// </summary>
-	/// <param name="pFile"></param>
-	/// <returns></returns>
-	constexpr int edgeDistanceFile(int pFile) {
-		return (std::min)(pFile, FileHIndex - pFile);
-	}
-
-	/// <summary>
-	/// Gets the distance to the nearest rank edge
-	/// </summary>
-	/// <param name="pRank"></param>
-	/// <returns></returns>
-	constexpr int edgeDistanceRank(int pRank) {
-		return (std::min)(pRank, Rank8Index - pRank);
-	}
-
-	// Distance calculation
-	extern std::vector<std::vector<int>> SquareDistance;
-	extern int distanceFile(int x, int y);
-	extern int distanceRank(int x, int y);
-	extern int distanceSquare(int x, int y);
-
-
-	// Returns true if more than
-	constexpr bool moreThanOne(uint64_t b) {
-		return b & (b - 1);
-	}
-
-	// Returns true if squares are on opposite colours
-	constexpr bool oppositeColors(int pSqIndex1, int pSqIndex2) {
-
-		return (pSqIndex1 + RANKSQUAREINDEX[pSqIndex1] + pSqIndex2 + RANKSQUAREINDEX[pSqIndex2]) & 1;
-	}
-
-
-
-	// Get front most square index from the given bits
-	template<int Colour> constexpr int frontmostSqIndex(uint64_t pBits) {
-		if (Colour == WHITEPIECE) {
-			return 63 - BitScanReverse(pBits);
-		}
-		else {
-			return 63 - BitScanForward(pBits);
-		}
-	}
-
-	// Represents a straight line create by drawing a line with a ruler through two square positions on the board.
-	extern std::vector<std::vector<uint64_t>> LineBB;
-
-
-	// All the squares along the line in front of the given one.
-	template<int Colour> constexpr uint64_t forwardFileBB(int pSqIndex) {
-		if (Colour == WHITEPIECE) {
-			return  RANKFWDSQUAREWHITE[pSqIndex] & FILE[pSqIndex];
-		}
-		else {
-			return  RANKFWDSQUAREBLACK[pSqIndex] & FILE[pSqIndex];
-		}
-	}
-
-
-
-	// All the squares that can be attacked by a pawn when it moves along its file
-	template<int Colour> constexpr uint64_t pawnAttackSpan(int pSqIndex) {
-		if (Colour == WHITEPIECE) {
-			return RANKFWDSQUAREWHITE[pSqIndex] & ADJACENTFILE[pSqIndex];
-		}
-		else {
-			return RANKFWDSQUAREBLACK[pSqIndex] & ADJACENTFILE[pSqIndex];
-		}
-	}
-
-
-	// Used to test if a pawn is passed
-	template<int Colour> constexpr uint64_t passedPawnSpan(int pSqIndex) {
-		return pawnAttackSpan<Colour>(pSqIndex) | forwardFileBB<Colour>(pSqIndex);
-	}
-
-	// Returns true if pawn is passed
-	template<int Colour> constexpr bool pawnPassed(int pSqIndex, uint64_t pOppositeColourPawns) {
-		return !(pOppositeColourPawns & passedPawnSpan<Colour>(pSqIndex));
-	}
-
-	// Gets the all the ranks forward of given square index
-	template<int Colour> constexpr uint64_t rankFwdSquare(int pSqIndex) {
-		if (Colour == WHITEPIECE) {
-			return RANKFWDSQUAREWHITE[pSqIndex];
-		}
-		else {
-			return RANKFWDSQUAREBLACK[pSqIndex];
-		}
-	}
-
-	// Shifts the board forward or back 8 bits
-	template<int Colour, int Direction> constexpr uint64_t shiftBB(const uint64_t pBits) {
-		if (Colour == WHITEPIECE && Direction == FORWARD) return pBits << 8;
-		else if (Colour == WHITEPIECE && Direction == BACK) return pBits >> 8;
-		else if (Colour == BLACKPIECE && Direction == FORWARD) return pBits >> 8;
-		else if (Colour == BLACKPIECE && Direction == BACK) return pBits << 8;
-		else return pBits;
-	}
-
-	// Shifts the board east or west 1 bit
-	template<int Direction> constexpr uint64_t shiftBB(const uint64_t pBits) {
-		if (Direction == EAST) return (pBits & ~FILEH) >> 1;
-		else if (Direction == WEST) return (pBits & ~FILEA) << 1;
-		else return pBits;
-	}
-
-	// Returns 8 squares forward or back of the current square
-	template<int Colour, int Direction> constexpr int shiftSq(const int pSqIndex) {
-		uint64_t b = shiftBB<Colour, Direction>(BITMASK >> pSqIndex);
-		if (b == 0ULL) return pSqIndex;
-		else return 63 - BitScanForward(b);
-	}
-
-	// Returns the mirrored rank index if the colour is black otherwise just returns the rank index
-	template<int Colour> constexpr int mirroredRankIfBlack(int pRankIndex) {
-		static_assert(Colour == WHITEPIECE || Colour == BLACKPIECE, "Invalid piece colour");
-
-		if (Colour == WHITEPIECE) {
-			return pRankIndex;
-		}
-		else {
-			return Rank8Index - pRankIndex;
-		}
-	}
-
-
-
-	// Endgame board material hashes
-	constexpr uint64_t whiteKNNKHash =
-			RandomBoardArray[WHITE_KING_INDEX_64 + (1 - 1)]
-			^ RandomBoardArray[WHITE_KNIGHT_INDEX_64 + (2 - 1)]
-			^ RandomBoardArray[BLACK_KING_INDEX_64 + (1 - 1)];
-
-	constexpr uint64_t blackKNNKHash =
-			RandomBoardArray[BLACK_KING_INDEX_64 + (1 - 1)]
-			^ RandomBoardArray[BLACK_KNIGHT_INDEX_64 + (2 - 1)]
-			^ RandomBoardArray[WHITE_KING_INDEX_64 + (1 - 1)];
-
-	constexpr uint64_t whiteKNNKPHash =
-			RandomBoardArray[WHITE_KING_INDEX_64 + (1 - 1)]
-			^ RandomBoardArray[WHITE_KNIGHT_INDEX_64 + (2 - 1)]
-			^ RandomBoardArray[BLACK_KING_INDEX_64 + (1 - 1)]
-			^ RandomBoardArray[BLACK_PAWN_INDEX_64 + (1 - 1)];
-
-	constexpr uint64_t blackKNNKPHash =
-			RandomBoardArray[BLACK_KING_INDEX_64 + (1 - 1)]
-			^ RandomBoardArray[BLACK_KNIGHT_INDEX_64 + (2 - 1)]
-			^ RandomBoardArray[WHITE_KING_INDEX_64 + (1 - 1)]
-			^ RandomBoardArray[WHITE_PAWN_INDEX_64 + (1 - 1)];
-
-	constexpr uint64_t whiteKPKHash =
-			RandomBoardArray[WHITE_KING_INDEX_64 + (1 - 1)]
-			^ RandomBoardArray[WHITE_PAWN_INDEX_64 + (1 - 1)]
-			^ RandomBoardArray[BLACK_KING_INDEX_64 + (1 - 1)];
-
-	constexpr uint64_t blackKPKHash =
-			RandomBoardArray[BLACK_KING_INDEX_64 + (1 - 1)]
-			^ RandomBoardArray[BLACK_PAWN_INDEX_64 + (1 - 1)]
-			^ RandomBoardArray[WHITE_KING_INDEX_64 + (1 - 1)];
-
-	constexpr uint64_t whiteKBNKHash =
-			RandomBoardArray[WHITE_KING_INDEX_64 + (1 - 1)]
-			^ RandomBoardArray[WHITE_BISHOP_INDEX_64 + (1 - 1)]
-			^ RandomBoardArray[WHITE_KNIGHT_INDEX_64 + (1 - 1)]
-			^ RandomBoardArray[BLACK_KING_INDEX_64 + (1 - 1)];
-
-	constexpr uint64_t blackKBNKHash =
-			RandomBoardArray[BLACK_KING_INDEX_64 + (1 - 1)]
-			^ RandomBoardArray[BLACK_BISHOP_INDEX_64 + (1 - 1)]
-			^ RandomBoardArray[BLACK_KNIGHT_INDEX_64 + (1 - 1)]
-			^ RandomBoardArray[WHITE_KING_INDEX_64 + (1 - 1)];
-
-	constexpr uint64_t whiteKRKPHash =
-			RandomBoardArray[WHITE_KING_INDEX_64 + (1 - 1)]
-			^ RandomBoardArray[WHITE_ROOK_INDEX_64 + (1 - 1)]
-			^ RandomBoardArray[BLACK_KING_INDEX_64 + (1 - 1)]
-			^ RandomBoardArray[BLACK_PAWN_INDEX_64 + (1 - 1)];
-
-	constexpr uint64_t blackKRKPHash =
-			RandomBoardArray[BLACK_KING_INDEX_64 + (1 - 1)]
-			^ RandomBoardArray[BLACK_ROOK_INDEX_64 + (1 - 1)]
-			^ RandomBoardArray[WHITE_KING_INDEX_64 + (1 - 1)]
-			^ RandomBoardArray[WHITE_PAWN_INDEX_64 + (1 - 1)];
-
-	constexpr uint64_t whiteKRKBHash =
-			RandomBoardArray[WHITE_KING_INDEX_64 + (1 - 1)]
-			^ RandomBoardArray[WHITE_ROOK_INDEX_64 + (1 - 1)]
-			^ RandomBoardArray[BLACK_KING_INDEX_64 + (1 - 1)]
-			^ RandomBoardArray[BLACK_BISHOP_INDEX_64 + (1 - 1)];
-
-	constexpr uint64_t blackKRKBHash =
-			RandomBoardArray[BLACK_KING_INDEX_64 + (1 - 1)]
-			^ RandomBoardArray[BLACK_ROOK_INDEX_64 + (1 - 1)]
-			^ RandomBoardArray[WHITE_KING_INDEX_64 + (1 - 1)]
-			^ RandomBoardArray[WHITE_BISHOP_INDEX_64 + (1 - 1)];
-
-	constexpr uint64_t whiteKRKNHash =
-			RandomBoardArray[WHITE_KING_INDEX_64 + (1 - 1)]
-			^ RandomBoardArray[WHITE_ROOK_INDEX_64 + (1 - 1)]
-			^ RandomBoardArray[BLACK_KING_INDEX_64 + (1 - 1)]
-			^ RandomBoardArray[BLACK_KNIGHT_INDEX_64 + (1 - 1)];
-
-	constexpr uint64_t blackKRKNHash =
-			RandomBoardArray[BLACK_KING_INDEX_64 + (1 - 1)]
-			^ RandomBoardArray[BLACK_ROOK_INDEX_64 + (1 - 1)]
-			^ RandomBoardArray[WHITE_KING_INDEX_64 + (1 - 1)]
-			^ RandomBoardArray[WHITE_KNIGHT_INDEX_64 + (1 - 1)];
-
-	constexpr uint64_t whiteKQKPHash =
-			RandomBoardArray[WHITE_KING_INDEX_64 + (1 - 1)]
-			^ RandomBoardArray[WHITE_QUEEN_INDEX_64 + (1 - 1)]
-			^ RandomBoardArray[BLACK_KING_INDEX_64 + (1 - 1)]
-			^ RandomBoardArray[BLACK_PAWN_INDEX_64 + (1 - 1)];
-
-	constexpr uint64_t blackKQKPHash =
-			RandomBoardArray[BLACK_KING_INDEX_64 + (1 - 1)]
-			^ RandomBoardArray[BLACK_QUEEN_INDEX_64 + (1 - 1)]
-			^ RandomBoardArray[WHITE_KING_INDEX_64 + (1 - 1)]
-			^ RandomBoardArray[WHITE_PAWN_INDEX_64 + (1 - 1)];
-
-	constexpr uint64_t whiteKQKRHash =
-			RandomBoardArray[WHITE_KING_INDEX_64 + (1 - 1)]
-			^ RandomBoardArray[WHITE_QUEEN_INDEX_64 + (1 - 1)]
-			^ RandomBoardArray[BLACK_KING_INDEX_64 + (1 - 1)]
-			^ RandomBoardArray[BLACK_ROOK_INDEX_64 + (1 - 1)];
-
-	constexpr uint64_t blackKQKRHash =
-			RandomBoardArray[BLACK_KING_INDEX_64 + (1 - 1)]
-			^ RandomBoardArray[BLACK_QUEEN_INDEX_64 + (1 - 1)]
-			^ RandomBoardArray[WHITE_KING_INDEX_64 + (1 - 1)]
-			^ RandomBoardArray[WHITE_ROOK_INDEX_64 + (1 - 1)];
-
-	constexpr uint64_t whiteKRPKRHash =
-			RandomBoardArray[WHITE_KING_INDEX_64 + (1 - 1)]
-			^ RandomBoardArray[WHITE_ROOK_INDEX_64 + (1 - 1)]
-			^ RandomBoardArray[WHITE_PAWN_INDEX_64 + (1 - 1)]
-			^ RandomBoardArray[BLACK_KING_INDEX_64 + (1 - 1)]
-			^ RandomBoardArray[BLACK_ROOK_INDEX_64 + (1 - 1)];
-
-	constexpr uint64_t blackKRPKRHash =
-			RandomBoardArray[BLACK_KING_INDEX_64 + (1 - 1)]
-			^ RandomBoardArray[BLACK_ROOK_INDEX_64 + (1 - 1)]
-			^ RandomBoardArray[BLACK_PAWN_INDEX_64 + (1 - 1)]
-			^ RandomBoardArray[WHITE_KING_INDEX_64 + (1 - 1)]
-			^ RandomBoardArray[WHITE_ROOK_INDEX_64 + (1 - 1)];
-
-	constexpr uint64_t whiteKRPKBHash =
-			RandomBoardArray[WHITE_KING_INDEX_64 + (1 - 1)]
-			^ RandomBoardArray[WHITE_ROOK_INDEX_64 + (1 - 1)]
-			^ RandomBoardArray[WHITE_PAWN_INDEX_64 + (1 - 1)]
-			^ RandomBoardArray[BLACK_KING_INDEX_64 + (1 - 1)]
-			^ RandomBoardArray[BLACK_BISHOP_INDEX_64 + (1 - 1)];
-
-	constexpr uint64_t blackKRPKBHash =
-			RandomBoardArray[BLACK_KING_INDEX_64 + (1 - 1)]
-			^ RandomBoardArray[BLACK_ROOK_INDEX_64 + (1 - 1)]
-			^ RandomBoardArray[BLACK_PAWN_INDEX_64 + (1 - 1)]
-			^ RandomBoardArray[WHITE_KING_INDEX_64 + (1 - 1)]
-			^ RandomBoardArray[WHITE_BISHOP_INDEX_64 + (1 - 1)];
-
-	constexpr uint64_t whiteKBPKBHash =
-			RandomBoardArray[WHITE_KING_INDEX_64 + (1 - 1)]
-			^ RandomBoardArray[WHITE_BISHOP_INDEX_64 + (1 - 1)]
-			^ RandomBoardArray[WHITE_PAWN_INDEX_64 + (1 - 1)]
-			^ RandomBoardArray[BLACK_KING_INDEX_64 + (1 - 1)]
-			^ RandomBoardArray[BLACK_BISHOP_INDEX_64 + (1 - 1)];
-
-	constexpr uint64_t blackKBPKBHash =
-			RandomBoardArray[BLACK_KING_INDEX_64 + (1 - 1)]
-			^ RandomBoardArray[BLACK_BISHOP_INDEX_64 + (1 - 1)]
-			^ RandomBoardArray[BLACK_PAWN_INDEX_64 + (1 - 1)]
-			^ RandomBoardArray[WHITE_KING_INDEX_64 + (1 - 1)]
-			^ RandomBoardArray[WHITE_BISHOP_INDEX_64 + (1 - 1)];
-
-	constexpr uint64_t whiteKBPKNHash =
-			RandomBoardArray[WHITE_KING_INDEX_64 + (1 - 1)]
-			^ RandomBoardArray[WHITE_BISHOP_INDEX_64 + (1 - 1)]
-			^ RandomBoardArray[WHITE_PAWN_INDEX_64 + (1 - 1)]
-			^ RandomBoardArray[BLACK_KING_INDEX_64 + (1 - 1)]
-			^ RandomBoardArray[BLACK_KNIGHT_INDEX_64 + (1 - 1)];
-
-	constexpr uint64_t blackKBPKNHash =
-			RandomBoardArray[BLACK_KING_INDEX_64 + (1 - 1)]
-			^ RandomBoardArray[BLACK_BISHOP_INDEX_64 + (1 - 1)]
-			^ RandomBoardArray[BLACK_PAWN_INDEX_64 + (1 - 1)]
-			^ RandomBoardArray[WHITE_KING_INDEX_64 + (1 - 1)]
-			^ RandomBoardArray[WHITE_KNIGHT_INDEX_64 + (1 - 1)];
-
-	constexpr uint64_t whiteKBPPKBHash =
-			RandomBoardArray[WHITE_KING_INDEX_64 + (1 - 1)]
-			^ RandomBoardArray[WHITE_BISHOP_INDEX_64 + (1 - 1)]
-			^ RandomBoardArray[WHITE_PAWN_INDEX_64 + (2 - 1)]
-			^ RandomBoardArray[BLACK_KING_INDEX_64 + (1 - 1)]
-			^ RandomBoardArray[BLACK_BISHOP_INDEX_64 + (1 - 1)];
-
-	constexpr uint64_t blackKBPPKBHash =
-			RandomBoardArray[BLACK_KING_INDEX_64 + (1 - 1)]
-			^ RandomBoardArray[BLACK_BISHOP_INDEX_64 + (1 - 1)]
-			^ RandomBoardArray[BLACK_PAWN_INDEX_64 + (2 - 1)]
-			^ RandomBoardArray[WHITE_KING_INDEX_64 + (1 - 1)]
-			^ RandomBoardArray[WHITE_BISHOP_INDEX_64 + (1 - 1)];
-
-	constexpr uint64_t whiteKRPPKRPHash =
-			RandomBoardArray[WHITE_KING_INDEX_64 + (1 - 1)]
-			^ RandomBoardArray[WHITE_ROOK_INDEX_64 + (1 - 1)]
-			^ RandomBoardArray[WHITE_PAWN_INDEX_64 + (2 - 1)]
-			^ RandomBoardArray[BLACK_KING_INDEX_64 + (1 - 1)]
-			^ RandomBoardArray[BLACK_ROOK_INDEX_64 + (1 - 1)]
-			^ RandomBoardArray[BLACK_PAWN_INDEX_64 + (1 - 1)];
-
-	constexpr uint64_t blackKRPPKRPHash =
-			RandomBoardArray[BLACK_KING_INDEX_64 + (1 - 1)]
-			^ RandomBoardArray[BLACK_ROOK_INDEX_64 + (1 - 1)]
-			^ RandomBoardArray[BLACK_PAWN_INDEX_64 + (2 - 1)]
-			^ RandomBoardArray[WHITE_KING_INDEX_64 + (1 - 1)]
-			^ RandomBoardArray[WHITE_ROOK_INDEX_64 + (1 - 1)]
-			^ RandomBoardArray[WHITE_PAWN_INDEX_64 + (1 - 1)];
-
-	extern const std::map<int, std::string> SearchErrorMessage;
+	};
 
 }
 
