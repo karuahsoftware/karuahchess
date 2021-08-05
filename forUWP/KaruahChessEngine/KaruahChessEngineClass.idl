@@ -84,9 +84,8 @@ namespace KaruahChessEngine
 		Boolean IsKingCheck(const Int32 pColour);
 		UInt64 GetPotentialMove(const Int32 pSqIndex);
 		UInt64 GetOccupiedBySpin(const Int32 pSpin);
-		UInt64 GetOccupiedByWhite();
-		UInt64 GetOccupiedByBlack();
-
+		UInt64 GetOccupiedByColour(const Int32 pColour);
+		
 		// Move operations
 		MoveResult Move(const Int32 pFromIndex, const Int32 pToIndex, const Int32 pPawnPromotionPiece, const Boolean pValidateEnabled, const Boolean pCommit);
 		MoveResult Arrange(const Int32 pFromIndex, const Int32 pToIndex);
@@ -104,9 +103,6 @@ namespace KaruahChessEngine
 		// Search operations
 		SearchResult SearchStart(const SearchOptions pSearchOptions);
 		
-
-		// Structure operations
-		UInt64 GetFeature(const Int32 pFeatureId);
 		
 
 	}

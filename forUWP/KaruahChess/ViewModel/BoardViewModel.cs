@@ -41,20 +41,16 @@ using Windows.Media.SpeechSynthesis;
 using KaruahChess.Voice;
 using Windows.Globalization;
 using Windows.Media.SpeechRecognition;
-using Windows.Media.Playback;
 using Windows.Media.Core;
 using KaruahChessEngine;
 using static KaruahChess.Rules.Move;
 using Windows.Foundation;
 
-
 namespace KaruahChess.ViewModel
 {
     public class BoardViewModel : BaseViewModel
     {
-        // variables       
-        BoardSquareDataService _dsBoardSquare;        
-        internal GameRecordDataService _dsGameRecord;
+        // variables             
         bool _boardResizeTimerRunning;
         Move _move ;                           
         CancellationTokenSource _ctsComputer;           
@@ -66,16 +62,18 @@ namespace KaruahChess.ViewModel
         TilePanel _boardTilePanelControl;
         PieceAnimation _pieceAnimationControl;
         Coordinates _coordinatesControl;
-        MediaPlayer _mediaplayer;        
+         
         VoiceRecognition _voiceRecogniser;
         ChessClock _chessClockControl;
         VoiceHelp _voiceHelpControl;
-        EngineSettings _engineSettingsControl;                
+        EngineSettings _engineSettingsControl;
+        SoundSettings _soundSettingsControl;
         BoardAnimation _boardAnimation;
         PieceEditTool _pieceEditToolControl;
         LevelIndicator _levelIndicatorControl;
         bool _pawnPromotionDialogOpen = false;
-        
+        MediaPlayerElement _mediaplayerReadText;
+        MediaPlayerElement _mediaplayerPieceMoveSound;
 
 
         public enum MoveTypeEnum { None = 0, Normal = 1, EnPassant = 2, Castle = 3, Promotion = 4 }
@@ -209,7 +207,7 @@ namespace KaruahChess.ViewModel
         public bool ComputerPlayerEnabled
         {
             get {
-                var paramComputerPlayerObj = ModelProvider.ParameterDataServiceObject.Get<ParamComputerPlayer>();
+                var paramComputerPlayerObj = ParameterDataService.instance.Get<ParamComputerPlayer>();
                 _computerPlayerEnabled = paramComputerPlayerObj;
                 return _computerPlayerEnabled.Enabled;
                  }
@@ -218,8 +216,8 @@ namespace KaruahChess.ViewModel
                 if (_computerPlayerEnabled != null && _computerPlayerEnabled.Enabled != value)
                 {
                     _computerPlayerEnabled.Enabled = value;
-                    ModelProvider.ParameterDataServiceObject.Set<ParamComputerPlayer>(_computerPlayerEnabled);
-                    UpdateBoardIndicators(_dsGameRecord.GetCurrentGame());
+                    ParameterDataService.instance.Set<ParamComputerPlayer>(_computerPlayerEnabled);
+                    UpdateBoardIndicators(GameRecordDataService.instance.GetCurrentGame());
                     RaisePropertyChanged(nameof(ComputerPlayerEnabled));
                 }
             }
@@ -233,7 +231,7 @@ namespace KaruahChess.ViewModel
         {
             get
             {
-                var paramComputerMoveFirstObj = ModelProvider.ParameterDataServiceObject.Get<ParamComputerMoveFirst>();
+                var paramComputerMoveFirstObj = ParameterDataService.instance.Get<ParamComputerMoveFirst>();
                 _ComputerMoveFirstEnabled = paramComputerMoveFirstObj;
                 return _ComputerMoveFirstEnabled.Enabled;
             }
@@ -242,8 +240,8 @@ namespace KaruahChess.ViewModel
                 if (_ComputerMoveFirstEnabled != null && _ComputerMoveFirstEnabled.Enabled != value)
                 {
                     _ComputerMoveFirstEnabled.Enabled = value;
-                    ModelProvider.ParameterDataServiceObject.Set<ParamComputerMoveFirst>(_ComputerMoveFirstEnabled);
-                    UpdateBoardIndicators(_dsGameRecord.GetCurrentGame());
+                    ParameterDataService.instance.Set<ParamComputerMoveFirst>(_ComputerMoveFirstEnabled);
+                    UpdateBoardIndicators(GameRecordDataService.instance.GetCurrentGame());
                     RaisePropertyChanged(nameof(ComputerMoveFirstEnabled));
                 }
             }
@@ -257,7 +255,7 @@ namespace KaruahChess.ViewModel
         {
             get
             {
-                var paramLevelAutoObj = ModelProvider.ParameterDataServiceObject.Get<ParamLevelAuto>();
+                var paramLevelAutoObj = ParameterDataService.instance.Get<ParamLevelAuto>();
                 _levelAutoEnabled = paramLevelAutoObj;
                 return _levelAutoEnabled.Enabled;
             }
@@ -266,8 +264,8 @@ namespace KaruahChess.ViewModel
                 if (_levelAutoEnabled != null && _levelAutoEnabled.Enabled != value)
                 {
                     _levelAutoEnabled.Enabled = value;
-                    ModelProvider.ParameterDataServiceObject.Set<ParamLevelAuto>(_levelAutoEnabled);
-                    UpdateBoardIndicators(_dsGameRecord.GetCurrentGame());
+                    ParameterDataService.instance.Set<ParamLevelAuto>(_levelAutoEnabled);
+                    UpdateBoardIndicators(GameRecordDataService.instance.GetCurrentGame());
                     RaisePropertyChanged(nameof(LevelAutoEnabled));
                 }
             }
@@ -281,7 +279,7 @@ namespace KaruahChess.ViewModel
         {
             get
             {
-                var paramLimitEngineStrengthELOObj = ModelProvider.ParameterDataServiceObject.Get<ParamLimitEngineStrengthELO>();
+                var paramLimitEngineStrengthELOObj = ParameterDataService.instance.Get<ParamLimitEngineStrengthELO>();
                 _limitEngineStrengthELO = paramLimitEngineStrengthELOObj;
                 return _limitEngineStrengthELO.eloRating;
             }
@@ -290,7 +288,7 @@ namespace KaruahChess.ViewModel
                 if (_limitEngineStrengthELO != null && _limitEngineStrengthELO.eloRating != value)
                 {
                     _limitEngineStrengthELO.eloRating = value;
-                    ModelProvider.ParameterDataServiceObject.Set<ParamLimitEngineStrengthELO>(_limitEngineStrengthELO);                    
+                    ParameterDataService.instance.Set<ParamLimitEngineStrengthELO>(_limitEngineStrengthELO);                    
                     RaisePropertyChanged(nameof(limitEngineStrengthELO));
                 }
             }
@@ -304,7 +302,7 @@ namespace KaruahChess.ViewModel
         {
             get
             {
-                var paramLimitAdvancedObj = ModelProvider.ParameterDataServiceObject.Get<ParamLimitAdvanced>();
+                var paramLimitAdvancedObj = ParameterDataService.instance.Get<ParamLimitAdvanced>();
                 _limitAdvancedEnabled = paramLimitAdvancedObj;
                 return _limitAdvancedEnabled.Enabled;
             }
@@ -313,7 +311,7 @@ namespace KaruahChess.ViewModel
                 if (_limitAdvancedEnabled != null && _limitAdvancedEnabled.Enabled != value)
                 {
                     _limitAdvancedEnabled.Enabled = value;
-                    ModelProvider.ParameterDataServiceObject.Set<ParamLimitAdvanced>(_limitAdvancedEnabled);
+                    ParameterDataService.instance.Set<ParamLimitAdvanced>(_limitAdvancedEnabled);
                     RaisePropertyChanged(nameof(LimitAdvancedEnabled));
                 }
             }
@@ -328,7 +326,7 @@ namespace KaruahChess.ViewModel
         {
             get
             {
-                var paramLimitDepthObj = ModelProvider.ParameterDataServiceObject.Get<ParamLimitDepth>();
+                var paramLimitDepthObj = ParameterDataService.instance.Get<ParamLimitDepth>();
                 _limitDepth = paramLimitDepthObj;
                 return _limitDepth.depth;
             }
@@ -337,7 +335,7 @@ namespace KaruahChess.ViewModel
                 if (_limitDepth != null && _limitDepth.depth != value)
                 {
                     _limitDepth.depth = value;
-                    ModelProvider.ParameterDataServiceObject.Set<ParamLimitDepth>(_limitDepth);
+                    ParameterDataService.instance.Set<ParamLimitDepth>(_limitDepth);
                     RaisePropertyChanged(nameof(limitDepth));
                 }
             }
@@ -351,7 +349,7 @@ namespace KaruahChess.ViewModel
         {
             get
             {
-                var paramLimitNodesObj = ModelProvider.ParameterDataServiceObject.Get<ParamLimitNodes>();
+                var paramLimitNodesObj = ParameterDataService.instance.Get<ParamLimitNodes>();
                 _limitNodes = paramLimitNodesObj;
                 return _limitNodes.nodes;
             }
@@ -360,7 +358,7 @@ namespace KaruahChess.ViewModel
                 if (_limitNodes != null && _limitNodes.nodes != value)
                 {
                     _limitNodes.nodes = value;
-                    ModelProvider.ParameterDataServiceObject.Set<ParamLimitNodes>(_limitNodes);
+                    ParameterDataService.instance.Set<ParamLimitNodes>(_limitNodes);
                     RaisePropertyChanged(nameof(limitNodes));
                 }
             }
@@ -374,7 +372,7 @@ namespace KaruahChess.ViewModel
         {
             get
             {
-                var paramLimitMoveDurationObj = ModelProvider.ParameterDataServiceObject.Get<ParamLimitMoveDuration>();
+                var paramLimitMoveDurationObj = ParameterDataService.instance.Get<ParamLimitMoveDuration>();
                 _limitMoveDuration = paramLimitMoveDurationObj;
                 return _limitMoveDuration.moveDurationMS;
             }
@@ -383,7 +381,7 @@ namespace KaruahChess.ViewModel
                 if (_limitMoveDuration != null && _limitMoveDuration.moveDurationMS != value)
                 {
                     _limitMoveDuration.moveDurationMS = value;
-                    ModelProvider.ParameterDataServiceObject.Set<ParamLimitMoveDuration>(_limitMoveDuration);
+                    ParameterDataService.instance.Set<ParamLimitMoveDuration>(_limitMoveDuration);
                     RaisePropertyChanged(nameof(limitMoveDuration));
                 }
             }
@@ -397,7 +395,7 @@ namespace KaruahChess.ViewModel
         {
             get
             {
-                var paramLimitThreadsObj = ModelProvider.ParameterDataServiceObject.Get<ParamLimitThreads>();
+                var paramLimitThreadsObj = ParameterDataService.instance.Get<ParamLimitThreads>();
                 _limitThreads = paramLimitThreadsObj;
                 return _limitThreads.threads;
             }
@@ -406,7 +404,7 @@ namespace KaruahChess.ViewModel
                 if (_limitThreads != null && _limitThreads.threads != value)
                 {
                     _limitThreads.threads = value;
-                    ModelProvider.ParameterDataServiceObject.Set<ParamLimitThreads>(_limitThreads);
+                    ParameterDataService.instance.Set<ParamLimitThreads>(_limitThreads);
                     RaisePropertyChanged(nameof(limitThreads));
                 }
             }
@@ -420,7 +418,7 @@ namespace KaruahChess.ViewModel
         {
             get
             {
-                var paramArrangeBoardEnabledObj = ModelProvider.ParameterDataServiceObject.Get<ParamArrangeBoard>();
+                var paramArrangeBoardEnabledObj = ParameterDataService.instance.Get<ParamArrangeBoard>();
                 _arrangeBoardEnabled = paramArrangeBoardEnabledObj;
                 return _arrangeBoardEnabled.Enabled;
             }
@@ -429,9 +427,9 @@ namespace KaruahChess.ViewModel
                 if (_arrangeBoardEnabled != null && _arrangeBoardEnabled.Enabled != value)
                 {
                     _arrangeBoardEnabled.Enabled = value;
-                    ModelProvider.ParameterDataServiceObject.Set<ParamArrangeBoard>(_arrangeBoardEnabled);
+                    ParameterDataService.instance.Set<ParamArrangeBoard>(_arrangeBoardEnabled);
                     BoardSquare.Shake(value);
-                    UpdateBoardIndicators(_dsGameRecord.GetCurrentGame());
+                    UpdateBoardIndicators(GameRecordDataService.instance.GetCurrentGame());
                     EndPieceAnimation();
                     RaisePropertyChanged(nameof(ArrangeBoardEnabled));
                     if (value == false && _pieceEditToolControl != null) _pieceEditToolControl.Close();
@@ -447,7 +445,7 @@ namespace KaruahChess.ViewModel
         {
             get
             {
-                var paramBoardCoordEnabledObj = ModelProvider.ParameterDataServiceObject.Get<ParamBoardCoord>();
+                var paramBoardCoordEnabledObj = ParameterDataService.instance.Get<ParamBoardCoord>();
                 _boardCoordEnabled = paramBoardCoordEnabledObj;
                 return _boardCoordEnabled.Enabled;
             }
@@ -456,7 +454,7 @@ namespace KaruahChess.ViewModel
                 if (_boardCoordEnabled != null && _boardCoordEnabled.Enabled != value)
                 {
                     _boardCoordEnabled.Enabled = value;
-                    ModelProvider.ParameterDataServiceObject.Set<ParamBoardCoord>(_boardCoordEnabled);
+                    ParameterDataService.instance.Set<ParamBoardCoord>(_boardCoordEnabled);
                     ResizeBoard();
                     RaisePropertyChanged(nameof(BoardCoordEnabled));
                 }
@@ -471,7 +469,7 @@ namespace KaruahChess.ViewModel
         {
             get
             {
-                var paramStructureEnabledObj = ModelProvider.ParameterDataServiceObject.Get<ParamNavigator>();
+                var paramStructureEnabledObj = ParameterDataService.instance.Get<ParamNavigator>();
                 _navigatorEnabled = paramStructureEnabledObj;
                 return _navigatorEnabled.Enabled;
             }
@@ -481,7 +479,7 @@ namespace KaruahChess.ViewModel
                 {
                     _navigatorEnabled.Enabled = value;
                     RefreshNavigation();
-                    ModelProvider.ParameterDataServiceObject.Set<ParamNavigator>(_navigatorEnabled);
+                    ParameterDataService.instance.Set<ParamNavigator>(_navigatorEnabled);
                     ResizeBoard();
                     RaisePropertyChanged(nameof(NavigatorEnabled));
                 }
@@ -497,7 +495,7 @@ namespace KaruahChess.ViewModel
         {
             get
             {
-                var paramMoveHighlightEnabledObj = ModelProvider.ParameterDataServiceObject.Get<ParamMoveHighlight>();
+                var paramMoveHighlightEnabledObj = ParameterDataService.instance.Get<ParamMoveHighlight>();
                 _moveHighlightEnabled = paramMoveHighlightEnabledObj;
                 return _moveHighlightEnabled.Enabled;
             }
@@ -506,7 +504,7 @@ namespace KaruahChess.ViewModel
                 if (_moveHighlightEnabled != null && _moveHighlightEnabled.Enabled != value)
                 {
                     _moveHighlightEnabled.Enabled = value;
-                    ModelProvider.ParameterDataServiceObject.Set<ParamMoveHighlight>(_moveHighlightEnabled);
+                    ParameterDataService.instance.Set<ParamMoveHighlight>(_moveHighlightEnabled);
                     RaisePropertyChanged(nameof(MoveHighlightEnabled));
 
                 }
@@ -521,7 +519,7 @@ namespace KaruahChess.ViewModel
         {
             get
             {
-                var paramClockEnabledObj = ModelProvider.ParameterDataServiceObject.Get<ParamClock>();
+                var paramClockEnabledObj = ParameterDataService.instance.Get<ParamClock>();
                 _clockEnabled = paramClockEnabledObj;
                 return _clockEnabled.Enabled;
             }
@@ -530,7 +528,7 @@ namespace KaruahChess.ViewModel
                 if (_clockEnabled != null && _clockEnabled.Enabled != value)
                 {
                     _clockEnabled.Enabled = value;
-                    ModelProvider.ParameterDataServiceObject.Set<ParamClock>(_clockEnabled);
+                    ParameterDataService.instance.Set<ParamClock>(_clockEnabled);
                     RaisePropertyChanged(nameof(ClockEnabled));
 
                 }
@@ -545,7 +543,7 @@ namespace KaruahChess.ViewModel
         {
             get
             {
-                var paramRotateBoardValueObj = ModelProvider.ParameterDataServiceObject.Get<ParamRotateBoard>();
+                var paramRotateBoardValueObj = ParameterDataService.instance.Get<ParamRotateBoard>();
                 _rotateBoardValue = paramRotateBoardValueObj;
                 return _rotateBoardValue.Value;
             }
@@ -554,7 +552,7 @@ namespace KaruahChess.ViewModel
                 if (_rotateBoardValue != null && _rotateBoardValue.Value != value)
                 {
                     _rotateBoardValue.Value = value;
-                    ModelProvider.ParameterDataServiceObject.Set<ParamRotateBoard>(_rotateBoardValue);                   
+                    ParameterDataService.instance.Set<ParamRotateBoard>(_rotateBoardValue);                   
                     RaisePropertyChanged(nameof(RotateBoardValue));
 
                 }
@@ -562,30 +560,53 @@ namespace KaruahChess.ViewModel
         }
 
         /// <summary>
-        /// Sounds enabled
+        /// Sounds read enabled
         /// </summary>  
-        private ParamSound _soundEnabled;
-        public bool SoundEnabled
+        private ParamSoundRead _soundReadEnabled;
+        public bool SoundReadEnabled
         {
             get
             {
-                var paramSoundEnabledObj = ModelProvider.ParameterDataServiceObject.Get<ParamSound>();
-                _soundEnabled = paramSoundEnabledObj;
-                return _soundEnabled.Enabled;
+                var paramSoundEnabledObj = ParameterDataService.instance.Get<ParamSoundRead>();
+                _soundReadEnabled = paramSoundEnabledObj;
+                return _soundReadEnabled.Enabled;
             }
             set
             {
-                if (_soundEnabled != null && _soundEnabled.Enabled != value)
+                if (_soundReadEnabled != null && _soundReadEnabled.Enabled != value)
                 {
-                    _soundEnabled.Enabled = value;
-                    ModelProvider.ParameterDataServiceObject.Set<ParamSound>(_soundEnabled);
-                    RaisePropertyChanged(nameof(SoundEnabled));
+                    _soundReadEnabled.Enabled = value;
+                    ParameterDataService.instance.Set<ParamSoundRead>(_soundReadEnabled);
+                    RaisePropertyChanged(nameof(SoundReadEnabled));
 
                 }
             }
         }
 
-        
+        /// <summary>
+        /// Sounds effects enabled
+        /// </summary>  
+        private ParamSoundEffect _soundEffectEnabled;
+        public bool SoundEffectEnabled
+        {
+            get
+            {
+                var paramSoundEnabledObj = ParameterDataService.instance.Get<ParamSoundEffect>();
+                _soundEffectEnabled = paramSoundEnabledObj;
+                return _soundEffectEnabled.Enabled;
+            }
+            set
+            {
+                if (_soundEffectEnabled != null && _soundEffectEnabled.Enabled != value)
+                {
+                    _soundEffectEnabled.Enabled = value;
+                    ParameterDataService.instance.Set<ParamSoundEffect>(_soundEffectEnabled);
+                    RaisePropertyChanged(nameof(SoundEffectEnabled));
+
+                }
+            }
+        }
+
         /// <summary>
         /// Lock panel flag
         /// </summary>
@@ -702,32 +723,29 @@ namespace KaruahChess.ViewModel
             _boardAnimation = new BoardAnimation();
 
             // Load media player
-            _mediaplayer = new MediaPlayer();                        
-            _mediaplayer.MediaEnded += MediaPlayer_MediaEnded;
-
-            // Load game record object
-            _dsGameRecord = new GameRecordDataService();
+            _mediaplayerReadText = new MediaPlayerElement();
+            _mediaplayerReadText.AutoPlay = false;
             
-           
 
-            // Load board square objects                 
-            _dsBoardSquare = new BoardSquareDataService();            
-                              
+            // Load sound effects
+            _mediaplayerPieceMoveSound = new MediaPlayerElement();
+            _mediaplayerPieceMoveSound.Source = MediaSource.CreateFromUri(new Uri("ms-appx:///Media/piecesound.wav"));
+            _mediaplayerPieceMoveSound.AutoPlay = false;
+ 
 
             // Create move object
-            _move = new Move(_dsBoardSquare);
+            _move = new Move(BoardSquareDataService.instance);
                         
             
             // Set the window size changed event                        
             Window.Current.SizeChanged += OnWindowSizeChanged;
                                    
             
-
             // Set feedback button visibility
             SetFeedbackVisibility();
 
 
-           
+            
 
 
         }
@@ -739,8 +757,8 @@ namespace KaruahChess.ViewModel
         public void PostInit()
         {
             // Load tiles           
-            _dsBoardSquare.Load(35, _dsGameRecord.GetCurrentGame());
-            BoardTiles = _dsBoardSquare.BoardTiles;
+            BoardSquareDataService.instance.Load(35, GameRecordDataService.instance.GetCurrentGame());
+            BoardTiles = BoardSquareDataService.instance.BoardTiles;
             
             // Navigate game to latest record
             NavigateMaxRecord();
@@ -749,7 +767,7 @@ namespace KaruahChess.ViewModel
             ResizeBoard();
 
             // Set clock offset
-            LoadChessClock(true, _dsGameRecord.GetCurrentGame());
+            LoadChessClock(true, GameRecordDataService.instance.GetCurrentGame());
 
             // Set board shake state
             BoardSquare.Shake(ArrangeBoardEnabled);
@@ -886,6 +904,16 @@ namespace KaruahChess.ViewModel
         }
 
         /// <summary>
+        /// Sets the sound settings control
+        /// </summary>
+        /// <param name="pSoundSettingsControl"></param>
+        public void SetSoundSettingsControl(SoundSettings pSoundSettingsControl)
+        {
+            _soundSettingsControl = pSoundSettingsControl;
+
+        }
+
+        /// <summary>
         /// Sets the level indicator control
         /// </summary>
         /// <param name="pLevelIndicatorControl"></param>
@@ -950,17 +978,17 @@ namespace KaruahChess.ViewModel
             }
 
             // Do the undo
-            var oldBoard = _dsGameRecord.Get();
+            var oldBoard = GameRecordDataService.instance.Get();
                         
-            var undo = _dsGameRecord.Undo();            
+            var undo = GameRecordDataService.instance.Undo();            
             if (undo)
             {
                 // Set the clock
-                LoadChessClock(true, _dsGameRecord.GetCurrentGame());
+                LoadChessClock(true, GameRecordDataService.instance.GetCurrentGame());
 
                 // Do rollback animation
-                var moveAnimationList = _boardAnimation.CreateAnimationList(oldBoard, _dsGameRecord.Get(), _dsBoardSquare);
-                _dsBoardSquare.Update(_dsGameRecord.GetCurrentGame(), false);
+                var moveAnimationList = _boardAnimation.CreateAnimationList(oldBoard, GameRecordDataService.instance.Get(), BoardSquareDataService.instance);
+                BoardSquareDataService.instance.Update(GameRecordDataService.instance.GetCurrentGame(), false);
                 await StartPieceAnimation(true, moveAnimationList, true);
 
 
@@ -990,7 +1018,7 @@ namespace KaruahChess.ViewModel
 
             // Get current board in view
             KaruahChessEngineClass board = new KaruahChessEngineClass();
-            var record = _dsGameRecord.Get(GameRecordCurrentValue);
+            var record = GameRecordDataService.instance.Get(GameRecordCurrentValue);
             board.SetBoardArray(record.BoardArray);
             board.SetStateArray(record.StateArray);
 
@@ -999,7 +1027,7 @@ namespace KaruahChess.ViewModel
             board.GetStateArray(record.StateArray);
 
             // Save changes
-            _dsGameRecord.UpdateGameState(record);
+            GameRecordDataService.instance.UpdateGameState(record);
             UpdateBoardIndicators(record);
 
             CheckChessClock();
@@ -1136,13 +1164,13 @@ namespace KaruahChess.ViewModel
                     await ImportDB.Import(file, ImportDB.ImportType.GameXML);
 
                     // Change transaction id
-                    _dsGameRecord.newTransaction();
+                    GameRecordDataService.instance.newTransaction();
 
                     // Load the latest record on to the board                    
                     NavigateMaxRecord();
 
-                    var gr = _dsGameRecord.Get();
-                    _dsBoardSquare.Update(gr, true);
+                    var gr = GameRecordDataService.instance.Get();
+                    BoardSquareDataService.instance.Update(gr, true);
 
                     LoadChessClock(true, gr);
 
@@ -1223,7 +1251,7 @@ namespace KaruahChess.ViewModel
             {
                 // Gets the array record of the board currently displayed
                 // and sets the export board control to the same.
-                GameRecordArray recordArray = _dsGameRecord.Get(GameRecordCurrentValue);
+                GameRecordArray recordArray = GameRecordDataService.instance.Get(GameRecordCurrentValue);
                 _exportControl.SetBoard(recordArray);
                 _exportControl.Show();
                 PositionBoardMessage();
@@ -1240,7 +1268,7 @@ namespace KaruahChess.ViewModel
         /// <param name="e"></param>
         public async void BoardTilePanel_TileClicked(TilePanel pTilePanel, object pEntity, int pTileId)
         {
-            bool gameFinished = !(_dsGameRecord.CurrentGame.GetStateGameStatus() == (int)BoardStatusEnum.Ready);
+            bool gameFinished = !(GameRecordDataService.instance.CurrentGame.GetStateGameStatus() == (int)BoardStatusEnum.Ready);
             
             if (pEntity != null && !ArrangeBoardEnabled) {
                 if (gameFinished == false)
@@ -1250,7 +1278,7 @@ namespace KaruahChess.ViewModel
                 }
                 else
                 {
-                    UpdateGameMessage(_dsGameRecord.GetCurrentGame());
+                    UpdateGameMessage(GameRecordDataService.instance.GetCurrentGame());
                 }
             }
             else if (_pieceEditToolControl != null && ArrangeBoardEnabled)
@@ -1267,7 +1295,7 @@ namespace KaruahChess.ViewModel
 
                     if (sq.PieceType == TypeEnum.King)
                     {
-                        var record = _dsGameRecord.Get(GameRecordCurrentValue);
+                        var record = GameRecordDataService.instance.Get(GameRecordCurrentValue);
                         CastlingRightsDialog castlingRights = new CastlingRightsDialog(sq.PieceType, sq.PieceColour, record, this);
                         castlingRights.ShowAsync();
                     }
@@ -1277,7 +1305,7 @@ namespace KaruahChess.ViewModel
                         else if (sq.PieceColour == ColourEnum.Black) _pieceEditToolControl.EditPieceColour = Common.Constants.BLACKPIECE;
 
                         Point tileCoord = pTilePanel.GetTileCoordinates(pTileId);
-                        _pieceEditToolControl.Show(sqIndex, tileCoord, _dsBoardSquare.SquareSize);
+                        _pieceEditToolControl.Show(sqIndex, tileCoord, BoardSquareDataService.instance.SquareSize);
 
                         BoardSquare.EllipseClearAll();
                         if (_pieceEditToolControl.IsOpen())
@@ -1306,8 +1334,8 @@ namespace KaruahChess.ViewModel
             // Add the moves
             if (!ArrangeBoardEnabled)
             {
-                await UserMoveAdd(_dsBoardSquare.Get(pFromIndex), false);
-                await UserMoveAdd(_dsBoardSquare.Get(pToIndex), false);
+                await UserMoveAdd(BoardSquareDataService.instance.Get(pFromIndex), false);
+                await UserMoveAdd(BoardSquareDataService.instance.Get(pToIndex), false);
             }
             else
             {
@@ -1335,6 +1363,17 @@ namespace KaruahChess.ViewModel
             }
         }
 
+        /// <summary>
+        /// Sound settings button event
+        /// </summary>
+        public void btnSoundSettings_Click(object sender, RoutedEventArgs e)
+        {
+            if (_soundSettingsControl != null)
+            {
+                _soundSettingsControl.Show();
+            }
+        }
+
 
         /// <summary>
         /// Starts the animation
@@ -1346,7 +1385,7 @@ namespace KaruahChess.ViewModel
                 LockPanel = true;
             }
 
-            var animComplete = await _pieceAnimationControl.RunAnimation(_dsBoardSquare,pAnimationList);
+            var animComplete = await _pieceAnimationControl.RunAnimation(BoardSquareDataService.instance,pAnimationList);
             if (animComplete && pEndClear) { 
                EndPieceAnimation();
             }                
@@ -1361,8 +1400,8 @@ namespace KaruahChess.ViewModel
         /// </summary>
         private void EndPieceAnimation()
         {
-            if (_dsBoardSquare != null) { 
-                _dsBoardSquare.ShowAllHidden();
+            if (BoardSquareDataService.instance != null) { 
+                BoardSquareDataService.instance.ShowAllHidden();
             }
 
             if (_pieceAnimationControl != null) { 
@@ -1379,7 +1418,7 @@ namespace KaruahChess.ViewModel
         {
             if (ArrangeBoardEnabled)
             {
-                GameRecordArray record = _dsGameRecord.Get(GameRecordCurrentValue);
+                GameRecordArray record = GameRecordDataService.instance.Get(GameRecordCurrentValue);
                 _pieceEditToolControl.BufferBoard.SetBoardArray(record.BoardArray);
                 _pieceEditToolControl.BufferBoard.SetStateArray(record.StateArray);
                                 
@@ -1389,8 +1428,8 @@ namespace KaruahChess.ViewModel
                 {
                     _pieceEditToolControl.BufferBoard.GetBoardArray(record.BoardArray);
                     _pieceEditToolControl.BufferBoard.GetStateArray(record.StateArray);                    
-                    _dsBoardSquare.Update(record, true);
-                    _dsGameRecord.UpdateGameState(record);
+                    BoardSquareDataService.instance.Update(record, true);
+                    GameRecordDataService.instance.UpdateGameState(record);
                 }
                 else {
                     ShowBoardMessage("", mResult.returnMessage, TextMessage.TypeEnum.Error, TextMessage.AnimationEnum.FadeOut);
@@ -1411,7 +1450,7 @@ namespace KaruahChess.ViewModel
         {
             if (ArrangeBoardEnabled)
             {
-                GameRecordArray record = _dsGameRecord.Get(GameRecordCurrentValue);
+                GameRecordArray record = GameRecordDataService.instance.Get(GameRecordCurrentValue);
                 _pieceEditToolControl.BufferBoard.SetBoardArray(record.BoardArray);
                 _pieceEditToolControl.BufferBoard.SetStateArray(record.StateArray);
                                 
@@ -1421,8 +1460,8 @@ namespace KaruahChess.ViewModel
                 {
                     _pieceEditToolControl.BufferBoard.GetBoardArray(record.BoardArray);
                     _pieceEditToolControl.BufferBoard.GetStateArray(record.StateArray);
-                    _dsBoardSquare.Update(record, true);
-                    _dsGameRecord.UpdateGameState(record);
+                    BoardSquareDataService.instance.Update(record, true);
+                    GameRecordDataService.instance.UpdateGameState(record);
                 }
                 else
                 {
@@ -1447,7 +1486,7 @@ namespace KaruahChess.ViewModel
             }
 
             // Ensure game record is set to the latest
-            int maxRecId = _dsGameRecord.GetMaxId();
+            int maxRecId = GameRecordDataService.instance.GetMaxId();
             if (GameRecordCurrentValue != maxRecId) {
                 NavigateGameRecord(maxRecId, false);
                 _move.Clear();
@@ -1469,35 +1508,35 @@ namespace KaruahChess.ViewModel
             else highlight = HighlightEnum.Select;
 
             // Create proposed move   
-            bool moveSelected =_move.Add(pBoardSquare.Index, _dsGameRecord.CurrentGame, highlight);
+            bool moveSelected =_move.Add(pBoardSquare.Index, GameRecordDataService.instance.CurrentGame, highlight);
                         
             // Restart the computer move (if required)
             await StartComputerMoveTask();
 
             if (moveSelected)
             {
-                GameRecordArray boardBeforeMove = _dsGameRecord.GetCurrentGame();                
+                GameRecordArray boardBeforeMove = GameRecordDataService.instance.GetCurrentGame();                
                 
                 // Ask user what pawn promotion piece they wish to use, if a promoting pawn move
                 int promotionPiece = (int)PawnPromotionEnum.Queen; // default
-                if (_dsGameRecord.CurrentGame.IsPawnPromotion(_move.FromIndex, _move.ToIndex))
+                if (GameRecordDataService.instance.CurrentGame.IsPawnPromotion(_move.FromIndex, _move.ToIndex))
                 {
                     _pawnPromotionDialogOpen = true;
                     var promotionDialog = new PawnPromotionDialog();
-                    promotionDialog.CreateContent(_dsGameRecord.CurrentGame.GetStateActiveColour());
+                    promotionDialog.CreateContent(GameRecordDataService.instance.CurrentGame.GetStateActiveColour());
                     await promotionDialog.ShowAsync();
                     promotionPiece = promotionDialog.Result;
                     _pawnPromotionDialogOpen = false;
                 }
 
                 // Do the move                    
-                int gameStatusBeforeMove = _dsGameRecord.CurrentGame.GetStateGameStatus();                    
-                var mResult = _dsGameRecord.CurrentGame.Move(_move.FromIndex, _move.ToIndex, promotionPiece, true, true);                    
+                int gameStatusBeforeMove = GameRecordDataService.instance.CurrentGame.GetStateGameStatus();                    
+                var mResult = GameRecordDataService.instance.CurrentGame.Move(_move.FromIndex, _move.ToIndex, promotionPiece, true, true);                    
                                
                 if (mResult.success)
                 {
                     // Read Text, show message
-                    Task readTask = null;
+                    var soundTasks = new List<Task>();
                     if (mResult.returnMessage != String.Empty)
                     {
                         await ShowBoardMessage("", mResult.returnMessage, TextMessage.TypeEnum.Info, TextMessage.AnimationEnum.FadeOut);
@@ -1505,28 +1544,33 @@ namespace KaruahChess.ViewModel
                     else
                     {                        
                         var ssml = GetBoardSquareSSML(mResult.moveDataStr);
-                        readTask = ReadText(ssml);
+                        soundTasks.Add(ReadText(ssml));
                     }
 
                     // Do animation
-                    var boardAfterMove = _dsGameRecord.GetCurrentGame();
-                    long transId = _dsGameRecord.transactionId;
+                    var boardAfterMove = GameRecordDataService.instance.GetCurrentGame();
+                    long transId = GameRecordDataService.instance.transactionId;
 
                     if (pAnimate) {
-                        var moveAnimationList = _boardAnimation.CreateAnimationList(boardBeforeMove, boardAfterMove, _dsBoardSquare);
-                        _dsBoardSquare.Update(boardAfterMove, false);
+                        var moveAnimationList = _boardAnimation.CreateAnimationList(boardBeforeMove, boardAfterMove, BoardSquareDataService.instance);
+                        BoardSquareDataService.instance.Update(boardAfterMove, false);
                         await StartPieceAnimation(true, moveAnimationList, true);                       
                     }
                     else  {
-                        _dsBoardSquare.Update(boardAfterMove, true);
+                        BoardSquareDataService.instance.Update(boardAfterMove, true);
                     }
 
-                    // Wait for read task to finish
-                    if (readTask != null) await Task.WhenAny(readTask, Task.Delay(2000));
-                
+                    // Piece move sound effect
+                    soundTasks.Add(playPieceMoveSoundEffect());
+
+                    // Wait for sound tasks to finish
+                    if (soundTasks.Count > 0)
+                    {
+                        await Task.WhenAll(soundTasks);
+                    }
 
                     // Continue if nothing changed during the animation
-                    if (transId == _dsGameRecord.transactionId)
+                    if (transId == GameRecordDataService.instance.transactionId)
                     {
 
                         // Check the clock
@@ -1536,9 +1580,9 @@ namespace KaruahChess.ViewModel
                         RecordCurrentGameState();
 
                         // Update score if checkmate occurred
-                        if (gameStatusBeforeMove == (int)BoardStatusEnum.Ready && _dsGameRecord.CurrentGame.GetStateGameStatus() == (int)BoardStatusEnum.Checkmate)
+                        if (gameStatusBeforeMove == (int)BoardStatusEnum.Ready && GameRecordDataService.instance.CurrentGame.GetStateGameStatus() == (int)BoardStatusEnum.Checkmate)
                         {
-                            await afterCheckMate(_dsGameRecord.CurrentGame);
+                            await afterCheckMate(GameRecordDataService.instance.CurrentGame);
                         }
 
                         // Start computer move if enabled
@@ -1569,7 +1613,7 @@ namespace KaruahChess.ViewModel
         private bool IsComputerTurn()
         {
             int computerColour = ComputerMoveFirstEnabled ? (int)ColourEnum.White : (int)ColourEnum.Black;
-            var turnColour = _dsGameRecord.CurrentGame.GetStateActiveColour();
+            var turnColour = GameRecordDataService.instance.CurrentGame.GetStateActiveColour();
 
             if (computerColour == turnColour && ComputerPlayerEnabled) return true;
             else return false;
@@ -1584,8 +1628,8 @@ namespace KaruahChess.ViewModel
         {
 
             int computerColour = ComputerMoveFirstEnabled ? (int)ColourEnum.White : (int)ColourEnum.Black;
-            var turnColour = _dsGameRecord.CurrentGame.GetStateActiveColour();
-            var boardStatus = _dsGameRecord.CurrentGame.GetStateGameStatus();
+            var turnColour = GameRecordDataService.instance.CurrentGame.GetStateActiveColour();
+            var boardStatus = GameRecordDataService.instance.CurrentGame.GetStateGameStatus();
             
             if (boardStatus == 0 && (!ComputerMoveProcessing) && (!ArrangeBoardEnabled) && ComputerPlayerEnabled && computerColour == turnColour) {
                 LockPanel = true;
@@ -1595,12 +1639,12 @@ namespace KaruahChess.ViewModel
 
                 _ctsComputer = new CancellationTokenSource();
                 var token = _ctsComputer.Token;
-                token.Register(() => _dsGameRecord.CurrentGame.CancelSearch());
+                token.Register(() => GameRecordDataService.instance.CurrentGame.CancelSearch());
                 
                 ComputerMoveProcessing = true;
                                 
-                GameRecordArray boardBeforeMove = _dsGameRecord.GetCurrentGame();
-                int gameStatusBeforeMove = _dsGameRecord.CurrentGame.GetStateGameStatus();
+                GameRecordArray boardBeforeMove = GameRecordDataService.instance.GetCurrentGame();
+                int gameStatusBeforeMove = GameRecordDataService.instance.CurrentGame.GetStateGameStatus();
 
                 // Start the search      
                 SearchOptions options;
@@ -1621,44 +1665,49 @@ namespace KaruahChess.ViewModel
                 }
 
 
-                var moveTask = Task.Run(() => _dsGameRecord.CurrentGame.SearchStart(options), token);
+                var moveTask = Task.Run(() => GameRecordDataService.instance.CurrentGame.SearchStart(options), token);
                 SearchResult topMove = await moveTask;
                  
                 if((!topMove.cancelled) && (topMove.error == 0)) { 
-                    MoveResult mResult = _dsGameRecord.CurrentGame.Move(topMove.moveFromIndex, topMove.moveToIndex, topMove.promotionPieceType, true, true);
+                    MoveResult mResult = GameRecordDataService.instance.CurrentGame.Move(topMove.moveFromIndex, topMove.moveToIndex, topMove.promotionPieceType, true, true);
                     if (mResult.success) {
 
                         // Read Text, show message
-                        Task readTask = null;
+                        var soundTasks = new List<Task>();
                         var rtnMessage = mResult.returnMessage;
                         if (rtnMessage != String.Empty) {
                             await ShowBoardMessage("", rtnMessage, TextMessage.TypeEnum.Info, TextMessage.AnimationEnum.FadeOut);                            
                         }
-                        else {                                                    
-                            readTask = ReadText(GetBoardSquareSSML(mResult.moveDataStr));
+                        else {
+                            soundTasks.Add(ReadText(GetBoardSquareSSML(mResult.moveDataStr)));
                         }
 
                         // Do animation
-                        var boardAfterMove = _dsGameRecord.GetCurrentGame();
-                        var moveAnimationList = _boardAnimation.CreateAnimationList(boardBeforeMove, boardAfterMove, _dsBoardSquare);
-                        _dsBoardSquare.Update(boardAfterMove, true);
+                        var boardAfterMove = GameRecordDataService.instance.GetCurrentGame();
+                        var moveAnimationList = _boardAnimation.CreateAnimationList(boardBeforeMove, boardAfterMove, BoardSquareDataService.instance);
+                        BoardSquareDataService.instance.Update(boardAfterMove, true);
 
-                        long transId = _dsGameRecord.transactionId;
+                        long transId = GameRecordDataService.instance.transactionId;
                         await StartPieceAnimation(true, moveAnimationList, true);
 
-                        // Wait for read task to finish
-                        if (readTask != null) await Task.WhenAny(readTask, Task.Delay(2000));
+                        // Piece move sound effect
+                        soundTasks.Add(playPieceMoveSoundEffect());
+
+                        // Wait for sound tasks to finish
+                        if (soundTasks.Count > 0) {
+                            await Task.WhenAll(soundTasks);
+                        }
 
                         // Continue if nothing changed during the animation
-                        if (transId == _dsGameRecord.transactionId)
+                        if (transId == GameRecordDataService.instance.transactionId)
                         {
                             CheckChessClock();
                             RecordCurrentGameState();
-
+                                                        
                             // Update score if checkmate occurred
-                            if (gameStatusBeforeMove == (int)BoardStatusEnum.Ready && _dsGameRecord.CurrentGame.GetStateGameStatus() == (int)BoardStatusEnum.Checkmate)
+                            if (gameStatusBeforeMove == (int)BoardStatusEnum.Ready && GameRecordDataService.instance.CurrentGame.GetStateGameStatus() == (int)BoardStatusEnum.Checkmate)
                             {
-                                await afterCheckMate(_dsGameRecord.CurrentGame);
+                                await afterCheckMate(GameRecordDataService.instance.CurrentGame);
                             }
                         }
 
@@ -1731,8 +1780,8 @@ namespace KaruahChess.ViewModel
 
             // Initialise a new game
             LockPanel = true;
-            _dsGameRecord.Reset();
-            _dsBoardSquare.Update(_dsGameRecord.GetCurrentGame(), true);
+            GameRecordDataService.instance.Reset();
+            BoardSquareDataService.instance.Update(GameRecordDataService.instance.GetCurrentGame(), true);
 
 
             // Ensure max record game is on the board  
@@ -1748,7 +1797,7 @@ namespace KaruahChess.ViewModel
             ResetChessClock();
 
             // Update board indicators
-            UpdateBoardIndicators(_dsGameRecord.GetCurrentGame());
+            UpdateBoardIndicators(GameRecordDataService.instance.GetCurrentGame());
 
             // Refresh Navigation
             RefreshNavigation();
@@ -1784,19 +1833,19 @@ namespace KaruahChess.ViewModel
             // Ensure game record is set to the latest
             NavigateMaxRecord();
 
-            var status = _dsGameRecord.CurrentGame.GetStateGameStatus(); 
+            var status = GameRecordDataService.instance.CurrentGame.GetStateGameStatus(); 
            
             // Only resign if game is not already finished
-            if (status == (int)BoardStatusEnum.Ready && _dsGameRecord.CurrentGame.GetStateFullMoveCount() > 0) {
+            if (status == (int)BoardStatusEnum.Ready && GameRecordDataService.instance.CurrentGame.GetStateFullMoveCount() > 0) {
                 stopMoveJob();
 
                 // Set the state of the game to resign
-                _dsGameRecord.CurrentGame.SetStateGameStatus((int)BoardStatusEnum.Resigned);
+                GameRecordDataService.instance.CurrentGame.SetStateGameStatus((int)BoardStatusEnum.Resigned);
 
                 // Record current game state                    
                 RecordCurrentGameState();
 
-                var turn = _dsGameRecord.CurrentGame.GetStateActiveColour();
+                var turn = GameRecordDataService.instance.CurrentGame.GetStateActiveColour();
                 // Do animation, update score and display message
                 if (turn == -1)
                 {
@@ -1807,7 +1856,7 @@ namespace KaruahChess.ViewModel
                     await doKingFallAnimation(ColourEnum.Black);
                 }
 
-                UpdateBoardIndicators(_dsGameRecord.GetCurrentGame());
+                UpdateBoardIndicators(GameRecordDataService.instance.GetCurrentGame());
             } 
             else
             {
@@ -2082,7 +2131,7 @@ namespace KaruahChess.ViewModel
             }
 
             // Set tile size
-            _dsBoardSquare.SquareSize = tileSize;               
+            BoardSquareDataService.instance.SquareSize = tileSize;               
             
             foreach (var item in BoardTiles)
             {
@@ -2145,22 +2194,22 @@ namespace KaruahChess.ViewModel
         /// <param name="pTurn"></param>
         private async Task KingFallAnimation(int pTurn)
         {
-            int kingIndex = _dsGameRecord.CurrentGame.GetKingIndex(pTurn);
+            int kingIndex = GameRecordDataService.instance.CurrentGame.GetKingIndex(pTurn);
             if (kingIndex >= 0)
             {
-                var kingTile = _dsBoardSquare.BoardTiles[kingIndex];
+                var kingTile = BoardSquareDataService.instance.BoardTiles[kingIndex];
                 var kingTilePoint = kingTile.Coordinates();
 
                 PieceAnimationInstruction instruction = new PieceAnimationInstruction();
                 instruction.AnimationType = PieceAnimationInstruction.AnimationTypeEnum.Fall;
-                instruction.ImageData = _dsBoardSquare.Get(kingIndex).Piece.ImageData;
+                instruction.ImageData = BoardSquareDataService.instance.Get(kingIndex).Piece.ImageData;
                 instruction.MoveFrom = kingTilePoint;
                 instruction.MoveTo = kingTilePoint;
 
                 List<PieceAnimationInstruction> animationList = new List<PieceAnimationInstruction>(1);
                 animationList.Add(instruction);
                                 
-                _dsBoardSquare.Hide(kingIndex);
+                BoardSquareDataService.instance.Hide(kingIndex);
                 await StartPieceAnimation(false, animationList, false);
             }
                         
@@ -2276,7 +2325,11 @@ namespace KaruahChess.ViewModel
                 _engineSettingsControl.SetPosition(BoardWidth);
             }
 
-            
+            if (_soundSettingsControl != null)
+            {
+                _soundSettingsControl.SetPosition(BoardWidth);
+            }
+
         }
 
         /// <summary>
@@ -2297,7 +2350,7 @@ namespace KaruahChess.ViewModel
                 }
 
                 // Record current game state                 
-                int success =  _dsGameRecord.RecordGameState(whiteClock, blackClock);
+                int success =  GameRecordDataService.instance.RecordGameState(whiteClock, blackClock);
                 if (success > 0)
                 {
                     // Ensure game record position is set to max value
@@ -2389,11 +2442,9 @@ namespace KaruahChess.ViewModel
         /// <param name="pText"></param>
         private async Task ReadText(string pText)
         {
-            if (SoundEnabled) { 
+            if (SoundReadEnabled) {
                 // Pause recogniser
-                if (_voiceRecogniser != null) { 
-                    _voiceRecogniser.Ignore = true;
-                }
+                VoiceRecogniserIgnoreIncrement();
 
                 // Phonemes
                 if (pText == "En passant")
@@ -2406,31 +2457,36 @@ namespace KaruahChess.ViewModel
                 {                
                     VoiceInformation voiceInfo = SpeechSynthesizer.DefaultVoice;
                 
-                    if (voiceInfo != null) {
+                    if (voiceInfo != null) {                        
                         var tcs = new TaskCompletionSource<bool>();
                         string langTag = voiceInfo.Language;                                
                         string ssml = @"<speak version='1.0' xmlns='http://www.w3.org/2001/10/synthesis' xml:lang='" + langTag + "'>" + pText + "</speak>";                                            
                         SpeechSynthesisStream stream = await speech.SynthesizeSsmlToStreamAsync(ssml);
                         var source = MediaSource.CreateFromStream(stream, stream.ContentType);
-                        _mediaplayer.Source = source; 
-                        _mediaplayer.MediaEnded += (sender, e) =>
+                                                
+                        var mediaEndedHandler = new TypedEventHandler<Windows.Media.Playback.MediaPlayer, object>((player, resource) =>
                         {
                             tcs.TrySetResult(true);
-                        };
-                        _mediaplayer.Play();
-                        await tcs.Task;
-                    }
+                        });
+                        _mediaplayerReadText.Source = source;
+                        _mediaplayerReadText.MediaPlayer.MediaEnded += mediaEndedHandler;
+                        _mediaplayerReadText.MediaPlayer.PlaybackSession.Position = new TimeSpan(0, 0, 0);
+                        _mediaplayerReadText.MediaPlayer.Play();
 
-                    
+                        // Wait here, but timeout after 2 seconds
+                        await Task.WhenAny(tcs.Task, Task.Delay(2000));
+
+                        _mediaplayerReadText.MediaPlayer.MediaEnded -= mediaEndedHandler;
+                    }
                 }
 
+                VoiceRecogniserIgnoreDecrement();
+
             }
-
             
-
         }
 
-               
+
         /// <summary>
         /// Start voice recognition
         /// </summary>
@@ -2530,11 +2586,11 @@ namespace KaruahChess.ViewModel
                         }
                         else
                         {                            
-                            int maxRecId = _dsGameRecord.GetMaxId();
+                            int maxRecId = GameRecordDataService.instance.GetMaxId();
                             if (GameRecordCurrentValue == maxRecId)
                             {   // Add the moves
-                                await UserMoveAdd(_dsBoardSquare.Get(pMoveList[0]), true);
-                                await UserMoveAdd(_dsBoardSquare.Get(pMoveList[1]), true);
+                                await UserMoveAdd(BoardSquareDataService.instance.Get(pMoveList[0]), true);
+                                await UserMoveAdd(BoardSquareDataService.instance.Get(pMoveList[1]), true);
                             }
                             else
                             {
@@ -2564,7 +2620,7 @@ namespace KaruahChess.ViewModel
 
 
                     // Ensure max is displayed
-                    int maxRecId = _dsGameRecord.GetMaxId();
+                    int maxRecId = GameRecordDataService.instance.GetMaxId();
 
                    
                     // Attempt to add the move
@@ -2587,12 +2643,12 @@ namespace KaruahChess.ViewModel
                             // If no colour was specified, substitute in the active colour
                             if (pMoveCommand[0] == String.Empty && ArrangeBoardEnabled == false)
                             {
-                                if (_dsGameRecord.CurrentGame.GetStateActiveColour() == Constants.WHITEPIECE) pMoveCommand[0] = "White";
-                                else if (_dsGameRecord.CurrentGame.GetStateActiveColour() == Constants.BLACKPIECE) pMoveCommand[0] = "Black";
+                                if (GameRecordDataService.instance.CurrentGame.GetStateActiveColour() == Constants.WHITEPIECE) pMoveCommand[0] = "White";
+                                else if (GameRecordDataService.instance.CurrentGame.GetStateActiveColour() == Constants.BLACKPIECE) pMoveCommand[0] = "Black";
                             }
 
                             var pieceName = (pMoveCommand[0] + " " + pMoveCommand[1]).Trim();
-                            var fromSpin = _dsGameRecord.CurrentGame.GetSpinFromPieceName(pieceName);
+                            var fromSpin = GameRecordDataService.instance.CurrentGame.GetSpinFromPieceName(pieceName);
 
                             // Get to index
                             int toIndex = -1;
@@ -2601,7 +2657,7 @@ namespace KaruahChess.ViewModel
                                 toIndex = helper.BoardCoordinateReverseDict[pMoveCommand[2]];
                             }
                             
-                            var fromIndex = _dsGameRecord.CurrentGame.FindFromIndex(toIndex, fromSpin, null);
+                            var fromIndex = GameRecordDataService.instance.CurrentGame.FindFromIndex(toIndex, fromSpin, null);
                                                         
                             if (fromIndex == -1) msg = pTextSpoken + " is not a valid move.";
                             else if (fromIndex == -2) msg = pTextSpoken + " is ambiguous. Try using coordinates instead.";
@@ -2612,8 +2668,8 @@ namespace KaruahChess.ViewModel
 
 
                                 // Do the move
-                                await UserMoveAdd(_dsBoardSquare.Get(fromIndex), true);
-                                await UserMoveAdd(_dsBoardSquare.Get(toIndex), true);
+                                await UserMoveAdd(BoardSquareDataService.instance.Get(fromIndex), true);
+                                await UserMoveAdd(BoardSquareDataService.instance.Get(toIndex), true);
                             }                           
                         }
                     }
@@ -2650,12 +2706,12 @@ namespace KaruahChess.ViewModel
 
                         foreach (var fenStr in pActionList)
                         {
-                            var coordList = _dsBoardSquare.LocatePiece(fenStr);
+                            var coordList = BoardSquareDataService.instance.LocatePiece(fenStr);
                             var coordCount = coordList.Count;
                             if (coordList.Count > 0)
                             {
                                 pieceFound = true;
-                                var title = _dsGameRecord.CurrentGame.GetPieceNameFromChar(fenStr);
+                                var title = GameRecordDataService.instance.CurrentGame.GetPieceNameFromChar(fenStr);
                                 msg += title + "; ";
                                 msgSSML += title + ". <prosody rate='0.7'>";
                                 for (int i = 0; i < coordCount; i++)
@@ -2695,14 +2751,27 @@ namespace KaruahChess.ViewModel
 
         }
 
+        /// <summary>
+        /// Increment the ignore flag on the voice recogniser
+        /// </summary>
+        private async void VoiceRecogniserIgnoreIncrement()
+        {
+            if (_voiceRecogniser != null)
+            {                
+                _voiceRecogniser.Ignore++;
+            }
+        }
 
-        // Runs when the media play ends
-        private async void MediaPlayer_MediaEnded(MediaPlayer player, object sender)
+        /// <summary>
+        /// Decrement the ignore flag on the voice recogniser
+        /// </summary>
+        private async void VoiceRecogniserIgnoreDecrement()
         {
             // 1 second delay to drop any synthesiser voice that may have been captured
-            if (_voiceRecogniser != null) { 
+            if (_voiceRecogniser != null)
+            {
                 await Task.Delay(1000);
-                _voiceRecogniser.Ignore = false;
+                _voiceRecogniser.Ignore--;
             }
         }
 
@@ -2710,7 +2779,7 @@ namespace KaruahChess.ViewModel
         /// <summary>
         /// Starts the chess clock based on current turn
         /// </summary>
-       private void CheckChessClock()
+        private void CheckChessClock()
         {
             if (_chessClockControl != null) {
                 if (ArrangeBoardEnabled)
@@ -2718,11 +2787,11 @@ namespace KaruahChess.ViewModel
                     _chessClockControl.StopAll();
                 }
                 else {
-                    var turn = _dsGameRecord.CurrentGame.GetStateActiveColour();
+                    var turn = GameRecordDataService.instance.CurrentGame.GetStateActiveColour();
                     _chessClockControl.Start(turn);
                 }
 
-                if (GameRecordCurrentValue == _dsGameRecord.GetMaxId()) _chessClockControl.ShowCurrentTime();
+                if (GameRecordCurrentValue == GameRecordDataService.instance.GetMaxId()) _chessClockControl.ShowCurrentTime();
                 
             }
 
@@ -2748,7 +2817,7 @@ namespace KaruahChess.ViewModel
             // Switches between historical and current
             if (_chessClockControl != null)
             {                
-                if (GameRecordCurrentValue == _dsGameRecord.GetMaxId()) _chessClockControl.ShowCurrentTime();                                    
+                if (GameRecordCurrentValue == GameRecordDataService.instance.GetMaxId()) _chessClockControl.ShowCurrentTime();                                    
                 else _chessClockControl.ShowHistoricalTime(board.GetStateWhiteClockOffset(),
                                                            board.GetStateBlackClockOffset());
                 
@@ -2780,8 +2849,8 @@ namespace KaruahChess.ViewModel
             if (pRecId > 0)
             {   
 
-                GameRecordArray oldBoard = _dsGameRecord.Get(GameRecordCurrentValue);
-                GameRecordArray updatedBoard = _dsGameRecord.Get(pRecId);
+                GameRecordArray oldBoard = GameRecordDataService.instance.Get(GameRecordCurrentValue);
+                GameRecordArray updatedBoard = GameRecordDataService.instance.Get(pRecId);
 
                 // Update board displayed with requested record
                 if (updatedBoard != null)
@@ -2791,15 +2860,15 @@ namespace KaruahChess.ViewModel
 
                     // Do animation
                     if (pAnimate) { 
-                        var moveAnimationList = _boardAnimation.CreateAnimationList(oldBoard, updatedBoard, _dsBoardSquare);
-                        _dsBoardSquare.Update(updatedBoard, false);
+                        var moveAnimationList = _boardAnimation.CreateAnimationList(oldBoard, updatedBoard, BoardSquareDataService.instance);
+                        BoardSquareDataService.instance.Update(updatedBoard, false);
                         GameRecordCurrentValue = pRecId;
                         UpdateBoardIndicators(updatedBoard);
                         LoadChessClock(false, updatedBoard);
                         await StartPieceAnimation(true, moveAnimationList, true);
                     }
                     else { 
-                        _dsBoardSquare.Update(updatedBoard, true);
+                        BoardSquareDataService.instance.Update(updatedBoard, true);
                         GameRecordCurrentValue = pRecId;
                         UpdateBoardIndicators(updatedBoard);
                         LoadChessClock(false, updatedBoard);
@@ -2825,7 +2894,7 @@ namespace KaruahChess.ViewModel
         /// </summary>
         public void NavigateMaxRecord()
         {
-            int maxId = _dsGameRecord.GetMaxId();
+            int maxId = GameRecordDataService.instance.GetMaxId();
             NavigateGameRecord(maxId, false);
         }
 
@@ -2849,9 +2918,9 @@ namespace KaruahChess.ViewModel
         /// </summary>
         private void HighlightLastMove()
         {
-            GameRecordArray currentBoard = _dsGameRecord.Get((int)GameRecordCurrentValue);
-            GameRecordArray previousBoard = _dsGameRecord.Get((int)GameRecordCurrentValue - 1);
-            var lastChanges = _dsGameRecord.GetBoardSquareChanges(currentBoard, previousBoard);
+            GameRecordArray currentBoard = GameRecordDataService.instance.Get((int)GameRecordCurrentValue);
+            GameRecordArray previousBoard = GameRecordDataService.instance.Get((int)GameRecordCurrentValue - 1);
+            var lastChanges = GameRecordDataService.instance.GetBoardSquareChanges(currentBoard, previousBoard);
 
             if (lastChanges.Count > 0)
             {
@@ -2864,52 +2933,7 @@ namespace KaruahChess.ViewModel
                 
             }
         }
-
-
-        /// <summary>
-        /// Highlight backward pawns
-        /// </summary>
-        public void HighlightFeature(KaruahChessEngineClass pChessEngine, List<int> pFeatureIdList)
-        {
-            // Get the board that is currently visible
-            GameRecordArray currentBoard = _dsGameRecord.Get((int)GameRecordCurrentValue);
-            pChessEngine.SetBoardArray(currentBoard.BoardArray);
-            pChessEngine.SetStateArray(currentBoard.StateArray);
-
-            // Combine features in the list
-            UInt64 allFeatures = 0UL;
-            foreach (int featureId in pFeatureIdList)
-            {
-                allFeatures |= pChessEngine.GetFeature(featureId);
-            }
-                        
-
-            HashSet<int> featuresToHighlight = new HashSet<int>();
-            for (int sqIndex = 0; sqIndex < 64; sqIndex++)
-            {
-                UInt64 sqMask = Constants.BITMASK >> sqIndex;
-                if ((sqMask & allFeatures) > 0UL)
-                {
-                    featuresToHighlight.Add(sqIndex);
-                }
-
-            }
-
-            // Highlight all the backward pawns
-            if (featuresToHighlight.Count > 0)
-            {
-                SolidColorBrush rectColour = new SolidColorBrush(Color.FromArgb(255, 233, 30, 99));
-                BoardSquare.RectangleShow(featuresToHighlight, rectColour);
-            }
-            else
-            {
-                
-                ShowBoardMessage("", "None found.", TextMessage.TypeEnum.Info, TextMessage.AnimationEnum.FadeOut);
-                
-            }
-        }
-
-                       
+          
 
         /// <summary>
         /// Refresh the navigation control
@@ -2923,7 +2947,7 @@ namespace KaruahChess.ViewModel
             if (NavigatorEnabled)
             {
                 _moveNavigatorControl.Show();
-                _moveNavigatorControl.Load(_dsGameRecord.GetAllRecordIDList(), GameRecordCurrentValue);                
+                _moveNavigatorControl.Load(GameRecordDataService.instance.GetAllRecordIDList(), GameRecordCurrentValue);                
             }
             else
             {
@@ -2948,6 +2972,35 @@ namespace KaruahChess.ViewModel
                 _ctsComputer.Cancel();
             }
         }
+
+
+        /// <summary>
+        /// Play piece move sound effect
+        /// </summary>
+        private async Task playPieceMoveSoundEffect()
+        {
+            if (_mediaplayerPieceMoveSound != null && SoundEffectEnabled)
+            {
+                var tcs = new TaskCompletionSource<bool>();
+                
+                var mediaEndedHandler = new TypedEventHandler<Windows.Media.Playback.MediaPlayer, object>((player, resource) => 
+                { 
+                    tcs.TrySetResult(true); 
+                });
+                
+                _mediaplayerPieceMoveSound.MediaPlayer.MediaEnded += mediaEndedHandler;
+                _mediaplayerPieceMoveSound.MediaPlayer.PlaybackSession.Position = new TimeSpan(0, 0, 0);
+                _mediaplayerPieceMoveSound.MediaPlayer.Play();
+                
+                // Wait here, but timeout after 2 seconds
+                await Task.WhenAny(tcs.Task, Task.Delay(2000));
+
+                _mediaplayerPieceMoveSound.MediaPlayer.MediaEnded -= mediaEndedHandler;
+            }
+        }
+
+        
+        
     }
 
 

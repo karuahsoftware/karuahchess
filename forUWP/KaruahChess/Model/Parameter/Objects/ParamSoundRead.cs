@@ -22,12 +22,12 @@ using System.Runtime.Serialization;
 namespace KaruahChess.Model.ParameterObjects
 {
     [DataContract]
-    public class ParamSound
+    public class ParamSoundRead
     {
         [DataMember]
         public bool Enabled { get; set; }
 
-        public ParamSound()
+        public ParamSoundRead()
         {
             // Set default value
             Enabled = true;

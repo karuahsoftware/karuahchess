@@ -17,26 +17,25 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
 using System;
+using System.Runtime.Serialization;
 
-
-namespace KaruahChess.Model
+namespace KaruahChess.Model.ParameterObjects
 {
-    public class ModelProvider
+    [DataContract]
+    public class ParamSoundEffect
     {
-       
+        [DataMember]
+        public bool Enabled { get; set; }
 
-        private static readonly ParameterDataService _parameterDataService = new ParameterDataService();
-
-        public static ParameterDataService ParameterDataServiceObject { get { return _parameterDataService; } }
-
-        /// <summary>
-        /// Reloads all data
-        /// </summary>
-        public static void ReloadAllData()
-        {  
-            
-            ParameterDataServiceObject.Load();
-
+        public ParamSoundEffect()
+        {
+            // Set default value
+            Enabled = true;
         }
     }
 }
+
+
+
+
+

@@ -63,7 +63,7 @@
                 <AppBarToggleButton Icon="Target" Label="Highlight Moves" IsChecked="{x:Bind BoardVM.MoveHighlightEnabled, Mode=TwoWay}" />
                 <AppBarToggleButton Icon="Play" Label="Navigator" IsChecked="{x:Bind BoardVM.NavigatorEnabled, Mode=TwoWay}"/>                
                 <AppBarSeparator/>
-                <AppBarToggleButton Icon="Volume" Label="Sound" ToolTipService.ToolTip="Read move out loud" IsChecked="{x:Bind BoardVM.SoundEnabled, Mode=TwoWay}" />
+                <AppBarButton Icon="Volume" Label="Sound Settings" Click="BoardVM.btnSoundSettings_Click" />
                 <AppBarToggleButton Icon="Microphone" Label="Voice Commands" ToolTipService.ToolTip="Move pieces with your voice" Checked="BoardVM.btnStartVoiceListen_Checked" Unchecked="BoardVM.btnStartVoiceListen_Unchecked" />
                 <AppBarButton Icon="Message" Label="Voice Help" ToolTipService.ToolTip="Open help page for voice commands."  Click="BoardVM.btnVoiceHelp_Click" />
                 <AppBarSeparator/>
@@ -100,7 +100,8 @@
             <customcontrol:Export x:Name="ExportControl"  StyleTemplate="{StaticResource ExportControlStyleTemplateObject}"/>
             <customcontrol:VoiceHelp x:Name="VoiceHelpControl"  StyleTemplate="{StaticResource VoiceHelpControlStyleTemplateObject}"/>
             <customcontrol:EngineSettings x:Name="EngineSettingsControl"  StyleTemplate="{StaticResource EngineSettingsControlStyleTemplateObject}"/>            
-            <customcontrol:PieceEditTool x:Name="PieceEditToolControl"  StyleTemplate="{StaticResource PieceTypeSelectControlStyleTemplateObject}" />            
+            <customcontrol:PieceEditTool x:Name="PieceEditToolControl"  StyleTemplate="{StaticResource PieceTypeSelectControlStyleTemplateObject}" />
+            <customcontrol:SoundSettings x:Name="SoundSettingsControl"  StyleTemplate="{StaticResource SoundSettingsControlStyleTemplateObject}"/>
         </Canvas>
 
         <customcontrol:MoveNavigator x:Name="MoveNavigatorControl" Grid.Row="1" Margin="0,1,0,1"  />

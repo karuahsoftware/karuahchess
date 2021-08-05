@@ -28,23 +28,24 @@ namespace KaruahChess.Model
     public class ParameterDataService : IParameterDataService
     {
 
-        private static HashSet<WeakReference<ParameterDataService>> _objectInstances = new HashSet<WeakReference<ParameterDataService>>();
-
         /// <summary>
         /// List of parameters
         /// </summary>
-        Dictionary<String, Object> _parameters;
+        private Dictionary<String, Object> _parameters;
         
 
         // Constructor
-        public ParameterDataService()
+        private ParameterDataService()
         {
-            _objectInstances.Add(new WeakReference<ParameterDataService>(this));
+           
             _parameters = new Dictionary<String, Object>();
             Load();
         }
 
-
+        /// <summary>
+        /// Singleton accessor
+        /// </summary>
+        public static ParameterDataService instance { get; private set; } = new ParameterDataService();
 
         /// <summary>
         /// Loads parameters
@@ -99,9 +100,13 @@ namespace KaruahChess.Model
                 {
                     _parameters.Add(param.Name, param.Value.Deserialize<ParamMoveHighlight>());
                 }
-                else if (param.Name == typeof(ParamSound).Name)
+                else if (param.Name == typeof(ParamSoundRead).Name)
                 {
-                    _parameters.Add(param.Name, param.Value.Deserialize<ParamSound>());
+                    _parameters.Add(param.Name, param.Value.Deserialize<ParamSoundRead>());
+                }
+                else if (param.Name == typeof(ParamSoundEffect).Name)
+                {
+                    _parameters.Add(param.Name, param.Value.Deserialize<ParamSoundEffect>());
                 }
                 else if (param.Name == typeof(ParamClock).Name)
                 {
@@ -224,8 +229,6 @@ namespace KaruahChess.Model
 
                 connection.Close();
 
-
-
             }
 
             if (result > 0)
@@ -233,7 +236,7 @@ namespace KaruahChess.Model
                 if (pReload)
                 {
                     // Reload all from db
-                    ReloadAllInstances();
+                    Load();
                 }
                 else
                 {
@@ -256,25 +259,7 @@ namespace KaruahChess.Model
         }
 
 
-        /// <summary>
-        /// Refreshes all instances
-        /// </summary>
-        public static void ReloadAllInstances()
-        {
-            ParameterDataService obj;
-            var _objectInstancesValid = new HashSet<WeakReference<ParameterDataService>>();
-
-            foreach (var weakRef in _objectInstances)
-            {
-                if (weakRef.TryGetTarget(out obj))
-                {
-                    obj.Load();
-                    _objectInstancesValid.Add(weakRef);
-                }
-            }
-
-            _objectInstances = _objectInstancesValid;
-        }
+        
 
     }
 }

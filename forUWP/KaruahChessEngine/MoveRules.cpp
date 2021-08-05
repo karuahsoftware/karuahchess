@@ -27,7 +27,7 @@ namespace MoveRules {
 
 	/// <summary>
 	/// Moves a piece
-	/// </summary>		
+	/// </summary>
 	bool Move(const int pFromIndex, const int pToIndex, BitBoard& pBoard, const helper::PawnPromotionEnum pPawnPromotionPiece, const bool pValidateEnabled, const bool pCommit)
 	{
 		bool success = true;
@@ -77,7 +77,7 @@ namespace MoveRules {
 		pBoard.Update(pToIndex, origFromSpin);
 
 
-		// Check for pawn promotion                
+		// Check for pawn promotion
 		if (origFromSpin == helper::WHITE_PAWN_SPIN && pToIndex >= 0 && pToIndex <= 7)
 		{
 			int pawnPromotion = (int)pPawnPromotionPiece * pBoard.StateActiveColour;
@@ -100,7 +100,7 @@ namespace MoveRules {
 		int origEnpassantIndex = pBoard.StateEnpassantIndex;
 		int origEnpassantSpin = pBoard.GetSpin(pBoard.StateEnpassantIndex);
 
-		// Detect enpassant            
+		// Detect enpassant
 		if ((origFromSpin == helper::WHITE_PAWN_SPIN && (pToIndex + 8) == pBoard.StateEnpassantIndex) || (origFromSpin == helper::BLACK_PAWN_SPIN && (pToIndex - 8) == pBoard.StateEnpassantIndex))
 		{
 			// Do Enpassant take
@@ -117,7 +117,7 @@ namespace MoveRules {
 
 			if (rookFromSqIndex > -1 && rookToSqIndex > -1)
 			{
-				// Move rook 
+				// Move rook
 				rookSpin = pBoard.GetSpin(rookFromSqIndex);
 				pBoard.Update(rookToSqIndex, rookSpin);
 				pBoard.Update(rookFromSqIndex, 0);
@@ -250,7 +250,7 @@ namespace MoveRules {
 
 	/// <summary>
 	/// Determines if colour is in check mate or stalemate
-	/// </summary>		
+	/// </summary>
 	bool IsCheckMate(BitBoard& pBoard)
 	{
 		bool moveFound = false;
@@ -263,7 +263,7 @@ namespace MoveRules {
 		bool isKingCheck = pBoard.IsKingCheck(pBoard.StateActiveColour);
 		if (!isKingCheck) return false;
 
-		uint64_t originalBoardArray[366];
+		uint64_t originalBoardArray[276];
 		pBoard.GetBoardArray(originalBoardArray);
 
 		int originalStateArray[8];
@@ -317,7 +317,7 @@ namespace MoveRules {
 
 	/// <summary>
 	/// Determines if board is in stalemate, helper method
-	/// </summary>		
+	/// </summary>
 	bool IsStaleMate(BitBoard& pBoard)
 	{
 		// Stale mate exists if only kings are left on the board
@@ -334,7 +334,7 @@ namespace MoveRules {
 		int fromIndex;
 		int toIndex;
 
-		uint64_t originalBoardArray[366];
+		uint64_t originalBoardArray[276];
 		pBoard.GetBoardArray(originalBoardArray);
 
 		int originalStateArray[8];
@@ -386,7 +386,7 @@ namespace MoveRules {
 
 	/// <summary>
 	/// Used for arranging pieces on the board.
-	/// </summary>		
+	/// </summary>
 	bool Arrange(const int pFromIndex, const int pToIndex, BitBoard& pBoard)
 	{
 		bool status = true;
@@ -414,10 +414,10 @@ namespace MoveRules {
 		int blackKingIndex = pBoard.KingIndex<helper::BLACKPIECE>();
 
 
-		// Check if the king is still on the board           
+		// Check if the king is still on the board
 		if (whiteKingIndex == -1 || blackKingIndex == -1)
 		{
-			// If king is missing reverse move                
+			// If king is missing reverse move
 			pBoard.Update(pToIndex, origToSpin);
 			pBoard.Update(pFromIndex, origFromSpin);
 			pBoard.ReturnMessage = "Invalid as King must remain on the board";
@@ -443,12 +443,12 @@ namespace MoveRules {
 
 	/// <summary>
 	/// Updates a piece on the board directly.
-	/// </summary>		
+	/// </summary>
 	bool ArrangeUpdate(const char pFen, const int pToIndex, BitBoard& pBoard)
 	{
 		bool status = true;
 
-		// Get original values before move		
+		// Get original values before move
 		int origToSpin = pBoard.GetSpin(pToIndex);
 
 		// Add the piece
@@ -468,10 +468,10 @@ namespace MoveRules {
 		int blackKingIndex = pBoard.KingIndex<helper::BLACKPIECE>();
 
 
-		// Check if the king is still on the board           
+		// Check if the king is still on the board
 		if (whiteKingIndex == -1 || blackKingIndex == -1)
 		{
-			// If king is missing reverse move                
+			// If king is missing reverse move
 			pBoard.Update(pToIndex, origToSpin);
 			pBoard.ReturnMessage = "Invalid as King must remain on the board";
 
@@ -556,11 +556,11 @@ namespace MoveRules {
 
 	/// <summary>
 	/// Checks if the move is a pawn promoting move
-	/// </summary>		
+	/// </summary>
 	bool IsPawnPromotion(const int pFromIndex, const int pToIndex, BitBoard& pBoard)
 	{
 		int origFromSpin = pBoard.GetSpin(pFromIndex);
-		// Check for pawn promotion                
+		// Check for pawn promotion
 		if ((origFromSpin == helper::WHITE_PAWN_SPIN && pToIndex >= 0 && pToIndex <= 7) ||
 			(origFromSpin == helper::BLACK_PAWN_SPIN && pToIndex >= 56 && pToIndex <= 63))
 		{

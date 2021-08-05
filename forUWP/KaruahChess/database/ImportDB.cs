@@ -84,7 +84,7 @@ namespace KaruahChess.Database
                             }
                         }
 
-                        GameRecordDataService.ReloadAllInstances();
+                        GameRecordDataService.instance.Load();
                     }
 
                     break;

@@ -448,7 +448,7 @@ namespace KaruahChess.CustomControl
                     }
                 }
 
-                GameRecordDataService.ReloadAllInstances();
+                GameRecordDataService.instance.Load();
             }
         }
     }

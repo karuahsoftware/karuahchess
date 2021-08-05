@@ -28,8 +28,6 @@ namespace KaruahChess.Model
     public class GameRecordDataService : IGameRecordDataService
     {
 
-        private static HashSet<WeakReference<GameRecordDataService>> _objectInstances = new HashSet<WeakReference<GameRecordDataService>>();
-
         Dictionary<int, GameRecordArray> _gameRecordDict;
         KaruahChessEngineClass _tempBoardA;
         KaruahChessEngineClass _tempBoardB;
@@ -39,10 +37,10 @@ namespace KaruahChess.Model
         public long transactionId {get; private set;} 
 
         // Constructor
-        public GameRecordDataService()
+        private GameRecordDataService()
         {          
            
-            _objectInstances.Add(new WeakReference<GameRecordDataService>(this));
+          
             _gameRecordDict = new Dictionary<int, GameRecordArray>();
 
             CurrentGame = new KaruahChessEngineClass();            
@@ -55,12 +53,16 @@ namespace KaruahChess.Model
             Load();
         }
 
+        /// <summary>
+        /// Singleton accessor
+        /// </summary>
+        public static GameRecordDataService instance { get; private set; } = new GameRecordDataService();
 
 
         /// <summary>
         /// Loads parameters
         /// </summary>
-        private void Load()
+        public void Load()
         {
             KaruahChessEngineClass board = new KaruahChessEngineClass();
 
@@ -162,7 +164,6 @@ namespace KaruahChess.Model
             // Set the clocks
             CurrentGame.SetStateWhiteClockOffset(pWhiteClockOffset);
             CurrentGame.SetStateBlackClockOffset(pBlackClockOffset);
-
 
 
             // create game record            
@@ -419,28 +420,6 @@ namespace KaruahChess.Model
             return recordIDList;
 
         }
-
-        /// <summary>
-        /// Refreshes all instances
-        /// </summary>
-        public static void ReloadAllInstances()
-        {
-            GameRecordDataService obj;
-            var _objectInstancesValid = new HashSet<WeakReference<GameRecordDataService>>();
-
-            foreach (var weakRef in _objectInstances)
-            {
-                if (weakRef.TryGetTarget(out obj))
-                {
-                    obj.Load();
-                    _objectInstancesValid.Add(weakRef);
-                }
-            }
-
-            _objectInstances = _objectInstancesValid;
-        }
-
-       
 
     }
 }

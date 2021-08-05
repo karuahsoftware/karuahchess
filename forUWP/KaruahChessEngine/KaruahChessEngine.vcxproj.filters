@@ -17,7 +17,6 @@
     <ClCompile Include="MoveRules.cpp" />
     <ClCompile Include="PiecePattern.cpp" />
     <ClCompile Include="Search.cpp" />
-    <ClCompile Include="PieceStructure.cpp" />
     <ClCompile Include="Engine.cpp" />
     <ClCompile Include="SFbitbase.cpp" />
     <ClCompile Include="SFbitboard.cpp" />
@@ -44,7 +43,6 @@
     <ClInclude Include="MoveRules.h" />
     <ClInclude Include="PiecePattern.h" />
     <ClInclude Include="Search.h" />
-    <ClInclude Include="PieceStructure.h" />
     <ClInclude Include="Engine.h" />
     <ClInclude Include="EvalWeights.h" />
     <ClInclude Include="SFbitboard.h" />

@@ -46,11 +46,16 @@ namespace KaruahChess.Model
         
 
         // Constructor
-        public BoardSquareDataService()
+        private BoardSquareDataService()
         {            
             BoardTiles = new ObservableCollectionCustom<Tile>();
             _tempboard = new KaruahChessEngineClass();
         }
+
+        /// <summary>
+        /// Singleton accessor
+        /// </summary>
+        public static BoardSquareDataService instance { get; private set; } = new BoardSquareDataService();
 
 
         /// <summary>

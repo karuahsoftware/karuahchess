@@ -25,6 +25,7 @@ namespace KaruahChess.Model
 
     public interface IGameRecordDataService
     {
+        void Load();
         GameRecordArray GetCurrentGame();
         GameRecordArray Get(int pId);
 

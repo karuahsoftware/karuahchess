@@ -140,6 +140,9 @@
     <Compile Include="CustomControl\CastlingRightsDialog.xaml.cs">
       <DependentUpon>CastlingRightsDialog.xaml</DependentUpon>
     </Compile>
+    <Compile Include="CustomControl\SoundSettings.xaml.cs">
+      <DependentUpon>SoundSettings.xaml</DependentUpon>
+    </Compile>
     <Compile Include="CustomControl\Export.xaml.cs">
       <DependentUpon>Export.xaml</DependentUpon>
     </Compile>
@@ -210,7 +213,6 @@
     <Compile Include="Model\BoardSquare\IBoardSquareDataService.cs" />
     <Compile Include="Model\GameRecord\GameRecordDataService.cs" />
     <Compile Include="Model\GameRecord\IGameRecordDataService.cs" />
-    <Compile Include="Model\ModelProvider.cs" />
     <Compile Include="Model\Parameter\IParameterDataService.cs" />
     <Compile Include="Model\Parameter\Objects\ParamLevelAuto.cs" />
     <Compile Include="Model\Parameter\Objects\ParamLimitAdvanced.cs" />
@@ -221,7 +223,8 @@
     <Compile Include="Model\Parameter\Objects\ParamLimitEngineStrengthELO.cs" />
     <Compile Include="Model\Parameter\Objects\ParamNavigator.cs" />
     <Compile Include="Model\Parameter\Objects\ParamClock.cs" />
-    <Compile Include="Model\Parameter\Objects\ParamSound.cs" />
+    <Compile Include="Model\Parameter\Objects\ParamSoundEffect.cs" />
+    <Compile Include="Model\Parameter\Objects\ParamSoundRead.cs" />
     <Compile Include="Model\Parameter\Objects\ParamMoveHighlight.cs" />
     <Compile Include="Model\Parameter\Objects\ParamBoardCoord.cs" />
     <Compile Include="Model\Parameter\Objects\ParamRotateBoard.cs" />
@@ -255,6 +258,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Assets\BadgeLogo.scale-200.png" />
+    <Content Include="Media\piecesound.wav" />
     <Content Include="Assets\Square310x310Logo.scale-200.png" />
     <Content Include="Assets\Square44x44Logo.scale-100.png" />
     <Content Include="Assets\Square44x44Logo.scale-400.png" />
@@ -329,6 +333,10 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="CustomControl\ChessClockStyleDefault.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="CustomControl\SoundSettings.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
@@ -407,7 +415,7 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.Data.Sqlite">
-      <Version>5.0.7</Version>
+      <Version>5.0.8</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.NETCore.UniversalWindowsPlatform">
       <Version>6.2.12</Version>

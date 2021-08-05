@@ -62,8 +62,7 @@ namespace winrt::KaruahChessEngine::implementation
 		bool IsKingCheck(const int32_t pColour);
 		uint64_t GetPotentialMove(const int32_t pSqIndex);
 		uint64_t GetOccupiedBySpin(const int32_t pSpin);
-		uint64_t GetOccupiedByWhite();
-		uint64_t GetOccupiedByBlack();
+		uint64_t GetOccupiedByColour(const int32_t pColour);
 
 		// Move operations
 		MoveResult Move(const int32_t pFromIndex, const int32_t pToIndex, const int32_t pPawnPromotionPiece, const bool pValidateEnabled, const bool pCommit);
@@ -80,8 +79,6 @@ namespace winrt::KaruahChessEngine::implementation
 
 		SearchResult SearchStart(const SearchOptions pSearchOptions);
 
-		// Structure operations
-		uint64_t GetFeature(const int32_t pFeatureId);
 
 		
 	};

@@ -104,10 +104,10 @@ namespace KaruahChess.Rules
             _tempBoardAfter.SetBoardArray(pBoardRecAfter.BoardArray);
             _tempBoardAfter.SetStateArray(pBoardRecAfter.StateArray);
 
-            UInt64 allBeforeWhitePos = _tempBoardBefore.GetOccupiedByWhite();
-            UInt64 allBeforeBlackPos = _tempBoardBefore.GetOccupiedByBlack();
-            UInt64 allAfterWhitePos = _tempBoardAfter.GetOccupiedByWhite();
-            UInt64 allAfterBlackPos = _tempBoardAfter.GetOccupiedByBlack();
+            UInt64 allBeforeWhitePos = _tempBoardBefore.GetOccupiedByColour(Constants.WHITEPIECE);
+            UInt64 allBeforeBlackPos = _tempBoardBefore.GetOccupiedByColour(Constants.BLACKPIECE);
+            UInt64 allAfterWhitePos = _tempBoardAfter.GetOccupiedByColour(Constants.WHITEPIECE);
+            UInt64 allAfterBlackPos = _tempBoardAfter.GetOccupiedByColour(Constants.BLACKPIECE);
 
             UInt64 allChangeWhitePos = allBeforeWhitePos ^ allAfterWhitePos;
             UInt64 allChangeBlackPos = allBeforeBlackPos ^ allAfterBlackPos;

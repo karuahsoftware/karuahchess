@@ -211,7 +211,7 @@ namespace KaruahChess.CustomControl
                 ComputerMoveFirstCheckBox.IsEnabled = true;
                 LevelAutoCheckBox.IsEnabled = true;
                 ComputerStrengthCombo.IsEnabled = true;
-                
+                ComputerStrengthTitleText.Opacity = 1.0;
                 ComputerAdvancedSettingsCheckBox.IsEnabled = true;
                 advanced = ComputerAdvancedSettingsCheckBox.IsEnabled && (ComputerAdvancedSettingsCheckBox.IsChecked == true);
                 advancedOpacity = advanced ? 1 : 0.5;
@@ -222,6 +222,7 @@ namespace KaruahChess.CustomControl
                 ComputerMoveFirstCheckBox.IsEnabled = false;
                 LevelAutoCheckBox.IsEnabled = false;
                 ComputerStrengthCombo.IsEnabled = false;
+                ComputerStrengthTitleText.Opacity = 0.5;
                 ComputerAdvancedSettingsCheckBox.IsEnabled = false;
                 advanced = false;
                 advancedOpacity = 0.5;

@@ -339,46 +339,6 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 		}
 
 
-		/// <summary>
-		/// King ring pattern
-		/// </summary>		
-		uint64_t KingRing(const int pIndex)
-		{
-
-			const uint64_t sqBinary = helper::BITMASK >> pIndex;
-
-			uint64_t northRowMaskA = helper::RowMask[pIndex] << 8;
-			uint64_t southRowMaskA = helper::RowMask[pIndex] >> 8;
-			uint64_t northRowMaskB = helper::RowMask[pIndex] << 16;
-			uint64_t southRowMaskB = helper::RowMask[pIndex] >> 16;
-			uint64_t currentRowMask = helper::RowMask[pIndex];
-
-			// Get next active square
-			return ((sqBinary << 1) & currentRowMask)
-				| ((sqBinary >> 1) & currentRowMask)
-				| ((sqBinary << 2) & currentRowMask)
-				| ((sqBinary >> 2) & currentRowMask)
-				| ((sqBinary << 6) & northRowMaskA)
-				| ((sqBinary >> 6) & southRowMaskA)
-				| ((sqBinary << 7) & northRowMaskA)
-				| ((sqBinary >> 7) & southRowMaskA)
-				| ((sqBinary << 8) & northRowMaskA)
-				| ((sqBinary >> 8) & southRowMaskA)
-				| ((sqBinary << 9) & northRowMaskA)
-				| ((sqBinary >> 9) & southRowMaskA)
-				| ((sqBinary << 10) & northRowMaskA)
-				| ((sqBinary >> 10) & southRowMaskA)
-				| ((sqBinary << 14) & northRowMaskB)
-				| ((sqBinary >> 14) & southRowMaskB)
-				| ((sqBinary << 15) & northRowMaskB)
-				| ((sqBinary >> 15) & southRowMaskB)
-				| ((sqBinary << 16) & northRowMaskB)
-				| ((sqBinary >> 16) & southRowMaskB)
-				| ((sqBinary << 17) & northRowMaskB)
-				| ((sqBinary >> 17) & southRowMaskB)
-				| ((sqBinary << 18) & northRowMaskB)
-				| ((sqBinary >> 18) & southRowMaskB);
-		}
 
 		// Explicit template instantiation
 		template uint64_t PawnEnpassant<helper::WHITEPIECE>(const int pIndex, const int pEnpassantIndex);

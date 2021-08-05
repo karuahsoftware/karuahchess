@@ -105,7 +105,7 @@ namespace KaruahChess.CustomControl
                 board.GetBoardArray(updatedRecord.BoardArray);
                 board.GetStateArray(updatedRecord.StateArray);
 
-                boardVM._dsGameRecord.UpdateGameState(updatedRecord);
+                GameRecordDataService.instance.UpdateGameState(updatedRecord);
                 boardVM.UpdateBoardIndicators(updatedRecord);
             }
             else

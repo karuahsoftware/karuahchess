@@ -24,7 +24,6 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #include "MoveRules.h"
 #include "Engine.h"
 #include "helper.h"
-#include "PieceStructure.h"
 
 
 namespace winrt::KaruahChessEngine::implementation
@@ -266,20 +265,14 @@ namespace winrt::KaruahChessEngine::implementation
 	uint64_t KaruahChessEngineClass::GetOccupiedBySpin(const int32_t pSpin) {
 		return MainBoard.GetOccupiedBySpin(pSpin);
 	}
-		
+	
 	/// <summary>
-	/// Gets all positions occupied by white pieces
+	/// Gets all positions occupied by the specified colour
 	/// </summary>
-	uint64_t KaruahChessEngineClass::GetOccupiedByWhite() {
-		return MainBoard.GetOccupied<WHITEPIECE>();
+	uint64_t KaruahChessEngineClass::GetOccupiedByColour(const int32_t pColour) {
+		return MainBoard.GetOccupied(pColour);
 	}
 
-	/// <summary>
-	/// Gets all positions occupied by black pieces
-	/// </summary>
-	uint64_t KaruahChessEngineClass::GetOccupiedByBlack() {
-		return MainBoard.GetOccupied<BLACKPIECE>();
-	}
 
 	/// <summary>
 	/// Moves a piece
@@ -420,16 +413,6 @@ namespace winrt::KaruahChessEngine::implementation
 		return result;
 	}
 
-
-	/// <summary>
-	/// Gets the feature as specified by the feature id
-	/// </summary>
-	/// <param name="pFeatureId"></param>
-	/// <returns></returns>
-	uint64_t KaruahChessEngineClass::GetFeature(const int32_t pFeatureId) {
-		
-		return PieceStructure::GetFeature(MainBoard, pFeatureId);
-	}
 
 
 }

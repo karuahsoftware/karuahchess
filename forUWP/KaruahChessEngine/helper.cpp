@@ -39,47 +39,40 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 namespace helper {
 
 	bool Initialised = false;
-	std::vector<uint64_t> RowMask(64, 0);
+    uint64_t RowMask[64] { 0 };
+    uint64_t NorthRay[64] { 0 };
+	uint64_t SouthRay[64] { 0 };
+	uint64_t EastRay[64] { 0 };;
+	uint64_t WestRay[64] { 0 };
+	uint64_t NorthWestRay[64] { 0 };
+	uint64_t NorthEastRay[64] { 0 };
+	uint64_t SouthWestRay[64] { 0 };
+	uint64_t SouthEastRay[64] { 0 };
 
-	std::vector<uint64_t> NorthRay(64, 0);
-	std::vector<uint64_t> SouthRay(64, 0);
-	std::vector<uint64_t> EastRay(64, 0);
-	std::vector<uint64_t> WestRay(64, 0);
-	std::vector<uint64_t> NorthWestRay(64, 0);
-	std::vector<uint64_t> NorthEastRay(64, 0);
-	std::vector<uint64_t> SouthWestRay(64, 0);
-	std::vector<uint64_t> SouthEastRay(64, 0);
+	int CastleIndex[64][2] { 0 };
 
-	std::vector<uint64_t> PawnStructureNorthRay(64, 0);
-	std::vector<uint64_t> PawnStructureSouthRay(64, 0);
+	uint64_t DiagonalRay[64] { 0 };
+	uint64_t HorizontalVerticalRay[64] { 0 };
+	uint64_t HorizontalVerticalMove[64][4097] { 0 };
+	uint64_t HorizontalVerticalMoveXRay[64][4097] { 0 };
+	uint64_t DiagonalMove[64][4097] { 0 };
+	uint64_t DiagonalMoveXRay[64][4097] { 0 };
+	uint64_t KnightMove[64] { 0 };
+	uint64_t KingMove[64] { 0 };
 
-
-	std::vector<std::vector<int>> CastleIndex(64, std::vector<int>(2, 0));
-
-	std::vector<uint64_t> DiagonalRay(64, 0);
-	std::vector<uint64_t> HorizontalVerticalRay(64, 0);
-	std::vector<std::vector<uint64_t>> HorizontalVerticalMove(64, std::vector<uint64_t>(4097, 0));
-	std::vector<std::vector<uint64_t>> HorizontalVerticalMoveXRay(64, std::vector<uint64_t>(4097, 0));
-	std::vector<std::vector<uint64_t>> DiagonalMove(64, std::vector<uint64_t>(4097, 0));
-	std::vector<std::vector<uint64_t>> DiagonalMoveXRay(64, std::vector<uint64_t>(4097, 0));
-	std::vector<uint64_t> KnightMove(64, 0);
-	std::vector<uint64_t> KingMove(64, 0);
-	std::vector<uint64_t> KingRing(64, 0);
 
 	constexpr uint64_t BitScanMagic = 0x37E84A99DAE458F;
 	constexpr int BitScanMagicTable[] = {
-	0, 1, 17, 2, 18, 50, 3, 57,
-	47, 19, 22, 51, 29, 4, 33, 58,
-	15, 48, 20, 27, 25, 23, 52, 41,
-	54, 30, 38, 5, 43, 34, 59, 8,
-	63, 16, 49, 56, 46, 21, 28, 32,
-	14, 26, 24, 40, 53, 37, 42, 7,
-	62, 55, 45, 31, 13, 39, 36, 6,
-	61, 44, 12, 35, 60, 11, 10, 9
+			0, 1, 17, 2, 18, 50, 3, 57,
+			47, 19, 22, 51, 29, 4, 33, 58,
+			15, 48, 20, 27, 25, 23, 52, 41,
+			54, 30, 38, 5, 43, 34, 59, 8,
+			63, 16, 49, 56, 46, 21, 28, 32,
+			14, 26, 24, 40, 53, 37, 42, 7,
+			62, 55, 45, 31, 13, 39, 36, 6,
+			61, 44, 12, 35, 60, 11, 10, 9
 	};
 
-	std::vector<std::vector<int>> SquareDistance(64, std::vector<int>(64, 0));
-	std::vector<std::vector<uint64_t>> LineBB(64, std::vector<uint64_t>(64, 0));
 
 	// Initialise function
 	void init() {
@@ -101,7 +94,7 @@ namespace helper {
 		CastleIndex[6][0] = 7;
 		CastleIndex[6][1] = 5;
 
-		// Set row mask and rays		
+		// Set row mask and rays
 		for (int i = 0; i < 64; i++)
 		{
 
@@ -109,7 +102,7 @@ namespace helper {
 			RowMask[i] = GetRowMask(i);
 
 			// Initialise rays
-			std::vector<uint64_t> ray(8, 0);
+			uint64_t ray[8] { 0 };
 			CreateRay(i, ray);
 			NorthRay[i] = ray[0];
 			SouthRay[i] = ray[1];
@@ -121,27 +114,12 @@ namespace helper {
 			SouthEastRay[i] = ray[7];
 
 			// Initialise structure rays
-			std::vector<uint64_t> structureRay(2, 0);
+			uint64_t structureRay[2] { 0 };
 			CreateStructureRay(i, structureRay);
-			PawnStructureNorthRay[i] = structureRay[0];
-			PawnStructureSouthRay[i] = structureRay[1];
-
-
 		}
 
 
 		CreateMoveLookupTable();
-
-		// Initialise distance, and LineBB
-		for (int s1 = 0; s1 <= 63; ++s1) {
-			for (int s2 = 0; s2 <= 63; ++s2) {
-				SquareDistance[s1][s2] = std::max(distanceFile(s1, s2), distanceRank(s1, s2));
-
-				if ((BITMASK >> s2) & DiagonalRay[s1]) LineBB[s1][s2] = DiagonalRay[s1] & DiagonalRay[s2];
-				else if ((BITMASK >> s2) & HorizontalVerticalRay[s1]) LineBB[s1][s2] = HorizontalVerticalRay[s1] & HorizontalVerticalRay[s2];
-				else LineBB[s1][s2] = 0ULL;
-			}
-		}
 
 		Initialised = true;
 	}
@@ -153,7 +131,7 @@ namespace helper {
 	void CreateMoveLookupTable()
 	{
 		const int arraySize = 4096;
-		std::vector<uint64_t> allBlockerCombinations(arraySize, 0);
+		uint64_t allBlockerCombinations[arraySize] { 0 };
 
 		for (int sqIndex = 0; sqIndex <= 63; sqIndex++)
 		{
@@ -179,11 +157,11 @@ namespace helper {
 				}
 				else
 				{
-					throw "Move key is not unique.";
+					throw std::runtime_error("Move key is not unique.");
 				}
 			}
 
-			// Zero vector
+			// Zero array
 			std::fill(std::begin(allBlockerCombinations), std::end(allBlockerCombinations), 0);
 
 			// Blocker combinations - horizontal vertical
@@ -202,14 +180,14 @@ namespace helper {
 				}
 				else
 				{
-					throw "Move key is not unique.";
+					throw std::runtime_error("Move key is not unique.");
 				}
 			}
 
 			// Add other move patterns
 			KnightMove[sqIndex] = PiecePattern::Knight(sqIndex);
 			KingMove[sqIndex] = PiecePattern::King(sqIndex);
-			KingRing[sqIndex] = PiecePattern::KingRing(sqIndex);
+
 		}
 
 	}
@@ -220,9 +198,9 @@ namespace helper {
 	/// </summary>
 	/// <param name="pRays"></param>
 	/// <returns></returns>
-	int CreateBlockerCombinationForRay(uint64_t pRays_NoEdge, std::vector<uint64_t>& pAllBlockerCombinations)
+	int CreateBlockerCombinationForRay(uint64_t pRays_NoEdge, uint64_t pAllBlockerCombinations[4096])
 	{
-		std::vector<int> map(12, 0);
+		int map[12] { 0 };
 		int mapIndex = 0;
 
 		// Create the map
@@ -243,7 +221,7 @@ namespace helper {
 			blockerBits |= BLOCKERBITMASK << i;
 		}
 
-		// Loop through all the blocker bits;		
+		// Loop through all the blocker bits;
 		for (unsigned int i = 0; i <= blockerBits; i++)
 		{
 			uint64_t possibleBlocker = 0uL;
@@ -260,7 +238,7 @@ namespace helper {
 
 
 	/// <summary>
-	/// Gets a horizontal and vertical or diagonal ray at the specified square index        
+	/// Gets a horizontal and vertical or diagonal ray at the specified square index
 	/// </summary>
 	/// <param name="pSqIndex"></param>
 	/// <param name="pRayType"></param>
@@ -316,8 +294,8 @@ namespace helper {
 	{
 #if defined(_WIN64) && defined(_MSC_VER)
 		unsigned long index = 0;
-		if (pNum > 0) _BitScanForward64(&index, pNum);
-		return index;
+			if (pNum > 0) _BitScanForward64(&index, pNum);
+			return index;
 #elif defined(__GNUC__)
 		int index = 0;
 		if (pNum > 0) index = __builtin_ctzll(pNum);
@@ -336,21 +314,21 @@ namespace helper {
 	{
 #if defined(_WIN64) && defined(_MSC_VER)
 		unsigned long index = 0;
-		if (pNum > 0) _BitScanReverse64(&index, pNum);
-		return index;
+			if (pNum > 0) _BitScanReverse64(&index, pNum);
+			return index;
 #elif defined(__GNUC__)
 		int index = 0;
 		if (pNum > 0) index = 63 - __builtin_clzll(pNum);
 		return index;
 #else
 		pNum |= pNum >> 1;
-		pNum |= pNum >> 2;
-		pNum |= pNum >> 4;
-		pNum |= pNum >> 8;
-		pNum |= pNum >> 16;
-		pNum |= pNum >> 32;
-		pNum = pNum & ~(pNum >> 1);
-		return BitScanMagicTable[pNum * BitScanMagic >> 58];
+			pNum |= pNum >> 2;
+			pNum |= pNum >> 4;
+			pNum |= pNum >> 8;
+			pNum |= pNum >> 16;
+			pNum |= pNum >> 32;
+			pNum = pNum & ~(pNum >> 1);
+			return BitScanMagicTable[pNum * BitScanMagic >> 58];
 #endif
 	}
 
@@ -364,19 +342,19 @@ namespace helper {
 		return (int)_mm_popcnt_u64(pBits);
 #elif defined(__GNUC__)
 		return __builtin_popcountll(pBits);
-#else 
+#else
 		std::bitset<64> binaryBits(pBits);
-		return binaryBits.count();
+            return binaryBits.count();
 #endif
 	}
 
 	/// <summary>
 	/// Create rays
-	/// </summary>		
+	/// </summary>
 	/// <param name="pIndex"></param>
 	/// <param name="pRays"></param>
 	/// <returns></returns>
-	void CreateRay(int pIndex, std::vector<uint64_t>& pRays)
+	void CreateRay(int pIndex, uint64_t pRays[8])
 	{
 
 		uint64_t sqBinary = BITMASK >> pIndex;
@@ -430,11 +408,11 @@ namespace helper {
 
 	/// <summary>
 	/// Create structure rays. Used to identify pawn structures
-	/// </summary>		
+	/// </summary>
 	/// <param name="pIndex"></param>
 	/// <param name="pRays"></param>
 	/// <returns></returns>
-	void CreateStructureRay(int pIndex, std::vector<uint64_t>& pRays)
+	void CreateStructureRay(int pIndex, uint64_t pRays[2])
 	{
 		// Get first square
 		const uint64_t sqBinary = BITMASK >> pIndex;
@@ -468,7 +446,7 @@ namespace helper {
 
 	/// <summary>
 	///  Gets a mask for a row
-	/// </summary>       
+	/// </summary>
 	/// <returns></returns>
 	uint64_t GetRowMask(int pSqIndex)
 	{
@@ -534,50 +512,16 @@ namespace helper {
 
 
 	const std::map<int, std::string> BoardCoordinateDict = {
-		{0, "a8"}, { 1, "b8" }, { 2, "c8" }, { 3, "d8" }, { 4, "e8" }, { 5, "f8" }, { 6, "g8" }, { 7, "h8" },
-		{ 8, "a7" }, { 9, "b7" }, { 10, "c7" }, { 11, "d7" }, { 12, "e7" }, { 13, "f7" }, { 14, "g7" }, { 15, "h7" },
-		{ 16, "a6" }, { 17, "b6" }, { 18, "c6" }, { 19, "d6" }, { 20, "e6" }, { 21, "f6" }, { 22, "g6" }, { 23, "h6" },
-		{ 24, "a5" }, { 25, "b5" }, { 26, "c5" }, { 27, "d5" }, { 28, "e5" }, { 29, "f5" }, { 30, "g5" }, { 31, "h5" },
-		{ 32, "a4" }, { 33, "b4" }, { 34, "c4" }, { 35, "d4" }, { 36, "e4" }, { 37, "f4" }, { 38, "g4" }, { 39, "h4" },
-		{ 40, "a3" }, { 41, "b3" }, { 42, "c3" }, { 43, "d3" }, { 44, "e3" }, { 45, "f3" }, { 46, "g3" }, { 47, "h3" },
-		{ 48, "a2" }, { 49, "b2" }, { 50, "c2" }, { 51, "d2" }, { 52, "e2" }, { 53, "f2" }, { 54, "g2" }, { 55, "h2" },
-		{ 56, "a1" }, { 57, "b1" }, { 58, "c1" }, { 59, "d1" }, { 60, "e1" }, { 61, "f1" }, { 62, "g1" }, { 63, "h1" }
+			{0, "a8"}, { 1, "b8" }, { 2, "c8" }, { 3, "d8" }, { 4, "e8" }, { 5, "f8" }, { 6, "g8" }, { 7, "h8" },
+			{ 8, "a7" }, { 9, "b7" }, { 10, "c7" }, { 11, "d7" }, { 12, "e7" }, { 13, "f7" }, { 14, "g7" }, { 15, "h7" },
+			{ 16, "a6" }, { 17, "b6" }, { 18, "c6" }, { 19, "d6" }, { 20, "e6" }, { 21, "f6" }, { 22, "g6" }, { 23, "h6" },
+			{ 24, "a5" }, { 25, "b5" }, { 26, "c5" }, { 27, "d5" }, { 28, "e5" }, { 29, "f5" }, { 30, "g5" }, { 31, "h5" },
+			{ 32, "a4" }, { 33, "b4" }, { 34, "c4" }, { 35, "d4" }, { 36, "e4" }, { 37, "f4" }, { 38, "g4" }, { 39, "h4" },
+			{ 40, "a3" }, { 41, "b3" }, { 42, "c3" }, { 43, "d3" }, { 44, "e3" }, { 45, "f3" }, { 46, "g3" }, { 47, "h3" },
+			{ 48, "a2" }, { 49, "b2" }, { 50, "c2" }, { 51, "d2" }, { 52, "e2" }, { 53, "f2" }, { 54, "g2" }, { 55, "h2" },
+			{ 56, "a1" }, { 57, "b1" }, { 58, "c1" }, { 59, "d1" }, { 60, "e1" }, { 61, "f1" }, { 62, "g1" }, { 63, "h1" }
 	};
 
-	const std::map<std::string, int> BoardCoordinateReverseDict = {
-		{"a8", 0}, { "b8", 1 }, { "c8", 2 }, { "d8", 3 }, { "e8", 4 }, { "f8", 5 }, { "g8", 6 }, { "h8", 7 },
-		{ "a7", 8 }, { "b7", 9 }, { "c7", 10 }, { "d7", 11 }, { "e7", 12 }, { "f7", 13 }, { "g7", 14 }, { "h7", 15 },
-		{ "a6", 16 }, { "b6", 17 }, { "c6", 18 }, { "d6", 19 }, { "e6", 20 }, { "f6", 21 }, { "g6", 22 }, { "h6", 23 },
-		{ "a5", 24 }, { "b5", 25 }, { "c5", 26 }, { "d5", 27 }, { "e5", 28 }, { "f5", 29 }, { "g5", 30 }, { "h5", 31 },
-		{ "a4", 32 }, { "b4", 33 }, { "c4", 34 }, { "d4", 35 }, { "e4", 36 }, { "f4", 37 }, { "g4", 38 }, { "h4", 39 },
-		{ "a3", 40 }, { "b3", 41 }, { "c3", 42 }, { "d3", 43 }, { "e3", 44 }, { "f3", 45 }, { "g3", 46 }, { "h3", 47 },
-		{ "a2", 48 }, { "b2", 49 }, { "c2", 50 }, { "d2", 51 }, { "e2", 52 }, { "f2", 53 }, { "g2", 54 }, { "h2", 55 },
-		{ "a1", 56 }, { "b1", 57 }, { "c1", 58 }, { "d1", 59 }, { "e1", 60 }, { "f1", 61 }, { "g1", 62 }, { "h1", 63 }
-	};
-
-
-	const std::map<std::string, std::array<int, 8>> FileDict = {
-		{"a", std::array<int,8> { 0, 8, 16, 24, 32, 40, 48, 56 } },
-			{"b", std::array<int,8> { 1, 9, 17, 25, 33, 41, 49, 57 } },
-			{"c", std::array<int,8> { 2, 10, 18, 26, 34, 42, 50, 58 } },
-			{"d", std::array<int,8> { 3, 11, 19, 27, 35, 43, 51, 59 } },
-			{"e", std::array<int,8> { 4, 12, 20, 28, 36, 44, 52, 60 } },
-			{"f", std::array<int,8> { 5, 13, 21, 29, 37, 45, 53, 61 } },
-			{"g", std::array<int,8> { 6, 14, 22, 30, 38, 46, 54, 62 } },
-			{"h", std::array<int,8> { 7, 15, 23, 31, 39, 47, 55, 63 } }
-	};
-
-
-	const std::map<std::string, std::array<int, 8>> RankDict = {
-		{"8", std::array<int,8>{ 0, 1, 2, 3, 4, 5, 6, 7 } },
-		{ "7", std::array<int,8> { 8, 9, 10, 11, 12, 13, 14, 15} },
-		{ "6", std::array<int,8> { 16, 17, 18, 19, 20, 21, 22, 23} },
-		{ "5", std::array<int,8> { 24, 25, 26, 27, 28, 29, 30, 31} },
-		{ "4", std::array<int,8> { 32, 33, 34, 35, 36, 37, 38, 39} },
-		{ "3", std::array<int,8>{ 40, 41, 42, 43, 44, 45, 46, 47} },
-		{ "2", std::array<int,8> { 48, 49, 50, 51, 52, 53, 54, 55} },
-		{ "1", std::array<int,8> { 56, 57, 58, 59, 60, 61, 62, 63} }
-	};
 
 	/// <summary>
 	/// Returns spin value from a FEN character
@@ -589,35 +533,33 @@ namespace helper {
 
 		switch (pFENChar)
 		{
-		case 'p':
-			return BLACK_PAWN_SPIN;
-		case 'r':
-			return BLACK_ROOK_SPIN;
-		case 'n':
-			return BLACK_KNIGHT_SPIN;
-		case 'b':
-			return BLACK_BISHOP_SPIN;
-		case 'q':
-			return BLACK_QUEEN_SPIN;
-		case 'k':
-			return BLACK_KING_SPIN;
-		case 'P':
-			return WHITE_PAWN_SPIN;
-		case 'R':
-			return WHITE_ROOK_SPIN;
-		case 'N':
-			return WHITE_KNIGHT_SPIN;
-		case 'B':
-			return WHITE_BISHOP_SPIN;
-		case 'Q':
-			return WHITE_QUEEN_SPIN;
-		case 'K':
-			return WHITE_KING_SPIN;
-		default:
-			return 0;
+			case 'p':
+				return BLACK_PAWN_SPIN;
+			case 'r':
+				return BLACK_ROOK_SPIN;
+			case 'n':
+				return BLACK_KNIGHT_SPIN;
+			case 'b':
+				return BLACK_BISHOP_SPIN;
+			case 'q':
+				return BLACK_QUEEN_SPIN;
+			case 'k':
+				return BLACK_KING_SPIN;
+			case 'P':
+				return WHITE_PAWN_SPIN;
+			case 'R':
+				return WHITE_ROOK_SPIN;
+			case 'N':
+				return WHITE_KNIGHT_SPIN;
+			case 'B':
+				return WHITE_BISHOP_SPIN;
+			case 'Q':
+				return WHITE_QUEEN_SPIN;
+			case 'K':
+				return WHITE_KING_SPIN;
+			default:
+				return 0;
 		}
-
-
 	}
 
 	/// <summary>
@@ -630,34 +572,33 @@ namespace helper {
 
 		switch (pSpin)
 		{
-		case BLACK_PAWN_SPIN:
-			return 'p';
-		case BLACK_ROOK_SPIN:
-			return 'r';
-		case BLACK_KNIGHT_SPIN:
-			return 'n';
-		case BLACK_BISHOP_SPIN:
-			return 'b';
-		case BLACK_QUEEN_SPIN:
-			return 'q';
-		case BLACK_KING_SPIN:
-			return 'k';
-		case WHITE_PAWN_SPIN:
-			return 'P';
-		case WHITE_ROOK_SPIN:
-			return 'R';
-		case WHITE_KNIGHT_SPIN:
-			return 'N';
-		case WHITE_BISHOP_SPIN:
-			return 'B';
-		case WHITE_QUEEN_SPIN:
-			return 'Q';
-		case WHITE_KING_SPIN:
-			return 'K';
-		default:
-			return '0';
+			case BLACK_PAWN_SPIN:
+				return 'p';
+			case BLACK_ROOK_SPIN:
+				return 'r';
+			case BLACK_KNIGHT_SPIN:
+				return 'n';
+			case BLACK_BISHOP_SPIN:
+				return 'b';
+			case BLACK_QUEEN_SPIN:
+				return 'q';
+			case BLACK_KING_SPIN:
+				return 'k';
+			case WHITE_PAWN_SPIN:
+				return 'P';
+			case WHITE_ROOK_SPIN:
+				return 'R';
+			case WHITE_KNIGHT_SPIN:
+				return 'N';
+			case WHITE_BISHOP_SPIN:
+				return 'B';
+			case WHITE_QUEEN_SPIN:
+				return 'Q';
+			case WHITE_KING_SPIN:
+				return 'K';
+			default:
+				return '0';
 		}
-
 	}
 
 	/// <summary>
@@ -670,32 +611,32 @@ namespace helper {
 
 		switch (pFENChar)
 		{
-		case 'p':
-			return "Black Pawn";
-		case 'r':
-			return "Black Rook";
-		case 'n':
-			return "Black Knight";
-		case 'b':
-			return "Black Bishop";
-		case 'q':
-			return "Black Queen";
-		case 'k':
-			return "Black King";
-		case 'P':
-			return "White Pawn";
-		case 'R':
-			return "White Rook";
-		case 'N':
-			return "White Knight";
-		case 'B':
-			return "White Bishop";
-		case 'Q':
-			return "White Queen";
-		case 'K':
-			return "White King";
-		default:
-			return "";
+			case 'p':
+				return "Black Pawn";
+			case 'r':
+				return "Black Rook";
+			case 'n':
+				return "Black Knight";
+			case 'b':
+				return "Black Bishop";
+			case 'q':
+				return "Black Queen";
+			case 'k':
+				return "Black King";
+			case 'P':
+				return "White Pawn";
+			case 'R':
+				return "White Rook";
+			case 'N':
+				return "White Knight";
+			case 'B':
+				return "White Bishop";
+			case 'Q':
+				return "White Queen";
+			case 'K':
+				return "White King";
+			default:
+				return "";
 		}
 
 	}
@@ -735,8 +676,6 @@ namespace helper {
 			return WHITE_KING_SPIN;
 		else
 			return 0;
-
-
 	}
 
 	/// <summary>
@@ -748,91 +687,8 @@ namespace helper {
 		while (std::getline(ss, token, pDelim)) {
 			pReturnVector.push_back(token);
 		}
-
 	}
 
-	/// <summary>
-	/// Returns pawn promotion enum from a FEN character
-	/// </summary>
-	/// <param name="pFENChar"></param>
-	/// <returns></returns>
-
-
-	PawnPromotionEnum GetPromotionEnumFromChar(char pFENChar)
-	{
-
-		switch (pFENChar)
-		{
-		case 'r':
-			return PawnPromotionEnum::Rook;
-		case 'n':
-			return PawnPromotionEnum::Knight;
-		case 'b':
-			return PawnPromotionEnum::Bishop;
-		default:
-			return PawnPromotionEnum::Queen;
-		}
-
-	}
-
-
-
-
-	/// <summary>
-	/// Extracts the endgame score out of a score value
-	/// </summary>
-	/// <param name="pScore"></param>
-	/// <returns></returns>
-	int endGameValue(int pScore) {
-		union { uint16_t u; int16_t s; } endgame = { uint16_t(unsigned(pScore + 0x8000) >> 16) };
-		return int(endgame.s);
-	}
-
-	/// <summary>
-	/// Extrats the midgame score out of a score value
-	/// </summary>
-	/// <param name="pScore"></param>
-	/// <returns></returns>
-	int midGameValue(int pScore) {
-
-		union { uint16_t u; int16_t s; } midgame = { uint16_t(unsigned(pScore)) };
-		return int(midgame.s);
-	}
-
-
-	/// <summary>
-	/// Distance functions
-	/// </summary>		
-	int distanceFile(int x, int y) { return std::abs(FILESQUAREINDEX[x] - FILESQUAREINDEX[y]); }
-	int distanceRank(int x, int y) { return std::abs(RANKSQUAREINDEX[x] - RANKSQUAREINDEX[y]); }
-	int distanceSquare(int x, int y) { return SquareDistance[x][y]; }
-
-	const std::map<int, std::string> SearchErrorMessage = {
-		{0, ""},
-		{1, "Incorrect number of White Kings" },
-		{2, "Incorrect number of Black Kings" },
-		{3, "Incorrect number of White Pieces" },
-		{4, "Incorrect number of Black Pieces" },
-		{5, "Total number of White Pawns plus White Queens is too high"},
-		{6, "Total number of Black Pawns plus Black Queens is too high"},
-		{7, "Total number of White Pawns plus White Bishops is too high"},
-		{8, "Total number of Black Pawns plus Black Bishops is too high"},
-		{9, "Total number of White Pawns plus White Knights is too high"},
-		{10, "Total number of Black Pawns plus Black Knights is too high"},
-		{11, "Total number of White Pawns plus White Rooks is too high"},
-		{12, "Total number of Black Pawns plus Black Rooks is too high"},
-		{13, "Total White Pawn count too high"},
-		{14, "Total Black Pawn count too high"},
-		{15, "White Pawns not allowed on Ranks 1 or 8"},
-		{16, "Black Pawns not allowed on Ranks 1 or 8"},
-		{17, "White King is in Check, but it is Black's turn to move"},
-		{18, "Black King is in Check, but it is White's turn to move"},
-		{19, "White King side castling availability is not correctly set"},
-		{20, "White Queen side castling availability is not correctly set"},
-		{21, "Black King side castling availability is not correctly set"},
-		{22, "Black Queen side castling availability is not correctly set"},
-
-	};
 }
 
 

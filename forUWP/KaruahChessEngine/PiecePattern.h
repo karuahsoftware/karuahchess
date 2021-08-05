@@ -36,5 +36,4 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 		extern uint64_t King(const int pIndex);
 		template<int Colour> extern uint64_t KingCastle(const int pIndex, const uint64_t pWhitePos, const uint64_t pBlackPos, const uint64_t pUsRookPos, const uint64_t pThemAttack, const uint64_t pThemPawnPotentialAttack, const int pStateCastlingAvailability);		
 		extern uint64_t Knight(const int pIndex);
-		extern uint64_t KingRing(const int pIndex);
 	}

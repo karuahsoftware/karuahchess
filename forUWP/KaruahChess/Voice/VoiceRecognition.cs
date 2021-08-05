@@ -48,7 +48,7 @@ namespace KaruahChess.Voice
 
         public static HashSet<String> SupportedLanguages { get; private set; } = new HashSet<string> { "en-AU", "en-CA", "en-GB", "en-IN", "en-NZ", "en-US" };
 
-        public bool Ignore { get; set; }
+        public int Ignore { get; set; }
 
 
         private KaruahChessEngineClass _tempBoard = new KaruahChessEngineClass();
@@ -144,7 +144,7 @@ namespace KaruahChess.Voice
         /// <param name="args"></param>
         private async void ContinuousRecognitionSession_ResultGenerated(SpeechContinuousRecognitionSession sender, SpeechContinuousRecognitionResultGeneratedEventArgs args)
         {
-            if ((!Ignore) && (args.Result.Confidence == SpeechRecognitionConfidence.Medium || args.Result.Confidence == SpeechRecognitionConfidence.High))
+            if ((Ignore == 0) && (args.Result.Confidence == SpeechRecognitionConfidence.Medium || args.Result.Confidence == SpeechRecognitionConfidence.High))
             {                
                 var text = args.Result.Text;
 

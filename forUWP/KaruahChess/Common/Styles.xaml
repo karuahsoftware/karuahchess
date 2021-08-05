@@ -295,4 +295,23 @@
         <customcontrol:CustomStyleTemplate.FontSize>14</customcontrol:CustomStyleTemplate.FontSize>
         <customcontrol:CustomStyleTemplate.IconFontSize>30</customcontrol:CustomStyleTemplate.IconFontSize>
     </customcontrol:CustomStyleTemplate>
+
+    <customcontrol:CustomStyleTemplate x:Key="SoundSettingsControlStyleTemplateObject"  >
+        <customcontrol:CustomStyleTemplate.Background>
+            <StaticResource ResourceKey="CustomControlBackgroundNormalBrush" />
+        </customcontrol:CustomStyleTemplate.Background>
+        <customcontrol:CustomStyleTemplate.BorderBrush>
+            <StaticResource ResourceKey="CustomControlBorderBrush" />
+        </customcontrol:CustomStyleTemplate.BorderBrush>
+        <customcontrol:CustomStyleTemplate.BorderThickness>1</customcontrol:CustomStyleTemplate.BorderThickness>
+        <customcontrol:CustomStyleTemplate.CornerRadius>0</customcontrol:CustomStyleTemplate.CornerRadius>
+        <customcontrol:CustomStyleTemplate.MinWidth>100</customcontrol:CustomStyleTemplate.MinWidth>
+        <customcontrol:CustomStyleTemplate.MinHeight>20</customcontrol:CustomStyleTemplate.MinHeight>
+        <customcontrol:CustomStyleTemplate.Width>NaN</customcontrol:CustomStyleTemplate.Width>
+        <customcontrol:CustomStyleTemplate.Height>NaN</customcontrol:CustomStyleTemplate.Height>
+        <customcontrol:CustomStyleTemplate.Margin>0</customcontrol:CustomStyleTemplate.Margin>
+        <customcontrol:CustomStyleTemplate.Padding>5</customcontrol:CustomStyleTemplate.Padding>
+        <customcontrol:CustomStyleTemplate.FontSize>14</customcontrol:CustomStyleTemplate.FontSize>
+        <customcontrol:CustomStyleTemplate.IconFontSize>30</customcontrol:CustomStyleTemplate.IconFontSize>
+    </customcontrol:CustomStyleTemplate>
 </ResourceDictionary>
