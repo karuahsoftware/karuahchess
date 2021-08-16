@@ -45,6 +45,7 @@ using Windows.Media.Core;
 using KaruahChessEngine;
 using static KaruahChess.Rules.Move;
 using Windows.Foundation;
+using static KaruahChess.Common.Constants;
 
 namespace KaruahChess.ViewModel
 {
@@ -67,7 +68,7 @@ namespace KaruahChess.ViewModel
         ChessClock _chessClockControl;
         VoiceHelp _voiceHelpControl;
         EngineSettings _engineSettingsControl;
-        SoundSettings _soundSettingsControl;
+        SoundColourSettings _soundColourSettingsControl;
         BoardAnimation _boardAnimation;
         PieceEditTool _pieceEditToolControl;
         LevelIndicator _levelIndicatorControl;
@@ -172,6 +173,20 @@ namespace KaruahChess.ViewModel
         }
 
         /// <summary>
+        /// Direction indicator
+        /// </summary>
+        private SolidColorBrush _borderColour;
+        public SolidColorBrush BorderColour
+        {
+            get { return _borderColour; }
+            set
+            {
+                _borderColour = value;
+                RaisePropertyChanged(nameof(BorderColour));
+            }
+        }
+
+        /// <summary>
         /// Move in progress indicator
         /// </summary>
         private bool _computerMoveProcessing;
@@ -243,6 +258,31 @@ namespace KaruahChess.ViewModel
                     ParameterDataService.instance.Set<ParamComputerMoveFirst>(_ComputerMoveFirstEnabled);
                     UpdateBoardIndicators(GameRecordDataService.instance.GetCurrentGame());
                     RaisePropertyChanged(nameof(ComputerMoveFirstEnabled));
+                }
+            }
+        }
+
+
+        /// <summary>
+        /// Randomise first move enabled
+        /// </summary>  
+        private ParamRandomiseFirstMove _randomiseFirstMove;
+        public bool RandomiseFirstMoveEnabled
+        {
+            get
+            {
+                var paramRandomiseFirstMoveObj = ParameterDataService.instance.Get<ParamRandomiseFirstMove>();
+                _randomiseFirstMove = paramRandomiseFirstMoveObj;
+                return _randomiseFirstMove.Enabled;
+            }
+            set
+            {
+                if (_randomiseFirstMove != null && _randomiseFirstMove.Enabled != value)
+                {
+                    _randomiseFirstMove.Enabled = value;
+                    ParameterDataService.instance.Set<ParamRandomiseFirstMove>(_randomiseFirstMove);
+                    UpdateBoardIndicators(GameRecordDataService.instance.GetCurrentGame());
+                    RaisePropertyChanged(nameof(RandomiseFirstMoveEnabled));
                 }
             }
         }
@@ -608,6 +648,34 @@ namespace KaruahChess.ViewModel
         }
 
         /// <summary>
+        /// Board dark square colour
+        /// </summary>
+        private ParamColourDarkSquares _colourDarkSquares;
+        public ColourARGB ColourDarkSquaresARGB
+        {
+            get
+            {
+                var paramColourDarkSquaresObj = ParameterDataService.instance.Get<ParamColourDarkSquares>();
+                _colourDarkSquares = paramColourDarkSquaresObj;
+                return _colourDarkSquares.ARGB();
+            }
+            set
+            {
+                if (_colourDarkSquares != null && !_colourDarkSquares.ARGB().Equals(value))
+                {
+                    _colourDarkSquares.A = value.A;
+                    _colourDarkSquares.R = value.R;
+                    _colourDarkSquares.G = value.G;
+                    _colourDarkSquares.B = value.B;
+                   
+                    ParameterDataService.instance.Set<ParamColourDarkSquares>(_colourDarkSquares);
+                    RaisePropertyChanged(nameof(ColourDarkSquaresARGB));
+
+                }
+            }
+        }
+
+        /// <summary>
         /// Lock panel flag
         /// </summary>
         private bool _lockPanel;
@@ -744,10 +812,6 @@ namespace KaruahChess.ViewModel
             // Set feedback button visibility
             SetFeedbackVisibility();
 
-
-            
-
-
         }
 
 
@@ -765,6 +829,9 @@ namespace KaruahChess.ViewModel
 
             // Set initial board size   
             ResizeBoard();
+
+            // Apply board colour
+            ApplyBoardColour();
 
             // Set clock offset
             LoadChessClock(true, GameRecordDataService.instance.GetCurrentGame());
@@ -903,13 +970,14 @@ namespace KaruahChess.ViewModel
 
         }
 
+        
         /// <summary>
         /// Sets the sound settings control
         /// </summary>
         /// <param name="pSoundSettingsControl"></param>
-        public void SetSoundSettingsControl(SoundSettings pSoundSettingsControl)
+        public void SetSoundColourSettingsControl(SoundColourSettings pSoundColourSettingsControl)
         {
-            _soundSettingsControl = pSoundSettingsControl;
+            _soundColourSettingsControl = pSoundColourSettingsControl;
 
         }
 
@@ -987,7 +1055,7 @@ namespace KaruahChess.ViewModel
                 LoadChessClock(true, GameRecordDataService.instance.GetCurrentGame());
 
                 // Do rollback animation
-                var moveAnimationList = _boardAnimation.CreateAnimationList(oldBoard, GameRecordDataService.instance.Get(), BoardSquareDataService.instance);
+                var moveAnimationList = _boardAnimation.CreateAnimationList(oldBoard, GameRecordDataService.instance.Get());
                 BoardSquareDataService.instance.Update(GameRecordDataService.instance.GetCurrentGame(), false);
                 await StartPieceAnimation(true, moveAnimationList, true);
 
@@ -1051,9 +1119,6 @@ namespace KaruahChess.ViewModel
            
 
         }
-
-       
-   
 
         /// <summary>
         /// Start a new game
@@ -1363,14 +1428,15 @@ namespace KaruahChess.ViewModel
             }
         }
 
+               
         /// <summary>
         /// Sound settings button event
         /// </summary>
-        public void btnSoundSettings_Click(object sender, RoutedEventArgs e)
+        public void btnSoundColourSettings_Click(object sender, RoutedEventArgs e)
         {
-            if (_soundSettingsControl != null)
+            if (_soundColourSettingsControl != null)
             {
-                _soundSettingsControl.Show();
+                _soundColourSettingsControl.Show();
             }
         }
 
@@ -1552,7 +1618,7 @@ namespace KaruahChess.ViewModel
                     long transId = GameRecordDataService.instance.transactionId;
 
                     if (pAnimate) {
-                        var moveAnimationList = _boardAnimation.CreateAnimationList(boardBeforeMove, boardAfterMove, BoardSquareDataService.instance);
+                        var moveAnimationList = _boardAnimation.CreateAnimationList(boardBeforeMove, boardAfterMove);
                         BoardSquareDataService.instance.Update(boardAfterMove, false);
                         await StartPieceAnimation(true, moveAnimationList, true);                       
                     }
@@ -1648,6 +1714,7 @@ namespace KaruahChess.ViewModel
 
                 // Start the search      
                 SearchOptions options;
+                options.randomiseFirstMove = RandomiseFirstMoveEnabled;
                 options.limitStrengthELO = limitEngineStrengthELO;  
                 
                 if (LimitAdvancedEnabled) { 
@@ -1684,7 +1751,7 @@ namespace KaruahChess.ViewModel
 
                         // Do animation
                         var boardAfterMove = GameRecordDataService.instance.GetCurrentGame();
-                        var moveAnimationList = _boardAnimation.CreateAnimationList(boardBeforeMove, boardAfterMove, BoardSquareDataService.instance);
+                        var moveAnimationList = _boardAnimation.CreateAnimationList(boardBeforeMove, boardAfterMove);
                         BoardSquareDataService.instance.Update(boardAfterMove, true);
 
                         long transId = GameRecordDataService.instance.transactionId;
@@ -2064,9 +2131,7 @@ namespace KaruahChess.ViewModel
 
             
         }
-
-
-        
+                
 
         /// <summary>
         /// Helper function to resize the board
@@ -2168,6 +2233,36 @@ namespace KaruahChess.ViewModel
             _pieceEditToolControl.Close();
 
             
+        }
+
+        /// <summary>
+        /// Apply board colour to the board
+        /// </summary>
+        public void ApplyBoardColour()
+        {
+            ColourARGB argb = ColourDarkSquaresARGB;
+            Color darkSquareColour = new Color
+            {
+                A = argb.A,
+                R = argb.R,
+                G = argb.G,
+                B = argb.B
+            };
+
+            // Tiles
+            foreach (Tile tile in BoardTiles)
+            {
+                BoardSquare sq = tile.Entity as BoardSquare;
+                if (sq.Colour == BoardSquare.ColourEnum.Black)
+                {
+                    tile.StyleTemplate.Background = new SolidColorBrush(darkSquareColour);
+                    
+                }
+            }
+
+            // Board border
+            BorderColour = new SolidColorBrush(darkSquareColour);
+                        
         }
 
         
@@ -2324,10 +2419,10 @@ namespace KaruahChess.ViewModel
             {
                 _engineSettingsControl.SetPosition(BoardWidth);
             }
-
-            if (_soundSettingsControl != null)
+                        
+            if (_soundColourSettingsControl != null)
             {
-                _soundSettingsControl.SetPosition(BoardWidth);
+                _soundColourSettingsControl.SetPosition(BoardWidth);
             }
 
         }
@@ -2860,7 +2955,7 @@ namespace KaruahChess.ViewModel
 
                     // Do animation
                     if (pAnimate) { 
-                        var moveAnimationList = _boardAnimation.CreateAnimationList(oldBoard, updatedBoard, BoardSquareDataService.instance);
+                        var moveAnimationList = _boardAnimation.CreateAnimationList(oldBoard, updatedBoard);
                         BoardSquareDataService.instance.Update(updatedBoard, false);
                         GameRecordCurrentValue = pRecId;
                         UpdateBoardIndicators(updatedBoard);

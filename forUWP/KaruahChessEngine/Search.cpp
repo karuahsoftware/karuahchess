@@ -56,27 +56,27 @@ namespace Search {
             // Set options
             if (pSearchOptions.limitStrengthELO >= 1350 && pSearchOptions.limitStrengthELO < 2850) {
                 // Limit engine strength
-                SF::Options["UCI_LimitStrength"] << SF::UCI::Option(true);
-                SF::Options["UCI_Elo"] << SF::UCI::Option(pSearchOptions.limitStrengthELO, 1350, 2850);
+                Stockfish::Options["UCI_LimitStrength"] << Stockfish::UCI::Option(true);
+                Stockfish::Options["UCI_Elo"] << Stockfish::UCI::Option(pSearchOptions.limitStrengthELO, 1350, 2850);
             }
             else {
                 // Set engine to max
-                SF::Options["UCI_LimitStrength"] << SF::UCI::Option(false);
-                SF::Options["UCI_Elo"] << SF::UCI::Option(1350, 1350, 2850);
+                Stockfish::Options["UCI_LimitStrength"] << Stockfish::UCI::Option(false);
+                Stockfish::Options["UCI_Elo"] << Stockfish::UCI::Option(1350, 1350, 2850);
             }
 
             // Get the board position
-            SF::Position pos;
-            SF::StateListPtr states = SF::StateListPtr(new std::deque<SF::StateInfo>(1));
+            Stockfish::Position pos;
+            Stockfish::StateListPtr states = Stockfish::StateListPtr(new std::deque<Stockfish::StateInfo>(1));
             std::string startFEN = pBoard.GetFullFEN();
 
             // Set the position
-            SF::Thread* mainThread = SF::Threads.main();
+            Stockfish::Thread* mainThread = Stockfish::Threads.main();
             pos.set(startFEN, false, &states->back(), mainThread);
 
             // Do the search
-            SF::Search::LimitsType limits;
-            limits.startTime = SF::now();
+            Stockfish::Search::LimitsType limits;
+            limits.startTime = Stockfish::now();
           
             // Set the limits from the GUI
             limits.depth = pSearchOptions.limitDepth;
@@ -85,32 +85,32 @@ namespace Search {
             
             
 
-            SF::Threads.start_thinking(pos, states, limits, false);
-            SF::Threads.main()->wait_for_search_finished();
-            SF::Search::RootMoves rootMoves = mainThread->rootMoves;
+            Stockfish::Threads.start_thinking(pos, states, limits, false);
+            Stockfish::Threads.main()->wait_for_search_finished();
+            Stockfish::Search::RootMoves rootMoves = mainThread->rootMoves;
 
 
             int rootIndex = 0;
-            if (pBoard.StateFullMoveCount < 1 && rootMoves.size() > 4) {
+            if (pSearchOptions.randomiseFirstMove && pBoard.StateFullMoveCount < 1 && rootMoves.size() > 4) {
                 auto rd = std::random_device{};
                 std::mt19937 gen(rd());
                 std::uniform_int_distribution<> distrib(0, 4);
                 rootIndex = distrib(gen);
             }
 
-            SF::Move m = rootMoves[rootIndex].pv[0];
+            Stockfish::Move m = rootMoves[rootIndex].pv[0];
 
             // Mirror the result as the karuah chess board is a mirror of
             // the sf board
-            const int fromIndex = helper::mirrorRank(SF::from_sq(m));
-            const int toIndex = helper::mirrorRank(SF::to_sq(m));
+            const int fromIndex = helper::mirrorRank(Stockfish::from_sq(m));
+            const int toIndex = helper::mirrorRank(Stockfish::to_sq(m));
 
-            if (m == SF::MOVE_NONE || m == SF::MOVE_NULL) {
+            if (m == Stockfish::MOVE_NONE || m == Stockfish::MOVE_NULL) {
                 // No move found
                 pBestMove.moveFromIndex = -1;
                 pBestMove.moveToIndex = -1;
             }
-            else if (SF::type_of(m) == SF::CASTLING) {
+            else if (Stockfish::type_of(m) == Stockfish::CASTLING) {
                 pBestMove.moveFromIndex = fromIndex;
 
                 // Set up the castling move
@@ -121,9 +121,9 @@ namespace Search {
                     pBestMove.moveToIndex = toIndex > fromIndex ? 62 : 58;
                 }
             }
-            else if (SF::type_of(m) == SF::PROMOTION) {
+            else if (Stockfish::type_of(m) == Stockfish::PROMOTION) {
                 // Set the promotion piece
-                pBestMove.promotionPieceType = SF::promotion_type(m);
+                pBestMove.promotionPieceType = Stockfish::promotion_type(m);
                 pBestMove.moveFromIndex = fromIndex;
                 pBestMove.moveToIndex = toIndex;
             }
@@ -150,7 +150,7 @@ namespace Search {
     /// <returns></returns>
     void Cancel() {
         _cancel = true;
-        SF::Threads.stop = true;
+        Stockfish::Threads.stop = true;
     }
 
     /// <summary>
@@ -159,7 +159,7 @@ namespace Search {
     /// <returns></returns>
     void ClearCache()
     {
-        SF::Search::clear();
+        Stockfish::Search::clear();
     }
 
 }

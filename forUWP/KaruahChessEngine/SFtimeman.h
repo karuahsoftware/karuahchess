@@ -1,6 +1,6 @@
 /*
   Stockfish, a UCI chess playing engine derived from Glaurung 2.1
-  Copyright (C) 2004-2020 The Stockfish developers (see AUTHORS file)
+  Copyright (C) 2004-2021 The Stockfish developers (see AUTHORS file)
 
   Stockfish is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -23,33 +23,31 @@
 #include "SFsearch.h"
 #include "SFthread.h"
 
+namespace Stockfish {
 
-    namespace SF {
+    /// The TimeManagement class computes the optimal time to think depending on
+    /// the maximum available time, the game move number and other parameters.
 
-        /// The TimeManagement class computes the optimal time to think depending on
-        /// the maximum available time, the game move number and other parameters.
+    class TimeManagement {
+    public:
+        void init(Search::LimitsType& limits, Color us, int ply);
+        TimePoint optimum() const { return optimumTime; }
+        TimePoint maximum() const { return maximumTime; }
+        TimePoint elapsed() const {
+            return Search::Limits.npmsec ?
+                TimePoint(Threads.nodes_searched()) : now() - startTime;
+        }
 
-        class TimeManagement {
-        public:
-            void init(Search::LimitsType& limits, Color us, int ply);
-            TimePoint optimum() const { return optimumTime; }
-            TimePoint maximum() const { return maximumTime; }
-            TimePoint elapsed() const {
-                return Search::Limits.npmsec ?
-                    TimePoint(Threads.nodes_searched()) : now() - startTime;
-            }
+        int64_t availableNodes; // When in 'nodes as time' mode
 
-            int64_t availableNodes; // When in 'nodes as time' mode
+    private:
+        TimePoint startTime;
+        TimePoint optimumTime;
+        TimePoint maximumTime;
+    };
 
-        private:
-            TimePoint startTime;
-            TimePoint optimumTime;
-            TimePoint maximumTime;
-        };
+    extern TimeManagement Time;
 
-        extern TimeManagement Time;
-
-    }
-
+} // namespace Stockfish
 
 #endif // #ifndef TIMEMAN_H_INCLUDED

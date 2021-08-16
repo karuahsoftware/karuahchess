@@ -33,7 +33,10 @@ namespace KaruahChess.CustomControl
         public CustomStyleTemplate StyleTemplate { get; set; }
 
         private ViewModel.BoardViewModel _boardVM;
-        private List<String> strengthLabelList = Constants.strengthLabelList;
+        private readonly List<string> strengthLabelList = Constants.strengthLabelList;
+
+        private readonly string nodeLimitToolTip = "Valid values are 10 to " + 2000000000.ToString("N0") + ".";
+        private readonly string moveDurationLimitToolTip = "Valid values are 1 to " + 600000.ToString("N0") + ". Leave blank for no limit.";
 
 
         /// <summary>
@@ -78,15 +81,22 @@ namespace KaruahChess.CustomControl
         {
             ComputerPlayerCheckBox.IsChecked = _boardVM.ComputerPlayerEnabled;
             ComputerMoveFirstCheckBox.IsChecked = _boardVM.ComputerMoveFirstEnabled;
+            RandomiseFirstMoveCheckBox.IsChecked = _boardVM.RandomiseFirstMoveEnabled;
             ComputerStrengthCombo.SelectedIndex = Constants.eloList.IndexOf(_boardVM.limitEngineStrengthELO);
             LevelAutoCheckBox.IsChecked = _boardVM.LevelAutoEnabled;
             ComputerAdvancedSettingsCheckBox.IsChecked = _boardVM.LimitAdvancedEnabled;
             DepthLimitSlider.Value = _boardVM.limitDepth;
-            NodeLimitSlider.Value = _boardVM.limitNodes;
-            MoveDurationLimitSlider.Value = _boardVM.limitMoveDuration;
+            NodeLimitTextBox.Text = _boardVM.limitNodes.ToString();
+            MoveDurationLimitTextBox.Text = _boardVM.limitMoveDuration == 0 ? "" : _boardVM.limitMoveDuration.ToString();
             ThreadsSlider.Value = _boardVM.limitThreads;
 
             SetControlState();
+
+            // Clear validation errors
+            NodeLimitErrorText.Text = "";
+            NodeLimitErrorText.Visibility = Visibility.Collapsed;
+            MoveDurationLimitErrorText.Text = "";
+            MoveDurationLimitErrorText.Visibility = Visibility.Collapsed;
 
             PagePopup.IsOpen = true;
 
@@ -104,6 +114,8 @@ namespace KaruahChess.CustomControl
                 this.SetValue(Canvas.TopProperty, 10);
                 this.StyleTemplate.Width = pMaxWidth - 15;
                 this.StyleTemplate.Height = pMaxWidth - 15;
+
+                MoveDurationLimitText.MaxWidth = 100;
             }
             if (pMaxWidth > 400)
             {
@@ -113,6 +125,8 @@ namespace KaruahChess.CustomControl
                 this.SetValue(Canvas.TopProperty, popupOffset);
                 this.StyleTemplate.Width = popupSize;
                 this.StyleTemplate.Height = popupSize;
+
+                MoveDurationLimitText.MaxWidth = 200;
             }
 
         }
@@ -138,12 +152,16 @@ namespace KaruahChess.CustomControl
         {
             ComputerPlayerCheckBox.IsChecked = new ParamComputerPlayer().Enabled;
             ComputerMoveFirstCheckBox.IsChecked = new ParamComputerMoveFirst().Enabled;
+            RandomiseFirstMoveCheckBox.IsChecked = new ParamRandomiseFirstMove().Enabled;
             ComputerStrengthCombo.SelectedIndex = Constants.eloList.IndexOf(new ParamLimitEngineStrengthELO().eloRating);
             LevelAutoCheckBox.IsChecked = new ParamLevelAuto().Enabled;
             ComputerAdvancedSettingsCheckBox.IsChecked = new ParamLimitAdvanced().Enabled;
             DepthLimitSlider.Value = new ParamLimitDepth().depth;
-            NodeLimitSlider.Value = new ParamLimitNodes().nodes;
-            MoveDurationLimitSlider.Value = new ParamLimitMoveDuration().moveDurationMS;
+            NodeLimitTextBox.Text = new ParamLimitNodes().nodes.ToString();
+
+            var defaultMoveDuration = new ParamLimitMoveDuration().moveDurationMS;
+            MoveDurationLimitTextBox.Text = defaultMoveDuration == 0 ? "" : defaultMoveDuration.ToString();
+            
             ThreadsSlider.Value = new ParamLimitThreads().threads;
 
             SetControlState();
@@ -185,15 +203,25 @@ namespace KaruahChess.CustomControl
 
             _boardVM.ComputerPlayerEnabled = ComputerPlayerCheckBox.IsChecked == true;
             _boardVM.ComputerMoveFirstEnabled = ComputerMoveFirstCheckBox.IsChecked == true;
+            _boardVM.RandomiseFirstMoveEnabled = RandomiseFirstMoveCheckBox.IsChecked == true;
             _boardVM.LevelAutoEnabled = LevelAutoCheckBox.IsChecked == true;
             int eloRating = Constants.eloList[ComputerStrengthCombo.SelectedIndex];
             _boardVM.limitEngineStrengthELO = eloRating;
             
             _boardVM.LimitAdvancedEnabled = ComputerAdvancedSettingsCheckBox.IsChecked == true;
             _boardVM.limitDepth = (int)DepthLimitSlider.Value;
-            _boardVM.limitNodes = (int)NodeLimitSlider.Value;
-            _boardVM.limitMoveDuration = (int)MoveDurationLimitSlider.Value;
+                        
+             Int32.TryParse(NodeLimitTextBox.Text, out int limitNodes);
+            if (limitNodes < 10 || limitNodes > 2000000000) limitNodes = 10;
+            _boardVM.limitNodes = limitNodes;
+
+            Int32.TryParse(MoveDurationLimitTextBox.Text, out int limitMoveDuration);
+            if (limitMoveDuration < 0 || limitMoveDuration > 600000) limitMoveDuration = 0;
+            _boardVM.limitMoveDuration = limitMoveDuration;
+
             _boardVM.limitThreads = (int)ThreadsSlider.Value;
+
+            
 
         }
 
@@ -209,6 +237,7 @@ namespace KaruahChess.CustomControl
             var ComputerPlayer = ComputerPlayerCheckBox.IsChecked == true;
             if (ComputerPlayer) {
                 ComputerMoveFirstCheckBox.IsEnabled = true;
+                RandomiseFirstMoveCheckBox.IsEnabled = true;
                 LevelAutoCheckBox.IsEnabled = true;
                 ComputerStrengthCombo.IsEnabled = true;
                 ComputerStrengthTitleText.Opacity = 1.0;
@@ -220,6 +249,7 @@ namespace KaruahChess.CustomControl
             else
             {
                 ComputerMoveFirstCheckBox.IsEnabled = false;
+                RandomiseFirstMoveCheckBox.IsEnabled = false;
                 LevelAutoCheckBox.IsEnabled = false;
                 ComputerStrengthCombo.IsEnabled = false;
                 ComputerStrengthTitleText.Opacity = 0.5;
@@ -232,28 +262,74 @@ namespace KaruahChess.CustomControl
             DepthLimitSlider.IsEnabled = advanced;
             DepthLimitText.Opacity = advancedOpacity;
             DepthLimitValueText.Opacity = advancedOpacity;
-            NodeLimitSlider.IsEnabled = advanced;
+            NodeLimitTextBox.IsEnabled = advanced;
             NodeLimitText.Opacity = advancedOpacity;
-            NodeLimitValueText.Opacity = advancedOpacity;
-            MoveDurationLimitSlider.IsEnabled = advanced;
+            NodeLimitErrorText.Opacity = advancedOpacity;
+            MoveDurationLimitTextBox.IsEnabled = advanced;
             MoveDurationLimitText.Opacity = advancedOpacity;
-            MoveDurationLimitValueText.Opacity = advancedOpacity;
+            MoveDurationLimitErrorText.Opacity = advancedOpacity;
             ThreadsSlider.IsEnabled = advanced;
             ThreadsText.Opacity = advancedOpacity;
             ThreadsValueText.Opacity = advancedOpacity;
         }
 
-        // Gets the duration as a string with units
-        private string getDurationStr(double pDurationMS)
-        {
-            return pDurationMS > 0 ? pDurationMS.ToString("N0") + " ms" : "off";
-        }
-
-
+        
         // Gets the value as string, or return off if zero
         private string getValueZeroOff(double pValue)
         {
             return pValue > 0 ? pValue.ToString("N0") : "off";
         }
+
+        
+        // Before changing event, filter out invalid characters
+        private void NodeLimitTextBox_OnBeforeTextChanging(TextBox sender, TextBoxBeforeTextChangingEventArgs args)
+        {
+            args.Cancel = System.Text.RegularExpressions.Regex.IsMatch(args.NewText, "[^0-9]");
+            
+        }
+
+        // Display validation error
+        private void NodeLimitTextBox_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            var tBox = sender as TextBox;
+            Int32.TryParse(tBox.Text, out int nodeLimit);
+
+            if (nodeLimit < 10 || nodeLimit > 2000000000)
+            {                
+                NodeLimitErrorText.Text = "Valid values are 10 to " + 2000000000.ToString("N0") + ".";
+                NodeLimitErrorText.Visibility = Visibility.Visible;
+            }
+            else
+            {
+                NodeLimitErrorText.Text = "";
+                NodeLimitErrorText.Visibility = Visibility.Collapsed;
+            }
+        }
+
+        // Before changing event, filter out invalid characters
+        private void MoveDurationLimitTextBox_OnBeforeTextChanging(TextBox sender, TextBoxBeforeTextChangingEventArgs args)
+        {
+            args.Cancel = System.Text.RegularExpressions.Regex.IsMatch(args.NewText, "[^0-9]");
+
+        }
+
+        // Display validation error
+        private void MoveDurationLimitTextBox_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            var tBox = sender as TextBox;
+            Int32.TryParse(tBox.Text, out int MoveDurationLimit);
+
+            if (MoveDurationLimit < 0 || MoveDurationLimit > 600000)
+            {
+                MoveDurationLimitErrorText.Text = "Valid values are 0 to " + 600000.ToString("N0") + ".";
+                MoveDurationLimitErrorText.Visibility = Visibility.Visible;
+            }
+            else
+            {
+                MoveDurationLimitErrorText.Text = "";
+                MoveDurationLimitErrorText.Visibility = Visibility.Collapsed;
+            }
+        }
+
     }
 }

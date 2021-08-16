@@ -27,7 +27,7 @@ namespace KaruahChess.Pieces
     public class PieceAnimationInstruction
     {
 
-        public enum AnimationTypeEnum { Move = 0, Take = 1, Put = 2, Fall = 3 }
+        public enum AnimationTypeEnum { Move = 0, Take = 1, Put = 2, Fall = 3, MoveFade = 4}
 
         /// <summary>
         /// Constructor

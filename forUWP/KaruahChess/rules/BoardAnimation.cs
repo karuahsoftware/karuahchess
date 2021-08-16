@@ -48,11 +48,10 @@ namespace KaruahChess.Rules
         /// <param name="pBoardB"></param>
         /// <param name="pBoardSquareDS"></param>
         /// <returns></returns>
-        public List<PieceAnimationInstruction> CreateAnimationList(GameRecordArray pBoardRecA, GameRecordArray pBoardRecB, BoardSquareDataService pBoardSquareDS)
+        public List<PieceAnimationInstruction> CreateAnimationList(GameRecordArray pBoardRecA, GameRecordArray pBoardRecB)
         {
             var animationList = new List<PieceAnimationInstruction>(4);
-            var moveList = GetAnimationMoveList(pBoardRecA, pBoardRecB);                        
-            int animationNumber = 0;
+            var moveList = GetAnimationMoveList(pBoardRecA, pBoardRecB);
 
             
             foreach (var move in moveList) {
@@ -62,28 +61,53 @@ namespace KaruahChess.Rules
 
                 if (fromIndex > -1 && toIndex > -1) {
                     // Piece move animation                                          
-                    var pieceImgData = Piece.GetImage(BoardSquareDataService.GetPieceTypeFromSpin(spin), BoardSquareDataService.GetPieceColourFromSpin(spin), pBoardSquareDS.SquareSize, pBoardSquareDS.SquareSize);
-                    var instruction = GetAnimationInstruction(fromIndex, toIndex, pieceImgData, pBoardSquareDS);
+                    var pieceImgData = Piece.GetImage(BoardSquareDataService.GetPieceTypeFromSpin(spin), BoardSquareDataService.GetPieceColourFromSpin(spin), BoardSquareDataService.instance.SquareSize, BoardSquareDataService.instance.SquareSize);
+                    var instruction = GetAnimationInstruction(fromIndex, toIndex, pieceImgData);
                     instruction.AnimationType = PieceAnimationInstruction.AnimationTypeEnum.Move;
                     animationList.Add(instruction);                    
                 }
                 else if (fromIndex > -1 && toIndex == -1)
                 {
-                    // Piece take animation
-                    var pieceImgData = Piece.GetImage(BoardSquareDataService.GetPieceTypeFromSpin(spin), BoardSquareDataService.GetPieceColourFromSpin(spin), pBoardSquareDS.SquareSize, pBoardSquareDS.SquareSize);
-                    var instruction = GetAnimationInstruction(fromIndex, fromIndex, pieceImgData, pBoardSquareDS);
-                    instruction.AnimationType = PieceAnimationInstruction.AnimationTypeEnum.Take;
-                    animationList.Add(instruction);
+                    // Look for a pawn promotion move
+                    int promotionIndex = -1;
+                    if (spin == 1 || spin == -1)
+                    {
+                        foreach (var nestedMove in moveList)
+                        {
+                            int nestedSpin = nestedMove[0];
+                            int nestedFromIndex = nestedMove[1];
+                            int nestedToIndex = nestedMove[2];
+                            if ((spin == 1 && nestedSpin > 1 && nestedFromIndex == -1 && nestedToIndex > -1) || (spin == -1 && nestedSpin < -1 && nestedFromIndex == -1 && nestedToIndex > -1)) promotionIndex = nestedToIndex;
+                            
+                        }
+                    }
+
+                    if (promotionIndex > -1)
+                    {
+                        // Pawn promotion animation
+                        var pieceImgData = Piece.GetImage(BoardSquareDataService.GetPieceTypeFromSpin(spin), BoardSquareDataService.GetPieceColourFromSpin(spin), BoardSquareDataService.instance.SquareSize, BoardSquareDataService.instance.SquareSize);
+                        var instruction = GetAnimationInstruction(fromIndex, promotionIndex, pieceImgData);
+                        instruction.AnimationType = PieceAnimationInstruction.AnimationTypeEnum.MoveFade;
+                        animationList.Add(instruction);
+                    }
+                    else
+                    {
+                        // Piece take animation
+                        var pieceImgData = Piece.GetImage(BoardSquareDataService.GetPieceTypeFromSpin(spin), BoardSquareDataService.GetPieceColourFromSpin(spin), BoardSquareDataService.instance.SquareSize, BoardSquareDataService.instance.SquareSize);
+                        var instruction = GetAnimationInstruction(fromIndex, fromIndex, pieceImgData);
+                        instruction.AnimationType = PieceAnimationInstruction.AnimationTypeEnum.Take;
+                        animationList.Add(instruction);
+                    }
                 }
                 else if (fromIndex == -1 && toIndex > -1)
                 {
                     // Piece return animation                    
-                    var pieceImgData = Piece.GetImage(BoardSquareDataService.GetPieceTypeFromSpin(spin), BoardSquareDataService.GetPieceColourFromSpin(spin), pBoardSquareDS.SquareSize, pBoardSquareDS.SquareSize);
-                    var instruction = GetAnimationInstruction(toIndex, toIndex, pieceImgData, pBoardSquareDS);
+                    var pieceImgData = Piece.GetImage(BoardSquareDataService.GetPieceTypeFromSpin(spin), BoardSquareDataService.GetPieceColourFromSpin(spin), BoardSquareDataService.instance.SquareSize, BoardSquareDataService.instance.SquareSize);
+                    var instruction = GetAnimationInstruction(toIndex, toIndex, pieceImgData);
                     instruction.AnimationType = PieceAnimationInstruction.AnimationTypeEnum.Put;
                     animationList.Add(instruction);
                 }
-                animationNumber++;
+                
             }
             
             return animationList;
@@ -119,7 +143,7 @@ namespace KaruahChess.Rules
             List<int[]> spinChangeList = ConvertSpinChangeArrayToList(spinChange);
                         
             // Too many changes to animate so just clear the list
-            if (spinChangeList.Count > 2)
+            if (spinChangeList.Count > 3)
             {
                 spinChangeList.Clear();
             }
@@ -193,10 +217,10 @@ namespace KaruahChess.Rules
         /// <param name="pImage"></param>
         /// <param name="pImageRotationZ"></param>
         /// <returns></returns>
-        private PieceAnimationInstruction GetAnimationInstruction(int pFromIndex, int pToIndex, BitmapImage pImage, BoardSquareDataService pBoardSquareDS)
+        private PieceAnimationInstruction GetAnimationInstruction(int pFromIndex, int pToIndex, BitmapImage pImage)
         {
-            var fromTile = pBoardSquareDS.BoardTiles[pFromIndex];
-            var toTile = pBoardSquareDS.BoardTiles[pToIndex];
+            var fromTile = BoardSquareDataService.instance.BoardTiles[pFromIndex];
+            var toTile = BoardSquareDataService.instance.BoardTiles[pToIndex];
             var fromTilePoint = fromTile.Coordinates();
             var toTilePoint = toTile.Coordinates();
 

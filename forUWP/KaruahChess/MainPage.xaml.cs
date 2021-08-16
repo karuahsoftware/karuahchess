@@ -50,13 +50,12 @@ namespace KaruahChess
             EngineSettingsControl.SetBoardVM(BoardVM);
             BoardVM.SetEngineSettingsControl(EngineSettingsControl);
 
-            SoundSettingsControl.SetBoardVM(BoardVM);
-            BoardVM.SetSoundSettingsControl(SoundSettingsControl);
-
+            SoundColourSettingsControl.SetBoardVM(BoardVM);
+            BoardVM.SetSoundColourSettingsControl(SoundColourSettingsControl);
+                       
             ImportPGNControl.SetBoardVM(BoardVM);
             BoardVM.SetImportPGNControl(ImportPGNControl);
-
-            
+                        
             BoardVM.SetExportControl(ExportControl);
 
             MoveNavigatorControl.SetBoardVM(BoardVM);

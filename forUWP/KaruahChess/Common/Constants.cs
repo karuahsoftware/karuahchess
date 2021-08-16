@@ -32,7 +32,6 @@ namespace KaruahChess.Common
         public const int BLACK_QUEEN_SPIN = -5;
         public const int BLACK_KING_SPIN = -6;
 
-
         // White Pieces
         public const int WHITE_PAWN_SPIN = 1;
         public const int WHITE_ROOK_SPIN = 4;
@@ -41,13 +40,13 @@ namespace KaruahChess.Common
         public const int WHITE_QUEEN_SPIN = 5;
         public const int WHITE_KING_SPIN = 6;
 
-
         // Colours
         public const int WHITEPIECE = 1;
         public const int BLACKPIECE = -1;
 
+        // ELO Strength options
         public static List<int> eloList = new List<int> { 1350, 1425, 1500, 1575, 1650, 1725, 1800, 1875, 1950, 2025, 2100, 2175, 2250, 2325, 2400, 2475, 2550, 2625, 2700, 2775, 2850 };
-        public static List<string> strengthLabelList = new List<String> {
+        public static List<string> strengthLabelList = new List<string> {
             "Beginner",
             "Level 2, Elo 1425",
             "Level 3, Elo 1500",
@@ -70,6 +69,15 @@ namespace KaruahChess.Common
             "Level 20, Elo 2775",
             "Level 21, Elo 2850"};
 
-
+        
+        // Colours in the format alpha, red, green, blue
+        public static List<ColourARGB> darkSquareColourList = new List<ColourARGB> {
+            new ColourARGB(255,90,120,153, "Blue"),
+            new ColourARGB(255,222,184,135, "Brown"),
+            new ColourARGB(255,100,153,100, "Green"),
+            new ColourARGB(255,153,153,153, "Grey")
+            };
+        
+       
     }
 }

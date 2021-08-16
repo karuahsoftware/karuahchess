@@ -55,6 +55,7 @@
                 <StackPanel Orientation="Vertical">
                     <CheckBox x:Name="ComputerPlayerCheckBox" Content="Computer player enabled" Style="{StaticResource CheckBoxStyle}" Click="ComputerPlayerCheckBox_Click" />
                     <CheckBox x:Name="ComputerMoveFirstCheckBox" Content="Computer moves first" Style="{StaticResource CheckBoxStyle}" />
+                    <CheckBox x:Name="RandomiseFirstMoveCheckBox" Content="Randomise first computer move" Style="{StaticResource CheckBoxStyle}" />
                     <CheckBox x:Name="LevelAutoCheckBox" Content="Increase strength after win" Style="{StaticResource CheckBoxStyle}" />
                     <StackPanel Orientation="Horizontal" Margin="0,10,0,0">
                         <TextBlock x:Name="ComputerStrengthTitleText" Text="Strength" Style="{StaticResource TextBlockStyle}"/>
@@ -66,41 +67,42 @@
                     <Grid x:Name="AdvancedSettingsGrid" Margin="0,10,0,0">
 
                         <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="Auto" />
-                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="*" MaxWidth="170"/>
                         </Grid.ColumnDefinitions>
                         <Grid.RowDefinitions>
-                            <RowDefinition Height="60" />
-                            <RowDefinition Height="60" />
-                            <RowDefinition Height="60" />
-                            <RowDefinition Height="60" />
+                            <RowDefinition Height="Auto" MinHeight="60"/>
+                            <RowDefinition Height="Auto" MinHeight="60"/>
+                            <RowDefinition Height="Auto" MinHeight="60"/>
+                            <RowDefinition Height="Auto" MinHeight="60"/>
                         </Grid.RowDefinitions>
 
                         <StackPanel Orientation="Vertical" Grid.Row="0" Grid.Column="0" HorizontalAlignment="Right">
                             <TextBlock x:Name="DepthLimitText" HorizontalAlignment="Right">Depth limit</TextBlock>
                             <TextBlock x:Name="DepthLimitValueText" HorizontalAlignment="Right" Margin="0,0,10,0" Text="{x:Bind getValueZeroOff(DepthLimitSlider.Value), Mode=OneWay}" />
                         </StackPanel>
-                        <Slider x:Name="DepthLimitSlider" Grid.Row="0" Grid.Column="1" Width="90" HorizontalAlignment="Left" Margin="3,0,10,0" Minimum="0" Maximum="35" TickFrequency="5" TickPlacement="BottomRight" StepFrequency="1"  SnapsTo="StepValues" IsThumbToolTipEnabled="False"/>
-                        
-                        
-                        <StackPanel Orientation="Vertical" Grid.Row="1" Grid.Column="0" HorizontalAlignment="Right">
-                            <TextBlock x:Name="NodeLimitText" HorizontalAlignment="Right">Node limit</TextBlock>
-                            <TextBlock x:Name="NodeLimitValueText" HorizontalAlignment="Right" Margin="0,0,15,0" Text="{x:Bind getValueZeroOff(NodeLimitSlider.Value), Mode=OneWay}" />
-                        </StackPanel>
-                        <Slider x:Name="NodeLimitSlider" Grid.Row="1" Grid.Column="1" HorizontalAlignment="Stretch" Margin="3,0,15,0" Minimum="10" Maximum="2000000000" TickFrequency="10000000" TickPlacement="BottomRight" StepFrequency="1"  SnapsTo="StepValues" IsThumbToolTipEnabled="False"/>
+                        <Slider x:Name="DepthLimitSlider" Grid.Row="0" Grid.Column="1" HorizontalAlignment="Stretch" Margin="3,0,15,0" Minimum="0" Maximum="35" TickFrequency="5" TickPlacement="BottomRight" StepFrequency="1" SnapsTo="StepValues" IsThumbToolTipEnabled="False"/>
+      
+                        <TextBlock x:Name="NodeLimitText" Grid.Row="1" Grid.Column="0" HorizontalAlignment="Right">Node limit</TextBlock>
 
-
-                        <StackPanel Orientation="Vertical" Grid.Row="2" Grid.Column="0" HorizontalAlignment="Right">
-                            <TextBlock x:Name="MoveDurationLimitText" HorizontalAlignment="Right">Move time limit</TextBlock>
-                            <TextBlock x:Name="MoveDurationLimitValueText" HorizontalAlignment="Right" Margin="0,0,15,0" Text="{x:Bind getDurationStr(MoveDurationLimitSlider.Value), Mode=OneWay}" />
+                        <StackPanel Orientation="Vertical" Grid.Row="1" Grid.Column="1" HorizontalAlignment="Stretch" VerticalAlignment="Top">
+                            <TextBox x:Name="NodeLimitTextBox" MaxLength="10" HorizontalAlignment="Stretch" VerticalAlignment="Top" TextChanged="NodeLimitTextBox_TextChanged" Margin="3,0,15,0" BeforeTextChanging="NodeLimitTextBox_OnBeforeTextChanging" Height="35" AcceptsReturn="False" TextWrapping="NoWrap" Style="{StaticResource TextBoxStyle}" ToolTipService.ToolTip="{x:Bind nodeLimitToolTip, Mode=OneTime}"/>
+                            <TextBlock x:Name="NodeLimitErrorText" TextWrapping="WrapWholeWords" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="3,0,0,10" Foreground="Red" Style="{StaticResource TextBlockStyle}" Visibility="Collapsed"/>
                         </StackPanel>
-                        <Slider x:Name="MoveDurationLimitSlider" Grid.Row="2" Grid.Column="1" HorizontalAlignment="Stretch" Margin="3,0,15,0" Minimum="0" Maximum="600000" TickFrequency="60000" TickPlacement="BottomRight" StepFrequency="1"  SnapsTo="StepValues" IsThumbToolTipEnabled="False"/>
+
+                        <TextBlock x:Name="MoveDurationLimitText" Grid.Row="2" Grid.Column="0" HorizontalAlignment="Right" VerticalAlignment="Top" TextWrapping="WrapWholeWords">Move time limit (ms)</TextBlock>
+                        
+                        <StackPanel Orientation="Vertical" Grid.Row="2" Grid.Column="1" HorizontalAlignment="Stretch" VerticalAlignment="Top">
+                            <TextBox x:Name="MoveDurationLimitTextBox" MaxLength="6" HorizontalAlignment="Stretch" VerticalAlignment="Top" TextChanged="MoveDurationLimitTextBox_TextChanged" Margin="3,0,15,0" BeforeTextChanging="MoveDurationLimitTextBox_OnBeforeTextChanging" MinWidth="80" Height="35" AcceptsReturn="False" TextWrapping="NoWrap" Style="{StaticResource TextBoxStyle}" ToolTipService.ToolTip="{x:Bind moveDurationLimitToolTip, Mode=OneTime}"/>
+                            <TextBlock x:Name="MoveDurationLimitErrorText" TextWrapping="WrapWholeWords" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="3,0,0,10" Foreground="Red" Style="{StaticResource TextBlockStyle}" Visibility="Collapsed"/>
+                        </StackPanel>
+
 
                         <StackPanel Orientation="Vertical" Grid.Row="3" Grid.Column="0" HorizontalAlignment="Right">
                             <TextBlock x:Name="ThreadsText" HorizontalAlignment="Right" >CPU threads</TextBlock>
                             <TextBlock x:Name="ThreadsValueText" HorizontalAlignment="Right" Margin="0,0,10,0" Text="{x:Bind getValueZeroOff(ThreadsSlider.Value), Mode=OneWay}" />
                         </StackPanel>
-                        <Slider x:Name="ThreadsSlider" Grid.Row="3" Grid.Column="1" Width="90" HorizontalAlignment="Left" Margin="3,0,15,0" Minimum="1" Maximum="15" TickFrequency="1" TickPlacement="BottomRight" StepFrequency="1"  SnapsTo="StepValues" IsThumbToolTipEnabled="False"/>
+                        <Slider x:Name="ThreadsSlider" Grid.Row="3" Grid.Column="1" HorizontalAlignment="Stretch" Margin="3,0,15,0" Minimum="1" Maximum="15" TickFrequency="1" TickPlacement="BottomRight" StepFrequency="1"  SnapsTo="StepValues" IsThumbToolTipEnabled="False"/>
                         
                     </Grid>
 
@@ -108,10 +110,10 @@
             </ScrollViewer>
 
             
-            <VariableSizedWrapGrid Orientation="Horizontal" ItemWidth="137" Grid.Row="2" Grid.Column="0">
-                <Button x:Name="btnCloseButton" Content="Close" Width="80" Click="Close_Click" FontSize="{x:Bind StyleTemplate.FontSize}" Style="{StaticResource ButtonStyle}" />
-                <Button  x:Name="btnStopSearchButton" Content="Stop search" Click="StopSearch_Click" FontSize="{x:Bind StyleTemplate.FontSize}" Style="{StaticResource ButtonStyle}" Width="135" />
-                <Button  x:Name="btnDefaultButton" Content="Reset to default" Click="ResetToDefault_Click" FontSize="{x:Bind StyleTemplate.FontSize}" Style="{StaticResource ButtonStyle}" Width="135"/>
+            <VariableSizedWrapGrid Margin="0,20,0,0" Orientation="Horizontal"  Grid.Row="2" Grid.Column="0">
+                <Button x:Name="btnCloseButton" Content="Close"  Click="Close_Click" FontSize="{x:Bind StyleTemplate.FontSize}" Style="{StaticResource ButtonStyle}" Width="135"/>
+                <Button x:Name="btnStopSearchButton" Content="Stop search" Click="StopSearch_Click" FontSize="{x:Bind StyleTemplate.FontSize}" Style="{StaticResource ButtonStyle}"  Width="135"/>
+                <Button x:Name="btnDefaultButton" Content="Reset to default" Click="ResetToDefault_Click" FontSize="{x:Bind StyleTemplate.FontSize}" Style="{StaticResource ButtonStyle}" Width="135"/>
             </VariableSizedWrapGrid>
             
 

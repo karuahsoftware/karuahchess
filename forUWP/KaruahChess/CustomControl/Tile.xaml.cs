@@ -17,7 +17,6 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
 
-using KaruahChess.Model;
 using KaruahChess.Pieces;
 using System;
 using Windows.ApplicationModel.DataTransfer;
@@ -58,8 +57,7 @@ namespace PurpleTreeSoftware.Panel
                 tileStack.Children.Add(pPieceCtrl);
                 _pieceCtrl = pPieceCtrl;
             }
-
-           
+                       
         }
 
 
@@ -163,25 +161,7 @@ namespace PurpleTreeSoftware.Panel
             
         }
         
-        /// <summary>
-        /// Gets the font size based on the width property
-        /// </summary>
-        /// <param name="pWidth"></param>
-        /// <returns></returns>
-        private double GetFontSize(double pWidth)
-        {
-            double rtnValue = 0;            
-            if (pWidth < 50)
-            {
-                rtnValue = 12;
-            }
-            else
-            {
-                rtnValue = 16;
-            }
-
-            return rtnValue;
-        }
+        
 
         /// <summary>
         /// Drag over event

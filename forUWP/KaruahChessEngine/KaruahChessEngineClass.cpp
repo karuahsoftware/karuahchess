@@ -74,11 +74,11 @@ namespace winrt::KaruahChessEngine::implementation
 	/// Get board array
 	/// </summary>
 	void KaruahChessEngineClass::GetBoardArray(winrt::array_view<uint64_t> pBoardArray) {
-		uint64_t boardArray[366];		
+		uint64_t boardArray[276];		
 		MainBoard.GetBoardArray(boardArray);
 
 		// Copy the arrays to native arrays 
-		for (int i = 0; i < 366; ++i) pBoardArray[i] = boardArray[i];
+		for (int i = 0; i < 276; ++i) pBoardArray[i] = boardArray[i];
 		
 		return;
 	}
@@ -100,10 +100,10 @@ namespace winrt::KaruahChessEngine::implementation
 	/// Set board array
 	/// </summary>
 	void KaruahChessEngineClass::SetBoardArray(const winrt::array_view<const uint64_t> pBoardArray) {
-		uint64_t boardArray[366];
+		uint64_t boardArray[276];
 		
 		// Copy the arrays to native arrays 
-		for (int i = 0; i < 366; ++i) boardArray[i] = pBoardArray[i];
+		for (int i = 0; i < 276; ++i) boardArray[i] = pBoardArray[i];
 
 		MainBoard.SetBoardArray(boardArray);
 
@@ -382,7 +382,7 @@ namespace winrt::KaruahChessEngine::implementation
 	/// </summary>		
 	SearchResult KaruahChessEngineClass::SearchStart(const SearchOptions pSearchOptions)
 	{
-		uint64_t boardArray[366];
+		uint64_t boardArray[276];
 		int32_t stateArray[8];
 
 		MainBoard.GetBoardArray(boardArray);
@@ -394,6 +394,7 @@ namespace winrt::KaruahChessEngine::implementation
 		Search::SearchTreeNode bestMove;
 		Search::SearchStatistics statistics;
 		Search::SearchOptions options;
+		options.randomiseFirstMove = pSearchOptions.randomiseFirstMove;
 		options.limitStrengthELO = pSearchOptions.limitStrengthELO;
 		options.limitDepth = pSearchOptions.limitDepth;
 		options.limitNodes = pSearchOptions.limitNodes;

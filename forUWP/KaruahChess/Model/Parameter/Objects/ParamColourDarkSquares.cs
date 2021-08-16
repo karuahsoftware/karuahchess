@@ -16,27 +16,42 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
+
 using System;
 using System.Runtime.Serialization;
+using KaruahChess.Common;
 
 namespace KaruahChess.Model.ParameterObjects
 {
     [DataContract]
-    public class ParamLimitNodes
+    public class ParamColourDarkSquares
     {
-   
+        
+        [DataMember]
+        public byte A { get; set; }
 
         [DataMember]
-        public int nodes { get; set; }
+        public byte R { get; set; }
 
-       
+        [DataMember]
+        public byte G { get; set; }
 
+        [DataMember]
+        public byte B { get; set; }
 
-        public ParamLimitNodes()
+        
+        public ParamColourDarkSquares()
         {
-            // Set default value
-            nodes = 1000000;
-            
+            // Set default value (green)
+            A = 255;
+            R = 100;
+            G = 153;
+            B = 100;
+        }
+
+        public ColourARGB ARGB()
+        {
+            return new ColourARGB(A, R, G, B, "");
         }
     }
 }

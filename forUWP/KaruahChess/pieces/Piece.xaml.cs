@@ -17,6 +17,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
 using System;
+using Windows.UI;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Media;
@@ -68,10 +69,12 @@ namespace KaruahChess.Pieces
         {
             PieceEllipse.Visibility = pVisibility;
 
-            if (pBrushColor != null) { 
-                PieceEllipse.Stroke = pBrushColor;
+            if (pBrushColor != null) {
+                PieceEllipse.StrokeThickness = 2;
+                PieceEllipse.Stroke = new SolidColorBrush(Color.FromArgb(255, 255, 255, 255));
                 if (pApplyFill) PieceEllipse.Fill = pBrushColor;
                 else { PieceEllipse.Fill = null; }
+                
             }
 
             StartPieceEllipseStoryBoard();
@@ -107,7 +110,8 @@ namespace KaruahChess.Pieces
 
             if (pBrushColor != null)
             {
-                PieceEllipseUnderAttack.Stroke = pBrushColor;
+                PieceEllipseUnderAttack.StrokeThickness = 2;
+                PieceEllipseUnderAttack.Stroke = new SolidColorBrush(Color.FromArgb(255, 255, 255, 255));
                 PieceEllipseUnderAttack.Fill = pBrushColor;
             }
 

@@ -46,6 +46,7 @@ namespace KaruahChessEngine
 		Int32 limitNodes;
 		Int32 limitMoveDuration;
 		Int32 limitThreads;
+		Boolean randomiseFirstMove;
 	};
 
 	[default_interface]

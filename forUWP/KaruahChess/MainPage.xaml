@@ -30,7 +30,7 @@
         <CommandBar x:Name="CommandBarA" Grid.Row="2" Margin="0" Padding="0" VerticalAlignment="Bottom" HorizontalAlignment="Stretch" ClosedDisplayMode="Compact"  IsSticky="False" IsOpen="False" OverflowButtonVisibility="Auto" DefaultLabelPosition="Right" FlowDirection="LeftToRight" HorizontalContentAlignment="Left" VerticalContentAlignment="Center" IsDynamicOverflowEnabled="True">            
             <CommandBar.Content>
                 <StackPanel Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Center">
-                    <Border x:Name="DirectionIndicator" CornerRadius="0" Width="30" Margin="2,0,0,3" Background="{x:Bind BoardVM.DirectionColour, Mode=OneWay}" BorderThickness="1" BorderBrush="BurlyWood" HorizontalAlignment="Right" VerticalAlignment="Stretch" IsHitTestVisible="False" >
+                    <Border x:Name="DirectionIndicator" CornerRadius="0" Width="30" Margin="2,0,0,3" Background="{x:Bind BoardVM.DirectionColour, Mode=OneWay}" BorderThickness="1" BorderBrush="{x:Bind BoardVM.BorderColour, Mode=OneWay}" HorizontalAlignment="Right" VerticalAlignment="Stretch" IsHitTestVisible="False" >
                         <ProgressRing x:Name="MoveProgress" IsActive="{x:Bind BoardVM.ComputerMoveProcessing, Mode=OneWay}" Foreground="{x:Bind BoardVM.OpposingColour, Mode=OneWay}" Width="25" Height="25" Margin="0" Padding="0"/>
                     </Border>
                     <customcontrol:LevelIndicator x:Name="LevelIndicatorControl" Margin="0" Padding="0" ToolTipService.ToolTip="Level and Engine Settings"/>
@@ -63,7 +63,7 @@
                 <AppBarToggleButton Icon="Target" Label="Highlight Moves" IsChecked="{x:Bind BoardVM.MoveHighlightEnabled, Mode=TwoWay}" />
                 <AppBarToggleButton Icon="Play" Label="Navigator" IsChecked="{x:Bind BoardVM.NavigatorEnabled, Mode=TwoWay}"/>                
                 <AppBarSeparator/>
-                <AppBarButton Icon="Volume" Label="Sound Settings" Click="BoardVM.btnSoundSettings_Click" />
+                <AppBarButton Icon="Audio" Label="Sound &amp; Colour" Click="BoardVM.btnSoundColourSettings_Click" />
                 <AppBarToggleButton Icon="Microphone" Label="Voice Commands" ToolTipService.ToolTip="Move pieces with your voice" Checked="BoardVM.btnStartVoiceListen_Checked" Unchecked="BoardVM.btnStartVoiceListen_Unchecked" />
                 <AppBarButton Icon="Message" Label="Voice Help" ToolTipService.ToolTip="Open help page for voice commands."  Click="BoardVM.btnVoiceHelp_Click" />
                 <AppBarSeparator/>
@@ -91,7 +91,7 @@
         
 
         <Canvas x:Name="BoardCanvas" Grid.Row="0">
-            <tile:TilePanel x:Name="BoardTilePanel" Margin="{x:Bind BoardVM.BoardCoordinateMargin, Mode=OneWay}" Padding="0" Depth="8"  Orientation="Vertical" Tiles="{x:Bind BoardVM.BoardTiles, Mode=OneWay}" Lock="{x:Bind BoardVM.LockPanel, Mode=OneWay}" StyleTemplate="{StaticResource BlackTileStyleTemplateObject}" Style="{StaticResource TilePanelStyle}" TileClicked="BoardVM.BoardTilePanel_TileClicked" MoveAction="BoardVM.BoardTilePanel_MoveAction"  RotationZ="{x:Bind BoardVM.RotateBoardValue, Mode=OneWay}" />
+            <tile:TilePanel x:Name="BoardTilePanel" Margin="{x:Bind BoardVM.BoardCoordinateMargin, Mode=OneWay}" Padding="0" Depth="8"  Orientation="Vertical" Tiles="{x:Bind BoardVM.BoardTiles, Mode=OneWay}" Lock="{x:Bind BoardVM.LockPanel, Mode=OneWay}" StyleTemplate="{StaticResource BlackTileStyleTemplateObject}" Style="{StaticResource TilePanelStyle}" TileClicked="BoardVM.BoardTilePanel_TileClicked" MoveAction="BoardVM.BoardTilePanel_MoveAction"  RotationZ="{x:Bind BoardVM.RotateBoardValue, Mode=OneWay}" BorderBrush="{x:Bind BoardVM.BorderColour, Mode=OneWay}" />
             <customcontrol:Coordinates x:Name="CoordinatesControl" Margin="0" Padding="0" />            
             <pieces:PieceAnimation x:Name="PieceAnimationControl"  Margin="{x:Bind BoardVM.BoardCoordinateMargin, Mode=OneWay}" Padding="0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" NegativeRotationZ="0" />            
             <customcontrol:TextMessage x:Name="BoardTextMessage" StyleTemplate="{StaticResource TextMessageStyleTemplatePanelObject}"  />            
@@ -101,7 +101,7 @@
             <customcontrol:VoiceHelp x:Name="VoiceHelpControl"  StyleTemplate="{StaticResource VoiceHelpControlStyleTemplateObject}"/>
             <customcontrol:EngineSettings x:Name="EngineSettingsControl"  StyleTemplate="{StaticResource EngineSettingsControlStyleTemplateObject}"/>            
             <customcontrol:PieceEditTool x:Name="PieceEditToolControl"  StyleTemplate="{StaticResource PieceTypeSelectControlStyleTemplateObject}" />
-            <customcontrol:SoundSettings x:Name="SoundSettingsControl"  StyleTemplate="{StaticResource SoundSettingsControlStyleTemplateObject}"/>
+            <customcontrol:SoundColourSettings x:Name="SoundColourSettingsControl"  StyleTemplate="{StaticResource SoundColourSettingsControlStyleTemplateObject}"/>
         </Canvas>
 
         <customcontrol:MoveNavigator x:Name="MoveNavigatorControl" Grid.Row="1" Margin="0,1,0,1"  />

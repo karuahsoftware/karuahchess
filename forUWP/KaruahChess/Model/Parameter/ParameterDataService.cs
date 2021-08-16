@@ -84,6 +84,10 @@ namespace KaruahChess.Model
                 {
                     _parameters.Add(param.Name, param.Value.Deserialize<ParamComputerMoveFirst>());
                 }
+                else if (param.Name == typeof(ParamRandomiseFirstMove).Name)
+                {
+                    _parameters.Add(param.Name, param.Value.Deserialize<ParamRandomiseFirstMove>());
+                }
                 else if (param.Name == typeof(ParamArrangeBoard).Name)
                 {
                     _parameters.Add(param.Name, param.Value.Deserialize<ParamArrangeBoard>());
@@ -143,6 +147,10 @@ namespace KaruahChess.Model
                 else if (param.Name == typeof(ParamLevelAuto).Name)
                 {
                     _parameters.Add(param.Name, param.Value.Deserialize<ParamLevelAuto>());
+                }
+                else if (param.Name == typeof(ParamColourDarkSquares).Name)
+                {
+                    _parameters.Add(param.Name, param.Value.Deserialize<ParamColourDarkSquares>());
                 }
             }
 

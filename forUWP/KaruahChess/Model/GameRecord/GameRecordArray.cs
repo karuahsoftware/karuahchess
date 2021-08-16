@@ -23,7 +23,7 @@ namespace KaruahChess.Model
     public class GameRecordArray
     {
         public int Id;
-        public UInt64[] BoardArray = new UInt64[366];
+        public UInt64[] BoardArray = new UInt64[276];
         public Int32[] StateArray = new Int32[8];
     }
 }

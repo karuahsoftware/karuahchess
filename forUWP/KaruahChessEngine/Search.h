@@ -48,6 +48,7 @@ namespace Search {
 		int limitNodes = 0;
 		int limitMoveDuration = 0;
 		int limitThreads = 1;
+		bool randomiseFirstMove = false;
 		
 	};
 

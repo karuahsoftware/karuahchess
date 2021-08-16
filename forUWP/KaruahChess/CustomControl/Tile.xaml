@@ -11,7 +11,7 @@
     x:Name="rootUserControl">
     
     <local:CanvasCustom x:Name="tileMain" IsHitTestVisible="True"                          
-            Background="{x:Bind StyleTemplate.Background}"       
+            Background="{x:Bind StyleTemplate.Background, Mode=OneWay}"       
             MinWidth="{x:Bind StyleTemplate.MinWidth}"
             MinHeight="{x:Bind StyleTemplate.MinHeight}"
             MaxWidth="{x:Bind StyleTemplate.MaxWidth}"

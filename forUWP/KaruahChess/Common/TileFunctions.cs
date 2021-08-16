@@ -36,7 +36,7 @@ namespace KaruahChess.Common
         /// <param name="pTileCollection">The collection of tiles</param>
         public static void GetTiles<T>(this IEnumerable<T> pList, ref ObservableCollectionCustom<Tile> pTileCollection, Double pSquareSize)
         {
-            var rd = helper.GetStyles();            
+            var rd = helper.GetStyles();         
 
             pTileCollection.SupressNotification = true;
             pTileCollection.Clear();

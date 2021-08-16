@@ -92,6 +92,22 @@ namespace KaruahChess.Pieces
                     var taskA = BeginStoryboard(animStoryboard);
                     taskList.Add(taskA);
                 }
+                else if (instruction.AnimationType == PieceAnimationInstruction.AnimationTypeEnum.MoveFade)
+                {
+                    // Move a piece from one square to another and fade out during the move            
+                    var animImg = new Image();
+                    var animStoryboard = new Storyboard();
+                    SetupMoveFadeAnimation(instruction, animImg, animStoryboard);
+                    AnimationCanvas.Children.Add(animImg);
+                    storyBoardList.Add(animStoryboard);
+
+                    // Hide board squares to be animated
+                    foreach (var index in instruction.HiddenSquareIndexes) pBoardSquareDS.Hide(index);
+
+                    // Begin the storyboard
+                    var taskA = BeginStoryboard(animStoryboard);
+                    taskList.Add(taskA);
+                }
                 else if (instruction.AnimationType == PieceAnimationInstruction.AnimationTypeEnum.Take)
                 {
                     // Move a piece from one square to another            
@@ -188,6 +204,59 @@ namespace KaruahChess.Pieces
             Storyboard.SetTargetProperty(animY, "(Canvas.Top)");
             pStoryboard.AutoReverse = false;
                        
+        }
+
+        /// <summary>
+        /// Set up animation
+        /// </summary>
+        /// <param name="pAnimInstruct"></param>
+        private void SetupMoveFadeAnimation(PieceAnimationInstruction pAnimInstruct, Image pImage, Storyboard pStoryboard)
+        {
+            QuinticEase ease = new QuinticEase();
+            ease.EasingMode = EasingMode.EaseOut;
+
+            // Set image and rotation                     
+            PlaneProjection proj = new PlaneProjection();
+            proj.RotationZ = -NegativeRotationZ;
+            pImage.Projection = proj;
+            pImage.Source = pAnimInstruct.ImageData;
+            pImage.Width = pAnimInstruct.ImageData.DecodePixelHeight;
+            pImage.Height = pAnimInstruct.ImageData.DecodePixelWidth;
+            pImage.Visibility = Visibility.Visible;
+
+            // Animation on the X axis
+            DoubleAnimation animX = new DoubleAnimation();
+            animX.From = pAnimInstruct.MoveFrom.X;
+            animX.To = pAnimInstruct.MoveTo.X;
+            animX.Duration = new Duration(TimeSpan.FromSeconds(2));
+            animX.EasingFunction = ease;
+
+            // Animation on the Y axis
+            DoubleAnimation animY = new DoubleAnimation();
+            animY.From = pAnimInstruct.MoveFrom.Y;
+            animY.To = pAnimInstruct.MoveTo.Y;
+            animY.Duration = new Duration(TimeSpan.FromSeconds(2));
+            animY.EasingFunction = ease;
+
+            // Animation opacity
+            DoubleAnimation animOpacity = new DoubleAnimation();
+            animOpacity.From = 1;
+            animOpacity.To = 0;
+            animOpacity.Duration = new Duration(TimeSpan.FromSeconds(2));
+            animOpacity.EasingFunction = ease;
+
+            // Set up the storyboard            
+            pStoryboard.Children.Add(animX);
+            pStoryboard.Children.Add(animY);
+            pStoryboard.Children.Add(animOpacity);
+            Storyboard.SetTarget(animX, pImage);
+            Storyboard.SetTarget(animY, pImage);
+            Storyboard.SetTarget(animOpacity, pImage);
+            Storyboard.SetTargetProperty(animX, "(Canvas.Left)");
+            Storyboard.SetTargetProperty(animY, "(Canvas.Top)");
+            Storyboard.SetTargetProperty(animOpacity, "Opacity");
+            pStoryboard.AutoReverse = false;
+
         }
 
         /// <summary>

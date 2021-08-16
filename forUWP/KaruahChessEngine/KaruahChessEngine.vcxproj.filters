@@ -44,7 +44,6 @@
     <ClInclude Include="PiecePattern.h" />
     <ClInclude Include="Search.h" />
     <ClInclude Include="Engine.h" />
-    <ClInclude Include="EvalWeights.h" />
     <ClInclude Include="SFbitboard.h" />
     <ClInclude Include="SFendgame.h" />
     <ClInclude Include="SFevaluate.h" />

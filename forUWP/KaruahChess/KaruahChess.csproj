@@ -136,12 +136,13 @@
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Common\ColourARGB.cs" />
     <Compile Include="Common\RelayCommand.cs" />
     <Compile Include="CustomControl\CastlingRightsDialog.xaml.cs">
       <DependentUpon>CastlingRightsDialog.xaml</DependentUpon>
     </Compile>
-    <Compile Include="CustomControl\SoundSettings.xaml.cs">
-      <DependentUpon>SoundSettings.xaml</DependentUpon>
+    <Compile Include="CustomControl\SoundColourSettings.xaml.cs">
+      <DependentUpon>SoundColourSettings.xaml</DependentUpon>
     </Compile>
     <Compile Include="CustomControl\Export.xaml.cs">
       <DependentUpon>Export.xaml</DependentUpon>
@@ -216,6 +217,7 @@
     <Compile Include="Model\Parameter\IParameterDataService.cs" />
     <Compile Include="Model\Parameter\Objects\ParamLevelAuto.cs" />
     <Compile Include="Model\Parameter\Objects\ParamLimitAdvanced.cs" />
+    <Compile Include="Model\Parameter\Objects\ParamColourDarkSquares.cs" />
     <Compile Include="Model\Parameter\Objects\ParamLimitDepth.cs" />
     <Compile Include="Model\Parameter\Objects\ParamLimitMoveDuration.cs" />
     <Compile Include="Model\Parameter\Objects\ParamLimitNodes.cs" />
@@ -223,6 +225,7 @@
     <Compile Include="Model\Parameter\Objects\ParamLimitEngineStrengthELO.cs" />
     <Compile Include="Model\Parameter\Objects\ParamNavigator.cs" />
     <Compile Include="Model\Parameter\Objects\ParamClock.cs" />
+    <Compile Include="Model\Parameter\Objects\ParamRandomiseFirstMove.cs" />
     <Compile Include="Model\Parameter\Objects\ParamSoundEffect.cs" />
     <Compile Include="Model\Parameter\Objects\ParamSoundRead.cs" />
     <Compile Include="Model\Parameter\Objects\ParamMoveHighlight.cs" />
@@ -336,7 +339,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="CustomControl\SoundSettings.xaml">
+    <Page Include="CustomControl\SoundColourSettings.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
@@ -415,7 +418,7 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.Data.Sqlite">
-      <Version>5.0.8</Version>
+      <Version>5.0.9</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.NETCore.UniversalWindowsPlatform">
       <Version>6.2.12</Version>

@@ -20,11 +20,12 @@ using System;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using KaruahChess.Common;
+using System.Collections.Generic;
 using KaruahChess.Model.ParameterObjects;
 
 namespace KaruahChess.CustomControl
 {
-    public sealed partial class SoundSettings : UserControl
+    public sealed partial class SoundColourSettings : UserControl
     {
         /// <summary>
         /// A class containing styling info for the control
@@ -32,13 +33,15 @@ namespace KaruahChess.CustomControl
         public CustomStyleTemplate StyleTemplate { get; set; }
 
         private ViewModel.BoardViewModel _boardVM;
-       
+
+        private readonly List<ColourARGB> darkSquareColourList = Constants.darkSquareColourList;
+
 
 
         /// <summary>
         /// Constructor
         /// </summary>
-        public SoundSettings()
+        public SoundColourSettings()
         {
 
             this.InitializeComponent();
@@ -70,7 +73,7 @@ namespace KaruahChess.CustomControl
         {
             SoundReadCheckBox.IsChecked = _boardVM.SoundReadEnabled;
             SoundEffectCheckBox.IsChecked = _boardVM.SoundEffectEnabled;
-
+            DarkSquareCombo.SelectedIndex = Constants.darkSquareColourList.IndexOf(_boardVM.ColourDarkSquaresARGB);
             PagePopup.IsOpen = true;
         }
 
@@ -119,10 +122,12 @@ namespace KaruahChess.CustomControl
         {
             _boardVM.SoundReadEnabled = SoundReadCheckBox.IsChecked == true;
             _boardVM.SoundEffectEnabled = SoundEffectCheckBox.IsChecked == true;
+            ColourARGB darkSquareColour = DarkSquareCombo.SelectedIndex > -1 ? Constants.darkSquareColourList[DarkSquareCombo.SelectedIndex] : new ParamColourDarkSquares().ARGB();
+            _boardVM.ColourDarkSquaresARGB = darkSquareColour;
+
+            // Refresh colour
+            _boardVM.ApplyBoardColour();
         }
-
-
-        
 
         
     }
