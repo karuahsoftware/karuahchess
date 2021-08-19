@@ -21,17 +21,16 @@ package purpletreesoftware.karuahchess.customcontrol
 import android.content.Context
 import android.widget.ImageView
 
-class TileAnimationInstruction
-/**
- * Constructor
- *
- */(pContext: Context) {
+class TileAnimationInstruction (pContext: Context) {
+
+    enum class AnimationTypeEnum(val value: Int) { Move(0), Take(1), Put(2), Fall(3), MoveFade(4)}
+    var animationType: AnimationTypeEnum? = null
 
     private val _context: Context = pContext
     /**
      * Image
      */
-    val imageData: ImageView
+    val imageData: ImageView = ImageView(_context)
 
 
     /**
@@ -50,12 +49,6 @@ class TileAnimationInstruction
     /**
      * List of square indexes that should be hidden for the animation
      */
-    val hiddenSquareIndexes : MutableList<Int>
-
-
-    init {
-        imageData = ImageView(_context)
-        hiddenSquareIndexes = mutableListOf()
-    }
+    val hiddenSquareIndexes : MutableList<Int> = mutableListOf()
 
 }

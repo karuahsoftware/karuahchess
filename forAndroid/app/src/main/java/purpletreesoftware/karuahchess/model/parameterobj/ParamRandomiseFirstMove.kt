@@ -16,14 +16,12 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-package purpletreesoftware.karuahchess.engine
+package purpletreesoftware.karuahchess.model.parameterobj
 
-class SearchOptions {
-    var limitStrengthELO: Int = 1350
-    var limitDepth: Int = 0
-    var limitNodes: Int = 0
-    var limitMoveDuration: Int = 0
-    var limitThreads: Int = 1
-    var randomiseFirstMove: Boolean = false
+class ParamRandomiseFirstMove :  java.io.Serializable{
+
+
+    var enabled: Boolean = true
+
 
 }

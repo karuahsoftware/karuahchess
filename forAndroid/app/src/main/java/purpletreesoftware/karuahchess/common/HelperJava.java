@@ -20,7 +20,7 @@ package purpletreesoftware.karuahchess.common;
 
 import java.io.*;
 
-public class Helper {
+public class HelperJava {
 
     /**
      * Serialises a class to xml

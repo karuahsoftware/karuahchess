@@ -20,6 +20,7 @@ package purpletreesoftware.karuahchess.customcontrol
 
 
 import android.app.Dialog
+import android.content.Context
 import android.content.DialogInterface
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -27,15 +28,18 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.Window
 import androidx.fragment.app.DialogFragment
-import purpletreesoftware.karuahchess.databinding.FragmentSoundsettingsBinding
+import purpletreesoftware.karuahchess.MainActivity
+import purpletreesoftware.karuahchess.common.ColourARGB
+import purpletreesoftware.karuahchess.common.Constants
+import purpletreesoftware.karuahchess.databinding.FragmentSoundcoloursettingsBinding
 import purpletreesoftware.karuahchess.model.parameter.ParameterDataService
 import purpletreesoftware.karuahchess.model.parameterobj.*
 
 
 @ExperimentalUnsignedTypes
-class SoundSettings : DialogFragment() {
+class SoundColourSettings : DialogFragment() {
 
-    private var _binding: FragmentSoundsettingsBinding? = null
+    private var _binding: FragmentSoundcoloursettingsBinding? = null
     private val binding get() = _binding!!
 
     override fun onStart() {
@@ -61,7 +65,7 @@ class SoundSettings : DialogFragment() {
     ): View? {
 
         // Inflate the layout for this fragment
-        val fragmentBinding = FragmentSoundsettingsBinding.inflate(inflater, container, false)
+        val fragmentBinding = FragmentSoundcoloursettingsBinding.inflate(inflater, container, false)
         _binding = fragmentBinding
         return fragmentBinding.root
     }
@@ -77,6 +81,21 @@ class SoundSettings : DialogFragment() {
         // Set initial values
         binding.soundReadCheckBox.isChecked = ParameterDataService.get(ParamSoundRead::class.java).enabled
         binding.soundEffectCheckBox.isChecked = ParameterDataService.get(ParamSoundEffect::class.java).enabled
+
+        // Set board colour spinner
+        val adapter = DarkSquareColourAdapter(
+            activity as Context,
+            android.R.layout.simple_spinner_item,
+            Constants.darkSquareColourList
+        )
+
+        binding.darksquarecolourspinner.adapter = adapter
+
+        // Set the spinner position
+        val boardColourIndex = Constants.darkSquareColourList.indexOf(ParameterDataService.get(ParamColourDarkSquares::class.java).argb())
+        if (boardColourIndex > -1) {
+            binding.darksquarecolourspinner.setSelection(boardColourIndex)
+        }
 
         // Connect button events
         binding.doneButton.setOnClickListener { dismiss() }
@@ -105,11 +124,25 @@ class SoundSettings : DialogFragment() {
             soundEffect.enabled = binding.soundEffectCheckBox.isChecked
             ParameterDataService.set(soundEffect)
         }
+
+        val darkSquareColour = ParameterDataService.get(ParamColourDarkSquares::class.java)
+        val darkSquareColourSelectedItem = binding.darksquarecolourspinner.selectedItem as ColourARGB
+        if (darkSquareColour.argb() != darkSquareColourSelectedItem) {
+            darkSquareColour.a = darkSquareColourSelectedItem.a
+            darkSquareColour.r = darkSquareColourSelectedItem.r
+            darkSquareColour.g = darkSquareColourSelectedItem.g
+            darkSquareColour.b = darkSquareColourSelectedItem.b
+            ParameterDataService.set(darkSquareColour)
+
+            // Apply the new colour to the board
+            val mainActivity = activity as MainActivity
+            mainActivity.applyBoardColour()
+        }
     }
 
     companion object {
-        fun newInstance(): SoundSettings {
-            val frag = SoundSettings()
+        fun newInstance(): SoundColourSettings {
+            val frag = SoundColourSettings()
             val args = Bundle()
             frag.arguments = args
             return frag

@@ -18,10 +18,10 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 package purpletreesoftware.karuahchess.customcontrol
 
-
 import android.content.ClipData
 import android.content.ClipDescription
 import android.content.Context
+import android.graphics.Color
 import android.util.AttributeSet
 import android.view.View
 import androidx.constraintlayout.widget.ConstraintLayout
@@ -121,12 +121,17 @@ class TilePanel: ConstraintLayout {
         // Inflate view
         TilepanelBinding.inflate(LayoutInflater.from(context), this, true)
 
+        val darkSquareColour = ContextCompat.getColor(context,R.color.colorBlackSquare)
+        val lightSquareColour = ContextCompat.getColor(context,R.color.colorWhiteSquare)
+
         // Create tiles
         for(tileIndex in 0..63) {
             val tileId = tileIndex + 1
             val tile = Tile(context, tileIndex, this)
+            val sqColour = if (isDarkSquare(tileIndex)) darkSquareColour else lightSquareColour
+
             tile.id = tileId
-            tile.setBackgroundColor(getTileBackgroundColour(tileIndex))
+            tile.setBackgroundColor(sqColour)
             _tileList.add(tile)
 
             // Set click listener
@@ -174,7 +179,7 @@ class TilePanel: ConstraintLayout {
      * Gets a tile as specified by its [pIndex]
      */
     fun getTile(pIndex: Int) : Tile? {
-        return if (pIndex in 0..63 && _tileList.count() > 0) {
+        return if (pIndex in 0..63 && _tileList.size == 64) {
             _tileList[pIndex]
         } else null
     }
@@ -430,7 +435,7 @@ class TilePanel: ConstraintLayout {
         )
 
         circle.shape = GradientDrawable.OVAL
-        circle.setStroke(1, pColour)
+        circle.setStroke(1, Color.WHITE)
         circle.alpha = 170
         circle.setSize(pSize,pSize)
         return circle
@@ -473,31 +478,14 @@ class TilePanel: ConstraintLayout {
     }
 
     /**
-     * Gets the board square [pIndex] colour
+     * Determines if the board square [pIndex] is a dark colour (black square)
      */
-    private fun getTileBackgroundColour(pIndex: Int): Int {
+    private fun isDarkSquare(pIndex: Int): Boolean {
 
-        if ((pIndex + 1) % 2 == 0)
-        {
-            if ((pIndex in 0..7) || (pIndex in 16..23) || (pIndex in 32..39) || (pIndex in 48..55))
-            {
-                return ContextCompat.getColor(context,R.color.colorBlackSquare)
-            }
-            else
-            {
-                return ContextCompat.getColor(context,R.color.colorWhiteSquare)
-            }
-        }
-        else
-        {
-            if ((pIndex in 0..7) || (pIndex in 16..23) || (pIndex in 32..39) || (pIndex in 48..55))
-            {
-                return ContextCompat.getColor(context,R.color.colorWhiteSquare)
-            }
-            else
-            {
-                return ContextCompat.getColor(context,R.color.colorBlackSquare)
-            }
+        return if ((pIndex + 1) % 2 == 0) {
+            (pIndex in 0..7) || (pIndex in 16..23) || (pIndex in 32..39) || (pIndex in 48..55)
+        } else {
+            !((pIndex in 0..7) || (pIndex in 16..23) || (pIndex in 32..39) || (pIndex in 48..55))
         }
     }
 
@@ -569,6 +557,24 @@ class TilePanel: ConstraintLayout {
         {
             return 0u
         }
+    }
+
+    /**
+     *
+     * Apply specified [pDarkSqColour] to the board
+     */
+    fun applyBoardColour(pDarkSqColour: Int) {
+        val lightSquareColour = ContextCompat.getColor(context,R.color.colorWhiteSquare)
+
+        for(tileIndex in 0..63) {
+            val sqColour = if (isDarkSquare(tileIndex)) pDarkSqColour else lightSquareColour
+            _tileList[tileIndex].setBackgroundColor(sqColour)
+        }
+
+        val border = GradientDrawable()
+        border.setStroke(1, pDarkSqColour) //black border with full opacity
+        this.foreground = border
+
     }
 
     /**

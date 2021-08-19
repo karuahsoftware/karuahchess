@@ -30,6 +30,11 @@ class KaruahChessEngineC {
     }
     private external fun getBoard(pId: Int): String
 
+    fun getOccupiedByColour(pColour: Int): ULong {
+        return getOccupiedByColour(pColour, id).toULong()
+    }
+    private external fun getOccupiedByColour(pColour: Int, pId: Int): Long
+
     fun getState(): String {
         return getState(id)
     }

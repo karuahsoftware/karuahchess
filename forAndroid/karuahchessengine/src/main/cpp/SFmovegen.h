@@ -1,6 +1,6 @@
 /*
   Stockfish, a UCI chess playing engine derived from Glaurung 2.1
-  Copyright (C) 2004-2020 The Stockfish developers (see AUTHORS file)
+  Copyright (C) 2004-2021 The Stockfish developers (see AUTHORS file)
 
   Stockfish is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -23,57 +23,55 @@
 
 #include "SFtypes.h"
 
+namespace Stockfish {
 
-    namespace SF {
+    class Position;
 
-        class Position;
+    enum GenType {
+        CAPTURES,
+        QUIETS,
+        QUIET_CHECKS,
+        EVASIONS,
+        NON_EVASIONS,
+        LEGAL
+    };
 
-        enum GenType {
-            CAPTURES,
-            QUIETS,
-            QUIET_CHECKS,
-            EVASIONS,
-            NON_EVASIONS,
-            LEGAL
-        };
+    struct ExtMove {
+        Move move;
+        int value;
 
-        struct ExtMove {
-            Move move;
-            int value;
+        operator Move() const { return move; }
+        void operator=(Move m) { move = m; }
 
-            operator Move() const { return move; }
-            void operator=(Move m) { move = m; }
+        // Inhibit unwanted implicit conversions to Move
+        // with an ambiguity that yields to a compile error.
+        operator float() const = delete;
+    };
 
-            // Inhibit unwanted implicit conversions to Move
-            // with an ambiguity that yields to a compile error.
-            operator float() const = delete;
-        };
-
-        inline bool operator<(const ExtMove& f, const ExtMove& s) {
-            return f.value < s.value;
-        }
-
-        template<GenType>
-        ExtMove* generate(const Position& pos, ExtMove* moveList);
-
-        /// The MoveList struct is a simple wrapper around generate(). It sometimes comes
-        /// in handy to use this class instead of the low level generate() function.
-        template<GenType T>
-        struct MoveList {
-
-            explicit MoveList(const Position& pos) : last(generate<T>(pos, moveList)) {}
-            const ExtMove* begin() const { return moveList; }
-            const ExtMove* end() const { return last; }
-            size_t size() const { return last - moveList; }
-            bool contains(Move move) const {
-                return std::find(begin(), end(), move) != end();
-            }
-
-        private:
-            ExtMove moveList[MAX_MOVES], * last;
-        };
-
+    inline bool operator<(const ExtMove& f, const ExtMove& s) {
+        return f.value < s.value;
     }
 
+    template<GenType>
+    ExtMove* generate(const Position& pos, ExtMove* moveList);
+
+    /// The MoveList struct is a simple wrapper around generate(). It sometimes comes
+    /// in handy to use this class instead of the low level generate() function.
+    template<GenType T>
+    struct MoveList {
+
+        explicit MoveList(const Position& pos) : last(generate<T>(pos, moveList)) {}
+        const ExtMove* begin() const { return moveList; }
+        const ExtMove* end() const { return last; }
+        size_t size() const { return last - moveList; }
+        bool contains(Move move) const {
+            return std::find(begin(), end(), move) != end();
+        }
+
+    private:
+        ExtMove moveList[MAX_MOVES], * last;
+    };
+
+} // namespace Stockfish
 
 #endif // #ifndef MOVEGEN_H_INCLUDED

@@ -40,14 +40,13 @@ namespace Engine {
 
 			helper::init();
 
-			constexpr int maxHashSizeMB = 16;
-			SF::UCI::init(SF::Options, maxHashSizeMB);
+			Stockfish::UCI::init(Stockfish::Options);
 
-			SF::PSQT::init();
-			SF::Bitboards::init();
-			SF::Position::init();
-			SF::Bitbases::init();
-			SF::Endgames::init();
+			Stockfish::PSQT::init();
+			Stockfish::Bitboards::init();
+			Stockfish::Position::init();
+			Stockfish::Bitbases::init();
+			Stockfish::Endgames::init();
 			setThreads(1);
 
 		}
@@ -68,8 +67,8 @@ namespace Engine {
 
 
 		if (threadLimit != newThreadLimit) {
-			SF::Threads.set(size_t(newThreadLimit));
-			SF::Search::clear(); // After threads are up
+			Stockfish::Threads.set(size_t(newThreadLimit));
+			Stockfish::Search::clear(); // After threads are up
 		}
 	}
 

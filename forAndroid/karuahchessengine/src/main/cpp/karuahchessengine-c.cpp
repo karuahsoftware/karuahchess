@@ -68,6 +68,26 @@ Java_purpletreesoftware_karuahchess_engine_KaruahChessEngineC_getBoard (
 }
 
 /// <summary>
+/// Get positions occupied by the specified colour
+/// </summary>
+extern "C"
+JNIEXPORT jlong JNICALL
+Java_purpletreesoftware_karuahchess_engine_KaruahChessEngineC_getOccupiedByColour (
+        JNIEnv* pEnv,
+        jobject pThis,
+        jint pColour,
+        jint pId)
+{
+    auto boardItr = MainBoardMap.find(pId);
+    if(boardItr != MainBoardMap.end()) {
+        return boardItr->second->GetOccupied(pColour);
+    }
+    else {
+        return 0;
+    }
+}
+
+/// <summary>
 /// Get board state string
 /// </summary>
 extern "C"
@@ -819,6 +839,9 @@ Java_purpletreesoftware_karuahchess_engine_KaruahChessEngineC_searchStart (
         Search::SearchOptions options;
 
         jclass mSearchOptions = pEnv->GetObjectClass(pSearchOptions);
+
+        jfieldID randomiseFirstMoveFieldID = pEnv->GetFieldID(mSearchOptions, "randomiseFirstMove","Z");
+        options.randomiseFirstMove = pEnv->GetBooleanField(pSearchOptions, randomiseFirstMoveFieldID);
 
         jfieldID limitStrengthELOFieldID = pEnv->GetFieldID(mSearchOptions, "limitStrengthELO","I");
         options.limitStrengthELO = pEnv->GetIntField(pSearchOptions, limitStrengthELOFieldID);

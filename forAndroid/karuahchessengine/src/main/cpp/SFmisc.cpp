@@ -1,6 +1,6 @@
 /*
   Stockfish, a UCI chess playing engine derived from Glaurung 2.1
-  Copyright (C) 2004-2020 The Stockfish developers (see AUTHORS file)
+  Copyright (C) 2004-2021 The Stockfish developers (see AUTHORS file)
 
   Stockfish is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -38,7 +38,7 @@
 #include <sys/mman.h>
 #endif
 
-#if defined(__APPLE__) || defined(__ANDROID__) || defined(__OpenBSD__) || (defined(__GLIBCXX__) && !defined(_GLIBCXX_HAVE_ALIGNED_ALLOC) && !defined(_WIN32))
+#if defined(__APPLE__) || defined(__ANDROID__) || defined(__OpenBSD__) || (defined(__GLIBCXX__) && !defined(_GLIBCXX_HAVE_ALIGNED_ALLOC) && !defined(_WIN32)) || defined(__e2k__)
 #define POSIXALIGNEDALLOC
 #include <stdlib.h>
 #endif
@@ -46,222 +46,216 @@
 #include "SFmisc.h"
 #include "SFthread.h"
 
+using namespace std;
 
-    namespace SF {
+namespace Stockfish {
 
-        using namespace std;
+    namespace {
 
-        namespace {
-
-            /// Version number. If Version is left empty, then compile date in the format
-            /// DD-MM-YY and show in engine_info.
-            const string Version = "12";
-            
-
-        } // namespace
+        /// Version number. If Version is left empty, then compile date in the format
+        /// DD-MM-YY and show in engine_info.
+        const string Version = "14";
 
 
-        /// engine_info() returns the full name of the current Stockfish version. This
-        /// will be either "Stockfish <Tag> DD-MM-YY" (where DD-MM-YY is the date when
-        /// the program was compiled) or "Stockfish <Version>", depending on whether
-        /// Version is empty.
+    } // namespace
 
-        const string engine_info(bool to_uci) {
 
-            const string months("Jan Feb Mar Apr May Jun Jul Aug Sep Oct Nov Dec");
-            string month, day, year;
-            stringstream ss, date(__DATE__); // From compiler, format is "Sep 21 2008"
+    /// engine_info() returns the full name of the current Stockfish version. This
+    /// will be either "Stockfish <Tag> DD-MM-YY" (where DD-MM-YY is the date when
+    /// the program was compiled) or "Stockfish <Version>", depending on whether
+    /// Version is empty.
 
-            ss << "Stockfish " << Version << setfill('0');
+    string engine_info(bool to_uci) {
 
-            if (Version.empty())
-            {
-                date >> month >> day >> year;
-                ss << setw(2) << day << setw(2) << (1 + months.find(month) / 4) << year.substr(2);
-            }
+        const string months("Jan Feb Mar Apr May Jun Jul Aug Sep Oct Nov Dec");
+        string month, day, year;
+        stringstream ss, date(__DATE__); // From compiler, format is "Sep 21 2008"
 
-            ss << (to_uci ? "\nid author " : " by ")
-                << "the Stockfish developers (see AUTHORS file)";
+        ss << "Stockfish " << Version << setfill('0');
 
-            return ss.str();
+        if (Version.empty())
+        {
+            date >> month >> day >> year;
+            ss << setw(2) << day << setw(2) << (1 + months.find(month) / 4) << year.substr(2);
         }
-                
 
-        /// prefetch() preloads the given address in L1/L2 cache. This is a non-blocking
-        /// function that doesn't stall the CPU waiting for data to be loaded from memory,
-        /// which can be quite slow.
+        ss << (to_uci ? "\nid author " : " by ")
+           << "the Stockfish developers (see AUTHORS file)";
+
+        return ss.str();
+    }
+
+    /// prefetch() preloads the given address in L1/L2 cache. This is a non-blocking
+    /// function that doesn't stall the CPU waiting for data to be loaded from memory,
+    /// which can be quite slow.
 #ifdef NO_PREFETCH
 
-        void prefetch(void*) {}
+    void prefetch(void*) {}
 
 #else
 
-        void prefetch(void* addr) {
+    void prefetch(void* addr) {
 
 #  if defined(__INTEL_COMPILER)
-            // This hack prevents prefetches from being optimized away by
-            // Intel compiler. Both MSVC and gcc seem not be affected by this.
-            __asm__("");
+        // This hack prevents prefetches from being optimized away by
+        // Intel compiler. Both MSVC and gcc seem not be affected by this.
+        __asm__("");
 #  endif
+
 
 #  if (defined(__INTEL_COMPILER) || defined(_MSC_VER)) && (defined(_M_X64) || defined(_M_IX86))
-            _mm_prefetch((char*)addr, _MM_HINT_T0);
+        _mm_prefetch((char*)addr, _MM_HINT_T0);
 #  elif (defined(__INTEL_COMPILER) || defined(_MSC_VER)) && (defined(_M_ARM) || defined(_M_ARM64))
-            __prefetch(addr);
+        __prefetch(addr);
 #  else
-            __builtin_prefetch(addr);
+        __builtin_prefetch(addr);
 #  endif
-        }
-
-#endif
-
-
-        /// std_aligned_alloc() is our wrapper for systems where the c++17 implementation
-        /// does not guarantee the availability of aligned_alloc(). Memory allocated with
-        /// std_aligned_alloc() must be freed with std_aligned_free().
-
-        void* std_aligned_alloc(size_t alignment, size_t size) {
-
-#if defined(POSIXALIGNEDALLOC)
-            void* mem;
-            return posix_memalign(&mem, alignment, size) ? nullptr : mem;
-#elif defined(_WIN32)
-            return _mm_malloc(size, alignment);
-#else
-            return std::aligned_alloc(alignment, size);
-#endif
-        }
-
-        void std_aligned_free(void* ptr) {
-
-#if defined(POSIXALIGNEDALLOC)
-            free(ptr);
-#elif defined(_WIN32)
-            _mm_free(ptr);
-#else
-            free(ptr);
-#endif
-        }
-
-        /// aligned_ttmem_alloc() will return suitably aligned memory, if possible using large pages.
-        /// The returned pointer is the aligned one, while the mem argument is the one that needs
-        /// to be passed to free. With c++17 some of this functionality could be simplified.
-
-#if defined(__linux__) && !defined(__ANDROID__)
-
-        void* aligned_ttmem_alloc(size_t allocSize, void*& mem) {
-
-            constexpr size_t alignment = 2 * 1024 * 1024; // assumed 2MB page sizes
-            size_t size = ((allocSize + alignment - 1) / alignment) * alignment; // multiple of alignment
-            if (posix_memalign(&mem, alignment, size))
-                mem = nullptr;
-#if defined(MADV_HUGEPAGE)
-            madvise(mem, allocSize, MADV_HUGEPAGE);
-#endif
-            return mem;
-        }
-
-#elif defined(_WIN64)
-
-        static void* aligned_ttmem_alloc_large_pages(size_t allocSize) {
-
-            HANDLE hProcessToken{ };
-            LUID luid{ };
-            void* mem = nullptr;
-
-            const size_t largePageSize = GetLargePageMinimum();
-            if (!largePageSize)
-                return nullptr;
-
-            // We need SeLockMemoryPrivilege, so try to enable it for the process
-            if (!OpenProcessToken(GetCurrentProcess(), TOKEN_ADJUST_PRIVILEGES | TOKEN_QUERY, &hProcessToken))
-                return nullptr;
-
-            if (LookupPrivilegeValue(NULL, SE_LOCK_MEMORY_NAME, &luid))
-            {
-                TOKEN_PRIVILEGES tp{ };
-                TOKEN_PRIVILEGES prevTp{ };
-                DWORD prevTpLen = 0;
-
-                tp.PrivilegeCount = 1;
-                tp.Privileges[0].Luid = luid;
-                tp.Privileges[0].Attributes = SE_PRIVILEGE_ENABLED;
-
-                // Try to enable SeLockMemoryPrivilege. Note that even if AdjustTokenPrivileges() succeeds,
-                // we still need to query GetLastError() to ensure that the privileges were actually obtained.
-                if (AdjustTokenPrivileges(
-                    hProcessToken, FALSE, &tp, sizeof(TOKEN_PRIVILEGES), &prevTp, &prevTpLen) &&
-                    GetLastError() == ERROR_SUCCESS)
-                {
-                    // Round up size to full pages and allocate
-                    allocSize = (allocSize + largePageSize - 1) & ~size_t(largePageSize - 1);
-                    mem = VirtualAlloc(
-                        NULL, allocSize, MEM_RESERVE | MEM_COMMIT | MEM_LARGE_PAGES, PAGE_READWRITE);
-
-                    // Privilege no longer needed, restore previous state
-                    AdjustTokenPrivileges(hProcessToken, FALSE, &prevTp, 0, NULL, NULL);
-                }
-            }
-
-            CloseHandle(hProcessToken);
-
-            return mem;
-        }
-
-        void* aligned_ttmem_alloc(size_t allocSize, void*& mem) {
-
-            
-            // Try to allocate large pages
-            mem = aligned_ttmem_alloc_large_pages(allocSize);
-
-            
-            // Fall back to regular, page aligned, allocation if necessary
-            if (!mem)
-                mem = VirtualAlloc(NULL, allocSize, MEM_RESERVE | MEM_COMMIT, PAGE_READWRITE);
-
-            return mem;
-        }
-
-#else
-
-        void* aligned_ttmem_alloc(size_t allocSize, void*& mem) {
-
-            constexpr size_t alignment = 64; // assumed cache line size
-            size_t size = allocSize + alignment - 1; // allocate some extra space
-            mem = malloc(size);
-            void* ret = reinterpret_cast<void*>((uintptr_t(mem) + alignment - 1) & ~uintptr_t(alignment - 1));
-            return ret;
-        }
-
-#endif
-
-
-        /// aligned_ttmem_free() will free the previously allocated ttmem
-
-#if defined(_WIN64)
-
-        void aligned_ttmem_free(void* mem) {
-
-            if (mem && !VirtualFree(mem, 0, MEM_RELEASE))
-            {
-                DWORD err = GetLastError();
-                std::cerr << "Failed to free transposition table. Error code: 0x" <<
-                    std::hex << err << std::dec << std::endl;
-                exit(EXIT_FAILURE);
-            }
-        }
-
-#else
-
-        void aligned_ttmem_free(void* mem) {
-            free(mem);
-        }
-
-#endif
-
-
-     
-
-        
-
     }
+
+#endif
+
+
+    /// std_aligned_alloc() is our wrapper for systems where the c++17 implementation
+    /// does not guarantee the availability of aligned_alloc(). Memory allocated with
+    /// std_aligned_alloc() must be freed with std_aligned_free().
+
+    void* std_aligned_alloc(size_t alignment, size_t size) {
+
+#if defined(POSIXALIGNEDALLOC)
+        void* mem;
+        return posix_memalign(&mem, alignment, size) ? nullptr : mem;
+#elif defined(_WIN32)
+        return _mm_malloc(size, alignment);
+#else
+        return std::aligned_alloc(alignment, size);
+#endif
+    }
+
+    void std_aligned_free(void* ptr) {
+
+#if defined(POSIXALIGNEDALLOC)
+        free(ptr);
+#elif defined(_WIN32)
+        _mm_free(ptr);
+#else
+        free(ptr);
+#endif
+    }
+
+    /// aligned_large_pages_alloc() will return suitably aligned memory, if possible using large pages.
+
+#if defined(_WIN32)
+
+    static void* aligned_large_pages_alloc_windows(size_t allocSize) {
+
+#if !defined(_WIN64)
+        (void)allocSize; // suppress unused-parameter compiler warning
+        return nullptr;
+#else
+
+        HANDLE hProcessToken{ };
+        LUID luid{ };
+        void* mem = nullptr;
+
+        const size_t largePageSize = GetLargePageMinimum();
+        if (!largePageSize)
+            return nullptr;
+
+        // We need SeLockMemoryPrivilege, so try to enable it for the process
+        if (!OpenProcessToken(GetCurrentProcess(), TOKEN_ADJUST_PRIVILEGES | TOKEN_QUERY, &hProcessToken))
+            return nullptr;
+
+        if (LookupPrivilegeValue(NULL, SE_LOCK_MEMORY_NAME, &luid))
+        {
+            TOKEN_PRIVILEGES tp{ };
+            TOKEN_PRIVILEGES prevTp{ };
+            DWORD prevTpLen = 0;
+
+            tp.PrivilegeCount = 1;
+            tp.Privileges[0].Luid = luid;
+            tp.Privileges[0].Attributes = SE_PRIVILEGE_ENABLED;
+
+            // Try to enable SeLockMemoryPrivilege. Note that even if AdjustTokenPrivileges() succeeds,
+            // we still need to query GetLastError() to ensure that the privileges were actually obtained.
+            if (AdjustTokenPrivileges(
+                hProcessToken, FALSE, &tp, sizeof(TOKEN_PRIVILEGES), &prevTp, &prevTpLen) &&
+                GetLastError() == ERROR_SUCCESS)
+            {
+                // Round up size to full pages and allocate
+                allocSize = (allocSize + largePageSize - 1) & ~size_t(largePageSize - 1);
+                mem = VirtualAlloc(
+                    NULL, allocSize, MEM_RESERVE | MEM_COMMIT | MEM_LARGE_PAGES, PAGE_READWRITE);
+
+                // Privilege no longer needed, restore previous state
+                AdjustTokenPrivileges(hProcessToken, FALSE, &prevTp, 0, NULL, NULL);
+            }
+        }
+
+        CloseHandle(hProcessToken);
+
+        return mem;
+
+#endif
+    }
+
+    void* aligned_large_pages_alloc(size_t allocSize) {
+
+        // Try to allocate large pages
+        void* mem = aligned_large_pages_alloc_windows(allocSize);
+
+        // Fall back to regular, page aligned, allocation if necessary
+        if (!mem)
+            mem = VirtualAlloc(NULL, allocSize, MEM_RESERVE | MEM_COMMIT, PAGE_READWRITE);
+
+        return mem;
+    }
+
+#else
+
+    void* aligned_large_pages_alloc(size_t allocSize) {
+
+#if defined(__linux__)
+        constexpr size_t alignment = 2 * 1024 * 1024; // assumed 2MB page size
+#else
+        constexpr size_t alignment = 4096; // assumed small page size
+#endif
+
+        // round up to multiples of alignment
+        size_t size = ((allocSize + alignment - 1) / alignment) * alignment;
+        void* mem = std_aligned_alloc(alignment, size);
+#if defined(MADV_HUGEPAGE)
+        madvise(mem, size, MADV_HUGEPAGE);
+#endif
+        return mem;
+    }
+
+#endif
+
+
+    /// aligned_large_pages_free() will free the previously allocated ttmem
+
+#if defined(_WIN32)
+
+    void aligned_large_pages_free(void* mem) {
+
+        if (mem && !VirtualFree(mem, 0, MEM_RELEASE))
+        {
+            DWORD err = GetLastError();
+            std::cerr << "Failed to free large page memory. Error code: 0x"
+                << std::hex << err
+                << std::dec << std::endl;
+            exit(EXIT_FAILURE);
+        }
+    }
+
+#else
+
+    void aligned_large_pages_free(void* mem) {
+        std_aligned_free(mem);
+    }
+
+#endif
+
+
+
+} // namespace Stockfish

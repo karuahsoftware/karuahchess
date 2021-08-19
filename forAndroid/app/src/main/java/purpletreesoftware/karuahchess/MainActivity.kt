@@ -22,6 +22,7 @@ import android.content.DialogInterface
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.content.res.Configuration
+import android.graphics.Color
 import android.media.SoundPool
 import android.net.Uri
 import android.os.Bundle
@@ -185,6 +186,9 @@ class MainActivity : AppCompatActivity(), TilePanel.OnTilePanelInteractionListen
             // Move progress bar visibility
             binding.moveProgressBar.visibility = View.GONE
 
+            // Apply board colour
+            applyBoardColour()
+
             // Set shake
             val arrangeBoardEnabled = ParameterDataService.get(ParamArrangeBoard::class.java).enabled
             binding.boardPanelLayout.shake(arrangeBoardEnabled)
@@ -268,8 +272,8 @@ class MainActivity : AppCompatActivity(), TilePanel.OnTilePanelInteractionListen
 
                 true
             }
-            R.id.action_soundsettings -> {
-                showSoundSettingsDialog()
+            R.id.action_soundcoloursettings -> {
+                showSoundColourSettingsDialog()
                 true
             }
             R.id.action_about -> {
@@ -502,7 +506,7 @@ class MainActivity : AppCompatActivity(), TilePanel.OnTilePanelInteractionListen
                 val boardAfterMove = GameRecordDataService.getCurrentGame()
 
                 if(pAnimate) {
-                    val moveAnimationSeq = BoardAnimation.createAnimationMoveSequence(
+                    val moveAnimationList = BoardAnimation.createAnimationList(
                         boardBeforeMove,
                         boardAfterMove,
                         binding.boardPanelLayout,
@@ -510,7 +514,7 @@ class MainActivity : AppCompatActivity(), TilePanel.OnTilePanelInteractionListen
                     )
 
                     // Do animation
-                    startPieceAnimation(true, moveAnimationSeq, 1200L)
+                    startPieceAnimation(true, moveAnimationList, 1200L)
                 }
 
                 // Update display
@@ -530,6 +534,7 @@ class MainActivity : AppCompatActivity(), TilePanel.OnTilePanelInteractionListen
                     startPieceAnimation(true, kingFallSeq, 3000L)
                     afterCheckMate(GameRecordDataService.currentGame)
                 }
+
 
 
 
@@ -558,6 +563,7 @@ class MainActivity : AppCompatActivity(), TilePanel.OnTilePanelInteractionListen
         val arrangeBoardEnabled =  ParameterDataService.get(ParamArrangeBoard::class.java).enabled
         val computerPlayerEnabled =  ParameterDataService.get(ParamComputerPlayer::class.java).enabled
         val computerMoveFirstEnabled =  ParameterDataService.get(ParamComputerMoveFirst::class.java).enabled
+        val randomiseFirstMoveEnabled = ParameterDataService.get(ParamRandomiseFirstMove::class.java).enabled
         val limitEngineStrengthELO = ParameterDataService.get(ParamLimitEngineStrengthELO::class.java).eloRating
         val limitAdvancedEnabled = ParameterDataService.get(ParamLimitAdvanced::class.java).enabled
         val limitDepth = ParameterDataService.get(ParamLimitDepth::class.java).depth
@@ -580,6 +586,7 @@ class MainActivity : AppCompatActivity(), TilePanel.OnTilePanelInteractionListen
             binding.moveProgressBar.visibility = View.VISIBLE
 
             val searchOptions = SearchOptions()
+            searchOptions.randomiseFirstMove = randomiseFirstMoveEnabled
             searchOptions.limitStrengthELO = limitEngineStrengthELO
 
             if (limitAdvancedEnabled) {
@@ -613,7 +620,7 @@ class MainActivity : AppCompatActivity(), TilePanel.OnTilePanelInteractionListen
 
                     // Do animation
                     val boardAfterMove = GameRecordDataService.getCurrentGame()
-                    val moveAnimationSeq = BoardAnimation.createAnimationMoveSequence(
+                    val moveAnimationList = BoardAnimation.createAnimationList(
                         boardBeforeMove,
                         boardAfterMove,
                         binding.boardPanelLayout,
@@ -621,7 +628,7 @@ class MainActivity : AppCompatActivity(), TilePanel.OnTilePanelInteractionListen
                     )
 
                     // Do animation
-                    startPieceAnimation(true, moveAnimationSeq, 1200L)
+                    startPieceAnimation(true, moveAnimationList, 1200L)
 
 
                     // Update display
@@ -739,7 +746,7 @@ class MainActivity : AppCompatActivity(), TilePanel.OnTilePanelInteractionListen
     /**
      * Starts the animation
      */
-    private suspend fun startPieceAnimation(pLockPanel : Boolean, pAnimationSequence : TileAnimationSequence, pDurationMS: Long)
+    private suspend fun startPieceAnimation(pLockPanel : Boolean, pAnimationList : ArrayList<TileAnimationInstruction>, pDurationMS: Long)
     {
 
         if (pLockPanel) {
@@ -747,7 +754,7 @@ class MainActivity : AppCompatActivity(), TilePanel.OnTilePanelInteractionListen
         }
 
 
-       binding.animationPanelLayout.runAnimation(pAnimationSequence.sequence, binding.boardPanelLayout, pDurationMS, binding.boardPanelLayout.framePadding)
+       binding.animationPanelLayout.runAnimation(binding.boardPanelLayout, pAnimationList, pDurationMS, binding.boardPanelLayout.framePadding)
        delay(pDurationMS)
 
         if (pLockPanel) {
@@ -804,14 +811,14 @@ class MainActivity : AppCompatActivity(), TilePanel.OnTilePanelInteractionListen
             val boardAfterUndo = GameRecordDataService.get()
             if (boardBeforeUndo != null && boardAfterUndo != null) {
 
-                val moveAnimationSeq = BoardAnimation.createAnimationMoveSequence(
+                val moveAnimationList = BoardAnimation.createAnimationList(
                     boardBeforeUndo,
                     boardAfterUndo,
                     binding.boardPanelLayout,
                     this.applicationContext
                 )
                 // Do animation
-                startPieceAnimation(true, moveAnimationSeq, 1200L)
+                startPieceAnimation(true, moveAnimationList, 1200L)
             }
 
             navigateMaxRecord()
@@ -1097,11 +1104,11 @@ class MainActivity : AppCompatActivity(), TilePanel.OnTilePanelInteractionListen
     /**
      * Show sound settings dialog
      */
-    private fun showSoundSettingsDialog() {
+    private fun showSoundColourSettingsDialog() {
 
         val fm = supportFragmentManager
-        val soundSettingsDialogFragment = SoundSettings.newInstance()
-        soundSettingsDialogFragment.show(fm, null)
+        val soundColourSettingsDialogFragment = SoundColourSettings.newInstance()
+        soundColourSettingsDialogFragment.show(fm, null)
     }
 
 
@@ -1254,7 +1261,7 @@ class MainActivity : AppCompatActivity(), TilePanel.OnTilePanelInteractionListen
 
                 // Do animation
                 if (pAnimate && oldBoard != null) {
-                    val moveAnimationSeq = BoardAnimation.createAnimationMoveSequence(
+                    val moveAnimationList = BoardAnimation.createAnimationList(
                         oldBoard,
                         updatedBoard,
                         binding.boardPanelLayout,
@@ -1262,7 +1269,7 @@ class MainActivity : AppCompatActivity(), TilePanel.OnTilePanelInteractionListen
                     )
 
                     // Do animation
-                    startPieceAnimation(true, moveAnimationSeq, 1200L)
+                    startPieceAnimation(true, moveAnimationList, 1200L)
 
                     BoardSquareDataService.update(binding.boardPanelLayout, updatedBoard)
                     BoardSquareDataService.gameRecordCurrentValue = pRecId
@@ -1396,6 +1403,17 @@ class MainActivity : AppCompatActivity(), TilePanel.OnTilePanelInteractionListen
         else showMessage("Edit board is disabled","", Toast.LENGTH_SHORT)
 
         binding.boardPanelLayout.shake(edit.enabled)
+
+    }
+
+    /**
+     * Apply board colour
+     */
+    fun applyBoardColour() {
+        val darkSquareColourParam = ParameterDataService.get(ParamColourDarkSquares::class.java)
+        val darkSqColour = Color.argb(darkSquareColourParam.a, darkSquareColourParam.r, darkSquareColourParam.g, darkSquareColourParam.b)
+        binding.boardPanelLayout.applyBoardColour(darkSqColour)
+
 
     }
 

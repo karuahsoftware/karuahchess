@@ -16,32 +16,19 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-package purpletreesoftware.karuahchess.customcontrol
-
-class TileAnimationSequence {
+package purpletreesoftware.karuahchess.model.parameterobj
 
 
-    enum class AnimationSeqEnum {A, B, C, D, E}
+import purpletreesoftware.karuahchess.common.ColourARGB
 
-    val sequence = HashMap<AnimationSeqEnum, TileAnimationInstruction>()
+class ParamColourDarkSquares :  java.io.Serializable{
+    // Default value is green
+    var a: Int = 255
+    var r: Int = 100
+    var g: Int = 153
+    var b: Int = 100
 
-    /**
-     * Adds an animation instruction to the sequence
-     */
-    fun add(pAninmationSeqEnum : AnimationSeqEnum, pAnimationInstruction : TileAnimationInstruction)
-    {
-        if (!sequence.containsKey(pAninmationSeqEnum)) {
-            sequence[pAninmationSeqEnum] = pAnimationInstruction
-        }
+    fun argb(): ColourARGB? {
+        return ColourARGB(a, r, g, b, "")
     }
-
-
-    /**
-     * Clears all the elements in the animation sequence
-     */
-    fun clear()
-    {
-        sequence.clear()
-    }
-
 }

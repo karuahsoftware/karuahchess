@@ -20,7 +20,7 @@ package purpletreesoftware.karuahchess.model.parameter
 
 import android.content.ContentValues
 import purpletreesoftware.karuahchess.common.App
-import purpletreesoftware.karuahchess.common.Helper
+import purpletreesoftware.karuahchess.common.HelperJava
 import purpletreesoftware.karuahchess.database.DatabaseHelper
 import java.io.InvalidClassException
 
@@ -46,7 +46,7 @@ class ParameterDataService  {
                     val value = dbCursor.getBlob(dbCursor.getColumnIndex("Value"))
 
                     try {
-                        parameters[name] = Helper.Deserialize(value)
+                        parameters[name] = HelperJava.Deserialize(value)
                     }
                     catch (ex: ClassNotFoundException){
                         // Do nothing
@@ -68,7 +68,7 @@ class ParameterDataService  {
             var param = pParameterClass.newInstance()
 
             if (parameters.containsKey(param.javaClass.simpleName)) {
-                param = Helper.Cast(parameters[param.javaClass.simpleName])
+                param = HelperJava.Cast(parameters[param.javaClass.simpleName])
             } else {
                 // Sets the new parameter and puts it in the database
                 set(param)
@@ -82,7 +82,8 @@ class ParameterDataService  {
          * Sets a parameter
          */
         override fun <T: Any> set(pObj: T): Long {
-            val param = Parameter(pObj.javaClass.simpleName,Helper.Serialize(pObj))
+            val param = Parameter(pObj.javaClass.simpleName,
+                HelperJava.Serialize(pObj))
 
             return updateOrAdd(param, pObj, false)
         }

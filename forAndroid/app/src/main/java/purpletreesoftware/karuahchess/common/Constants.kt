@@ -114,5 +114,16 @@ class Constants {
             "Level 19, Elo 2700",
             "Level 20, Elo 2775",
             "Level 21, Elo 2850")
+
+        val darkSquareColourList = arrayListOf(
+            ColourARGB(255,90,120,153, "Blue"),
+            ColourARGB(255,222,184,135, "Brown"),
+            ColourARGB(255,100,153,100, "Green"),
+            ColourARGB(255,153,153,153, "Grey")
+        )
+
+
     }
+
+
 }

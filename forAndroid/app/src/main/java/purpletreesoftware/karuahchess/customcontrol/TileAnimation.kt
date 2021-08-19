@@ -19,14 +19,13 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 package purpletreesoftware.karuahchess.customcontrol
 
 import android.content.Context
-import androidx.constraintlayout.widget.ConstraintLayout
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.view.animation.*
 import android.widget.FrameLayout
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import purpletreesoftware.karuahchess.R
-import purpletreesoftware.karuahchess.customcontrol.TileAnimationSequence.AnimationSeqEnum
 import purpletreesoftware.karuahchess.databinding.AnimationpanelBinding
 
 
@@ -52,9 +51,8 @@ class TileAnimation: ConstraintLayout {
     /**
      * Runs an animation sequence
      */
-    fun runAnimation(pAnimItems: HashMap<AnimationSeqEnum, TileAnimationInstruction>, pTilePanel: TilePanel, pDurationMS: Long, pPanelMargin: Int)
+    fun runAnimation(pTilePanel: TilePanel, pAnimationList: ArrayList<TileAnimationInstruction>, pDurationMS: Long, pPanelMargin: Int)
     {
-
             // Set frame size to match board size
             val frameSize = pTilePanel.boardSize
 
@@ -65,215 +63,229 @@ class TileAnimation: ConstraintLayout {
             // Set up animation
             this.removeAllViews()
 
-            if (pAnimItems.containsKey(AnimationSeqEnum.A)) {
-                val instruction = pAnimItems[AnimationSeqEnum.A]
+            for(instruction in pAnimationList) {
 
-                if (instruction?.imageData != null) {
+                when (instruction.animationType) {
+                    TileAnimationInstruction.AnimationTypeEnum.Move -> {
+                        // Set initial image position
+                        instruction.imageData.layoutParams =
+                            FrameLayout.LayoutParams(pTilePanel.tileSize, pTilePanel.tileSize)
+                        instruction.imageData.x = instruction.moveFromX
+                        instruction.imageData.y = instruction.moveFromY
 
-                    // Set initial image position
-                    instruction.imageData.layoutParams = FrameLayout.LayoutParams(pTilePanel.tileSize, pTilePanel.tileSize)
-                    instruction.imageData.x = instruction.moveFromX
-                    instruction.imageData.y = instruction.moveFromY
+                        // Set counter rotation
+                        instruction.imageData.rotation = -this.rotation
 
-                    // Set counter rotation
-                    instruction.imageData.rotation = -this.rotation
+                        // Add the image to the view for animation
+                        this.addView(instruction.imageData)
 
-                    // Add the image to the view for animation
-                    this.addView(instruction.imageData)
+                        // Calculate the move coordinates (as a delta from the current position)
+                        val moveToDeltaX = instruction.moveToX - instruction.moveFromX
+                        val moveToDeltaY = instruction.moveToY - instruction.moveFromY
 
-                    // Calculate the move coordinates (as a delta from the current position)
-                    val moveToDeltaX = instruction.moveToX - instruction.moveFromX
-                    val moveToDeltaY = instruction.moveToY - instruction.moveFromY
+                        // Set up the animation
+                        val animation = TranslateAnimation(0f, moveToDeltaX, 0f, moveToDeltaY)
+                        animation.duration = pDurationMS
+                        animation.fillAfter = true
+                        animation.fillBefore = false
+                        animation.isFillEnabled = false
+                        animation.interpolator = AccelerateDecelerateInterpolator()
 
-                    // Set up the animation
-                    val animation = TranslateAnimation(0f, moveToDeltaX, 0f, moveToDeltaY)
-                    animation.duration = pDurationMS
-                    animation.fillAfter = true
-                    animation.fillBefore = false
-                    animation.isFillEnabled = false
-                    animation.interpolator = AccelerateDecelerateInterpolator()
+                        val tileAnimationListener = TileAnimationListener(
+                            instruction,
+                            pTilePanel,
+                            this,
+                            true,
+                            instruction.imageData
+                        )
+                        animation.setAnimationListener(tileAnimationListener)
 
-                    val tileAnimationListener = TileAnimationListener(instruction,pTilePanel,this, true, instruction.imageData)
-                    animation.setAnimationListener(tileAnimationListener)
+                        instruction.imageData.startAnimation(animation)
 
-                    instruction.imageData.startAnimation(animation)
+                    }
+                    TileAnimationInstruction.AnimationTypeEnum.MoveFade -> {
+                        // Set initial image position
+                        instruction.imageData.layoutParams =
+                            FrameLayout.LayoutParams(pTilePanel.tileSize, pTilePanel.tileSize)
+                        instruction.imageData.x = instruction.moveFromX
+                        instruction.imageData.y = instruction.moveFromY
 
+                        // Set counter rotation
+                        instruction.imageData.rotation = -this.rotation
+
+                        // Add the image to the view for animation
+                        this.addView(instruction.imageData)
+
+                        // Calculate the move coordinates (as a delta from the current position)
+                        val moveToDeltaX = instruction.moveToX - instruction.moveFromX
+                        val moveToDeltaY = instruction.moveToY - instruction.moveFromY
+
+                        // Create animation set
+                        val animationSet = AnimationSet(true)
+
+                        // Set up the move animation
+                        val animationMove = TranslateAnimation(0f, moveToDeltaX, 0f, moveToDeltaY)
+                        animationMove.duration = pDurationMS
+                        animationMove.fillAfter = false
+                        animationMove.fillBefore = false
+                        animationMove.isFillEnabled = false
+                        animationMove.interpolator = AccelerateDecelerateInterpolator()
+                        animationSet.addAnimation(animationMove)
+
+                        // Set up the fade animation
+                        val animationFade = AlphaAnimation(1.0f, 0f)
+                        animationFade.duration = pDurationMS
+                        animationFade.fillAfter = false
+                        animationFade.fillBefore = false
+                        animationFade.isFillEnabled = false
+                        animationFade.interpolator = AccelerateDecelerateInterpolator()
+                        animationSet.addAnimation(animationFade)
+
+                        val tileAnimationListener = TileAnimationListener(
+                            instruction,
+                            pTilePanel,
+                            this,
+                            true,
+                            instruction.imageData
+                        )
+                        animationSet.setAnimationListener(tileAnimationListener)
+
+                        instruction.imageData.startAnimation(animationSet)
+
+                    }
+                    TileAnimationInstruction.AnimationTypeEnum.Take -> {
+
+                        // Set initial image position
+                        instruction.imageData.layoutParams =
+                            FrameLayout.LayoutParams(pTilePanel.tileSize, pTilePanel.tileSize)
+                        instruction.imageData.x = instruction.moveFromX
+                        instruction.imageData.y = instruction.moveFromY
+
+                        // Set counter rotation
+                        instruction.imageData.rotation = -this.rotation
+
+                        // Add the image to the view for animation
+                        this.addView(instruction.imageData)
+
+                        // Set up the animation
+                        val animation = AnimationUtils.loadAnimation(this.context, R.anim.piecetake)
+                        animation.duration = pDurationMS
+                        animation.fillAfter = false
+                        animation.fillBefore = false
+                        animation.isFillEnabled = false
+                        animation.interpolator = AccelerateDecelerateInterpolator()
+
+                        val tileAnimationListener = TileAnimationListener(
+                            instruction,
+                            pTilePanel,
+                            this,
+                            true,
+                            instruction.imageData
+                        )
+                        animation.setAnimationListener(tileAnimationListener)
+
+                        instruction.imageData.startAnimation(animation)
+
+                    }
+                    TileAnimationInstruction.AnimationTypeEnum.Put -> {
+                        // Set initial image position
+                        instruction.imageData.layoutParams =
+                            FrameLayout.LayoutParams(pTilePanel.tileSize, pTilePanel.tileSize)
+                        instruction.imageData.x = instruction.moveFromX
+                        instruction.imageData.y = instruction.moveFromY
+
+                        // Set counter rotation
+                        instruction.imageData.rotation = -this.rotation
+
+                        // Add the image to the view for animation
+                        this.addView(instruction.imageData)
+
+                        // Set up the animation
+                        val animation =
+                            AnimationUtils.loadAnimation(this.context, R.anim.piecereturn)
+
+                        animation.duration = pDurationMS
+                        animation.fillAfter = true
+                        animation.fillBefore = true
+                        animation.isFillEnabled = false
+                        animation.interpolator = AccelerateDecelerateInterpolator()
+
+                        val tileAnimationListener = TileAnimationListener(
+                            instruction,
+                            pTilePanel,
+                            this,
+                            true,
+                            instruction.imageData
+                        )
+                        animation.setAnimationListener(tileAnimationListener)
+
+                        instruction.imageData.startAnimation(animation)
+                    }
+                    TileAnimationInstruction.AnimationTypeEnum.Fall -> {
+                        // Set initial image position
+                        instruction.imageData.layoutParams =
+                            FrameLayout.LayoutParams(pTilePanel.tileSize, pTilePanel.tileSize)
+                        instruction.imageData.x = instruction.moveFromX
+                        instruction.imageData.y = instruction.moveFromY
+
+                        // Set counter rotation
+                        instruction.imageData.rotation = -this.rotation
+
+                        // Add the image to the view for animation
+                        this.addView(instruction.imageData)
+
+                        var offsetX = 0f
+                        var offsetY = 0f
+
+                        when {
+                            this.rotation == 0f -> {
+                                offsetX = 0.5f
+                                offsetY = 0.8f
+                            }
+                            this.rotation == 90f -> {
+                                offsetX = 0.8f
+                                offsetY = 0.5f
+                            }
+                            this.rotation == 180f -> {
+                                offsetX = 0.5f
+                                offsetY = 0.2f
+                            }
+                            this.rotation == 270f -> {
+                                offsetX = 0.2f
+                                offsetY = 0.5f
+                            }
+
+                            // Set up the animation
+                        }
+
+
+                        val pvX = instruction.moveFromX + (pTilePanel.tileSize * offsetX)
+                        val pvY = instruction.moveFromY + (pTilePanel.tileSize * offsetY)
+
+                        // Set up the animation
+                        val animation = RotateAnimation(0f, 90f, pvX, pvY)
+
+                        animation.duration = pDurationMS
+                        animation.fillAfter = true
+                        animation.fillBefore = false
+                        animation.isFillEnabled = false
+                        animation.interpolator = BounceInterpolator()
+
+                        val tileAnimationListener = TileAnimationListener(
+                            instruction,
+                            pTilePanel,
+                            this,
+                            false,
+                            instruction.imageData
+                        )
+                        animation.setAnimationListener(tileAnimationListener)
+
+                        instruction.imageData.startAnimation(animation)
+
+                    }
                 }
 
-
             }
-
-            if (pAnimItems.containsKey(AnimationSeqEnum.B)) {
-                val instruction = pAnimItems[AnimationSeqEnum.B]
-
-                if (instruction?.imageData != null) {
-
-                    // Set initial image position
-                    instruction.imageData.layoutParams = FrameLayout.LayoutParams(pTilePanel.tileSize, pTilePanel.tileSize)
-                    instruction.imageData.x = instruction.moveFromX
-                    instruction.imageData.y = instruction.moveFromY
-
-                    // Set counter rotation
-                    instruction.imageData.rotation = -this.rotation
-
-                    // Add the image to the view for animation
-                    this.addView(instruction.imageData)
-
-                    // Calculate the move coordinates (as a delta from the current position)
-                    val moveToDeltaX = instruction.moveToX - instruction.moveFromX
-                    val moveToDeltaY = instruction.moveToY - instruction.moveFromY
-
-                    // Set up the animation
-                    val animation = TranslateAnimation(0f, moveToDeltaX, 0f, moveToDeltaY)
-                    animation.duration = pDurationMS
-                    animation.fillAfter = true
-                    animation.fillBefore = false
-                    animation.isFillEnabled = false
-                    animation.interpolator = AccelerateDecelerateInterpolator()
-
-                    val tileAnimationListener = TileAnimationListener(instruction,pTilePanel,this, true, instruction.imageData)
-                    animation.setAnimationListener(tileAnimationListener)
-
-                    instruction.imageData.startAnimation(animation)
-
-                }
-
-
-            }
-
-        if (pAnimItems.containsKey(AnimationSeqEnum.C)) {
-            val instruction = pAnimItems[AnimationSeqEnum.C]
-
-            if (instruction?.imageData != null) {
-
-                // Set initial image position
-                instruction.imageData.layoutParams = FrameLayout.LayoutParams(pTilePanel.tileSize, pTilePanel.tileSize)
-                instruction.imageData.x = instruction.moveFromX
-                instruction.imageData.y = instruction.moveFromY
-
-                // Set counter rotation
-                instruction.imageData.rotation = -this.rotation
-
-                // Add the image to the view for animation
-                this.addView(instruction.imageData)
-
-                // Set up the animation
-                val animation = AnimationUtils.loadAnimation(this.context, R.anim.piecetake)
-
-                animation.duration = pDurationMS
-                animation.fillAfter = true
-                animation.fillBefore = false
-                animation.isFillEnabled = false
-                animation.interpolator = AccelerateDecelerateInterpolator()
-
-                val tileAnimationListener = TileAnimationListener(instruction,pTilePanel,this, true, instruction.imageData)
-                animation.setAnimationListener(tileAnimationListener)
-
-                instruction.imageData.startAnimation(animation)
-
-            }
-
-
-        }
-
-        if (pAnimItems.containsKey(AnimationSeqEnum.D)) {
-            val instruction = pAnimItems[AnimationSeqEnum.D]
-
-            if (instruction?.imageData != null) {
-
-                // Set initial image position
-                instruction.imageData.layoutParams = FrameLayout.LayoutParams(pTilePanel.tileSize, pTilePanel.tileSize)
-                instruction.imageData.x = instruction.moveFromX
-                instruction.imageData.y = instruction.moveFromY
-
-                // Set counter rotation
-                instruction.imageData.rotation = -this.rotation
-
-                // Add the image to the view for animation
-                this.addView(instruction.imageData)
-
-                // Set up the animation
-                val animation = AnimationUtils.loadAnimation(this.context, R.anim.piecereturn)
-
-                animation.duration = pDurationMS
-                animation.fillAfter = true
-                animation.fillBefore = false
-                animation.isFillEnabled = false
-                animation.interpolator = AccelerateDecelerateInterpolator()
-
-                val tileAnimationListener = TileAnimationListener(instruction,pTilePanel,this, true, instruction.imageData)
-                animation.setAnimationListener(tileAnimationListener)
-
-                instruction.imageData.startAnimation(animation)
-
-            }
-
-
-        }
-
-        if (pAnimItems.containsKey(AnimationSeqEnum.E)) {
-            val instruction = pAnimItems[AnimationSeqEnum.E]
-
-            if (instruction?.imageData != null) {
-
-                // Set initial image position
-                instruction.imageData.layoutParams = FrameLayout.LayoutParams(pTilePanel.tileSize, pTilePanel.tileSize)
-                instruction.imageData.x = instruction.moveFromX
-                instruction.imageData.y = instruction.moveFromY
-
-                // Set counter rotation
-                instruction.imageData.rotation = -this.rotation
-
-                // Add the image to the view for animation
-                this.addView(instruction.imageData)
-
-                var offsetX = 0f
-                var offsetY = 0f
-
-                when {
-                    this.rotation == 0f -> {
-                        offsetX = 0.5f
-                        offsetY = 0.8f
-                    }
-                    this.rotation == 90f -> {
-                        offsetX = 0.8f
-                        offsetY = 0.5f
-                    }
-                    this.rotation == 180f -> {
-                        offsetX = 0.5f
-                        offsetY = 0.2f
-                    }
-                    this.rotation == 270f -> {
-                        offsetX = 0.2f
-                        offsetY = 0.5f
-                    }
-
-                    // Set up the animation
-                }
-
-
-                val pvX = instruction.moveFromX + (pTilePanel.tileSize * offsetX)
-                val pvY = instruction.moveFromY + (pTilePanel.tileSize * offsetY)
-
-                // Set up the animation
-                val animation = RotateAnimation(0f, 90f, pvX, pvY)
-
-                animation.duration = pDurationMS
-                animation.fillAfter = true
-                animation.fillBefore = false
-                animation.isFillEnabled = false
-                animation.interpolator = BounceInterpolator()
-
-                val tileAnimationListener = TileAnimationListener(instruction,pTilePanel,this, false, instruction.imageData)
-                animation.setAnimationListener(tileAnimationListener)
-
-                instruction.imageData.startAnimation(animation)
-
-
-            }
-
-
-        }
 
     }
 

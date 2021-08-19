@@ -87,10 +87,10 @@ class EngineSettings : DialogFragment() {
         binding.computerPlayerEnabledCheckBox.setOnClickListener { setControlState() }
 
         binding.computerMoveFirstCheckBox.isChecked = ParameterDataService.get(ParamComputerMoveFirst::class.java).enabled
-        binding.computerMoveFirstCheckBox.setOnClickListener { setControlState() }
+
+        binding.randomiseFirstMoveCheckBox.isChecked = ParameterDataService.get(ParamRandomiseFirstMove::class.java).enabled
 
         binding.levelAutoCheckBox.isChecked = ParameterDataService.get(ParamLevelAuto::class.java).enabled
-        binding.levelAutoCheckBox.setOnClickListener { setControlState() }
 
         binding.computerAdvancedSettingsCheckBox.isChecked = ParameterDataService.get(ParamLimitAdvanced::class.java).enabled
         binding.computerAdvancedSettingsCheckBox.setOnClickListener { setControlState() }
@@ -200,6 +200,18 @@ class EngineSettings : DialogFragment() {
             ParameterDataService.set(computerMoveFirst)
         }
 
+        val randomiseFirstMove = ParameterDataService.get(ParamRandomiseFirstMove::class.java)
+        if (randomiseFirstMove.enabled != binding.randomiseFirstMoveCheckBox.isChecked) {
+            randomiseFirstMove.enabled = binding.randomiseFirstMoveCheckBox.isChecked
+            ParameterDataService.set(randomiseFirstMove)
+        }
+
+        val levelAuto = ParameterDataService.get(ParamLevelAuto::class.java)
+        if (levelAuto.enabled != binding.levelAutoCheckBox.isChecked) {
+            levelAuto.enabled = binding.levelAutoCheckBox.isChecked
+            ParameterDataService.set(levelAuto)
+        }
+
         val limitEngineStrengthELO = ParameterDataService.get(ParamLimitEngineStrengthELO::class.java)
         if (limitEngineStrengthELO.eloRating != Constants.eloarray[binding.elospinner.selectedItemPosition]) {
             limitEngineStrengthELO.eloRating =
@@ -211,12 +223,6 @@ class EngineSettings : DialogFragment() {
         if (computerAdvancedSettings.enabled != binding.computerAdvancedSettingsCheckBox.isChecked) {
             computerAdvancedSettings.enabled = binding.computerAdvancedSettingsCheckBox.isChecked
             ParameterDataService.set(computerAdvancedSettings)
-        }
-
-        val levelAuto = ParameterDataService.get(ParamLevelAuto::class.java)
-        if (levelAuto.enabled != binding.levelAutoCheckBox.isChecked) {
-            levelAuto.enabled = binding.levelAutoCheckBox.isChecked
-            ParameterDataService.set(levelAuto)
         }
 
         val limitDepth = ParameterDataService.get(ParamLimitDepth::class.java)
@@ -262,6 +268,7 @@ class EngineSettings : DialogFragment() {
         val computerPlayer = binding.computerPlayerEnabledCheckBox.isChecked
         if (computerPlayer) {
             binding.computerMoveFirstCheckBox.isEnabled = true
+            binding.randomiseFirstMoveCheckBox.isEnabled = true
             binding.levelAutoCheckBox.isEnabled = true
             binding.eloStrengthTitleText.isEnabled = true
             binding.elospinner.isEnabled = true
@@ -270,6 +277,7 @@ class EngineSettings : DialogFragment() {
             advancedOpacity = if (advanced) 1.0F else 0.38F
         } else {
             binding.computerMoveFirstCheckBox.isEnabled = false
+            binding.randomiseFirstMoveCheckBox.isEnabled = false
             binding.levelAutoCheckBox.isEnabled = false
             binding.eloStrengthTitleText.isEnabled = false
             binding.elospinner.isEnabled = false
@@ -302,8 +310,9 @@ class EngineSettings : DialogFragment() {
     private fun resetToDefault() {
         binding.computerPlayerEnabledCheckBox.isChecked = ParamComputerPlayer().enabled
         binding.computerMoveFirstCheckBox.isChecked = ParamComputerMoveFirst().enabled
-        binding.elospinner.setSelection(Constants.eloarray.indexOf(ParamLimitEngineStrengthELO().eloRating))
+        binding.randomiseFirstMoveCheckBox.isChecked = ParamRandomiseFirstMove().enabled
         binding.levelAutoCheckBox.isChecked = ParamLevelAuto().enabled
+        binding.elospinner.setSelection(Constants.eloarray.indexOf(ParamLimitEngineStrengthELO().eloRating))
         binding.computerAdvancedSettingsCheckBox.isChecked = ParamLimitAdvanced().enabled
         binding.depthLimitSlider.value = ParamLimitDepth().depth.toFloat()
         binding.nodeLimitValueEditText.setText(if (ParamLimitNodes().nodes > 0)  ParamLimitNodes().nodes.toString() else "")

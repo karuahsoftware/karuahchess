@@ -16,14 +16,26 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-package purpletreesoftware.karuahchess.engine
+package purpletreesoftware.karuahchess.common
 
-class SearchOptions {
-    var limitStrengthELO: Int = 1350
-    var limitDepth: Int = 0
-    var limitNodes: Int = 0
-    var limitMoveDuration: Int = 0
-    var limitThreads: Int = 1
-    var randomiseFirstMove: Boolean = false
+import java.util.*
 
+data class ColourARGB(val a: Int , val r: Int , val g: Int , val b: Int, val text: String)
+{
+    override fun equals(other: Any?): Boolean {
+        return if (other == null || javaClass != other.javaClass) {
+            false
+        } else {
+            val otherColourARGB = other as ColourARGB
+            a == otherColourARGB.a && r == otherColourARGB.r && g == otherColourARGB.g && b == otherColourARGB.b
+        }
+    }
+
+    override fun hashCode(): Int {
+        return Objects.hash(a,r,g,b)
+    }
+
+    override fun toString(): String {
+        return text
+    }
 }
