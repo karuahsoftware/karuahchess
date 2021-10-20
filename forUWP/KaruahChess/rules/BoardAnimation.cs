@@ -48,7 +48,7 @@ namespace KaruahChess.Rules
         /// <param name="pBoardB"></param>
         /// <param name="pBoardSquareDS"></param>
         /// <returns></returns>
-        public List<PieceAnimationInstruction> CreateAnimationList(GameRecordArray pBoardRecA, GameRecordArray pBoardRecB)
+        public List<PieceAnimationInstruction> CreateAnimationList(GameRecordArray pBoardRecA, GameRecordArray pBoardRecB, Double pDuration)
         {
             var animationList = new List<PieceAnimationInstruction>(4);
             var moveList = GetAnimationMoveList(pBoardRecA, pBoardRecB);
@@ -64,6 +64,7 @@ namespace KaruahChess.Rules
                     var pieceImgData = Piece.GetImage(BoardSquareDataService.GetPieceTypeFromSpin(spin), BoardSquareDataService.GetPieceColourFromSpin(spin), BoardSquareDataService.instance.SquareSize, BoardSquareDataService.instance.SquareSize);
                     var instruction = GetAnimationInstruction(fromIndex, toIndex, pieceImgData);
                     instruction.AnimationType = PieceAnimationInstruction.AnimationTypeEnum.Move;
+                    instruction.Duration = pDuration;
                     animationList.Add(instruction);                    
                 }
                 else if (fromIndex > -1 && toIndex == -1)
@@ -88,6 +89,7 @@ namespace KaruahChess.Rules
                         var pieceImgData = Piece.GetImage(BoardSquareDataService.GetPieceTypeFromSpin(spin), BoardSquareDataService.GetPieceColourFromSpin(spin), BoardSquareDataService.instance.SquareSize, BoardSquareDataService.instance.SquareSize);
                         var instruction = GetAnimationInstruction(fromIndex, promotionIndex, pieceImgData);
                         instruction.AnimationType = PieceAnimationInstruction.AnimationTypeEnum.MoveFade;
+                        instruction.Duration = pDuration;
                         animationList.Add(instruction);
                     }
                     else
@@ -96,6 +98,7 @@ namespace KaruahChess.Rules
                         var pieceImgData = Piece.GetImage(BoardSquareDataService.GetPieceTypeFromSpin(spin), BoardSquareDataService.GetPieceColourFromSpin(spin), BoardSquareDataService.instance.SquareSize, BoardSquareDataService.instance.SquareSize);
                         var instruction = GetAnimationInstruction(fromIndex, fromIndex, pieceImgData);
                         instruction.AnimationType = PieceAnimationInstruction.AnimationTypeEnum.Take;
+                        instruction.Duration = pDuration;
                         animationList.Add(instruction);
                     }
                 }
@@ -105,6 +108,7 @@ namespace KaruahChess.Rules
                     var pieceImgData = Piece.GetImage(BoardSquareDataService.GetPieceTypeFromSpin(spin), BoardSquareDataService.GetPieceColourFromSpin(spin), BoardSquareDataService.instance.SquareSize, BoardSquareDataService.instance.SquareSize);
                     var instruction = GetAnimationInstruction(toIndex, toIndex, pieceImgData);
                     instruction.AnimationType = PieceAnimationInstruction.AnimationTypeEnum.Put;
+                    instruction.Duration = pDuration;
                     animationList.Add(instruction);
                 }
                 

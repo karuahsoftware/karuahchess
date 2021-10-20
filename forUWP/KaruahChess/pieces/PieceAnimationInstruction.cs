@@ -56,6 +56,9 @@ namespace KaruahChess.Pieces
         public Point MoveTo { get; set; }
 
 
+        public Double Duration { get; set; } = 2;
+
+
         /// <summary>
         /// List of square indexes that should be hidden for the animation
         /// </summary>

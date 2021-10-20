@@ -19,6 +19,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 using KaruahChess.Model;
 using System;
 using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -30,6 +31,8 @@ namespace KaruahChess.Pieces
 {
     public sealed partial class PieceAnimation : UserControl
     {
+
+        SemaphoreSlim throttler = new SemaphoreSlim(initialCount: 1);
 
         /// <summary>
         /// Constructor
@@ -68,8 +71,11 @@ namespace KaruahChess.Pieces
         /// Runs the next animation
         /// </summary>
         /// <returns></returns>
-        public async Task<bool> RunAnimation(BoardSquareDataService pBoardSquareDS, List<PieceAnimationInstruction> pAnimationList)
-        {                   
+        public async Task RunAnimation(BoardSquareDataService pBoardSquareDS, List<PieceAnimationInstruction> pAnimationList)
+        {
+
+            await throttler.WaitAsync();  // Limit animation threads to one
+
             var taskList = new List<Task>();
             AnimationCanvas.Visibility = Visibility.Visible;
             var storyBoardList = new List<Storyboard>();
@@ -158,8 +164,8 @@ namespace KaruahChess.Pieces
 
             // Wait for all tasks to finish
             await Task.WhenAll(taskList);
-                
-            return true;           
+            throttler.Release(); 
+            
         }
 
 
@@ -185,14 +191,14 @@ namespace KaruahChess.Pieces
             DoubleAnimation animX = new DoubleAnimation();
             animX.From = pAnimInstruct.MoveFrom.X;
             animX.To = pAnimInstruct.MoveTo.X;
-            animX.Duration = new Duration(TimeSpan.FromSeconds(2));
+            animX.Duration = new Duration(TimeSpan.FromSeconds(pAnimInstruct.Duration));
             animX.EasingFunction = ease;
 
             // Animation on the Y axis
             DoubleAnimation animY = new DoubleAnimation();
             animY.From = pAnimInstruct.MoveFrom.Y;
             animY.To = pAnimInstruct.MoveTo.Y;
-            animY.Duration = new Duration(TimeSpan.FromSeconds(2));
+            animY.Duration = new Duration(TimeSpan.FromSeconds(pAnimInstruct.Duration));
             animY.EasingFunction = ease;
 
             // Set up the storyboard            
@@ -228,21 +234,21 @@ namespace KaruahChess.Pieces
             DoubleAnimation animX = new DoubleAnimation();
             animX.From = pAnimInstruct.MoveFrom.X;
             animX.To = pAnimInstruct.MoveTo.X;
-            animX.Duration = new Duration(TimeSpan.FromSeconds(2));
+            animX.Duration = new Duration(TimeSpan.FromSeconds(pAnimInstruct.Duration));
             animX.EasingFunction = ease;
 
             // Animation on the Y axis
             DoubleAnimation animY = new DoubleAnimation();
             animY.From = pAnimInstruct.MoveFrom.Y;
             animY.To = pAnimInstruct.MoveTo.Y;
-            animY.Duration = new Duration(TimeSpan.FromSeconds(2));
+            animY.Duration = new Duration(TimeSpan.FromSeconds(pAnimInstruct.Duration));
             animY.EasingFunction = ease;
 
             // Animation opacity
             DoubleAnimation animOpacity = new DoubleAnimation();
             animOpacity.From = 1;
             animOpacity.To = 0;
-            animOpacity.Duration = new Duration(TimeSpan.FromSeconds(2));
+            animOpacity.Duration = new Duration(TimeSpan.FromSeconds(pAnimInstruct.Duration));
             animOpacity.EasingFunction = ease;
 
             // Set up the storyboard            
@@ -286,14 +292,14 @@ namespace KaruahChess.Pieces
             DoubleAnimation animRotate = new DoubleAnimation();
             animRotate.From = 0;
             animRotate.To = -20;
-            animRotate.Duration = new Duration(TimeSpan.FromSeconds(2));
+            animRotate.Duration = new Duration(TimeSpan.FromSeconds(pAnimInstruct.Duration));
             animRotate.EasingFunction = ease;
 
             // Animation opacity
             DoubleAnimation animOpacity = new DoubleAnimation();
             animOpacity.From = 1;
             animOpacity.To = 0;
-            animOpacity.Duration = new Duration(TimeSpan.FromSeconds(2));
+            animOpacity.Duration = new Duration(TimeSpan.FromSeconds(pAnimInstruct.Duration));
             animOpacity.EasingFunction = ease;
 
             // Set up the storyboard            
@@ -335,14 +341,14 @@ namespace KaruahChess.Pieces
             DoubleAnimation animRotate = new DoubleAnimation();
             animRotate.From = -20;
             animRotate.To = -0;
-            animRotate.Duration = new Duration(TimeSpan.FromSeconds(2));
+            animRotate.Duration = new Duration(TimeSpan.FromSeconds(pAnimInstruct.Duration));
             animRotate.EasingFunction = ease;
 
             // Animation opacity
             DoubleAnimation animOpacity = new DoubleAnimation();
             animOpacity.From = 0;
             animOpacity.To = 1;
-            animOpacity.Duration = new Duration(TimeSpan.FromSeconds(2));
+            animOpacity.Duration = new Duration(TimeSpan.FromSeconds(pAnimInstruct.Duration));
             animOpacity.EasingFunction = ease;
 
             // Set up the storyboard            
@@ -384,7 +390,7 @@ namespace KaruahChess.Pieces
             DoubleAnimation animRotate = new DoubleAnimation();
             animRotate.From = 0;
             animRotate.To = 90;
-            animRotate.Duration = new Duration(TimeSpan.FromSeconds(2));
+            animRotate.Duration = new Duration(TimeSpan.FromSeconds(pAnimInstruct.Duration));
             animRotate.EasingFunction = bounce;
 
             

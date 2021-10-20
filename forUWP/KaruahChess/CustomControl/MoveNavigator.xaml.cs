@@ -18,6 +18,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 using System;
 using System.Collections.Generic;
+using Windows.Foundation;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
@@ -32,7 +33,7 @@ namespace KaruahChess.CustomControl
         /// </summary>
 
         private ViewModel.BoardViewModel _boardVM;
-        
+        public NavToggleButton _selectedButton;
 
         /// <summary>
         /// Constructor
@@ -42,9 +43,7 @@ namespace KaruahChess.CustomControl
 
             this.InitializeComponent();
 
-            
-            
-
+                      
         }
 
         /// <summary>
@@ -63,30 +62,35 @@ namespace KaruahChess.CustomControl
         /// <returns></returns>
         public void Load(List<int> pNavList, int pSelectedId)
         {
-            if (this.Visibility == Visibility.Collapsed) return;
+            if (this.Visibility == Visibility.Visible)
+            {
 
-            navigatorStack.Children.Clear();
-           
-            for (int index = 0;  index < pNavList.Count; index++) {
-                var navButton = new NavToggleButton {
-                    Width = 32,
-                    Height = 32,
-                    Padding = new Thickness(0),
-                    Margin = new Thickness(0, 0, 1, 0),
-                    Content = pNavList[index].ToString(),
-                    Tag = pNavList[index],
-                    BorderThickness = new Thickness(0)                    
-                    
-                };
-                
-                // Add button to stackpanel
-                navButton.Tapped += NavigatorStack_ItemClick;
-                navigatorStack.Children.Add(navButton);
-                
+                navigatorStack.Children.Clear();
+                _selectedButton = null;
+
+                for (int index = 0; index < pNavList.Count; index++)
+                {
+                    var navButton = new NavToggleButton
+                    {
+                        Width = 32,
+                        Height = 32,
+                        Padding = new Thickness(0),
+                        Margin = new Thickness(0, 0, 1, 0),
+                        Content = pNavList[index].ToString(),
+                        Tag = pNavList[index],
+                        BorderThickness = new Thickness(0),
+                        VerticalAlignment = VerticalAlignment.Top
+
+                    };
+
+                    // Add button to stackpanel
+                    navButton.Tapped += NavigatorStack_ItemClick;
+                    navigatorStack.Children.Add(navButton);
+
+                }
+
+                SetSelected(pSelectedId);
             }
-
-            SetSelected(pSelectedId);
-
             
             
 
@@ -98,44 +102,52 @@ namespace KaruahChess.CustomControl
         /// <param name="pSelectedId"></param>
         public void SetSelected(int pSelectedId)
         {
-            if (this.Visibility == Visibility.Collapsed) return;
-
-            int buttonSelectedId = -1;
-            int buttonId = -1;
-            for (int index = 0; index < navigatorStack.Children.Count; index++)
+            if (this.Visibility == Visibility.Visible)
             {
-                var navButton = (NavToggleButton)navigatorStack.Children[index];
 
-                // Highlight selected id
-                buttonId = (int)navButton.Tag;
-                if (pSelectedId == buttonId)
+                for (int index = 0; index < navigatorStack.Children.Count; index++)
                 {
-                    buttonSelectedId = buttonId;
-                    navButton.IsChecked = true;
-                    navButton.Opacity = 1;
-                }
-                else
-                {
-                    navButton.IsChecked = false;
-                    navButton.Opacity = 0.51;
-                }
-            }
+                    var navButton = (NavToggleButton)navigatorStack.Children[index];
 
-            // Scroll to end of scrollviewer if last button is selected
-            if (buttonId == buttonSelectedId && buttonId > -1)
+                    // Highlight selected id
+                    int buttonId = (int)navButton.Tag;
+                    if (pSelectedId == buttonId)
+                    {
+                        navButton.IsChecked = true;
+                        navButton.Opacity = 1;
+                        _selectedButton = navButton;
+                    }
+                    else
+                    {
+                        navButton.IsChecked = false;
+                        navButton.Opacity = 0.51;
+                    }
+                }
+            }         
+
+        }
+        
+        /// <summary>
+        /// Scroll to the selected button
+        /// </summary>
+        public void ScrollToSelected()
+        {
+            // Scroll to position of button selected
+            if (this.Visibility == Visibility.Visible && _selectedButton != null)
             {
-                var period = TimeSpan.FromMilliseconds(100);
+                TimeSpan period = TimeSpan.FromMilliseconds(100);
                 Windows.System.Threading.ThreadPoolTimer.CreateTimer(async (source) =>
                 {
                     await Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () =>
                     {
-                        var Success = navigatorScoll.ChangeView(navigatorScoll.ScrollableWidth, null, null, true);
+                        var transform = _selectedButton.TransformToVisual(navigatorStack);
+                        var position = transform.TransformPoint(new Point(0, 0));
+                        var Success = navigatorScoll.ChangeView(position.X, null, null, true);
                     });
                 }, period);
             }
-
         }
-        
+
         /// <summary>
         /// Show the control
         /// </summary>
@@ -162,8 +174,14 @@ namespace KaruahChess.CustomControl
         private void NavigatorStack_ItemClick(object sender, RoutedEventArgs e)
         {            
             ToggleButton navButton = (ToggleButton)sender;
-            int moveId = (int)(navButton).Tag;
-            _boardVM.NavigateGameRecord(moveId, false);            
+            int moveId = (int)navButton.Tag;
+            
+            // Set animation to true if only navigating to the nearest move. If skipping moves then don't animate.            
+            int navDistance = GetNavDistance();            
+            if (navDistance == 1) _boardVM.NavigateGameRecord(moveId, true, false, false);
+            else _boardVM.NavigateGameRecord(moveId, false, false, false);
+
+
         }
 
        
@@ -172,7 +190,7 @@ namespace KaruahChess.CustomControl
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void LeftBtn_Click(object sender, RoutedEventArgs e)
+        private void LeftScrollBtn_Click(object sender, RoutedEventArgs e)
         {
             double currentOffset = navigatorScoll.HorizontalOffset;
             double newOffset = currentOffset - 66;
@@ -185,7 +203,7 @@ namespace KaruahChess.CustomControl
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void RightBtn_Click(object sender, RoutedEventArgs e)
+        private void RightScrollBtn_Click(object sender, RoutedEventArgs e)
         {
             double currentOffset = navigatorScoll.HorizontalOffset;
             double newOffset = currentOffset + 66;
@@ -196,15 +214,114 @@ namespace KaruahChess.CustomControl
         {
             if (navigatorScoll.ScrollableWidth > 0)
             {
-                LeftBtn.Opacity = 0.51;
-                RightBtn.Opacity = 0.51;
+                LeftScrollBtn.Opacity = 0.51;
+                RightScrollBtn.Opacity = 0.51;
             }
         }
 
         private void NavGrid_PointerExited(object sender, Windows.UI.Xaml.Input.PointerRoutedEventArgs e)
         {
-            LeftBtn.Opacity = 0.31;
-            RightBtn.Opacity = 0.31;
+            LeftScrollBtn.Opacity = 0.31;
+            RightScrollBtn.Opacity = 0.31;
         }
+
+
+        /// <summary>
+        /// Back button
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void BackBtn_Click(object sender, RoutedEventArgs e)
+        {
+            if (this.Visibility == Visibility.Collapsed) return;
+
+            int selectedIndex = GetFirstSelectedIndex();
+            if (selectedIndex > -1)
+            {                
+                int previousIndex = selectedIndex - 1;
+                if (previousIndex > -1)
+                {
+                    var navButton = (NavToggleButton)navigatorStack.Children[previousIndex];
+                    int buttonId = (int)navButton.Tag;
+                    _boardVM.NavigateGameRecord(buttonId, true, false, true);
+                  
+                    
+                }
+            }
+        }
+
+        /// <summary>
+        /// Foward button
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void ForwardBtn_Click(object sender, RoutedEventArgs e)
+        {
+            if (this.Visibility == Visibility.Collapsed) return;
+
+            int selectedIndex = GetFirstSelectedIndex();
+            if (selectedIndex > -1)
+            {
+                int childrenCount = navigatorStack.Children.Count;
+                int nextIndex = selectedIndex + 1;
+                if (nextIndex < childrenCount)
+                {
+                    var navButton = (NavToggleButton)navigatorStack.Children[nextIndex];
+                    int buttonId = (int)navButton.Tag;
+                    _boardVM.NavigateGameRecord(buttonId, true, false, true);                    
+                }
+            }
+
+        }
+
+
+        /// <summary>
+        /// Gets the currently selected navigation index
+        /// </summary>
+        /// <returns></returns>
+        private int GetFirstSelectedIndex()
+        {
+            int selectedIndex = -1;
+
+            int childrenCount = navigatorStack.Children.Count;
+            for (int index = 0; index < childrenCount; index++)
+            {
+                var navButton = (NavToggleButton)navigatorStack.Children[index];
+                if (navButton.IsChecked == true)
+                {
+                    selectedIndex = index;
+                    break;
+                }
+            }
+
+            return selectedIndex;
+        }
+
+
+        /// <summary>
+        /// Determine the navigation distance.
+        /// </summary>
+        /// <returns></returns>
+        private int GetNavDistance()
+        {
+            int childrenCount = navigatorStack.Children.Count;
+            int firstSelected = -1;
+            int lastSelected = -1;
+
+            for (int index = 0; index<childrenCount; index++)
+            {
+                var navButton = (NavToggleButton)navigatorStack.Children[index];
+                if (navButton.IsChecked == true)
+                {
+                    if (firstSelected == -1) firstSelected = index;
+                    else lastSelected = index;
+                }
+           }
+
+
+            if (firstSelected > -1 && lastSelected > -1) return lastSelected - firstSelected;
+            else return 0;
+        }
+
     }
 }

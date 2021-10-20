@@ -45,7 +45,7 @@ using Windows.Media.Core;
 using KaruahChessEngine;
 using static KaruahChess.Rules.Move;
 using Windows.Foundation;
-using static KaruahChess.Common.Constants;
+
 
 namespace KaruahChess.ViewModel
 {
@@ -76,6 +76,7 @@ namespace KaruahChess.ViewModel
         MediaPlayerElement _mediaplayerReadText;
         MediaPlayerElement _mediaplayerPieceMoveSound;
 
+        SemaphoreSlim navThrottler = new SemaphoreSlim(initialCount: 1);
 
         public enum MoveTypeEnum { None = 0, Normal = 1, EnPassant = 2, Castle = 3, Promotion = 4 }
         // 0  Game ready, 1 CheckMate, 2 Stalemate, 3 Resign
@@ -518,7 +519,7 @@ namespace KaruahChess.ViewModel
                 if (_navigatorEnabled != null && _navigatorEnabled.Enabled != value)
                 {
                     _navigatorEnabled.Enabled = value;
-                    RefreshNavigation();
+                    RefreshNavigation(true, true);
                     ParameterDataService.instance.Set<ParamNavigator>(_navigatorEnabled);
                     ResizeBoard();
                     RaisePropertyChanged(nameof(NavigatorEnabled));
@@ -839,9 +840,7 @@ namespace KaruahChess.ViewModel
             // Set board shake state
             BoardSquare.Shake(ArrangeBoardEnabled);
                         
-
-            // Initialise the navigation data
-            RefreshNavigation();
+                        
         }
 
 
@@ -1055,16 +1054,14 @@ namespace KaruahChess.ViewModel
                 LoadChessClock(true, GameRecordDataService.instance.GetCurrentGame());
 
                 // Do rollback animation
-                var moveAnimationList = _boardAnimation.CreateAnimationList(oldBoard, GameRecordDataService.instance.Get());
+                var moveAnimationList = _boardAnimation.CreateAnimationList(oldBoard, GameRecordDataService.instance.Get(), 1);
                 BoardSquareDataService.instance.Update(GameRecordDataService.instance.GetCurrentGame(), false);
                 await StartPieceAnimation(true, moveAnimationList, true);
 
 
                 // Set the game record values                                              
                 NavigateMaxRecord();
-
-                // Refresh Navigation
-                RefreshNavigation();
+                               
                 
             }
 
@@ -1238,9 +1235,7 @@ namespace KaruahChess.ViewModel
                     BoardSquareDataService.instance.Update(gr, true);
 
                     LoadChessClock(true, gr);
-
-                    // Refresh Navigation
-                    RefreshNavigation();
+                                        
                                         
                     await ShowBoardMessage("", "Load complete", TextMessage.TypeEnum.Info, TextMessage.AnimationEnum.FadeOut);
                     
@@ -1336,15 +1331,18 @@ namespace KaruahChess.ViewModel
             bool gameFinished = !(GameRecordDataService.instance.CurrentGame.GetStateGameStatus() == (int)BoardStatusEnum.Ready);
             
             if (pEntity != null && !ArrangeBoardEnabled) {
+                             
                 if (gameFinished == false)
                 {
                     var sq = (BoardSquare)pEntity;
                     await UserMoveAdd(sq, true);
                 }
                 else
-                {
-                    UpdateGameMessage(GameRecordDataService.instance.GetCurrentGame());
+                {                 
+                   int maxRecId = GameRecordDataService.instance.GetMaxId();
+                   NavigateGameRecord(maxRecId, false, true, true);                               
                 }
+               
             }
             else if (_pieceEditToolControl != null && ArrangeBoardEnabled)
             {
@@ -1450,9 +1448,10 @@ namespace KaruahChess.ViewModel
             if (pLockPanel) { 
                 LockPanel = true;
             }
-
-            var animComplete = await _pieceAnimationControl.RunAnimation(BoardSquareDataService.instance,pAnimationList);
-            if (animComplete && pEndClear) { 
+         
+            
+            await _pieceAnimationControl.RunAnimation(BoardSquareDataService.instance,pAnimationList);
+            if (pEndClear) { 
                EndPieceAnimation();
             }                
           
@@ -1466,13 +1465,16 @@ namespace KaruahChess.ViewModel
         /// </summary>
         private void EndPieceAnimation()
         {
-            if (BoardSquareDataService.instance != null) { 
-                BoardSquareDataService.instance.ShowAllHidden();
-            }
-
+            
             if (_pieceAnimationControl != null) { 
                 _pieceAnimationControl.Clear();
             }
+
+            if (BoardSquareDataService.instance != null)
+            {
+                BoardSquareDataService.instance.ShowAllHidden();
+            }
+
         }
 
         /// <summary>
@@ -1554,7 +1556,7 @@ namespace KaruahChess.ViewModel
             // Ensure game record is set to the latest
             int maxRecId = GameRecordDataService.instance.GetMaxId();
             if (GameRecordCurrentValue != maxRecId) {
-                NavigateGameRecord(maxRecId, false);
+                NavigateGameRecord(maxRecId, false, true, true);
                 _move.Clear();
                 return;
             }
@@ -1618,7 +1620,7 @@ namespace KaruahChess.ViewModel
                     long transId = GameRecordDataService.instance.transactionId;
 
                     if (pAnimate) {
-                        var moveAnimationList = _boardAnimation.CreateAnimationList(boardBeforeMove, boardAfterMove);
+                        var moveAnimationList = _boardAnimation.CreateAnimationList(boardBeforeMove, boardAfterMove, 2);
                         BoardSquareDataService.instance.Update(boardAfterMove, false);
                         await StartPieceAnimation(true, moveAnimationList, true);                       
                     }
@@ -1751,7 +1753,7 @@ namespace KaruahChess.ViewModel
 
                         // Do animation
                         var boardAfterMove = GameRecordDataService.instance.GetCurrentGame();
-                        var moveAnimationList = _boardAnimation.CreateAnimationList(boardBeforeMove, boardAfterMove);
+                        var moveAnimationList = _boardAnimation.CreateAnimationList(boardBeforeMove, boardAfterMove, 2);
                         BoardSquareDataService.instance.Update(boardAfterMove, true);
 
                         long transId = GameRecordDataService.instance.transactionId;
@@ -1866,9 +1868,7 @@ namespace KaruahChess.ViewModel
             // Update board indicators
             UpdateBoardIndicators(GameRecordDataService.instance.GetCurrentGame());
 
-            // Refresh Navigation
-            RefreshNavigation();
-
+            
             LockPanel = false;
 
             // Show start move message
@@ -2449,8 +2449,7 @@ namespace KaruahChess.ViewModel
                 if (success > 0)
                 {
                     // Ensure game record position is set to max value
-                    NavigateMaxRecord();
-                    RefreshNavigation();
+                    NavigateMaxRecord();                   
                 }
             }
             catch (Exception ex)  {
@@ -2938,11 +2937,12 @@ namespace KaruahChess.ViewModel
         /// Navigate to game record
         /// </summary>
         /// <param name="pRecId"></param>
-        public async void NavigateGameRecord(int pRecId, bool pAnimate)
-        {
+        public async void NavigateGameRecord(int pRecId, bool pAnimate, bool pReloadNav, bool pScrollNav)
+        {           
 
             if (pRecId > 0)
-            {   
+            {
+                await navThrottler.WaitAsync();
 
                 GameRecordArray oldBoard = GameRecordDataService.instance.Get(GameRecordCurrentValue);
                 GameRecordArray updatedBoard = GameRecordDataService.instance.Get(pRecId);
@@ -2950,37 +2950,37 @@ namespace KaruahChess.ViewModel
                 // Update board displayed with requested record
                 if (updatedBoard != null)
                 {
-                    // End any animations
-                    EndPieceAnimation();
 
                     // Do animation
                     if (pAnimate) { 
-                        var moveAnimationList = _boardAnimation.CreateAnimationList(oldBoard, updatedBoard);
+                        var moveAnimationList = _boardAnimation.CreateAnimationList(oldBoard, updatedBoard, 0.5);
                         BoardSquareDataService.instance.Update(updatedBoard, false);
                         GameRecordCurrentValue = pRecId;
                         UpdateBoardIndicators(updatedBoard);
                         LoadChessClock(false, updatedBoard);
                         await StartPieceAnimation(true, moveAnimationList, true);
                     }
-                    else { 
+                    else {
+                        // End any animations
+                        EndPieceAnimation();
+
                         BoardSquareDataService.instance.Update(updatedBoard, true);
                         GameRecordCurrentValue = pRecId;
                         UpdateBoardIndicators(updatedBoard);
                         LoadChessClock(false, updatedBoard);
                     }
-
-                    // Set the selected move navigation item
-                    if (_moveNavigatorControl != null) {
-                        _moveNavigatorControl.SetSelected(GameRecordCurrentValue);
-                    }
-
+                                        
                     if (_move != null)
                     {
                         _move.Clear();
                     }
 
-                    
+                    // Refresh the navigation
+                    RefreshNavigation(pReloadNav, pScrollNav);
                 }
+
+                navThrottler.Release();
+
             }
         }
 
@@ -2990,7 +2990,7 @@ namespace KaruahChess.ViewModel
         public void NavigateMaxRecord()
         {
             int maxId = GameRecordDataService.instance.GetMaxId();
-            NavigateGameRecord(maxId, false);
+            NavigateGameRecord(maxId, false, true, true);
         }
 
         /// <summary>
@@ -3033,7 +3033,7 @@ namespace KaruahChess.ViewModel
         /// <summary>
         /// Refresh the navigation control
         /// </summary>
-        public void RefreshNavigation()
+        public void RefreshNavigation(bool pReload, bool pScroll)
         {
             // Exit immediately if navigator is null
             if (_moveNavigatorControl == null) return;
@@ -3042,7 +3042,20 @@ namespace KaruahChess.ViewModel
             if (NavigatorEnabled)
             {
                 _moveNavigatorControl.Show();
-                _moveNavigatorControl.Load(GameRecordDataService.instance.GetAllRecordIDList(), GameRecordCurrentValue);                
+
+                if (pReload)
+                {
+                    _moveNavigatorControl.Load(GameRecordDataService.instance.GetAllRecordIDList(), GameRecordCurrentValue);
+                }
+                else
+                {
+                    _moveNavigatorControl.SetSelected(GameRecordCurrentValue);
+                }
+
+                if (pScroll)
+                {
+                    _moveNavigatorControl.ScrollToSelected();
+                }
             }
             else
             {

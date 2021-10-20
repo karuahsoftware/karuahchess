@@ -233,7 +233,7 @@ namespace KaruahChess.CustomControl
 
                 // Loads the game in to the database
                 LoadGameIntoDatabase(gameRecList);
-                _boardVM.RefreshNavigation();
+             
             }
             catch(Exception ex)
             {                

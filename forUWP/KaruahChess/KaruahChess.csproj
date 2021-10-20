@@ -261,8 +261,9 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Assets\BadgeLogo.scale-200.png" />
+    <Content Include="Assets\Square310x310Logo.png" />
+    <Content Include="Assets\Square310x310Logo.scale-100.png" />
     <Content Include="Media\piecesound.wav" />
-    <Content Include="Assets\Square310x310Logo.scale-200.png" />
     <Content Include="Assets\Square44x44Logo.scale-100.png" />
     <Content Include="Assets\Square44x44Logo.scale-400.png" />
     <Content Include="Assets\Square44x44Logo.targetsize-48_altform-unplated.png" />
@@ -418,10 +419,10 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.Data.Sqlite">
-      <Version>5.0.9</Version>
+      <Version>5.0.11</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.NETCore.UniversalWindowsPlatform">
-      <Version>6.2.12</Version>
+      <Version>6.2.13</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.Services.Store.Engagement">
       <Version>10.1901.28001</Version>
