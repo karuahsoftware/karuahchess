@@ -63,6 +63,7 @@ import purpletreesoftware.karuahchess.viewmodel.*
 import purpletreesoftware.karuahchess.voice.VoiceRecognition
 import java.io.InputStream
 import android.media.AudioAttributes
+import kotlinx.coroutines.sync.Semaphore
 
 @ExperimentalUnsignedTypes
 class MainActivity : AppCompatActivity(), TilePanel.OnTilePanelInteractionListener, PieceEditTool.OnPieceEditToolInteractionListener, VoiceRecognition.OnVoiceRecognitionInteractionListener, PawnPromotion.OnPawnPromotionInteractionListener {
@@ -82,6 +83,7 @@ class MainActivity : AppCompatActivity(), TilePanel.OnTilePanelInteractionListen
     private var sndPool: SoundPool? = null
     private var sndMove: Int = 0
     lateinit var binding: ActivityMainBinding
+    private val navThrottler = Semaphore(1)
 
     // Public variables
     enum class MoveTypeEnum(val value: Int) { None(0), Normal(1), EnPassant(2), Castle(3), Promotion(4) }
@@ -297,7 +299,7 @@ class MainActivity : AppCompatActivity(), TilePanel.OnTilePanelInteractionListen
                 item.isChecked = navParam.enabled
                 ParameterDataService.set(navParam)
 
-                loadNavigator(navParam.enabled)
+                refreshNavigation(true, true)
 
                 if(navParam.enabled) showMessage("${item.title} is enabled", "", Toast.LENGTH_SHORT)
                 else showMessage("${item.title} is disabled", "", Toast.LENGTH_SHORT)
@@ -510,11 +512,12 @@ class MainActivity : AppCompatActivity(), TilePanel.OnTilePanelInteractionListen
                         boardBeforeMove,
                         boardAfterMove,
                         binding.boardPanelLayout,
-                        this.applicationContext
+                        this,
+                        1200L
                     )
 
                     // Do animation
-                    startPieceAnimation(true, moveAnimationList, 1200L)
+                    startPieceAnimation(true, moveAnimationList)
                 }
 
                 // Update display
@@ -530,8 +533,8 @@ class MainActivity : AppCompatActivity(), TilePanel.OnTilePanelInteractionListen
                 if (gameStatusBeforeMove == BoardStatusEnum.Ready.value && GameRecordDataService.currentGame.getStateGameStatus() == BoardStatusEnum.Checkmate.value)
                 {
                     val kingFallIndex = GameRecordDataService.currentGame.getKingIndex(GameRecordDataService.currentGame.getStateActiveColour())
-                    val kingFallSeq = BoardAnimation.createAnimationFall(kingFallIndex, binding.boardPanelLayout, this.applicationContext)
-                    startPieceAnimation(true, kingFallSeq, 3000L)
+                    val kingFallSeq = BoardAnimation.createAnimationFall(kingFallIndex, binding.boardPanelLayout, this, 3000L)
+                    startPieceAnimation(true, kingFallSeq)
                     afterCheckMate(GameRecordDataService.currentGame)
                 }
 
@@ -624,11 +627,12 @@ class MainActivity : AppCompatActivity(), TilePanel.OnTilePanelInteractionListen
                         boardBeforeMove,
                         boardAfterMove,
                         binding.boardPanelLayout,
-                        this.applicationContext
+                        this,
+                        1200L
                     )
 
                     // Do animation
-                    startPieceAnimation(true, moveAnimationList, 1200L)
+                    startPieceAnimation(true, moveAnimationList)
 
 
                     // Update display
@@ -643,8 +647,8 @@ class MainActivity : AppCompatActivity(), TilePanel.OnTilePanelInteractionListen
                     // do if checkmate occurred
                     if (gameStatusBeforeMove == BoardStatusEnum.Ready.value && GameRecordDataService.currentGame.getStateGameStatus() == BoardStatusEnum.Checkmate.value) {
                         val kingFallIndex = GameRecordDataService.currentGame.getKingIndex(GameRecordDataService.currentGame.getStateActiveColour())
-                        val kingFallSeq = BoardAnimation.createAnimationFall(kingFallIndex, binding.boardPanelLayout, this.applicationContext)
-                        startPieceAnimation(true, kingFallSeq, 3000L)
+                        val kingFallSeq = BoardAnimation.createAnimationFall(kingFallIndex, binding.boardPanelLayout, this, 3000L)
+                        startPieceAnimation(true, kingFallSeq)
                         afterCheckMate(GameRecordDataService.currentGame)
                     }
 
@@ -679,7 +683,7 @@ class MainActivity : AppCompatActivity(), TilePanel.OnTilePanelInteractionListen
             if (pTextShort.trim() == "") readText(pTextFull)
             else readText(pTextShort)
 
-            val toast = Toast.makeText(applicationContext, pTextFull, pDuration)
+            val toast = Toast.makeText(this, pTextFull, pDuration)
             toast.show()
         }
     }
@@ -746,7 +750,7 @@ class MainActivity : AppCompatActivity(), TilePanel.OnTilePanelInteractionListen
     /**
      * Starts the animation
      */
-    private suspend fun startPieceAnimation(pLockPanel : Boolean, pAnimationList : ArrayList<TileAnimationInstruction>, pDurationMS: Long)
+    private suspend fun startPieceAnimation(pLockPanel : Boolean, pAnimationList : ArrayList<TileAnimationInstruction>)
     {
 
         if (pLockPanel) {
@@ -754,8 +758,8 @@ class MainActivity : AppCompatActivity(), TilePanel.OnTilePanelInteractionListen
         }
 
 
-       binding.animationPanelLayout.runAnimation(binding.boardPanelLayout, pAnimationList, pDurationMS, binding.boardPanelLayout.framePadding)
-       delay(pDurationMS)
+       binding.animationPanelLayout.runAnimation(binding.boardPanelLayout, pAnimationList, binding.boardPanelLayout.framePadding)
+
 
         if (pLockPanel) {
             _lockPanel = false
@@ -815,10 +819,11 @@ class MainActivity : AppCompatActivity(), TilePanel.OnTilePanelInteractionListen
                     boardBeforeUndo,
                     boardAfterUndo,
                     binding.boardPanelLayout,
-                    this.applicationContext
+                    this,
+                    1200L
                 )
                 // Do animation
-                startPieceAnimation(true, moveAnimationList, 1200L)
+                startPieceAnimation(true, moveAnimationList)
             }
 
             navigateMaxRecord()
@@ -851,7 +856,8 @@ class MainActivity : AppCompatActivity(), TilePanel.OnTilePanelInteractionListen
      */
     private fun showBoardMessageDialog(pTitle: String, pMessage: String, pIcon: Int) {
 
-        if (!(pTitle == "" && pMessage == "")) {
+        // Added isFinishing check to stop bad token exception is some circumstances
+        if ((!(pTitle == "" && pMessage == "")) && !isFinishing) {
             readText("$pTitle $pMessage")
 
             val dialog = MaterialAlertDialogBuilder(this, R.style.Theme_MaterialComponents_DayNight_Dialog_Alert)
@@ -1183,7 +1189,7 @@ class MainActivity : AppCompatActivity(), TilePanel.OnTilePanelInteractionListen
             val file: InputStream? = contentResolver.openInputStream(pFileUri)
             val importDB = ImportDB()
             val fileResult = if(file != null) {
-                importDB.import(file, ImportDB.ImportTypeEnum.GameXML, this.applicationContext)
+                importDB.import(file, ImportDB.ImportTypeEnum.GameXML, this)
             }
             else { 0 }
 
@@ -1214,8 +1220,8 @@ class MainActivity : AppCompatActivity(), TilePanel.OnTilePanelInteractionListen
         try {
             // Export data
             val exportDB = ExportDB()
-            val file = exportDB.export(ExportDB.ExportTypeEnum.GameXML, this.applicationContext)
-            val sharedFileUri: Uri = FileProvider.getUriForFile(this.applicationContext, "purpletreesoftware.karuahchess.exportdata", file)
+            val file = exportDB.export(ExportDB.ExportTypeEnum.GameXML, this)
+            val sharedFileUri: Uri = FileProvider.getUriForFile(this, "purpletreesoftware.karuahchess.exportdata", file)
 
             // Send file via intent
             val intent = Intent(Intent.ACTION_SEND)
@@ -1234,49 +1240,45 @@ class MainActivity : AppCompatActivity(), TilePanel.OnTilePanelInteractionListen
      */
     suspend fun navigateMaxRecord() {
         val maxId = GameRecordDataService.getMaxId()
-        navigateGameRecord(maxId, false)
-
-        // Refresh shake animation
-        binding.boardPanelLayout.shakeRefresh()
-
-        // Load the move navigator
-        val navParam = ParameterDataService.get(ParamNavigator::class.java)
-        loadNavigator(navParam.enabled)
+        navigateGameRecord(maxId, false, true,true)
     }
 
     /**
      * Navigate to requested game record
      */
-    suspend fun navigateGameRecord(pRecId: Int, pAnimate: Boolean) {
+    suspend fun navigateGameRecord(pRecId: Int, pAnimate: Boolean, pReloadNav: Boolean, pScrollNav: Boolean) {
         if (pRecId > 0)
         {
+            navThrottler.acquire()
+
             val oldBoard : GameRecordArray? = GameRecordDataService.get(BoardSquareDataService.gameRecordCurrentValue)
             val updatedBoard = GameRecordDataService.get(pRecId)
 
             // Update board displayed with requested record
             if (updatedBoard != null)
             {
-                // End any animations
-                endPieceAnimation()
-
                 // Do animation
                 if (pAnimate && oldBoard != null) {
                     val moveAnimationList = BoardAnimation.createAnimationList(
                         oldBoard,
                         updatedBoard,
                         binding.boardPanelLayout,
-                        this.applicationContext
+                        this,
+                        400L
                     )
 
-                    // Do animation
-                    startPieceAnimation(true, moveAnimationList, 1200L)
 
                     BoardSquareDataService.update(binding.boardPanelLayout, updatedBoard)
                     BoardSquareDataService.gameRecordCurrentValue = pRecId
                     updateBoardIndicators(updatedBoard)
 
+                    // Do animation
+                    startPieceAnimation(true, moveAnimationList)
                 }
                 else {
+                    // End any animations
+                    endPieceAnimation()
+
                     BoardSquareDataService.update(binding.boardPanelLayout, updatedBoard)
                     BoardSquareDataService.gameRecordCurrentValue = pRecId
                     updateBoardIndicators(updatedBoard)
@@ -1284,21 +1286,38 @@ class MainActivity : AppCompatActivity(), TilePanel.OnTilePanelInteractionListen
 
                 _move.Clear()
 
+                // Refresh the navigation
+                refreshNavigation(pReloadNav, pScrollNav)
 
+                // Refresh shake animation
+                binding.boardPanelLayout.shakeRefresh()
 
             }
+
+            navThrottler.release()
         }
     }
 
     /**
      * Loads the move navigator
      */
-    private fun loadNavigator(pEnabled: Boolean) {
-        // Update navigator
+    private fun refreshNavigation(pReload: Boolean, pScroll: Boolean) {
+        // Refresh the navigator control
+        val navParam = ParameterDataService.get(ParamNavigator::class.java)
+        if(navParam.enabled) {
 
-        if(pEnabled) {
-            val recIdList = GameRecordDataService.getAllRecordIDList()
-            binding.navigatorLayout.show(this,recIdList, BoardSquareDataService.gameRecordCurrentValue)
+            binding.navigatorLayout.show()
+            if (pReload) {
+                val recIdList = GameRecordDataService.getAllRecordIDList()
+                binding.navigatorLayout.load(recIdList, BoardSquareDataService.gameRecordCurrentValue)
+            }
+            else {
+                binding.navigatorLayout.setSelected(BoardSquareDataService.gameRecordCurrentValue)
+            }
+
+            if (pScroll) {
+                binding.navigatorLayout.scrollToSelected()
+            }
         }
         else {
             binding.navigatorLayout.hide()
@@ -1371,8 +1390,8 @@ class MainActivity : AppCompatActivity(), TilePanel.OnTilePanelInteractionListen
 
             // Do animation, display message
             val kingFallIndex = GameRecordDataService.currentGame.getKingIndex(GameRecordDataService.currentGame.getStateActiveColour())
-            val kingFallSeq = BoardAnimation.createAnimationFall(kingFallIndex, binding.boardPanelLayout, this.applicationContext)
-            startPieceAnimation(true, kingFallSeq, 3000L)
+            val kingFallSeq = BoardAnimation.createAnimationFall(kingFallIndex, binding.boardPanelLayout, this, 3000L)
+            startPieceAnimation(true, kingFallSeq)
 
             // Record current game state
             recordCurrentGameState()
@@ -1465,12 +1484,12 @@ class MainActivity : AppCompatActivity(), TilePanel.OnTilePanelInteractionListen
 
         val fm = supportFragmentManager
         val voicePermissionDialogFragment = VoicePermission.newInstance()
-        if (!voicePermissionDialogFragment.hasPermission(applicationContext)) {
+        if (!voicePermissionDialogFragment.hasPermission(this)) {
             voicePermissionDialogFragment.show(fm, null)
         }
 
         if (_voiceRecognition == null && voicePermissionDialogFragment.hasPermission(
-                applicationContext
+                this
             )
         ) {
             _voiceRecognition = VoiceRecognition(this)

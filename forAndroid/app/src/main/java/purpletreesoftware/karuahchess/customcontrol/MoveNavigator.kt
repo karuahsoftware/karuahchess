@@ -25,19 +25,23 @@ import android.util.AttributeSet
 import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
-import android.widget.FrameLayout
+import android.widget.LinearLayout
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.recyclerview.widget.RecyclerView
 import purpletreesoftware.karuahchess.MainActivity
 import purpletreesoftware.karuahchess.databinding.MovenavigatorpanelBinding
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
+import purpletreesoftware.karuahchess.model.boardsquare.BoardSquareDataService
 
 
 @ExperimentalUnsignedTypes
-class MoveNavigator : FrameLayout {
+class MoveNavigator : LinearLayout {
     private var _binding: MovenavigatorpanelBinding? = null
     private val binding get() = _binding!!
-    var gameRecCurrentId: Int = -1
-
+    private var recordList: ArrayList<Int>? = null
+    private var moveNavAdapter: MoveNavigatorAdapter? = null
 
     constructor(context: Context) : super(context) {
         initialize(context)
@@ -50,6 +54,8 @@ class MoveNavigator : FrameLayout {
 
 
     private fun initialize(context: Context) {
+        val activity = context as MainActivity
+
         // Inflate view
         _binding = MovenavigatorpanelBinding.inflate(LayoutInflater.from(context), this, true)
 
@@ -61,25 +67,116 @@ class MoveNavigator : FrameLayout {
             }
         })
 
+        // Set the navigate previous button listener
+        binding.leftNavPreviousButton.setOnClickListener {
+            GlobalScope.launch(Dispatchers.Main) {
+                val prevId = getPreviousRecordId(BoardSquareDataService.gameRecordCurrentValue)
+                if (prevId > -1) {
+                    activity.navigateGameRecord(prevId, true, false, true)
 
+                    // Scroll to current position
+                    val gameRecIndex = getRecordIndex(prevId)
+                    if (gameRecIndex > -1) {
+                        binding.moveNavRecyclerView.layoutManager?.scrollToPosition(gameRecIndex)
+                    }
+                }
+            }
+        }
+
+        // Set the navigate next button listener
+        binding.rightNavNextButton.setOnClickListener {
+            GlobalScope.launch(Dispatchers.Main) {
+                val nextId = getNextRecordId(BoardSquareDataService.gameRecordCurrentValue)
+
+                if (nextId > -1) {
+                    activity.navigateGameRecord(nextId, true, false, true)
+
+                    // Scroll to current position
+                    val gameRecIndex = getRecordIndex(nextId)
+                    if (gameRecIndex > -1) {
+                        binding.moveNavRecyclerView.layoutManager?.scrollToPosition(gameRecIndex)
+                    }
+                }
+            }
+        }
+
+        // Set the navigate next button listener
+        binding.upNavNextButton.setOnClickListener {
+            GlobalScope.launch(Dispatchers.Main) {
+                val nextId = getNextRecordId(BoardSquareDataService.gameRecordCurrentValue)
+
+                if (nextId > -1) {
+                    activity.navigateGameRecord(nextId, true, false, true)
+
+                    // Scroll to current position
+                    val gameRecIndex = getRecordIndex(nextId)
+                    if (gameRecIndex > -1) {
+                        binding.moveNavRecyclerView.layoutManager?.scrollToPosition(gameRecIndex)
+                    }
+                }
+            }
+        }
+
+        // Set the navigate previous button listener
+        binding.downNavPreviousButton.setOnClickListener {
+            GlobalScope.launch(Dispatchers.Main) {
+                val prevId = getPreviousRecordId(BoardSquareDataService.gameRecordCurrentValue)
+                if (prevId > -1) {
+                    activity.navigateGameRecord(prevId, true, false, true)
+
+                    // Scroll to current position
+                    val gameRecIndex = getRecordIndex(prevId)
+                    if (gameRecIndex > -1) {
+                        binding.moveNavRecyclerView.layoutManager?.scrollToPosition(gameRecIndex)
+                    }
+                }
+            }
+        }
     }
+
+
 
     /**
      * Show the control and load the data
      */
-    fun show(pMainActivity: MainActivity, pGameRecIdList: ArrayList<Int>, pGameRecCurrentId: Int) {
-        this.visibility = View.VISIBLE
-        gameRecCurrentId = pGameRecCurrentId
+    fun load(pNavList: ArrayList<Int>, pSelectedId: Int) {
+        if (this.visibility == View.VISIBLE) {
+            recordList = pNavList
 
-        // Set orientation
-        setOrientation(pMainActivity)
+            // Set orientation
+            setOrientation()
 
-        // Fill data
-        binding.moveNavRecyclerView.adapter = MoveNavigatorAdapter(pMainActivity, this, pGameRecIdList, pGameRecCurrentId)
+            // Fill data
+            moveNavAdapter = MoveNavigatorAdapter(this, pNavList, pSelectedId)
+            binding.moveNavRecyclerView.adapter = moveNavAdapter
 
+        }
+    }
+
+    /**
+     * Set the selected button
+     */
+    fun setSelected(pSelectedId: Int) {
+        // Save and restore state ensures the recycler maintains its scroll position
+        val recyclerViewState = binding.moveNavRecyclerView.layoutManager?.onSaveInstanceState()
+        moveNavAdapter?.setSelectedId(pSelectedId)
+
+        if (recyclerViewState != null) {
+            binding.moveNavRecyclerView.layoutManager?.onRestoreInstanceState(recyclerViewState)
+        }
+    }
+
+    /**
+     * Scroll to the selected button
+     */
+    fun scrollToSelected() {
         // Scroll to current position
-        binding.moveNavRecyclerView.layoutManager?.scrollToPosition(pGameRecCurrentId - 1)
-
+        if (this.visibility == View.VISIBLE) {
+            val gameRecIndex = getRecordIndex(BoardSquareDataService.gameRecordCurrentValue)
+            if (gameRecIndex > -1) {
+                binding.moveNavRecyclerView.layoutManager?.scrollToPosition(gameRecIndex)
+            }
+        }
     }
 
     /**
@@ -123,12 +220,14 @@ class MoveNavigator : FrameLayout {
     /**
      * Sets the orientation of the control
      */
-    private fun setOrientation(pMainActivity: MainActivity) {
+    private fun setOrientation() {
+
+        val activity = context as MainActivity
 
         // Set to vertical or horizontal layout depending on screen rotation
         if(this.resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) {
             binding.moveNavRecyclerView.layoutManager = object : androidx.recyclerview.widget.LinearLayoutManager(
-                pMainActivity,
+                activity,
                 RecyclerView.VERTICAL,
                 true
             ) {
@@ -142,13 +241,22 @@ class MoveNavigator : FrameLayout {
             val params =  CoordinatorLayout.LayoutParams(CoordinatorLayout.LayoutParams.WRAP_CONTENT, CoordinatorLayout.LayoutParams.MATCH_PARENT);
             params.gravity = Gravity.TOP or Gravity.END
             params.anchorGravity = Gravity.TOP or Gravity.END
-            params.anchorId = pMainActivity.binding.boardPanelLayout.id
+            params.anchorId = activity.binding.boardPanelLayout.id
             this.layoutParams = params
+
+
+            binding.mainNavLayout.orientation = LinearLayout.VERTICAL
+
+            // Set next and previous navigation buttons
+            binding.leftNavPreviousButton.visibility = View.GONE
+            binding.rightNavNextButton.visibility = View.GONE
+            binding.upNavNextButton.visibility = View.VISIBLE
+            binding.downNavPreviousButton.visibility = View.VISIBLE
 
         }
         else {
             binding.moveNavRecyclerView.layoutManager = object : androidx.recyclerview.widget.LinearLayoutManager(
-                pMainActivity,
+                activity,
                 RecyclerView.HORIZONTAL,
                 false
             ){
@@ -162,11 +270,24 @@ class MoveNavigator : FrameLayout {
             val mainParams =  CoordinatorLayout.LayoutParams(CoordinatorLayout.LayoutParams.MATCH_PARENT, CoordinatorLayout.LayoutParams.WRAP_CONTENT);
             mainParams.gravity = Gravity.START or Gravity.BOTTOM
             mainParams.anchorGravity = Gravity.START or Gravity.BOTTOM
-            mainParams.anchorId = pMainActivity.binding.boardPanelLayout.id
+            mainParams.anchorId = activity.binding.boardPanelLayout.id
             this.layoutParams = mainParams
 
+            binding.mainNavLayout.orientation = LinearLayout.HORIZONTAL
 
+            // Set next and previous navigation buttons
+            binding.leftNavPreviousButton.visibility = View.VISIBLE
+            binding.rightNavNextButton.visibility = View.VISIBLE
+            binding.upNavNextButton.visibility = View.GONE
+            binding.downNavPreviousButton.visibility = View.GONE
         }
+    }
+
+    /**
+     * Show the control
+     */
+    fun show() {
+        this.visibility = View.VISIBLE
     }
 
     /**
@@ -175,6 +296,60 @@ class MoveNavigator : FrameLayout {
     fun hide() {
         this.visibility = View.GONE
         binding.moveNavRecyclerView.adapter = null
+    }
+
+    /**
+     * Get the next record in the list
+     */
+    private fun getNextRecordId(pRecId: Int): Int {
+        if (recordList != null) {
+            val rList: ArrayList<Int> = recordList ?: ArrayList()
+
+            var found: Boolean = false
+            for (recId in rList) {
+                if (found) return recId
+                if (recId == pRecId) found = true
+            }
+            return -1
+        }
+        else {
+            return -1
+        }
+    }
+
+    /**
+     * Get the previous record in the list
+     */
+    private fun getPreviousRecordId(pRecId: Int): Int {
+        if (recordList != null) {
+            val rList: ArrayList<Int> = recordList ?: ArrayList()
+
+            var previousId = -1
+            for (recId in rList) {
+                if (recId == pRecId) return previousId
+                previousId = recId
+            }
+            return -1
+        }
+        else {
+            return -1
+        }
+    }
+
+    /**
+     * Get the index of the record
+     */
+    private fun getRecordIndex(pRecId: Int): Int {
+        if (recordList != null) {
+            val rList: ArrayList<Int> = recordList ?: ArrayList()
+            for ((index, recId) in rList.withIndex()) {
+                if (recId == pRecId) return index
+            }
+            return -1
+        }
+        else {
+            return -1
+        }
     }
 
 

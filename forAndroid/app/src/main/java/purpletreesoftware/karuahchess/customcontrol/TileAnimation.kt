@@ -25,6 +25,8 @@ import android.view.animation.*
 import android.widget.FrameLayout
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.coordinatorlayout.widget.CoordinatorLayout
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.sync.Semaphore
 import purpletreesoftware.karuahchess.R
 import purpletreesoftware.karuahchess.databinding.AnimationpanelBinding
 
@@ -32,6 +34,7 @@ import purpletreesoftware.karuahchess.databinding.AnimationpanelBinding
 @ExperimentalUnsignedTypes
 class TileAnimation: ConstraintLayout {
 
+    val animationThrottle = Semaphore(1)
 
     constructor(context: Context) : super(context) {
         initialize(context)
@@ -51,8 +54,11 @@ class TileAnimation: ConstraintLayout {
     /**
      * Runs an animation sequence
      */
-    fun runAnimation(pTilePanel: TilePanel, pAnimationList: ArrayList<TileAnimationInstruction>, pDurationMS: Long, pPanelMargin: Int)
+    suspend fun runAnimation(pTilePanel: TilePanel, pAnimationList: ArrayList<TileAnimationInstruction>, pPanelMargin: Int)
     {
+            // Only let one animation set run at a time
+            animationThrottle.acquire()
+
             // Set frame size to match board size
             val frameSize = pTilePanel.boardSize
 
@@ -63,7 +69,11 @@ class TileAnimation: ConstraintLayout {
             // Set up animation
             this.removeAllViews()
 
+            var maxDuration: Long = 0L
+
             for(instruction in pAnimationList) {
+
+                if (instruction.duration > maxDuration) maxDuration = instruction.duration
 
                 when (instruction.animationType) {
                     TileAnimationInstruction.AnimationTypeEnum.Move -> {
@@ -85,7 +95,7 @@ class TileAnimation: ConstraintLayout {
 
                         // Set up the animation
                         val animation = TranslateAnimation(0f, moveToDeltaX, 0f, moveToDeltaY)
-                        animation.duration = pDurationMS
+                        animation.duration = instruction.duration
                         animation.fillAfter = true
                         animation.fillBefore = false
                         animation.isFillEnabled = false
@@ -125,7 +135,7 @@ class TileAnimation: ConstraintLayout {
 
                         // Set up the move animation
                         val animationMove = TranslateAnimation(0f, moveToDeltaX, 0f, moveToDeltaY)
-                        animationMove.duration = pDurationMS
+                        animationMove.duration = instruction.duration
                         animationMove.fillAfter = false
                         animationMove.fillBefore = false
                         animationMove.isFillEnabled = false
@@ -134,7 +144,7 @@ class TileAnimation: ConstraintLayout {
 
                         // Set up the fade animation
                         val animationFade = AlphaAnimation(1.0f, 0f)
-                        animationFade.duration = pDurationMS
+                        animationFade.duration = instruction.duration
                         animationFade.fillAfter = false
                         animationFade.fillBefore = false
                         animationFade.isFillEnabled = false
@@ -169,7 +179,7 @@ class TileAnimation: ConstraintLayout {
 
                         // Set up the animation
                         val animation = AnimationUtils.loadAnimation(this.context, R.anim.piecetake)
-                        animation.duration = pDurationMS
+                        animation.duration = instruction.duration
                         animation.fillAfter = false
                         animation.fillBefore = false
                         animation.isFillEnabled = false
@@ -204,7 +214,7 @@ class TileAnimation: ConstraintLayout {
                         val animation =
                             AnimationUtils.loadAnimation(this.context, R.anim.piecereturn)
 
-                        animation.duration = pDurationMS
+                        animation.duration = instruction.duration
                         animation.fillAfter = true
                         animation.fillBefore = true
                         animation.isFillEnabled = false
@@ -265,7 +275,7 @@ class TileAnimation: ConstraintLayout {
                         // Set up the animation
                         val animation = RotateAnimation(0f, 90f, pvX, pvY)
 
-                        animation.duration = pDurationMS
+                        animation.duration = instruction.duration
                         animation.fillAfter = true
                         animation.fillBefore = false
                         animation.isFillEnabled = false
@@ -287,6 +297,10 @@ class TileAnimation: ConstraintLayout {
 
             }
 
+
+            if (maxDuration > 0L) delay(maxDuration)
+
+            animationThrottle.release()
     }
 
 

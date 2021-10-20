@@ -19,10 +19,9 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 package purpletreesoftware.karuahchess.customcontrol
 
 import android.content.res.ColorStateList
-import androidx.core.content.ContextCompat.getColor
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import android.widget.Button
+import androidx.core.content.ContextCompat
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
@@ -30,51 +29,89 @@ import purpletreesoftware.karuahchess.MainActivity
 import purpletreesoftware.karuahchess.R
 import purpletreesoftware.karuahchess.databinding.MovenavigatorItemBinding
 
+
+
 @ExperimentalUnsignedTypes
-class MoveNavigatorAdapter(private val pMainActivity: MainActivity, private val pMoveNav: MoveNavigator, private val pGameRecIdList: ArrayList<Int>, private val pGameRecCurrentId: Int) : androidx.recyclerview.widget.RecyclerView.Adapter<MoveNavigatorAdapter.ViewHolder>()  {
+class MoveNavigatorAdapter(private val pMoveNav: MoveNavigator, private val pGameRecIdList: ArrayList<Int>, private val pSelectedId: Int) : androidx.recyclerview.widget.RecyclerView.Adapter<MoveNavigatorAdapter.MoveNavViewHolder>()  {
 
+    var selectedId = pSelectedId
+        private set
 
-
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MoveNavViewHolder {
         val itemBinding = MovenavigatorItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-        return ViewHolder(itemBinding)
-
+        return MoveNavViewHolder(itemBinding)
     }
 
-    override fun onBindViewHolder(pHolder: ViewHolder, pPosition: Int) {
-        val navId = pGameRecIdList[pPosition]
-        pHolder.recordButton?.text = navId.toString()
-        pHolder.recordButton?.setOnClickListener {
-            pMoveNav.gameRecCurrentId = navId
-            GlobalScope.launch(Dispatchers.Main) {
-                pMainActivity.navigateGameRecord(navId, false)
-            }
-            notifyDataSetChanged()
-        }
-
-        if (navId == pMoveNav.gameRecCurrentId) {
-            pHolder.recordButton?.backgroundTintList = ColorStateList.valueOf(getColor(pMainActivity, R.color.colorButtonSelected))
-            pHolder.recordButton?.setTextColor(getColor(pMainActivity, R.color.colorButtonDefaultText))
-            pHolder.recordButton?.alpha = 1.0f
-        }
-        else {
-            pHolder.recordButton?.backgroundTintList = ColorStateList.valueOf(getColor(pMainActivity, R.color.colorButtonDefault))
-            pHolder.recordButton?.setTextColor(getColor(pMainActivity, R.color.colorButtonDefaultTextFade))
-            pHolder.recordButton?.alpha = 0.8f
-        }
-
-
+    override fun onBindViewHolder(pHolder: MoveNavViewHolder, pPosition: Int) {
+        pHolder.setNavId(pGameRecIdList[pPosition])
     }
 
     override fun getItemCount(): Int = pGameRecIdList.size
 
-
-    inner class ViewHolder(pItemBinding: MovenavigatorItemBinding) : androidx.recyclerview.widget.RecyclerView.ViewHolder(pItemBinding.root) {
-        var recordButton : Button? = pItemBinding.recordIdButton
+    fun setSelectedId(pNavId: Int) {
+        selectedId = pNavId
+        notifyDataSetChanged()
     }
 
 
+    inner class MoveNavViewHolder(pItemBinding: MovenavigatorItemBinding) : androidx.recyclerview.widget.RecyclerView.ViewHolder(pItemBinding.root) {
+        private var navId : Int = -1
+        private val recButton = pItemBinding.root
 
+        init {
+            recButton.setOnClickListener {
+                if (navId > -1) {
+                    GlobalScope.launch(Dispatchers.Main) {
+                        val activity = recButton.context as MainActivity
+                        val distance = navId - selectedId
+                        val animate: Boolean = distance == 1 || distance == -1
+                        activity.navigateGameRecord(navId, animate, false, false)
+                    }
+                }
+            }
 
+            setButtonStyle()
+        }
+
+        /**
+         * Set the navigation ID
+         */
+        fun setNavId(pNavId: Int) {
+            navId = pNavId
+            recButton.text = pNavId.toString()
+            setButtonStyle()
+        }
+
+        /**
+         * Set the button style based on the selected ID
+         */
+        private fun setButtonStyle() {
+            val activity = recButton.context as MainActivity
+            if (selectedId == navId) {
+                recButton.backgroundTintList = ColorStateList.valueOf(
+                    ContextCompat.getColor(
+                        activity,
+                        R.color.colorButtonSelected
+                    )
+                )
+                recButton.setTextColor(ContextCompat.getColor(activity, R.color.colorButtonDefaultText))
+                recButton.alpha = 1.0f
+            } else {
+                recButton.backgroundTintList = ColorStateList.valueOf(
+                    ContextCompat.getColor(
+                        activity,
+                        R.color.colorButtonDefault
+                    )
+                )
+                recButton.setTextColor(
+                    ContextCompat.getColor(
+                        activity,
+                        R.color.colorButtonDefaultTextFade
+                    )
+                )
+                recButton.alpha = 0.8f
+            }
+
+        }
+    }
 }

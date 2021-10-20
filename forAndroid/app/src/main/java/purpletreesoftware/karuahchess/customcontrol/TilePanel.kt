@@ -44,6 +44,9 @@ class TilePanel: ConstraintLayout {
     private var _tileListener: OnTilePanelInteractionListener? = null
     private var _shakeEnabled = false
     private val _shakeAnimation = AnimationUtils.loadAnimation(this.context, R.anim.shake)
+    private var _binding: TilepanelBinding? = null
+    private val binding get() = _binding!!
+
 
     // Creates a new drag event listener
     private val _tileDragListen = View.OnDragListener { v, event ->
@@ -119,7 +122,7 @@ class TilePanel: ConstraintLayout {
 
     private fun initialize(context: Context) {
         // Inflate view
-        TilepanelBinding.inflate(LayoutInflater.from(context), this, true)
+        _binding = TilepanelBinding.inflate(LayoutInflater.from(context), this, true)
 
         val darkSquareColour = ContextCompat.getColor(context,R.color.colorBlackSquare)
         val lightSquareColour = ContextCompat.getColor(context,R.color.colorWhiteSquare)
@@ -351,10 +354,11 @@ class TilePanel: ConstraintLayout {
     fun drawTiles(pPanelWidth:Int, pPanelHeight:Int, pApproximateBoardMargin: Int) {
 
         // Set up tile list
-        val boardLayout = findViewById<View>(R.id.boardLayout) as ConstraintLayout
+
+        //val boardLayout = findViewById<View>(R.id.boardLayout) as ConstraintLayout
         val cset = ConstraintSet()
 
-        boardLayout.removeAllViews()
+        binding.boardLayout.removeAllViews()
 
         // Caclulate sizes
         if (pPanelHeight < pPanelWidth) {
@@ -370,7 +374,7 @@ class TilePanel: ConstraintLayout {
         }
 
         for(tile in _tileList) {
-            boardLayout.addView(tile, tile.index)
+            binding.boardLayout.addView(tile, tile.index)
 
             // Set constraints
             cset.constrainWidth(tile.id, tileSize)
@@ -389,7 +393,7 @@ class TilePanel: ConstraintLayout {
 
         }
 
-        cset.applyTo(boardLayout)
+        cset.applyTo(binding.boardLayout)
 
     }
 
@@ -573,7 +577,7 @@ class TilePanel: ConstraintLayout {
 
         val border = GradientDrawable()
         border.setStroke(1, pDarkSqColour) //black border with full opacity
-        this.foreground = border
+        binding.boardLayout.foreground = border
 
     }
 

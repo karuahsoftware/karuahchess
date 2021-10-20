@@ -41,7 +41,7 @@ class BoardAnimation {
         /**
          * Creates a move animation sequence
          */
-        fun createAnimationList(pBoardRecA: GameRecordArray, pBoardRecB: GameRecordArray, pTilePanel: TilePanel, pContext: Context) : ArrayList<TileAnimationInstruction>
+        fun createAnimationList(pBoardRecA: GameRecordArray, pBoardRecB: GameRecordArray, pTilePanel: TilePanel, pContext: Context, pDuration: Long) : ArrayList<TileAnimationInstruction>
         {
             val animationList: ArrayList<TileAnimationInstruction> = ArrayList(4)
             val moveList = getAnimationMoveList(pBoardRecA, pBoardRecB)
@@ -58,6 +58,7 @@ class BoardAnimation {
                         val instruction = getAnimationInstruction(fromIndex, toIndex, pTilePanel, pieceImgData, pContext)
                         if (instruction != null) {
                             instruction.animationType = TileAnimationInstruction.AnimationTypeEnum.Move
+                            instruction.duration = pDuration
                             animationList.add(instruction)
                         }
                     }
@@ -81,6 +82,7 @@ class BoardAnimation {
                             val instruction = getAnimationInstruction(fromIndex, promotionIndex, pTilePanel, pieceImgData, pContext)
                             if (instruction != null) {
                                 instruction.animationType = TileAnimationInstruction.AnimationTypeEnum.MoveFade
+                                instruction.duration = pDuration
                                 animationList.add(instruction)
                             }
                         }
@@ -93,6 +95,7 @@ class BoardAnimation {
                             val instruction = getAnimationInstruction(fromIndex, fromIndex, pTilePanel, pieceImgData, pContext)
                             if (instruction != null) {
                                 instruction.animationType = TileAnimationInstruction.AnimationTypeEnum.Take
+                                instruction.duration = pDuration
                                 animationList.add(instruction)
                             }
                         }
@@ -106,6 +109,7 @@ class BoardAnimation {
                         val instruction = getAnimationInstruction(toIndex, toIndex, pTilePanel, pieceImgData, pContext)
                         if (instruction != null) {
                             instruction.animationType = TileAnimationInstruction.AnimationTypeEnum.Put
+                            instruction.duration = pDuration
                             animationList.add(instruction)
                         }
                     }
@@ -120,7 +124,7 @@ class BoardAnimation {
         /**
          * Create fall animation
          */
-        fun createAnimationFall(pIndex: Int, pTilePanel: TilePanel, pContext: Context) : ArrayList<TileAnimationInstruction>
+        fun createAnimationFall(pIndex: Int, pTilePanel: TilePanel, pContext: Context, pDuration: Long) : ArrayList<TileAnimationInstruction>
         {
             val animationList: ArrayList<TileAnimationInstruction> = ArrayList(4)
             val spin = pTilePanel.getTile(pIndex)?.spin
@@ -132,6 +136,7 @@ class BoardAnimation {
                     val instruction = getAnimationInstruction(pIndex, pIndex, pTilePanel, pieceImage, pContext)
                     if (instruction != null) {
                         instruction.animationType = TileAnimationInstruction.AnimationTypeEnum.Fall
+                        instruction.duration = pDuration
                         animationList.add(instruction)
                     }
                 }

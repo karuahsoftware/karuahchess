@@ -1232,7 +1232,6 @@ namespace Stockfish {
                     assert(0 && "pos_is_ok: Bitboards");
 
         StateInfo si = *st;
-        ASSERT_ALIGNED(&si, Eval::NNUE::CacheLineSize);
 
         set_state(&si);
         if (std::memcmp(&si, st, sizeof(StateInfo)))

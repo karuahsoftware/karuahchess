@@ -45,6 +45,10 @@ class TileAnimationInstruction (pContext: Context) {
     var moveToX : Float = 0f
     var moveToY : Float = 0f
 
+    /**
+     * Duration of the animation
+     */
+    var duration: Long = 1200
 
     /**
      * List of square indexes that should be hidden for the animation
