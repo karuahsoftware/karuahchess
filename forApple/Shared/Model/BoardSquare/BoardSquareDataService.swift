@@ -16,20 +16,34 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-class BoardSquareDataService {
-    static var gameRecordCurrentValue = 0
-    private static let tempBoard = KaruahChessEngineC()
+@MainActor class BoardSquareDataService : ObservableObject {
+    static let instance = BoardSquareDataService()
     
-    static func update(pTilePanel: TilePanelView, pRecord: GameRecordArray) {
+    @Published var gameRecordCurrentValue = 0
+    private let tempBoard = KaruahChessEngineC()
+    
+    private init() {
+        // Ensures only once instance of the class is created
+    }
+    
+    /// Updates a tile panel with a given record
+    func update(pTilePanelVM: TilePanelViewModel, pRecord: GameRecordArray) {
         tempBoard.setBoardArray(pRecord.boardArray)
         tempBoard.setStateArray(pRecord.stateArray)
-        
+    
         for index: Int in 0...63  {
             let spin = tempBoard.getSpin(Int32(index))
-            
-            DispatchQueue.main.async {
-                pTilePanel.setPiece(pIndex: index, pSpin: Int(spin))
-            }
+            pTilePanelVM.setPiece(pIndex: index, pSpin: Int(spin))
+            pTilePanelVM.getTile(pIndex: index).tileVM.visible = true
         }
     }
+    
+    /// Show all tiles
+    func showAll(pTilePanelVM: TilePanelViewModel) {
+        for index: Int in 0...63  {
+            pTilePanelVM.getTile(pIndex: index).tileVM.visible = true
+        }
+    }
+    
+    
 }

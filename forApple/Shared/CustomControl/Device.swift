@@ -18,11 +18,25 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 import SwiftUI
 
-final public class Device: ObservableObject {
-    static let shared = Device()
+final internal class Device: ObservableObject {
+    static let instance = Device()
     
-    @Published public var tileSize: CGFloat = 0
-    @Published public var toastMessage: String = ""
-    @Published public var isLandScape: Bool = false
+    private init() {
+        // private ensures only once instance of the class is created
+        
+        // Load tile colour
+        let tileColour = ParameterDataService.instance.get(pParameterClass: ParamColourDarkSquares.self).argb()
+        tileDarkSquareColour = Color(red: Double(tileColour.r) / 255, green: Double(tileColour.g) / 255, blue: Double(tileColour.b) / 255)
+    }
+    
+    @Published var tileSize: CGFloat = 0
+    @Published var tileDarkSquareColour: Color
+    @Published var boardCoordPadding: CGFloat = 0
+    @Published var toastMessage: String = ""
+    @Published var navigationHeight: CGFloat = 0
+    
+    #if os(iOS)
+    @Published var isLandScape: Bool = false
+    #endif
     
 }

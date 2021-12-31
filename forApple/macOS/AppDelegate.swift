@@ -42,7 +42,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             window.addTitlebarAccessoryViewController(titlebarAccessory)
             
             // Set the tile size
-            Device.shared.tileSize = MainWindowController.getTileSize(pSize: window.contentLayoutRect.size)
+            Device.instance.tileSize = MainWindowController.getTileSize(pSize: window.contentLayoutRect.size)
         }
         
         NSApplication.shared.mainMenu = menu.make()

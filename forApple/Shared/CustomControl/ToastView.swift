@@ -19,7 +19,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 import SwiftUI
 
 struct ToastView: View {
-    @StateObject private var device : Device = Device.shared
+    @ObservedObject private var device : Device = Device.instance
     
     var body: some View {
         HStack {

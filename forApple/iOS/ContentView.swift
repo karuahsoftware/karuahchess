@@ -17,10 +17,15 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
 import SwiftUI
+import UniformTypeIdentifiers
+import CoreMedia
 
 struct ContentView: View {
-    @ObservedObject var boardVM : BoardViewModel = BoardViewModel.shared
+    @ObservedObject private var device : Device = Device.instance
+    @ObservedObject private var boardVM : BoardViewModel = BoardViewModel.instance
+    @ObservedObject private var navigateVM : NavigatorViewModel = BoardViewModel.instance.navigatorVM
     @State private var showMenu : Bool = false
+    
     
     
     var body: some View {
@@ -35,78 +40,143 @@ struct ContentView: View {
         }
         
         
-        return ZStack(alignment: Alignment(horizontal: .leading, vertical: .top)) {
-            
-            
-                    // Main Board
-                    BoardViewModel.shared.boardLayout
-                        .coordinateSpace(name: "BoardCoordinateSpace")
-                        .rotationEffect(Angle(degrees: boardVM.boardRotation))
-                        .disabled(self.showMenu ? true : false)
-                        .zIndex(1)
-                        
-                                                
-                    // Animation Layout
-                    BoardViewModel.shared.animationLayout
-                        .rotationEffect(Angle(degrees: boardVM.boardRotation))
-                        .zIndex(2)
-                        
-                    // Piece Edit Tool
-                    PieceEditToolView(pieceEditToolVM: BoardViewModel.shared.pieceEditTool)
-                        .zIndex(3)
-                        
-                    // Action buttons
-                    FloatingActionView()
-                        .zIndex(4)
-            
-                    // Board Message
-                    BoardMessageAlertView(BoardMessageAlertVM: BoardViewModel.shared.boardMessage)
-                        .zIndex(5)
-            
-                    // Show menu
-                    if self.showMenu {
-                        
-                        // Dismiss menu when rectangle is clicked
-                        Rectangle()
-                            .zIndex(9)
-                            .opacity(0.3)
-                            .onTapGesture {
-                                withAnimation {
-                                    self.showMenu = false
-                                }
+        return
+            ZStack(alignment: Alignment(horizontal: .leading, vertical: .top))  {
+                VStack(alignment: .leading, spacing: 0) {
+                    ZStack(alignment: Alignment(horizontal: .leading, vertical: .top)) {
+                    
+                        if boardVM.coordPanelEnabled {
+                            CoordPanelView(boardRotation: $boardVM.boardRotation)
+                                .zIndex(1)
                         }
-                        
-                        // Show the menu
-                        MenuView(showMenu: $showMenu)
-                        .transition(.move(edge: .trailing))
-                        .zIndex(10)
-                        .gesture(drag)
-                        .frame(minWidth:0 , maxWidth: .infinity, minHeight: 0, maxHeight: .infinity, alignment: .trailing)
-                        
-                    }
-            
-                    // Messages to show
-                    ToastView()
-                        .frame(minWidth:0 , maxWidth: .infinity, minHeight: 0, maxHeight: .infinity, alignment: .bottom)
-                        .zIndex(100)
-            
-                    Spacer()
-                        
-                }
-                .navigationBarTitle("", displayMode: .inline)
-                .navigationBarItems(
-                    leading: NavLogoItem(),
-                    trailing: Button(action: {
-                        withAnimation {
-                            self.showMenu.toggle()
-                        }
-                    }){
-                        Image(systemName: "line.horizontal.3")
+                
+               
+                        // Main Board
+                        TilePanelView(tilePanelVM: boardVM.tilePanelVM)
+                            .coordinateSpace(name: "BoardCoordinateSpace")
+                            .rotationEffect(Angle(degrees: boardVM.boardRotation))
+                            .border(device.tileDarkSquareColour, width: 1)
+                            .offset(x: device.boardCoordPadding)
+                            .disabled(self.showMenu ? true : false)
+                            .zIndex(2)
                             
-                    }.font(.title)
-                )
-                .navigationViewStyle(StackNavigationViewStyle())
-        
+                            
+                            
+                        
+                            
+                        // Animation Layout
+                        TileAnimationView(tileAnimationVM: boardVM.tileAnimationVM)
+                            .rotationEffect(Angle(degrees: boardVM.boardRotation))
+                            .offset(x: device.boardCoordPadding)
+                            .zIndex(3)
+                        
+                            
+                        // Piece Edit Tool
+                        PieceEditToolView(pieceEditToolVM: boardVM.pieceEditToolVM)
+                            .offset(x: device.boardCoordPadding)
+                            .zIndex(4)
+                        
+                
+                        // Castling Rights
+                        CastlingRightsView(castlingRightsVM: boardVM.castlingRightsVM)
+                            .offset(x: device.boardCoordPadding)
+                            .zIndex(5)
+                        
+                        // Castling Rights
+                        PawnPromotionView(pawnPromotionVM: boardVM.pawnPromotionVM)
+                            .offset(x: device.boardCoordPadding)
+                            .zIndex(6)
+                    }
+                    
+                    if navigateVM.enabled {
+                        NavigatorView(navigatorVM: navigateVM, boardVM: boardVM)
+                            .padding(.top,1)
+                            .frame(width: device.tileSize * 8 + device.boardCoordPadding, alignment: .top)
+                    }
+                }
+            // Action buttons
+            FloatingActionView(showMenu: $showMenu)
+                .zIndex(7)
+    
+            // Board Message
+            BoardMessageAlertView(BoardMessageAlertVM: BoardViewModel.instance.boardMessageAlertVM)
+                .zIndex(8)
+    
+            // Show menu
+            if self.showMenu {
+                
+                // Dismiss menu when rectangle is clicked
+                Rectangle()
+                    .zIndex(9)
+                    .opacity(0.3)
+                    .onTapGesture {
+                        withAnimation {
+                            self.showMenu = false
+                        }
+                }
+                
+                // Show the menu
+                MenuView(showMenu: $showMenu)
+                .transition(.move(edge: .trailing))
+                .zIndex(10)
+                .gesture(drag)
+                .frame(minWidth:0 , maxWidth: .infinity, minHeight: 0, maxHeight: .infinity, alignment: .trailing)
+                
+            }
+    
+            // Messages to show
+            ToastView()
+                .frame(minWidth:0 , maxWidth: .infinity, minHeight: 0, maxHeight: .infinity, alignment: .bottom)
+                .zIndex(100)
+    
+            Spacer()
+                
+        }
+        .coordinateSpace(name: "MainCoordinateSpace")
+        .fileExporter(isPresented: $boardVM.showFileExporter, document: $boardVM.exportFileDocument.wrappedValue, contentType: UTType.gzip, defaultFilename: $boardVM.exportFileDocument.wrappedValue?.fileName) { result in
+            switch result {
+            case .success:
+                boardVM.showMessage(pTextFull: "File successfully saved", pTextShort: "", pDurationms: Constants.TOAST_LONG)
+            case .failure (let error):
+                boardVM.showMessage(pTextFull: "Error saving file - \(error.localizedDescription)", pTextShort: "", pDurationms: Constants.TOAST_LONG)
+            }
+            boardVM.showFileExporter = false
+        }
+        .fileImporter(isPresented: $boardVM.showFileImporter, allowedContentTypes: [UTType.gzip, UTType.xml], allowsMultipleSelection: false) { result in
+            Task(priority: .userInitiated) {
+                do {
+                    guard let fileUrl: URL = try result.get().first else {
+                        boardVM.showMessage(pTextFull: "Error importing file", pTextShort: "", pDurationms: Constants.TOAST_LONG)
+                        return
+                    }
+                    
+                    if fileUrl.startAccessingSecurityScopedResource() {
+                        await boardVM.loadGame(fileUrl)
+                        fileUrl.stopAccessingSecurityScopedResource()
+                    }
+                    
+                }
+                catch let error {
+                    boardVM.showMessage(pTextFull: "Error importing file - \(error.localizedDescription)", pTextShort: "", pDurationms: Constants.TOAST_LONG)
+                }
+                
+                boardVM.showFileImporter = false
+            }
+        }
+        .navigationBarTitle("", displayMode: .inline)
+        .navigationBarItems(
+            leading: NavLogoItem(),
+            trailing: Button(action: {
+                withAnimation {
+                    self.showMenu.toggle()
+                }
+            }){
+                Image(systemName: "line.horizontal.3")
+            }.font(.title)
+            
+        )
+       .navigationViewStyle(StackNavigationViewStyle())
+       .clipped()   // Clipping stops the board from going in to the inset areas
         
     }
     
@@ -118,8 +188,8 @@ struct NavLogoItem: View {
     var body: some View {
         HStack(alignment: .center) {
             Text("Karuah Chess").font(.body)
-            DirectionIndicatorView(directionIndicatorVM: BoardViewModel.shared.directionIndicator).frame(width: 20, height: 20)
-            ActivityIndicatorView(activityIndicatorVM: BoardViewModel.shared.processingIndicator).frame(width:35, height:35)
+            DirectionIndicatorView(directionIndicatorVM: BoardViewModel.instance.directionIndicatorVM).frame(width: 20, height: 20)
+            ActivityIndicatorView(activityIndicatorVM: BoardViewModel.instance.activityIndicatorVM).frame(width:35, height:35)
         }
         
     }

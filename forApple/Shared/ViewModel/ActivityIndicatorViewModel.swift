@@ -18,7 +18,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 import SwiftUI
 
-class ActivityIndicatorViewModel: ObservableObject {
+@MainActor class ActivityIndicatorViewModel: ObservableObject {
     
     @Published var enabled: Bool = false
     

@@ -25,6 +25,7 @@ class MenuSheet: ObservableObject {
     
     enum Sheets: Identifiable {
         case engineSettings
+        case soundColourSettings
         case about
         
         var id: Int {

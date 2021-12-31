@@ -22,17 +22,30 @@ class Menu : NSObject {
     @ObservedObject var menuSettingsVM : MenuSettingsViewModel = MenuSettingsViewModel()
     
     @objc func newGame() {
-        let action : ()->Void = {BoardViewModel.shared.newGame()}
-        BoardViewModel.shared.boardMessage.show("New", "Start a new game?", BoardMessageAlertViewModel.alertTypeEnum.YesNo, action)
+        let action : ()->Void = {
+            Task(priority: .userInitiated) {
+                await BoardViewModel.instance.newGame()
+            }
+        }
+        BoardViewModel.instance.boardMessageAlertVM.show("Start a new game?", "", BoardMessageAlertViewModel.alertTypeEnum.YesNo, action)
     }
     
     @objc func resign() {
-        let action : ()->Void = {BoardViewModel.shared.resignGame()}
-        BoardViewModel.shared.boardMessage.show("Resign", "Resign from current game?", BoardMessageAlertViewModel.alertTypeEnum.YesNo, action)
+        let action : ()->Void = {
+            Task(priority: .userInitiated) {
+                await BoardViewModel.instance.resignGame()
+            }
+        }
+        BoardViewModel.instance.boardMessageAlertVM.show("Resign from current game?", "", BoardMessageAlertViewModel.alertTypeEnum.YesNo, action)
     }
     
     @objc func engineSettings() {
         MenuSheet.shared.active = .engineSettings
+    }
+    
+    @objc func coordinates(_ sender: NSMenuItem) {
+        menuSettingsVM.value.coordinatesEnabled.toggle()
+        sender.state = menuSettingsVM.value.coordinatesEnabled ? .on : .off
     }
     
     @objc func highlightMoves(_ sender: NSMenuItem) {
@@ -40,9 +53,13 @@ class Menu : NSObject {
         sender.state = menuSettingsVM.value.moveHighlightEnabled ? .on : .off
     }
     
-    @objc func sound(_ sender: NSMenuItem) {
-        menuSettingsVM.value.soundEnabled.toggle()
-        sender.state = menuSettingsVM.value.soundEnabled ? .on : .off
+    @objc func navigator(_ sender: NSMenuItem) {
+        menuSettingsVM.value.navigatorEnabled.toggle()
+        sender.state = menuSettingsVM.value.navigatorEnabled ? .on : .off
+    }
+    
+    @objc func soundColourSettings() {
+        MenuSheet.shared.active = .soundColourSettings
     }
     
     @objc func edit(_ sender: NSMenuItem) {
@@ -51,11 +68,25 @@ class Menu : NSObject {
     }
     
     @objc func undo() {
-        BoardViewModel.shared.undoMove()
+        Task(priority: .userInitiated) {
+         await BoardViewModel.instance.undoMove()
+        }
     }
     
     @objc func switchDirection() {
-        BoardViewModel.shared.switchDirection()
+        Task(priority: .userInitiated) {
+        await BoardViewModel.instance.switchDirection()
+        }
+    }
+    
+    @objc func loadGame() {
+        BoardViewModel.instance.showFileImporter = true
+    }
+    
+    @objc func saveGame() {
+        Task(priority: .userInitiated) {
+            await BoardViewModel.instance.saveGame()
+        }
     }
     
     @objc func about() {
@@ -107,6 +138,16 @@ class Menu : NSObject {
         
         appMenu.addItem(NSMenuItem.separator())
         
+        // Coordinates
+        do {
+            let menuItem = NSMenuItem(title: "Coordinates", action: #selector(self.coordinates), keyEquivalent: "")
+            menuItem.image = NSImage(systemSymbolName: "globe", accessibilityDescription: "Coordinates")
+            menuItem.target = self
+            menuItem.state = menuSettingsVM.value.coordinatesEnabled ? .on : .off
+            appMenu.addItem(menuItem)
+            
+        }
+        
         // Highlight Moves
         do {
             let menuItem = NSMenuItem(title: "Highlight Moves", action: #selector(self.highlightMoves), keyEquivalent: "")
@@ -117,14 +158,24 @@ class Menu : NSObject {
             
         }
         
-        // Sound
+        // Navigator
         do {
-            let menuItem = NSMenuItem(title: "Sound", action: #selector(self.sound), keyEquivalent: "")
-            menuItem.image = NSImage(systemSymbolName: "speaker.wave.2", accessibilityDescription: "Sound")
+            let menuItem = NSMenuItem(title: "Navigator", action: #selector(self.navigator), keyEquivalent: "")
+            menuItem.image = NSImage(systemSymbolName: "play", accessibilityDescription: "Navigator")
             menuItem.target = self
-            menuItem.state = menuSettingsVM.value.soundEnabled ? .on : .off
+            menuItem.state = menuSettingsVM.value.navigatorEnabled ? .on : .off
             appMenu.addItem(menuItem)
             
+        }
+        
+        appMenu.addItem(NSMenuItem.separator())
+        
+        // Sound and colour settings
+        do {
+            let menuItem = NSMenuItem(title: "Sound & Colour", action: #selector(self.soundColourSettings), keyEquivalent: "")
+            menuItem.image = NSImage(systemSymbolName: "music.note", accessibilityDescription: "Sound & Colour")
+            menuItem.target = self
+            appMenu.addItem(menuItem)
         }
         
         appMenu.addItem(NSMenuItem.separator())
@@ -140,7 +191,7 @@ class Menu : NSObject {
         
         // Undo
         do {
-            let menuItem = NSMenuItem(title: "Undo", action: #selector(self.undo), keyEquivalent: "u")
+            let menuItem = NSMenuItem(title: "Undo", action: #selector(self.undo), keyEquivalent: "z")
             menuItem.image = NSImage(systemSymbolName: "arrow.uturn.left", accessibilityDescription: "Undo")
             menuItem.target = self
             appMenu.addItem(menuItem)
@@ -150,6 +201,22 @@ class Menu : NSObject {
         do {
             let menuItem = NSMenuItem(title: "Switch Direction", action: #selector(self.switchDirection), keyEquivalent: "")
             menuItem.image = NSImage(systemSymbolName: "arrow.up.arrow.down", accessibilityDescription: "Switch Direction")
+            menuItem.target = self
+            appMenu.addItem(menuItem)
+        }
+        
+        // Load game
+        do {
+            let menuItem = NSMenuItem(title: "Load Game", action: #selector(self.loadGame), keyEquivalent: "")
+            menuItem.image = NSImage(systemSymbolName: "doc", accessibilityDescription: "Load Game")
+            menuItem.target = self
+            appMenu.addItem(menuItem)
+        }
+        
+        // Save game
+        do {
+            let menuItem = NSMenuItem(title: "Save Game", action: #selector(self.saveGame), keyEquivalent: "")
+            menuItem.image = NSImage(systemSymbolName: "opticaldiscdrive", accessibilityDescription: "Save Game")
             menuItem.target = self
             appMenu.addItem(menuItem)
         }

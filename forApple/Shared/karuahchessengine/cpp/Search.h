@@ -23,34 +23,40 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #include <chrono>
 
 
-	namespace Search {
-		
-		struct SearchTreeNode {			
-				
-			int moveFromIndex = -1;
-			int moveToIndex = -1;
-			int promotionPieceType = 0;
-			bool cancelled = false;
-			bool error = false;
-			
-		};
+namespace Search {
 
-		struct SearchStatistics {			
-			std::chrono::time_point<std::chrono::steady_clock> StartTime;
-			std::chrono::time_point<std::chrono::steady_clock> EndTime;
-			std::chrono::milliseconds DurationMS = std::chrono::milliseconds::zero();			
-			
-		};
+	struct SearchTreeNode {
 
-		struct SearchOptions {			
-			int limitStrengthELO = 1350;  
-		};
+		int moveFromIndex = -1;
+		int moveToIndex = -1;
+		int promotionPieceType = 0;
+		bool cancelled = false;
+		int error = 0;
 
-		// Functions
-		extern void GetBestMove(BitBoard& pBoard, SearchOptions pSearchOptions, SearchTreeNode& pBestMove, SearchStatistics& pStatistics);
-		
+	};
 
-		extern void Cancel();
-		extern void ClearCache();
-	}
+	struct SearchStatistics {
+		std::chrono::time_point<std::chrono::steady_clock> StartTime;
+		std::chrono::time_point<std::chrono::steady_clock> EndTime;
+		std::chrono::milliseconds DurationMS = std::chrono::milliseconds::zero();
+
+	};
+
+	struct SearchOptions {
+		int limitStrengthELO = 1350;
+		int limitDepth = 0;
+		int limitNodes = 0;
+		int limitMoveDuration = 0;
+		int limitThreads = 1;
+		bool randomiseFirstMove = false;
+
+	};
+
+	// Functions
+	extern void GetBestMove(BitBoard& pBoard, SearchOptions pSearchOptions, SearchTreeNode& pBestMove, SearchStatistics& pStatistics);
+
+
+	extern void Cancel();
+	extern void ClearCache();
+}
 

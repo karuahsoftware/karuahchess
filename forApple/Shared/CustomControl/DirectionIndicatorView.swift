@@ -33,7 +33,6 @@ struct DirectionIndicatorView: View {
                 .fill(Color.black)
                 .border(Color.primary)
             }
-                
         }
     }
 }

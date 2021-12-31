@@ -20,5 +20,9 @@ import SwiftUI
 
 @objc class SearchOptions: NSObject {
     @objc var limitStrengthELO: Int32 = 1350
-    
+    @objc var limitDepth: Int32 = 0
+    @objc var limitNodes: Int32 = 0
+    @objc var limitMoveDuration: Int32 = 0
+    @objc var limitThreads: Int32 = 1
+    @objc var randomiseFirstMove: Bool = false
 }

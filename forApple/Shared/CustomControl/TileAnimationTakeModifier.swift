@@ -29,7 +29,7 @@ struct TileAnimationTakeModifier: AnimatableModifier {
     }
     
     func body(content: Content) -> some View {
-        let transform = CGAffineTransform(translationX: complete * Device.shared.tileSize * 0.3, y: -complete * Device.shared.tileSize * 0.3)
+        let transform = CGAffineTransform(translationX: complete * Device.instance.tileSize * 0.3, y: -complete * Device.instance.tileSize * 0.3)
         return content.opacity(1 - Double(complete)).transformEffect(transform)
     }
 

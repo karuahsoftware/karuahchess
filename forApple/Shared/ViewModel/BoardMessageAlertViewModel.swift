@@ -18,14 +18,13 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 import SwiftUI
 
-class BoardMessageAlertViewModel: ObservableObject {
+@MainActor class BoardMessageAlertViewModel: ObservableObject {
     @Published var title = ""
     @Published var message = ""
     @Published var showAlert = false
     @Published var alertType = alertTypeEnum.Ok
     
     var action: Action? = {}
-    
     
     typealias Action = () -> ()
     enum alertTypeEnum : Int { case Ok = 0, YesNo = 1}
@@ -38,6 +37,7 @@ class BoardMessageAlertViewModel: ObservableObject {
         alertType = pAlertType
     }
     
+    
     /// Show the message
     func show(_ pTitle: String, _ pMessage: String, _ pAlertType: alertTypeEnum, _ pAction: Action?) {
         title = pTitle
@@ -48,7 +48,7 @@ class BoardMessageAlertViewModel: ObservableObject {
     }
     
     /// Clear the message
-    func clear() {
+    func clear(_ pAlertType: alertTypeEnum) {
         title = ""
         message = ""
         showAlert = false

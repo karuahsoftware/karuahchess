@@ -19,7 +19,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 import SwiftUI
 
 struct TileAnimationPutModifier: AnimatableModifier {
-    @StateObject private var device : Device = Device.shared
+    @ObservedObject private var device : Device = Device.instance
     var complete: CGFloat
     
     var animatableData: CGFloat {

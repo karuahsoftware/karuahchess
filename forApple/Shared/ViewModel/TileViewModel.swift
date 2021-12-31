@@ -18,7 +18,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 import SwiftUI
 
-class TileViewModel: ObservableObject {
+@MainActor class TileViewModel: ObservableObject {
     
     @Published var pieceName = ""
     @Published var spin = 0
@@ -26,9 +26,11 @@ class TileViewModel: ObservableObject {
     @Published var highlightFull = false
     @Published var highlightFullFadeOut = false
     @Published var checkIndicator = false
-    @Published var frame = CGRect()
+    @Published var boardFrame = CGRect()
+    @Published var mainFrame = CGRect()
     @Published var visible = true
     @Published var editMode = false
+    
     
     func setPiece(pName: String, pSpin: Int) {
         self.pieceName = pName

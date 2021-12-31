@@ -18,7 +18,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 import SwiftUI
 
-class DirectionIndicatorViewModel: ObservableObject {
+@MainActor class DirectionIndicatorViewModel: ObservableObject {
     
     @Published var direction = 0
     

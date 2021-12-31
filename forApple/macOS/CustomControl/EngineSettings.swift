@@ -20,48 +20,176 @@ import SwiftUI
 
 struct EngineSettings: View {
     
-    @ObservedObject var engineSettingsVM : EngineSettingsViewModel = EngineSettingsViewModel.shared
+    @ObservedObject private var engineSettingsVM : EngineSettingsViewModel = EngineSettingsViewModel.instance
+    private let menuSheet : MenuSheet
+    @FocusState private var limitMoveDurationIsFocused : Bool
+    @FocusState private var limitNodesIsFocused : Bool
+    
+    private var maxThreads: Double = ProcessInfo.processInfo.activeProcessorCount > 1 ? Double(ProcessInfo.processInfo.activeProcessorCount - 1) : Double(1)
+    
+    let formatter: NumberFormatter = {
+        let formatter = NumberFormatter()
+        formatter.numberStyle = .decimal
+        return formatter
+    }()
+    
+    // Initialisation
+    init(pMenuSheet: MenuSheet) {
+        menuSheet = pMenuSheet
+    }
     
     var body: some View {
         VStack(alignment: .leading) {
+            ScrollView([.vertical]) {
+                VStack(alignment: .leading) {
+                    HStack {
+                        Image(systemName: "gear")
+                        .imageScale(.large)
+                        Text("Engine Settings").font(.headline)
+                        ActivityIndicatorView(activityIndicatorVM: BoardViewModel.instance.activityIndicatorVM).frame(width:35, height:35)
+                    }.padding(.bottom, 10)
+                    
+                    Toggle(isOn: $engineSettingsVM.value.computerPlayerEnabled) {
+                        Text("Computer player enabled")
+                            .font(.body)
+                    }
+                        
+                    Group {
+                        Toggle(isOn: $engineSettingsVM.value.computerMovesFirst) {
+                            Text("Computer moves first")
+                                .font(.body)
+                        }
+                        
+                        Toggle(isOn: $engineSettingsVM.value.randomiseFirstMove) {
+                            Text("Randomise first computer move")
+                                .font(.body)
+                        }
+                        
+                        Toggle(isOn: $engineSettingsVM.value.levelAuto) {
+                            Text("Increase strength after win")
+                                .font(.body)
+                        }
+                        
+                        Picker(selection: $engineSettingsVM.value.limitEngineStrengthELOIndex, label: Text("Computer Strength").font(.body).opacity(!$engineSettingsVM.value.computerPlayerEnabled.wrappedValue ? 0.5 : 1)) {
+                            ForEach(0 ..< Constants.strengthArrayLabel.count) {
+                                Text(Constants.strengthArrayLabel[$0])
+                            }
+                        }
+                        .pickerStyle(DefaultPickerStyle())
+                          
+                        
+                        Toggle(isOn: $engineSettingsVM.value.limitAdvanced) {
+                            Text("Advanced search settings")
+                                .font(.body)
+                        }
+                        .padding(.top)
+                        
+                        Group {
+                            Slider(value: $engineSettingsVM.value.limitDepth, in: 0...35, step:1) {
+                                Text("Depth limit \(getValueZeroOff(pValue: Int($engineSettingsVM.value.limitDepth.wrappedValue)))")
+                                    .font(.body)
+                                    .opacity(getAdvancedSettingsOpacity())
+                            }
+                            
+                            HStack(alignment: .top) {
+                                Text("Node limit").opacity(getAdvancedSettingsOpacity())
+                                TextField("", value: $engineSettingsVM.value.limitNodes, formatter: NumberFormatter())
+                                    .focused($limitNodesIsFocused)
+                                    .help(Text("Valid values are 10 to \(formatter.string(from: 2000000000) ?? "")"))
+                                    .frame(width: 100)
+                                
+                            }
+                            
+                            if !$engineSettingsVM.value.limitNodesIsValid.wrappedValue {
+                                HStack {
+                                    Image(systemName: "arrow.turn.left.up")
+                                    .imageScale(.large)
+                                    .foregroundColor(Color.red)
+                                    .padding(.leading)
+                                    
+                                    Text("Valid values are 10 to \(formatter.string(from: 2000000000) ?? "") ")
+                                    .foregroundColor(Color.red)
+                                    .padding(0)
+                                }.opacity(getAdvancedSettingsOpacity())
+                            }
+                            
+                            HStack(alignment: .top) {
+                                Text("Move time limit (ms)").opacity(getAdvancedSettingsOpacity())
+                                TextField("", value: $engineSettingsVM.value.limitMoveDuration, formatter: NumberFormatter())
+                                    .focused($limitMoveDurationIsFocused)
+                                    .help(Text("Valid values are 0 to \(formatter.string(from: 600000) ?? ""). Set to 0 for no limit."))
+                                    .frame(width: 100)
+                                
+                            }
+                            
+                            if !$engineSettingsVM.value.limitMoveDurationIsValid.wrappedValue {
+                                HStack {
+                                    Image(systemName: "arrow.turn.left.up")
+                                    .imageScale(.large)
+                                    .foregroundColor(Color.red)
+                                    .padding(.leading)
+                                    
+                                    Text("Valid values are 0 to \(formatter.string(from: 600000) ?? "") ")
+                                        .foregroundColor(Color.red)
+                                        .padding(0)
+                                }.opacity(getAdvancedSettingsOpacity())
+                            }
+                            
+                            if maxThreads > 1 {
+                                Slider(value: $engineSettingsVM.value.limitThreads, in: 1...maxThreads, step:1) {
+                                    Text("CPU threads \(getValueZeroOff(pValue: Int($engineSettingsVM.value.limitThreads.wrappedValue)))")
+                                        .font(.body)
+                                        .opacity(getAdvancedSettingsOpacity())
+                                }
+                            }
+                            
+                        }.disabled(!$engineSettingsVM.value.limitAdvanced.wrappedValue)
+                        
+                    }.disabled(!$engineSettingsVM.value.computerPlayerEnabled.wrappedValue)
+                    
+                }.frame(minWidth: 50, maxWidth: .infinity, minHeight: 50, maxHeight: .infinity)
                 
+            } // Scrollview
+            
+            Divider()
+            
             HStack {
-                Image(systemName: "gear")
-                .imageScale(.large)
-                Text("Engine Settings").font(.headline)
-            }.padding(.bottom, 10)
-            
-            Toggle(isOn: $engineSettingsVM.value.computerPlayerEnabled) {
-                Text("Computer player enabled")
-                    .font(.body)
-            }
+                Button(action: {
+                    menuSheet.active = nil
+                }){
+                    Text("Close")
+                }
                 
-            
-            Toggle(isOn: $engineSettingsVM.value.computerMovesFirst) {
-                Text("Computer moves first")
-                    .font(.body)
-            }
-            .disabled(!$engineSettingsVM.value.computerPlayerEnabled.wrappedValue)
-            
-            Picker(selection: $engineSettingsVM.value.limitEngineStrengthELOIndex, label: Text("Computer Strength")) {
-                ForEach(0 ..< Constants.strengthArrayLabel.count) {
-                    Text(Constants.strengthArrayLabel[$0])
+                Button(action: {
+                    Task(priority: .userInitiated) {
+                        await BoardViewModel.instance.endMoveJob()
+                    }
+                }){
+                    Text("Stop search")
+                }
+                
+                Button(action: {
+                    limitNodesIsFocused = false
+                    limitMoveDurationIsFocused = false
+                    engineSettingsVM.resetToDefault()
+                }){
+                    Text("Reset to default")
                 }
             }
-            .disabled(!$engineSettingsVM.value.computerPlayerEnabled.wrappedValue)
-            .pickerStyle(DefaultPickerStyle())
-                
-            Spacer()
-                .frame(maxWidth: .infinity)
-                    
-                
+               
         }
         
-            
-            
-    
-        
     }
+    
+    
+    private func getValueZeroOff(pValue: Int) -> String {
+        return pValue > 0 ? String(pValue) : "off"
+    }
+    
+    private func getAdvancedSettingsOpacity() -> Double {
+        return !($engineSettingsVM.value.limitAdvanced.wrappedValue && $engineSettingsVM.value.computerPlayerEnabled.wrappedValue) ? 0.5 : 1
+    }
+    
     
     
 }

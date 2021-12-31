@@ -18,7 +18,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 import SwiftUI
 
-class BoardAnimation {
+@MainActor class BoardAnimation {
     private let tempBoardBefore = KaruahChessEngineC()
     private let tempBoardAfter = KaruahChessEngineC()
     
@@ -40,25 +40,47 @@ class BoardAnimation {
             
             if fromIndex > -1 && toIndex > -1 {
                 // Move animation
-                let imageData = Image(BoardViewModel.shared.boardLayout.getImageName(pSpin: spin))
-                if var instruction = getAnimationInstruction(pFromIndex: fromIndex, pToIndex: toIndex, pTilePanel: BoardViewModel.shared.boardLayout, pImage: imageData) {
+                let imageData = Image(BoardViewModel.instance.tilePanelVM.getImageName(pSpin: spin))
+                if var instruction = getAnimationInstruction(pFromIndex: fromIndex, pToIndex: toIndex, pTilePanelVM: BoardViewModel.instance.tilePanelVM, pImage: imageData) {
                     instruction.animationType = TileAnimationInstruction.AnimationTypeEnum.Move
                     animationList.append(instruction)
                 }
             }
             else if fromIndex > -1 && toIndex == -1 {
-                // Piece take animation
-                let imageData = Image(BoardViewModel.shared.boardLayout.getImageName(pSpin: spin))
-                if var instruction = getAnimationInstruction(pFromIndex: fromIndex, pToIndex: fromIndex, pTilePanel: BoardViewModel.shared.boardLayout, pImage: imageData) {
-                    instruction.animationType = TileAnimationInstruction.AnimationTypeEnum.Take
-                    animationList.append(instruction)
+                // Look for a pawn promotion move
+                var promotionIndex = -1
+                if spin == 1 || spin == -1 {
+                    for nestedMove in moveList {
+                        let nestedSpin = nestedMove[0]
+                        let nestedFromIndex = nestedMove[1]
+                        let nestedToIndex = nestedMove[2]
+                        if (spin == 1 && nestedSpin > 1 && nestedFromIndex == -1 && nestedToIndex > -1) || (spin == -1 && nestedSpin < -1 && nestedFromIndex == -1 && nestedToIndex > -1) {
+                            promotionIndex = nestedToIndex
+                        }
+                    }
                 }
                 
+                if promotionIndex > -1 {
+                    // Pawn promotion animation
+                    let imageData = Image(BoardViewModel.instance.tilePanelVM.getImageName(pSpin: spin))
+                    if var instruction = getAnimationInstruction(pFromIndex: fromIndex, pToIndex: promotionIndex, pTilePanelVM: BoardViewModel.instance.tilePanelVM, pImage: imageData) {
+                        instruction.animationType = TileAnimationInstruction.AnimationTypeEnum.MoveFade
+                        animationList.append(instruction)
+                    }
+                }
+                else {
+                    // Piece take animation
+                    let imageData = Image(BoardViewModel.instance.tilePanelVM.getImageName(pSpin: spin))
+                    if var instruction = getAnimationInstruction(pFromIndex: fromIndex, pToIndex: fromIndex, pTilePanelVM: BoardViewModel.instance.tilePanelVM, pImage: imageData) {
+                        instruction.animationType = TileAnimationInstruction.AnimationTypeEnum.Take
+                        animationList.append(instruction)
+                    }
+                }
             }
             else if fromIndex == -1 && toIndex > -1 {
                 // Piece return animation
-                let imageData = Image(BoardViewModel.shared.boardLayout.getImageName(pSpin: spin))
-                if var instruction = getAnimationInstruction(pFromIndex: toIndex, pToIndex: toIndex, pTilePanel: BoardViewModel.shared.boardLayout, pImage: imageData) {
+                let imageData = Image(BoardViewModel.instance.tilePanelVM.getImageName(pSpin: spin))
+                if var instruction = getAnimationInstruction(pFromIndex: toIndex, pToIndex: toIndex, pTilePanelVM: BoardViewModel.instance.tilePanelVM, pImage: imageData) {
                     instruction.animationType = TileAnimationInstruction.AnimationTypeEnum.Put
                     animationList.append(instruction)
                 }
@@ -76,13 +98,13 @@ class BoardAnimation {
     ///   - pIndex: The piece the animate
     ///   - pTilePanel: The board
     /// - Returns: An animation instruction
-    func createAnimationFall(pIndex: Int, pTilePanel: TilePanelView) -> [TileAnimationInstruction] {
+    func createAnimationFall(pIndex: Int, pTilePanelVM: TilePanelViewModel) -> [TileAnimationInstruction] {
         var animationList = [TileAnimationInstruction]()
-        let spin = pTilePanel.getTile(pIndex: pIndex).tileVM.spin
+        let spin = pTilePanelVM.getTile(pIndex: pIndex).tileVM.spin
         
         if 0...63~=pIndex && spin != 0 {
-            let imageData = Image(BoardViewModel.shared.boardLayout.getImageName(pSpin: spin))
-            if var instruction = getAnimationInstruction(pFromIndex: pIndex, pToIndex: pIndex, pTilePanel: BoardViewModel.shared.boardLayout, pImage: imageData) {
+            let imageData = Image(BoardViewModel.instance.tilePanelVM.getImageName(pSpin: spin))
+            if var instruction = getAnimationInstruction(pFromIndex: pIndex, pToIndex: pIndex, pTilePanelVM: BoardViewModel.instance.tilePanelVM, pImage: imageData) {
                 instruction.animationType = TileAnimationInstruction.AnimationTypeEnum.Fall
                 animationList.append(instruction)
             }
@@ -106,10 +128,10 @@ class BoardAnimation {
         tempBoardAfter.setBoardArray(pBoardRecAfter.boardArray)
         tempBoardAfter.setStateArray(pBoardRecAfter.stateArray)
         
-        let allBeforeWhitePos: UInt64 = tempBoardBefore.getOccupiedByWhite()
-        let allBeforeBlackPos: UInt64 = tempBoardBefore.getOccupiedByBlack()
-        let allAfterWhitePos: UInt64 = tempBoardAfter.getOccupiedByWhite()
-        let allAfterBlackPos: UInt64 = tempBoardAfter.getOccupiedByBlack()
+        let allBeforeWhitePos: UInt64 = tempBoardBefore.getOccupiedByColour(Int32(Constants.WHITEPIECE))
+        let allBeforeBlackPos: UInt64 = tempBoardBefore.getOccupiedByColour(Int32(Constants.BLACKPIECE))
+        let allAfterWhitePos: UInt64 = tempBoardAfter.getOccupiedByColour(Int32(Constants.WHITEPIECE))
+        let allAfterBlackPos: UInt64 = tempBoardAfter.getOccupiedByColour(Int32(Constants.BLACKPIECE))
         
         let allChangeWhitePos = allBeforeWhitePos ^ allAfterWhitePos
         let allChangeBlackPos = allBeforeBlackPos ^ allAfterBlackPos
@@ -120,7 +142,7 @@ class BoardAnimation {
         var spinChangeList = convertSpinChangeArrayToList(pSpinChange: spinChange)
         
         // Too many changes to animate so just clear the list
-        if spinChangeList.count > 2 {
+        if spinChangeList.count > 3 {
             spinChangeList.removeAll()
         }
         
@@ -196,18 +218,17 @@ class BoardAnimation {
     ///   - pToIndex: To Index
     ///   - pImage: Image
     /// - Returns: An animation instruction
-    private func getAnimationInstruction(pFromIndex: Int, pToIndex: Int, pTilePanel: TilePanelView, pImage: Image) -> TileAnimationInstruction? {
+    private func getAnimationInstruction(pFromIndex: Int, pToIndex: Int, pTilePanelVM: TilePanelViewModel, pImage: Image) -> TileAnimationInstruction? {
         
         if  0...63 ~= pFromIndex && 0...63 ~= pToIndex {
         
-            let fromTile: TileView = pTilePanel.getTile(pIndex: pFromIndex)
-            let toTile: TileView = pTilePanel.getTile(pIndex: pToIndex)
-            let fromPoint: CGPoint = CGPoint(x: fromTile.tileVM.frame.midX, y: fromTile.tileVM.frame.midY)
-            let toPoint: CGPoint = CGPoint(x: toTile.tileVM.frame.midX, y: toTile.tileVM.frame.midY)
+            let fromTile: TileView = pTilePanelVM.getTile(pIndex: pFromIndex)
+            let toTile: TileView = pTilePanelVM.getTile(pIndex: pToIndex)
+            let fromPoint: CGPoint = CGPoint(x: fromTile.tileVM.boardFrame.midX, y: fromTile.tileVM.boardFrame.midY)
+            let toPoint: CGPoint = CGPoint(x: toTile.tileVM.boardFrame.midX, y: toTile.tileVM.boardFrame.midY)
             
             let animInstruct = TileAnimationInstruction(animationType: TileAnimationInstruction.AnimationTypeEnum.Move, imageData: pImage, moveFrom: fromPoint, moveTo: toPoint, hiddenSquareIndexes: [fromTile.index, toTile.index])
             
-                
             return animInstruct
         }
         else {

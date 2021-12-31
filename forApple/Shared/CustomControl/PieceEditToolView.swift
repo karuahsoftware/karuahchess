@@ -19,68 +19,73 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 import SwiftUI
 
 struct PieceEditToolView: View {
-    @StateObject private var device : Device = Device.shared
+    @ObservedObject private var device : Device = Device.instance
     @ObservedObject var pieceEditToolVM : PieceEditToolViewModel
     @State private var pieceEditListWhite : [Character] = ["P", "R", "N", "B" ,"Q"]
     @State private var pieceEditListBlack : [Character] = ["p", "r", "n", "b" ,"q"]
     
     
     var body: some View {
-        
         HStack(alignment: .center, spacing: 0) {
-            [self] in
+        
+        if pieceEditToolVM.visible {
             
-            if pieceEditToolVM.visible {
+            // Delete Button
+            Button(action: {
+                BoardViewModel.instance.arrangeUpdate(pFen: " ", pToIndex: pieceEditToolVM.lastTileIndexTapped)
+                pieceEditToolVM.close()
+            }) {
+                Image(systemName: "trash.fill")
+                    .resizable()
+                    .aspectRatio(contentMode: .fit)
+                    .padding(.init(top: 5, leading: 5, bottom: 5, trailing: 0))
+                    .clipped()
+                    .foregroundColor(Color("Rust"))
+            }.buttonStyle(BoardButtonStyle(buttonSize: pieceEditToolVM.calcButtonSize(pTileSize: device.tileSize)))
+        
+           
+            // Colour select button
+            Button(action: {
+                pieceEditToolVM.colour = pieceEditToolVM.colour * -1
+            }) {
+                Image(systemName: "chevron.right")
+                    .resizable()
+                    .aspectRatio(contentMode: .fit)
+                    .padding(.init(top: 8, leading: 0, bottom: 8, trailing: 0))
+                    .clipped()
+                    .foregroundColor(Color("Rust"))
+            }.buttonStyle(BoardButtonStyle(buttonSize: pieceEditToolVM.calcButtonSize(pTileSize: device.tileSize)))
             
-                // Delete Button
+            
+            // Piece Buttons
+            ForEach(pieceEditToolVM.colour == Constants.WHITEPIECE ? pieceEditListWhite : pieceEditListBlack, id: \.self) {fen in
                 Button(action: {
-                    BoardViewModel.shared.arrangeUpdate(pFen: " ", pToIndex: pieceEditToolVM.lastTileIndexTapped)
+                    BoardViewModel.instance.arrangeUpdate(pFen: fen, pToIndex: pieceEditToolVM.lastTileIndexTapped)
+                    pieceEditToolVM.close()
                 }) {
-                    Image(systemName: "trash.fill")
+                    getImage(pFen: fen)
                         .resizable()
                         .aspectRatio(contentMode: .fit)
-                        .padding(.init(top: 5, leading: 5, bottom: 5, trailing: 0))
+                        .padding(0)
                         .clipped()
-                        .foregroundColor(Color("Rust"))
-                }.buttonStyle(BoardButtonStyle(buttonSize: pieceEditToolVM.calcButtonSize(pTileSize: device.tileSize)))
-            
-               
-                // Colour select button
-                Button(action: {
-                    pieceEditToolVM.colour = pieceEditToolVM.colour * -1
-                }) {
-                    Image(systemName: "arrow.up.and.down")
-                        .resizable()
-                        .aspectRatio(contentMode: .fit)
-                        .padding(.init(top: 8, leading: 0, bottom: 8, trailing: 0))
-                        .clipped()
-                        .foregroundColor(Color("Rust"))
-                }.buttonStyle(BoardButtonStyle(buttonSize: pieceEditToolVM.calcButtonSize(pTileSize: device.tileSize)))
-                
-                
-                // Piece Buttons
-                ForEach(pieceEditToolVM.colour == Constants.WHITEPIECE ? pieceEditListWhite : pieceEditListBlack, id: \.self) {fen in
-                    Button(action: {
-                        BoardViewModel.shared.arrangeUpdate(pFen: fen, pToIndex: pieceEditToolVM.lastTileIndexTapped)
-                    }) {
-                        getImage(pFen: fen)
-                            .resizable()
-                            .aspectRatio(contentMode: .fit)
-                            .padding(0)
-                            .clipped()
-                    }
-                    .buttonStyle(BoardButtonStyle(buttonSize: pieceEditToolVM.calcButtonSize(pTileSize: device.tileSize)))
-                    
                 }
-            
+                .buttonStyle(BoardButtonStyle(buttonSize: pieceEditToolVM.calcButtonSize(pTileSize: device.tileSize)))
+                
             }
+             
+        
         }
-        .background(Color("GrayDarkLight"))
-        .shadow(radius: 6)
-        .shadow(radius: 10)
-        .position(x: pieceEditToolVM.posXY.x, y: pieceEditToolVM.posXY.y)
+ 
         
     }
+    .background(Color("GrayDarkLight"))
+    .clipped()
+    .shadow(radius: 6)
+    .shadow(radius: 10)
+    .offset(x: pieceEditToolVM.posXY.x, y: pieceEditToolVM.posXY.y)
+    
+    }
+    
 }
 
 

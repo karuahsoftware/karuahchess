@@ -18,22 +18,24 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 import SwiftUI
 
-class PieceEditToolViewModel: ObservableObject {
+@MainActor class PieceEditToolViewModel: ObservableObject {
     
+    @ObservedObject private var device : Device = Device.instance
     @Published var bufferBoard: KaruahChessEngineC = KaruahChessEngineC()
     @Published var colour : Int = Constants.WHITEPIECE
     @Published var visible : Bool = false
     @Published var posXY : CGPoint = CGPoint(x: 0, y: 0)
     @Published var lastTileIndexTapped : Int = -1
     
+    
     /// Displays the piece edit tool
     /// - Parameter pTile: The tile that was clicked
     func show(pTile: TileView) {
         // Ensure nothing is higlighted
-        BoardViewModel.shared.boardLayout.setHighLightFull(pBits: 0)
+        BoardViewModel.instance.tilePanelVM.setHighLightFull(pBits: 0)
         
-        if visible == true && lastTileIndexTapped == pTile.index {
-            Close()
+        if visible == true {
+            close()
         }
         else {
             // Show the view and put it in the correct position
@@ -46,21 +48,18 @@ class PieceEditToolViewModel: ObservableObject {
             }
             
             // Calculate position
-            let boardWidth = Device.shared.tileSize * 8
+            let boardWidth = Device.instance.tileSize * 8
+            let buttonSize = calcButtonSize(pTileSize: device.tileSize)
             
-            let buttonSize = calcButtonSize(pTileSize: pTile.device.tileSize)
-            
-            let marginX : CGFloat = 10
-            let limitUpperPosX = boardWidth - buttonSize * 7 / 2 - marginX
-            let limitLowerPosX = buttonSize * 7 / 2 + marginX
-            let posX : CGFloat =  max(min(pTile.tileVM.frame.origin.x, limitUpperPosX), limitLowerPosX)
+            let limitUpperPosX = boardWidth - buttonSize * 7
+            let posX : CGFloat =  max(0, min(pTile.tileVM.mainFrame.origin.x - (buttonSize * 7 / 2) , limitUpperPosX))
             
             var posY : CGFloat
-            if pTile.tileVM.frame.origin.y - pTile.device.tileSize / 2 > 0 {
-                posY = pTile.tileVM.frame.origin.y - pTile.device.tileSize / 2
+            if pTile.tileVM.mainFrame.origin.y - device.tileSize > 0 {
+                posY = pTile.tileVM.mainFrame.origin.y - buttonSize
             }
             else {
-                posY = pTile.tileVM.frame.origin.y + pTile.device.tileSize * 1.5
+                posY = pTile.tileVM.mainFrame.origin.y + device.tileSize
             }
             
             posXY = CGPoint(x: posX, y: posY)
@@ -77,21 +76,23 @@ class PieceEditToolViewModel: ObservableObject {
     
     /// Close the view
     
-    func Close() {
-        BoardViewModel.shared.boardLayout.setHighLightFull(pBits: 0)
-        lastTileIndexTapped = -1
-        visible = false
+    func close() {
+        if visible {
+            BoardViewModel.instance.tilePanelVM.setHighLightFull(pBits: 0)
+            lastTileIndexTapped = -1
+            visible = false
+        }
     }
     
     
     /// Calculates the size of the button based on the tile size
     /// - Parameter pTileSize: The size of the tile
     func calcButtonSize(pTileSize: CGFloat) -> CGFloat {
-        if (pTileSize > 90) {
+        if (pTileSize > 40) {
             return pTileSize * 0.85
         }
         else {
-            return pTileSize * 0.95
+            return pTileSize
         }
     }
 }

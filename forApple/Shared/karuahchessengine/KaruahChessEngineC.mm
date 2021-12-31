@@ -23,7 +23,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #import "cpp/Search.h"
 #import "cpp/MoveRules.h"
 #import "cpp/helper.h"
-#import "cpp/PieceStructure.h"
+
 #if TARGET_OS_IPHONE
     #import <UIKit/UIKit.h>
 #else
@@ -153,6 +153,12 @@ using namespace helper;
     return MainBoard.StateCastlingAvailability;
 }
 
+// Set castling availability
+- (bool) setStateCastlingAvailability:(const int32_t) pCastlingAvailability :(const int32_t) pColour {
+    if (pColour == helper::WHITEPIECE) return MainBoard.setStateCastlingAvailability<helper::WHITEPIECE>(pCastlingAvailability);
+    else return MainBoard.setStateCastlingAvailability<helper::BLACKPIECE>(pCastlingAvailability);
+}
+
 // Get king index
 - (int32_t) getKingIndex:(const int32_t) pColour {
     if (pColour == WHITEPIECE) {
@@ -178,14 +184,9 @@ using namespace helper;
     return MainBoard.GetOccupiedBySpin(pSpin);
 }
 
-// Get all positions occupied by white pieces
-- (uint64_t) getOccupiedByWhite {
-    return MainBoard.GetOccupied<WHITEPIECE>();
-}
-
-// Get all positions occupied by black pieces
-- (uint64_t) getOccupiedByBlack {
-    return MainBoard.GetOccupied<BLACKPIECE>();
+// Get positions occupied by a particular colour
+- (uint64_t) getOccupiedByColour:(const int32_t) pColour {
+    return MainBoard.GetOccupied(pColour);
 }
 
 // Moves a piece
@@ -255,7 +256,7 @@ using namespace helper;
 
 // Searches for the best move
 - (NSObject * _Nonnull) searchStart:(SearchOptions * _Nonnull)pSearchOptions {
-    uint64_t boardArray[366];
+    uint64_t boardArray[276];
     int32_t stateArray[8];
     
     MainBoard.GetBoardArray(boardArray);
@@ -266,7 +267,14 @@ using namespace helper;
     Search::SearchTreeNode bestMove;
     Search::SearchStatistics statistics;
     Search::SearchOptions options;
+    options.randomiseFirstMove = pSearchOptions.randomiseFirstMove;
     options.limitStrengthELO = pSearchOptions.limitStrengthELO;
+    options.limitDepth = pSearchOptions.limitDepth;
+    options.limitNodes = pSearchOptions.limitNodes;
+    options.limitMoveDuration = pSearchOptions.limitMoveDuration;
+    options.limitThreads = pSearchOptions.limitThreads;
+    
+    
     Search::GetBestMove(SearchBoard, options, bestMove, statistics);
     
     // Copy the values to result
@@ -276,13 +284,10 @@ using namespace helper;
     result.promotionPieceType = bestMove.promotionPieceType;
     result.cancelled = bestMove.cancelled;
     result.error = bestMove.error;
+    result.errorMessage = [NSString stringWithUTF8String:helper::SearchErrorMessage.at(bestMove.error).c_str()];
     return result;
 }
 
-// Get all white backward pawns
-- (uint64_t) getFeature:(const int32_t)pFeatureId {
-    return PieceStructure::GetFeature(MainBoard, pFeatureId);
-}
 
 
 // does a forward bitscan on the given number

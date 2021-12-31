@@ -29,34 +29,50 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #include <thread>
 
 
-	namespace Engine {
+namespace Engine {
 
-		bool isInitialised = false;
+	bool isInitialised = false;
+	unsigned int threadLimit = 0;
 
-		// Initialise the engine
-		void init() {
-			if (!isInitialised) {
-				// Set the maximum threads to run at the same time to be at least one and always one less than the maximum
-				// so that some capacity is left over for the application
-				const int maxThreads = std::thread::hardware_concurrency() > 1 ? std::thread::hardware_concurrency() - 1 : 1;
+	// Initialise the engine
+	void init() {
+		if (!isInitialised) {
 
-				helper::init();
-				
-				constexpr int maxHashSizeMB = 16;
-				SF::UCI::init(SF::Options, maxHashSizeMB);
-				
-				SF::PSQT::init();
-				SF::Bitboards::init();
-				SF::Position::init();
-				SF::Bitbases::init();
-				SF::Endgames::init();
-				SF::Threads.set(size_t(maxThreads));
-				SF::Search::clear(); // After threads are up
-											
+			helper::init();
 
-			}
+			Stockfish::UCI::init(Stockfish::Options);
 
-			isInitialised = true;
+			Stockfish::PSQT::init();
+			Stockfish::Bitboards::init();
+			Stockfish::Position::init();
+			Stockfish::Bitbases::init();
+			Stockfish::Endgames::init();
+			setThreads(1);
+
 		}
 
+		isInitialised = true;
 	}
+
+
+	// Initialise the threads, used to set the number of threads
+	void setThreads(unsigned int pRequestMaxThreads) {
+
+		// Limit the maximum threads to at least one and always one less than the maximum
+		// so that some capacity is left over for the application
+		unsigned int newThreadLimit = std::thread::hardware_concurrency() > 1 ? std::min(std::thread::hardware_concurrency() - 1, pRequestMaxThreads): 1;
+
+		// Check that thread limit is in the valid range, otherwise just set it to 1
+		if (newThreadLimit < 1 || newThreadLimit > 512) newThreadLimit = 1;
+
+
+		if (threadLimit != newThreadLimit) {
+			Stockfish::Threads.set(size_t(newThreadLimit));
+			Stockfish::Search::clear(); // After threads are up
+		}
+	}
+
+
+
+
+}

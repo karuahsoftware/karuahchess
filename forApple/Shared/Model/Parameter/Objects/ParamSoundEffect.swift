@@ -16,7 +16,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-class ParamSound : ParamProtocol {
+class ParamSoundEffect : ParamProtocol {
     var enabled : Bool
     
     required init() {

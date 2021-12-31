@@ -22,30 +22,38 @@ struct MenuView: View {
     @State private var showingNewGameAlert = false
     @State private var showingResignAlert = false
     @Binding var showMenu: Bool
-    @ObservedObject var menuSettingsVM : MenuSettingsViewModel = MenuSettingsViewModel()
+    @ObservedObject var menuSettingsVM : MenuSettingsViewModel = MenuSettingsViewModel.instance
     
     
     var body: some View {
-        
-        ScrollView(.vertical) {
-        VStack(alignment: .leading) {
+        Form {
             
-                Group {
+                Section {
                     Button(action: {
                         self.showingNewGameAlert = true
                     }){
-                        Image(systemName: "plus")
-                        .foregroundColor(Color(.label))
-                        .imageScale(.large)
-                        Text("New Game")
-                        .foregroundColor(Color(.label))
-                        .font(.body)
+                        Label() {
+                            Text("New Game")
+                        } icon: {
+                            Image(systemName: "plus")
+                                .resizable()
+                                .aspectRatio(contentMode: .fit)
+                                .font(Font.system(.headline))
+                                .padding(3)
+                                .frame(width: 28, height: 28)
+                                .background(Color.green)
+                                .foregroundColor(Color.white)
+                                .cornerRadius(6)
+                        }
+                            
+                        
                     }
-                    .padding(.top, 10)
                     .alert(isPresented: $showingNewGameAlert) {
                         Alert(title: Text("New"), message: Text("Start a new game?"), primaryButton: .destructive(Text("Yes")) {
-                            self.showMenu = false
-                            BoardViewModel.shared.newGame()
+                            Task(priority: .userInitiated)  {
+                                self.showMenu = false
+                                await BoardViewModel.instance.newGame()
+                            }
                         } , secondaryButton: .cancel())
                     }
          
@@ -54,147 +62,256 @@ struct MenuView: View {
                     Button(action: {
                         self.showingResignAlert = true
                     }){
-                        Image(systemName: "flag")
-                        .foregroundColor(Color(.label))
-                        .imageScale(.large)
-                        Text("Resign")
-                        .foregroundColor(Color(.label))
-                        .font(.body)
+                        Label() {
+                            Text("Resign")
+                        } icon: {
+                            Image(systemName: "flag")
+                                .resizable()
+                                .aspectRatio(contentMode: .fit)
+                                .font(Font.system(.headline))
+                                .padding(3)
+                                .frame(width: 28, height: 28)
+                                .background(Color.orange)
+                                .foregroundColor(Color.white)
+                                .cornerRadius(6)
+                        }
                     }
-                    .padding(.top, 10)
                     .alert(isPresented: $showingResignAlert) {
                         Alert(title: Text("Resign"), message: Text("Resign from current game?"), primaryButton: .destructive(Text("Yes")) {
-                            self.showMenu = false
-                            BoardViewModel.shared.resignGame()
+                            Task(priority: .userInitiated) {
+                                self.showMenu = false
+                                await BoardViewModel.instance.resignGame()
+                            }
                         } , secondaryButton: .cancel())
                     }
                     
                     
-                    NavigationLink(destination: EngineSettings(showMenu: $showMenu)) {
-                        Image(systemName: "gear")
-                        .foregroundColor(Color(.label))
-                        .imageScale(.large)
-                        Text("Engine Settings")
-                        .foregroundColor(Color(.label))
-                        .font(.body)
-                    }.padding(.top, 10)
-                    
-                    Divider()
+                    NavigationLink(destination: EngineSettings(pShowMenu: $showMenu), isActive: $menuSettingsVM.isShowingEngineSettings) {
+                        Label() {
+                            Text("Engine Settings")
+                        } icon: {
+                            Image(systemName: "gear")
+                                .resizable()
+                                .aspectRatio(contentMode: .fit)
+                                .font(Font.system(.headline))
+                                .padding(3)
+                                .frame(width: 28, height: 28)
+                                .background(Color.gray)
+                                .foregroundColor(Color.white)
+                                .cornerRadius(6)
+                        }
+                    }
                     
                 }
                    
-                Group {
+                Section {
+                    
+                    Toggle(isOn: $menuSettingsVM.value.coordinatesEnabled) {
+                        Label() {
+                            Text("Coordinates")
+                        } icon: {
+                            Image(systemName: "globe")
+                                .resizable()
+                                .aspectRatio(contentMode: .fit)
+                                .font(Font.system(.headline))
+                                .padding(3)
+                                .frame(width: 28, height: 28)
+                                .background(Color.blue)
+                                .foregroundColor(Color.white)
+                                .cornerRadius(6)
+                        }
+                    }
+                    
                     Toggle(isOn: $menuSettingsVM.value.moveHighlightEnabled) {
-                        
-                        Button(action: {
-                            menuSettingsVM.value.moveHighlightEnabled.toggle()
-                            
-                               }){
-                            Image(systemName: "target")
-                            .foregroundColor(Color(.label))
-                            .imageScale(.large)
-                            
+                        Label() {
                             Text("Highlight Moves")
-                                .font(.body)
-                                .foregroundColor(Color(.label))
-                               }
-                               .padding(.top, 10)
+                        } icon: {
+                            Image(systemName: "target")
+                                .resizable()
+                                .aspectRatio(contentMode: .fit)
+                                .font(Font.system(.headline))
+                                .padding(3)
+                                .frame(width: 28, height: 28)
+                                .background(Color.blue)
+                                .foregroundColor(Color.white)
+                                .cornerRadius(6)
+                        }
                     }
                     
-                    Divider()
-                }
-                
-                Group {
-                    Toggle(isOn: $menuSettingsVM.value.soundEnabled) {
-                        
-                        Button(action: {
-                            menuSettingsVM.value.soundEnabled.toggle()
+                    Toggle(isOn: $menuSettingsVM.value.navigatorEnabled) {
+                        Label() {
+                            Text("Navigator")
+                        } icon: {
+                            Image(systemName: "play")
+                                .resizable()
+                                .aspectRatio(contentMode: .fit)
+                                .font(Font.system(.headline))
+                                .padding(3)
+                                .frame(width: 28, height: 28)
+                                .background(Color.blue)
+                                .foregroundColor(Color.white)
+                                .cornerRadius(6)
+                        }
                             
-                               }){
-                            Image(systemName: "speaker.wave.2")
-                            .foregroundColor(Color(.label))
-                            .imageScale(.large)
-                            
-                            Text("Sound")
-                                .font(.body)
-                                .foregroundColor(Color(.label))
-                               }
-                               .padding(.top, 10)
                     }
-                        
-                
-                    Divider()
+                }
+            
+                Section {
+                    NavigationLink(destination: SoundColourSettings(showMenu: $showMenu)) {
+                        Label() {
+                            Text("Sound and Colour")
+                        } icon: {
+                            Image(systemName: "music.note")
+                                .resizable()
+                                .aspectRatio(contentMode: .fit)
+                                .font(Font.system(.headline))
+                                .padding(3)
+                                .frame(width: 28, height: 28)
+                                .background(Color.indigo)
+                                .foregroundColor(Color.white)
+                                .cornerRadius(6)
+                        }
+                    }
                 
                 }
                 
-                Group {
+                    
+                Section {
                     Toggle(isOn: $menuSettingsVM.value.arrangeBoardEnabled) {
-                        
-                        Button(action: {
-                            menuSettingsVM.value.arrangeBoardEnabled.toggle()
-                            
-                               }){
-                            Image(systemName: "pencil")
-                            .foregroundColor(Color(.label))
-                            .imageScale(.large)
-                            
+                        Label() {
                             Text("Edit")
-                                .font(.body)
-                                .foregroundColor(Color(.label))
-                               }
-                               .padding(.top, 10)
+                        } icon: {
+                            Image(systemName: "pencil")
+                                .resizable()
+                                .aspectRatio(contentMode: .fit)
+                                .font(Font.system(.headline))
+                                .padding(3)
+                                .frame(width: 28, height: 28)
+                                .background(Color.brown)
+                                .foregroundColor(Color.white)
+                                .cornerRadius(6)
+                        }
+                            
                     }
-                        
                     
                     Button(action: {
-                               self.showMenu = false
-                               BoardViewModel.shared.undoMove()
-                           }){
-                               Image(systemName: "arrow.uturn.left")
-                               .foregroundColor(Color(.label))
-                               .imageScale(.large)
+                           Task(priority: .userInitiated) {
+                              self.showMenu = false
+                              await BoardViewModel.instance.undoMove()
+                           }
+                       }){
+                           Label() {
                                Text("Undo")
-                                .foregroundColor(Color(.label))
-                               .font(.body)
+                           } icon: {
+                               Image(systemName: "arrow.uturn.left")
+                                   .resizable()
+                                   .aspectRatio(contentMode: .fit)
+                                   .font(Font.system(.headline))
+                                   .padding(3)
+                                   .frame(width: 28, height: 28)
+                                   .background(Color.pink)
+                                   .foregroundColor(Color.white)
+                                   .cornerRadius(6)
                            }
-                           .padding(.top, 10)
-                     
-                       
+                           
+                       }
+                                             
+                                               
                     Button(action: {
-                               self.showMenu = false
-                               BoardViewModel.shared.switchDirection()
+                            Task(priority: .userInitiated) {
+                                self.showMenu = false
+                                await BoardViewModel.instance.switchDirection()
+                               }
                            }){
-                               Image(systemName: "arrow.up.arrow.down")
-                               .foregroundColor(Color(.label))
-                               .imageScale(.large)
-                               Text("Switch Direction")
-                                .foregroundColor(Color(.label))
-                               .font(.body)
+                               Label() {
+                                   Text("Switch Direction")
+                               } icon: {
+                                   Image(systemName: "arrow.up.arrow.down")
+                                       .resizable()
+                                       .aspectRatio(contentMode: .fit)
+                                       .font(Font.system(.headline))
+                                       .padding(3)
+                                       .frame(width: 28, height: 28)
+                                       .background(Color.cyan)
+                                       .foregroundColor(Color.white)
+                                       .cornerRadius(6)
+                               }
+                               
                            }
-                           .padding(.top, 10)
                     
-                        Divider()
                     }
-                    
-                    Group {
-                        NavigationLink(destination: AboutView(showMenu: $showMenu)) {
-                            Image(systemName: "questionmark")
-                            .foregroundColor(Color(.label))
-                            .imageScale(.large)
-                                .font(.system(size: 16))
-                            Text("About")
-                            .foregroundColor(Color(.label))
-                            .font(.body)
-                        }.padding(.top, 10)
-                    }
+
                 
-                }
-                Spacer()
+            Section {
+                Button(action: {
+                               self.showMenu = false
+                               BoardViewModel.instance.showFileImporter = true
+                        
+                           }){
+                               Label() {
+                                   Text("Load Game")
+                               } icon: {
+                                   Image(systemName: "doc")
+                                       .resizable()
+                                       .aspectRatio(contentMode: .fit)
+                                       .font(Font.system(.headline))
+                                       .padding(3)
+                                       .frame(width: 28, height: 28)
+                                       .background(Color.black)
+                                       .foregroundColor(Color.white)
+                                       .cornerRadius(6)
+                               }
+                           }
+                
+                    Button(action: {
+                                Task(priority: .userInitiated) {[self] in
+                                    showMenu = false
+                                    await BoardViewModel.instance.saveGame()
+                                }
+                              
+                           }){
+                               HStack {
+                                   Label() {
+                                       Text("Save Game")
+                                   } icon: {
+                                       Image(systemName: "opticaldiscdrive")
+                                           .resizable()
+                                           .aspectRatio(contentMode: .fit)
+                                           .font(Font.system(.headline))
+                                           .padding(3)
+                                           .frame(width: 28, height: 28)
+                                           .background(Color.black)
+                                           .foregroundColor(Color.white)
+                                           .cornerRadius(6)
+                                   }
+                               }
+                           }
+                
             }
-            .padding()
-            .frame(maxWidth: 428, alignment: .leading)
-            .background(Color(.systemGray6))
-        
-        
+            
+            
+            Section {
+                NavigationLink(destination: AboutView(showMenu: $showMenu)) {
+                    Label() {
+                        Text("About")
+                    } icon: {
+                        Image(systemName: "questionmark")
+                            .resizable()
+                            .aspectRatio(contentMode: .fit)
+                            .font(Font.system(.headline))
+                            .padding(3)
+                            .frame(width: 28, height: 28)
+                            .background(Color.yellow)
+                            .foregroundColor(Color.white)
+                            .cornerRadius(6)
+                    }
+                }
+            }
+            
+            
+                
+        }
+    
     }
+     
 }

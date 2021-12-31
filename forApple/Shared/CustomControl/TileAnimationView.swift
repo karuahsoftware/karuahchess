@@ -20,106 +20,73 @@ import SwiftUI
 
 struct TileAnimationView: View {
     
-    @StateObject private var device : Device = Device.shared
-    @ObservedObject var tileAnimationVM : TileAnimationViewModel = TileAnimationViewModel()
+    @ObservedObject private var device : Device = Device.instance
+    @ObservedObject var tileAnimationVM : TileAnimationViewModel
     @State private var complete: [CGFloat] = [CGFloat](repeating: 0, count: 10)
     
-    
-    
     var body: some View {
-        ZStack { [self] in
-            
+        
+        ZStack {
+
             if tileAnimationVM.visible {
                 
-                ForEach(tileAnimationVM.animationInstructionArray.indices) {index in
-                        let animInstruct = tileAnimationVM.animationInstructionArray[index]
-                        if animInstruct.animationType == TileAnimationInstruction.AnimationTypeEnum.Take {
-                           // Take animation
-                            Group {
-                                animInstruct.imageData
-                                .resizable()
-                                .aspectRatio(contentMode: .fill)
-                                .modifier(TileAnimationTakeModifier(complete: complete[index]))
-                                .rotationEffect(Angle(degrees: -BoardViewModel.shared.boardRotation))
-                                .onAppear {
-                                    complete[index] = 0
-                                    withAnimation(.easeInOut(duration: tileAnimationVM.duration)) {
-                                        complete[index] = 1
-                                    }
-                                }
-                            }
-                            .frame(width: device.tileSize, height: device.tileSize)
-                            .position(animInstruct.moveFrom)
-                                
-                        }
-                        else if animInstruct.animationType == TileAnimationInstruction.AnimationTypeEnum.Fall {
-                           // Fall animation
-                            Group {
-                                animInstruct.imageData
-                                .resizable()
-                                .aspectRatio(contentMode: .fill)
-                                .modifier(TileFallEffect(complete: complete[index]))
-                                .rotationEffect(Angle(degrees: -BoardViewModel.shared.boardRotation))
-                                .onAppear {
-                                    complete[index] = 0
-                                    withAnimation(.easeIn(duration: tileAnimationVM.duration)) {
-                                        complete[index] = 1
-                                     }
-                                    
-                                 }
- 
-                            }
-                            .frame(width: device.tileSize, height: device.tileSize)
-                            .position(animInstruct.moveFrom)
-                            
-                        }
-                        else if animInstruct.animationType == TileAnimationInstruction.AnimationTypeEnum.Put {
-                            // Put animation
-                            Group {
-                                animInstruct.imageData
-                                .resizable()
-                                .aspectRatio(contentMode: .fill)
-                                .modifier(TileAnimationPutModifier(complete: complete[index]))
-                                .rotationEffect(Angle(degrees: -BoardViewModel.shared.boardRotation))
-                                .onAppear {
-                                    complete[index] = 0
-                                    withAnimation(.easeInOut(duration: tileAnimationVM.duration)) {
-                                        complete[index] = 1
-                                    }
-                                }
-                            }
-                            .frame(width: device.tileSize, height: device.tileSize)
-                            .position(animInstruct.moveFrom)
-                        }
-                        else if animInstruct.animationType == TileAnimationInstruction.AnimationTypeEnum.Move {
-                            // Move animation
-                            Group {
-                                animInstruct.imageData
-                                .resizable()
-                                .aspectRatio(contentMode: .fill)
-                                .rotationEffect(Angle(degrees: -BoardViewModel.shared.boardRotation))
-                                .modifier(TileAnimationMoveModifier(complete: complete[index], moveFrom: animInstruct.moveFrom, moveTo: animInstruct.moveTo))
-                                .onAppear {
-                                    complete[index] = 0
-                                    withAnimation(.easeInOut(duration: tileAnimationVM.duration)) {
-                                        complete[index] = 1
-                                    }
-                                }
-                            }
-                            .frame(width: device.tileSize, height: device.tileSize)
-                            .position(animInstruct.moveFrom)
-                        }
+                ForEach(tileAnimationVM.animationInstructionArray.indices, id: \.self) {index in
                     
-                }
+                        let animInstruct = tileAnimationVM.animationInstructionArray[index]
                 
+                        // Animation
+                        animInstruct.imageData
+                        .resizable()
+                        .aspectRatio(contentMode: .fill)
+                        .modify {
+                            if animInstruct.animationType == TileAnimationInstruction.AnimationTypeEnum.Fall {
+                                $0.modifier(TileFallEffect(complete: complete[index]))
+                            }
+                            else {
+                                $0
+                            }
+                        }
+                        .rotationEffect(Angle(degrees: -BoardViewModel.instance.boardRotation))
+                        .modify {
+                            if animInstruct.animationType == TileAnimationInstruction.AnimationTypeEnum.Move {
+                                $0.modifier(TileAnimationMoveModifier(complete: complete[index], moveFrom: animInstruct.moveFrom, moveTo: animInstruct.moveTo))
+                            }
+                            else if animInstruct.animationType == TileAnimationInstruction.AnimationTypeEnum.Take {
+                                $0.modifier(TileAnimationTakeModifier(complete: complete[index]))
+                            }
+                            else if animInstruct.animationType == TileAnimationInstruction.AnimationTypeEnum.Put {
+                                $0.modifier(TileAnimationPutModifier(complete: complete[index]))
+                            }
+                            else if animInstruct.animationType == TileAnimationInstruction.AnimationTypeEnum.MoveFade {
+                                $0.modifier(TileAnimationMoveFadeModifier(complete: complete[index], moveFrom: animInstruct.moveFrom, moveTo: animInstruct.moveTo))
+                            }
+                            else {
+                                $0
+                            }
+                        }
+                        .frame(width: device.tileSize, height: device.tileSize)
+                        .position(animInstruct.moveFrom)
+                        .onReceive(tileAnimationVM.$visible) { visible in
+                            if visible {
+                                complete[index] = 0
+                                withAnimation(.easeInOut(duration: tileAnimationVM.duration)) {
+                                    complete[index] = 1
+                                }
+                            }
+                            else {
+                                complete[index] = 0
+                            }
+                        }
+                }
             }
+ 
             Spacer()
             
         }.frame(width: device.tileSize * 8, height: device.tileSize * 8)
-            
+    
     }
     
-    
-   
-    
 }
+
+
+

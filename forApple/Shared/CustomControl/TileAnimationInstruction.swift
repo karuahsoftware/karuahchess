@@ -21,11 +21,10 @@ import SwiftUI
 struct TileAnimationInstruction: Identifiable  {
     let id = UUID()
     
-    enum AnimationTypeEnum: Int {case Move = 0, Take = 1, Put = 2, Fall = 3}
+    enum AnimationTypeEnum: Int {case Move = 0, Take = 1, Put = 2, Fall = 3, MoveFade = 4}
     
     // Type
     var animationType: AnimationTypeEnum
-    
     
     // Image
     let imageData: Image

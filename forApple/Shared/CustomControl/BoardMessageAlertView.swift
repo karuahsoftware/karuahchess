@@ -22,16 +22,9 @@ struct BoardMessageAlertView: View {
     @ObservedObject var BoardMessageAlertVM : BoardMessageAlertViewModel
     
     var body: some View {
-        if BoardMessageAlertVM.alertType == BoardMessageAlertViewModel.alertTypeEnum.Ok {
-            Spacer().alert(isPresented: $BoardMessageAlertVM.showAlert) { () -> Alert in
-                Alert(title: Text(BoardMessageAlertVM.title), message: Text(BoardMessageAlertVM.message),
-                      dismissButton: .default(Text("OK")) {
-                        BoardMessageAlertVM.clear()
-                      })
-            }
-        }
-        else if BoardMessageAlertVM.alertType == BoardMessageAlertViewModel.alertTypeEnum.YesNo {
-            Spacer().alert(isPresented: $BoardMessageAlertVM.showAlert) { () -> Alert in
+        if BoardMessageAlertVM.alertType == BoardMessageAlertViewModel.alertTypeEnum.YesNo {
+            Spacer()
+            .alert(isPresented: $BoardMessageAlertVM.showAlert) { () -> Alert in
                 Alert(title: Text(BoardMessageAlertVM.title), message: Text(BoardMessageAlertVM.message), primaryButton: .destructive(Text("Yes")) {
                     if let action = BoardMessageAlertVM.action {
                         action()
@@ -40,12 +33,18 @@ struct BoardMessageAlertView: View {
             }
         }
         else {
-            EmptyView()
+            Spacer()
+            .alert(isPresented: $BoardMessageAlertVM.showAlert) { () -> Alert in
+                Alert(title: Text(BoardMessageAlertVM.title), message: Text(BoardMessageAlertVM.message),
+                      dismissButton: .default(Text("OK")) {
+                        BoardMessageAlertVM.clear(BoardMessageAlertViewModel.alertTypeEnum.Ok)
+                      })
+            }
         }
- 
+        
+        
+        
+        
     }
-    
-    
-    
 }
 

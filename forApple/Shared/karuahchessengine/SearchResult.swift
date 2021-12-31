@@ -23,5 +23,6 @@ import SwiftUI
     @objc var moveToIndex: Int32 = -1
     @objc var promotionPieceType: Int32 = 0
     @objc var cancelled: Bool = false
-    @objc var error: Bool = false
+    @objc var error: Int = 0
+    @objc var errorMessage: String = ""
 }

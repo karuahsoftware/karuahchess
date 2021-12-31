@@ -54,12 +54,12 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 - (void) setStateGameStatus:(const int32_t) pStatus;
 - (int32_t) getStateFullMoveCount;
 - (int32_t) getStateCastlingAvailability;
+- (bool) setStateCastlingAvailability:(const int32_t) pCastlingAvailability :(const int32_t) pColour;
 - (int32_t) getKingIndex:(const int32_t) pColour;
 - (bool) isKingCheck:(const int32_t) pColour;
 - (uint64_t) getPotentialMove:(const int32_t) pSqIndex;
 - (uint64_t) getOccupiedBySpin:(const int32_t) pSpin;
-- (uint64_t) getOccupiedByWhite;
-- (uint64_t) getOccupiedByBlack;
+- (uint64_t) getOccupiedByColour:(const int32_t) pColour;
 - (NSObject * _Nonnull) move:(const int32_t)pFromIndex :(const int32_t)pToIndex :(const int32_t)pPawnPromotionPiece :(const bool)pValidateEnabled :(const bool)pCommit;
 - (NSObject * _Nonnull) arrange:(const int32_t)pFromIndex :(const int32_t)pToIndex;
 - (NSObject * _Nonnull) arrangeUpdate:(const char)pFen :(const int32_t)pToIndex;
@@ -70,7 +70,6 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 - (NSString * _Nonnull) getFullFEN;
 - (bool) isPawnPromotion:(const int32_t)pFromIndex :(const int32_t)pToIndex;
 - (NSObject * _Nonnull) searchStart:(NSObject * _Nonnull)pSearchOptions;
-- (uint64_t) getFeature:(const int32_t)pFeatureId;
 - (int) bitscanForward:(const uint64_t)pNum;
 
 @end

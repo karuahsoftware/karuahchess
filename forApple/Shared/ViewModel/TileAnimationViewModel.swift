@@ -18,19 +18,17 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 import SwiftUI
 
-class TileAnimationViewModel: ObservableObject {
+@MainActor class TileAnimationViewModel: ObservableObject {
     
     @Published var animationInstructionArray: [TileAnimationInstruction] = []
     @Published var visible: Bool = false
     @Published var duration: Double = 0
     
-    
-    
     /// Clear all animation instructions
    func clear() {
-       animationInstructionArray.removeAll()
-       visible = false
-       
+        visible = false
+        animationInstructionArray.removeAll()
+        
    }
        
        
@@ -38,22 +36,27 @@ class TileAnimationViewModel: ObservableObject {
        /// - Parameters:
        ///   - pBoardSquareDS: Board square data service
        ///   - pAnimationList: The list of animation instructions to run
-    func runAnimation(pAnimationList: [TileAnimationInstruction], pTilePanel: TilePanelView, pDuration: Double) {
+    func runAnimation(pAnimationList: [TileAnimationInstruction], pTilePanelVM: TilePanelViewModel, pDuration: Double) {
            clear()
            duration = pDuration
-           
+        
            // Loop through all the animation instructions
            for animInstruct in pAnimationList {
-               // Add the animation to the array
-               self.animationInstructionArray.append(animInstruct)
+                
+                // Add the animation to the array
+                animationInstructionArray.append(animInstruct)
             
-                // Hide the squares being animated
+                // Clear the squares being animated
                 for index in animInstruct.hiddenSquareIndexes {
-                    pTilePanel.getTile(pIndex: index).tileVM.visible = false
+                    pTilePanelVM.getTile(pIndex: index).tileVM.visible = false
+        
                 }
+            
            }
-           
+        
            visible = true
     }
+    
+    
     
 }

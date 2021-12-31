@@ -25,6 +25,7 @@ class Constants  {
     static let SQLITE_TRANSIENT = unsafeBitCast(-1, to: sqlite3_destructor_type.self)
     static let TOAST_SHORT = 2000
     static let TOAST_LONG = 3500
+    static let TOAST_EXTRALONG = 8000
     
     static let BITMASK: UInt64 = 0b10000000_00000000_00000000_00000000_00000000_00000000_00000000_00000000
     
@@ -89,7 +90,7 @@ class Constants  {
          "2" : [48, 49, 50, 51, 52, 53, 54, 55],
          "1" : [56, 57, 58, 59, 60, 61, 62, 63]]
            
-    static let eloarray: [Int] = [1350, 1425, 1500, 1575, 1650, 1725, 1800, 1875, 1950, 2025, 2100, 2175, 2250, 2850]
+    static let eloarray: [Int] = [1350, 1425, 1500, 1575, 1650, 1725, 1800, 1875, 1950, 2025, 2100, 2175, 2250, 2325, 2400, 2475, 2550, 2625, 2700, 2775, 2850]
     static let strengthArrayLabel: [String] =
         ["Beginner",
         "Level 2, Elo 1425",
@@ -104,5 +105,19 @@ class Constants  {
         "Level 11, Elo 2100",
         "Level 12, Elo 2125",
         "Level 13, Elo 2250",
-        "Maximum"]
+        "Level 14, Elo 2325",
+        "Level 15, Elo 2400",
+        "Level 16, Elo 2475",
+        "Level 17, Elo 2550",
+        "Level 18, Elo 2625",
+        "Level 19, Elo 2700",
+        "Level 20, Elo 2775",
+        "Level 21, Elo 2850"]
+    
+    static let darkSquareColourArray: [ColourARGB] =
+    [ColourARGB(a: 255, r: 90, g: 120, b: 153, text: "Blue"),
+     ColourARGB(a: 255, r: 222, g: 184, b: 135, text: "Brown"),
+     ColourARGB(a: 255, r: 100, g: 153, b: 100, text: "Green"),
+     ColourARGB(a: 255, r: 153, g: 153, b: 153, text: "Grey")]
+    
 }

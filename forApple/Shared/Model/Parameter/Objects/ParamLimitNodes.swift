@@ -16,19 +16,11 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-import SwiftUI
-
-struct TileFramePreference: Equatable {
-    let tileIndex: Int
-    let tileFrame: CGRect
-}
-
-struct TileFramePreferenceKey: PreferenceKey {
-    typealias Value = [TileFramePreference]
+class ParamLimitNodes : ParamProtocol {
+    var nodes : Int
     
-    static var defaultValue: [TileFramePreference] = []
-    
-    static func reduce(value: inout [TileFramePreference], nextValue: () -> [TileFramePreference]) {
-        value.append(contentsOf: nextValue())
+    required init() {
+        nodes = 1000000 // Default value
     }
+    
 }

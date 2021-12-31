@@ -19,14 +19,13 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 import SQLite3
 
 class ParameterDataService : ParameterDataServiceProtocol {
-    private static var objectInstances = NSHashTable<ParameterDataService>(options: .weakMemory)
     private var parameters: [String: ParamProtocol]
     
+    static let instance = ParameterDataService()
   
     /// Constructor
-    init() {
+    private init() {
         parameters = [String: ParamProtocol]()
-        ParameterDataService.objectInstances.add(self)
         load()
     }
     
@@ -66,6 +65,38 @@ class ParameterDataService : ParameterDataServiceProtocol {
                             if let obj = try? JSONDecoder().decode(ParamComputerPlayer.self, from: data) {
                                 parameters[name] = obj
                             }
+                        case String(describing: ParamColourDarkSquares.self):
+                            if let obj = try? JSONDecoder().decode(ParamColourDarkSquares.self, from: data) {
+                                parameters[name] = obj
+                            }
+                        case String(describing: ParamLevelAuto.self):
+                            if let obj = try? JSONDecoder().decode(ParamLevelAuto.self, from: data) {
+                                parameters[name] = obj
+                            }
+                        case String(describing: ParamLimitAdvanced.self):
+                            if let obj = try? JSONDecoder().decode(ParamLimitAdvanced.self, from: data) {
+                                parameters[name] = obj
+                            }
+                        case String(describing: ParamLimitDepth.self):
+                            if let obj = try? JSONDecoder().decode(ParamLimitDepth.self, from: data) {
+                                parameters[name] = obj
+                            }
+                        case String(describing: ParamLimitEngineStrengthELO.self):
+                            if let obj = try? JSONDecoder().decode(ParamLimitEngineStrengthELO.self, from: data) {
+                                parameters[name] = obj
+                            }
+                        case String(describing: ParamLimitMoveDuration.self):
+                            if let obj = try? JSONDecoder().decode(ParamLimitMoveDuration.self, from: data) {
+                                parameters[name] = obj
+                            }
+                        case String(describing: ParamLimitNodes.self):
+                            if let obj = try? JSONDecoder().decode(ParamLimitNodes.self, from: data) {
+                                parameters[name] = obj
+                            }
+                        case String(describing: ParamLimitThreads.self):
+                            if let obj = try? JSONDecoder().decode(ParamLimitThreads.self, from: data) {
+                                parameters[name] = obj
+                            }
                         case String(describing: ParamMoveHighlight.self):
                             if let obj = try? JSONDecoder().decode(ParamMoveHighlight.self, from: data) {
                                 parameters[name] = obj
@@ -74,21 +105,25 @@ class ParameterDataService : ParameterDataServiceProtocol {
                             if let obj = try? JSONDecoder().decode(ParamNavigator.self, from: data) {
                                 parameters[name] = obj
                             }
+                        case String(describing: ParamRandomiseFirstMove.self):
+                            if let obj = try? JSONDecoder().decode(ParamRandomiseFirstMove.self, from: data) {
+                                parameters[name] = obj
+                            }
                         case String(describing: ParamRotateBoard.self):
                             if let obj = try? JSONDecoder().decode(ParamRotateBoard.self, from: data) {
                                 parameters[name] = obj
                             }
-                        case String(describing: ParamSound.self):
-                            if let obj = try? JSONDecoder().decode(ParamSound.self, from: data) {
+                    case String(describing: ParamSoundEffect.self):
+                        if let obj = try? JSONDecoder().decode(ParamSoundEffect.self, from: data) {
+                            parameters[name] = obj
+                        }
+                        case String(describing: ParamSoundRead.self):
+                            if let obj = try? JSONDecoder().decode(ParamSoundRead.self, from: data) {
                                 parameters[name] = obj
                             }
                         case String(describing: ParamVoiceCommand.self):
                             if let obj = try? JSONDecoder().decode(ParamVoiceCommand.self, from: data) {
                             parameters[name] = obj
-                            }
-                        case String(describing: ParamLimitEngineStrengthELO.self):
-                            if let obj = try? JSONDecoder().decode(ParamLimitEngineStrengthELO.self, from: data) {
-                                parameters[name] = obj
                             }
                         default:
                             break
@@ -182,7 +217,7 @@ class ParameterDataService : ParameterDataServiceProtocol {
             if result > 0 {
                 if pReload {
                     // Reload all from DB
-                    ParameterDataService.reloadAllInstances()
+                    load()
                 }
                 else {
                     // Just update the affected list item
@@ -195,15 +230,5 @@ class ParameterDataService : ParameterDataServiceProtocol {
         return result
     }
     
-    /// Refreshes all instances
-    static func reloadAllInstances() {
-       let objectInstancesValid = NSHashTable<ParameterDataService>(options: .weakMemory)
-       
-       for obj in objectInstances.allObjects {
-           obj.load()
-           objectInstancesValid.add(obj)
-       }
-       
-       objectInstances = objectInstancesValid
-   }
+    
 }

@@ -18,39 +18,75 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 import SwiftUI
 
-class MenuSettingsViewModel: ObservableObject {
+@MainActor class MenuSettingsViewModel: ObservableObject {
+    static let instance = MenuSettingsViewModel()
     @Published var value = MenuSettingsValue()
-    
+    @Published var isShowingEngineSettings = false
 }
 
-struct MenuSettingsValue {
-    var arrangeBoardEnabled : Bool = BoardViewModel.shared.parameterDS.get(pParameterClass: ParamArrangeBoard.self).enabled {
+@MainActor struct MenuSettingsValue {
+    var arrangeBoardEnabled : Bool = ParameterDataService.instance.get(pParameterClass: ParamArrangeBoard.self).enabled {
         didSet {
-            BoardViewModel.shared.boardLayout.editMode(pEnable: arrangeBoardEnabled)
+            BoardViewModel.instance.tilePanelVM.editMode(pEnable: arrangeBoardEnabled)
             let parameter = ParamArrangeBoard()
             parameter.enabled = arrangeBoardEnabled
-            _ = BoardViewModel.shared.parameterDS.set(pObj: parameter)
+            _ = ParameterDataService.instance.set(pObj: parameter)
             if !parameter.enabled {
-                BoardViewModel.shared.pieceEditTool.Close()
+                BoardViewModel.instance.pieceEditToolVM.close()
+                BoardViewModel.instance.castlingRightsVM.close()
+            }
+            Task (priority: .userInitiated) {
+                await BoardViewModel.instance.endMoveJob()
             }
         }
     }
     
-    var moveHighlightEnabled : Bool = BoardViewModel.shared.parameterDS.get(pParameterClass: ParamMoveHighlight.self).enabled {
+    var coordinatesEnabled : Bool = ParameterDataService.instance.get(pParameterClass: ParamBoardCoord.self).enabled {
         didSet {
-            let parameter = ParamMoveHighlight()
-            parameter.enabled = moveHighlightEnabled
-            _ = BoardViewModel.shared.parameterDS.set(pObj: parameter)
+            let parameter = ParamBoardCoord()
+            parameter.enabled = coordinatesEnabled
+            _ = ParameterDataService.instance.set(pObj: parameter)
+            BoardViewModel.instance.coordPanelEnabled = parameter.enabled
             
         }
     }
     
-    var soundEnabled: Bool = BoardViewModel.shared.parameterDS.get(pParameterClass: ParamSound.self).enabled {
+    var moveHighlightEnabled : Bool = ParameterDataService.instance.get(pParameterClass: ParamMoveHighlight.self).enabled {
         didSet {
-            let parameter = ParamSound()
-            parameter.enabled = soundEnabled
-            _ = BoardViewModel.shared.parameterDS.set(pObj: parameter)
+            let parameter = ParamMoveHighlight()
+            parameter.enabled = moveHighlightEnabled
+            _ = ParameterDataService.instance.set(pObj: parameter)
             
         }
     }
+    
+    var navigatorEnabled : Bool = ParameterDataService.instance.get(pParameterClass: ParamNavigator.self).enabled {
+        didSet {
+            let parameter = ParamNavigator()
+            parameter.enabled = navigatorEnabled
+            _ = ParameterDataService.instance.set(pObj: parameter)
+            BoardViewModel.instance.navigatorVM.enabled = parameter.enabled
+            BoardViewModel.instance.loadNavigator(pEnabled: parameter.enabled)
+        }
+    }
+    
+    var soundReadEnabled: Bool = ParameterDataService.instance.get(pParameterClass: ParamSoundRead.self).enabled {
+        didSet {
+            let parameter = ParamSoundRead()
+            parameter.enabled = soundReadEnabled
+            _ = ParameterDataService.instance.set(pObj: parameter)
+            
+        }
+    }
+    
+    var soundEffectEnabled: Bool = ParameterDataService.instance.get(pParameterClass: ParamSoundEffect.self).enabled {
+        didSet {
+            let parameter = ParamSoundEffect()
+            parameter.enabled = soundEffectEnabled
+            _ = ParameterDataService.instance.set(pObj: parameter)
+            
+        }
+    }
+    
+    
 }

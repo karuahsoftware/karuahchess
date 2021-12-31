@@ -1,17 +1,17 @@
 {
   "images" : [
     {
-      "filename" : "blackrook1.png",
+      "filename" : "BlackRook1.png",
       "idiom" : "universal",
       "scale" : "1x"
     },
     {
-      "filename" : "blackrook2.png",
+      "filename" : "BlackRook2.png",
       "idiom" : "universal",
       "scale" : "2x"
     },
     {
-      "filename" : "blackrook3.png",
+      "filename" : "BlackRook3.png",
       "idiom" : "universal",
       "scale" : "3x"
     }

@@ -16,16 +16,16 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-class Move {
+@MainActor class Move {
     
-    private let tilePanel: TilePanelView
+    private let tilePanelVM: TilePanelViewModel
     var fromIndex: Int = -1
     var toIndex: Int = -1
     
     enum HighlightEnum : Int { case None, MovePath, Select}
     
-    init(pTilePanel: TilePanelView) {
-        tilePanel = pTilePanel
+    init(pTilePanelVM: TilePanelViewModel) {
+        tilePanelVM = pTilePanelVM
     }
     
     
@@ -35,11 +35,11 @@ class Move {
     ///   - pBoard: The chess engine
     ///   - pHighlight: Type of highlight to perform
     /// - Returns: True when both from and to squares have been selected
-    func add(pBoardSquareIndex: Int, pBoard: KaruahChessEngineC, pHighlight: HighlightEnum) -> Bool {
+    func add(pBoardSquareIndex: Int, pBoard: KaruahChessEngineC, pHighlight: HighlightEnum) async -> Bool {
         var complete = false
         
         if fromIndex == pBoardSquareIndex {
-            clear()
+            await clear()
         }
         else if fromIndex == -1 && toIndex == -1 {
             fromIndex = pBoardSquareIndex
@@ -48,27 +48,20 @@ class Move {
                 if sqMark & (Constants.BITMASK >> fromIndex) <= 0 {
                     sqMark = sqMark | (Constants.BITMASK >> fromIndex)
                 }
-                
-                DispatchQueue.main.async {
-                    self.tilePanel.setHighLight(pBits: sqMark)
-                }
+                tilePanelVM.setHighLight(pBits: sqMark)
             }
             else if pHighlight == HighlightEnum.Select {
                 let sqMark = Constants.BITMASK >> fromIndex
-                DispatchQueue.main.async {
-                    self.tilePanel.setHighLight(pBits: sqMark)
-                }
+                tilePanelVM.setHighLight(pBits: sqMark)
             }
         }
         else if fromIndex > -1 && toIndex == -1 {
             toIndex = pBoardSquareIndex
             complete = true
-            DispatchQueue.main.async {
-                self.tilePanel.setHighLight(pBits: 0)
-            }
+            self.tilePanelVM.setHighLight(pBits: 0)
         }
         else {
-            clear()
+            await clear()
         }
         
         return complete
@@ -76,11 +69,9 @@ class Move {
     
     
     /// Clear the move
-    func clear() {
+    func clear() async {
        fromIndex = -1
         toIndex = -1
-        DispatchQueue.main.async {
-            self.tilePanel.setHighLight(pBits: 0)
-        }
+        self.tilePanelVM.setHighLight(pBits: 0)
     }
 }

@@ -22,7 +22,7 @@ struct BoardButtonStyle: ButtonStyle {
     let buttonSize: CGFloat
     
     func makeBody(configuration: Self.Configuration) -> some View {
-        configuration.label.frame(width: Device.shared.tileSize, height: Device.shared.tileSize)
+        configuration.label.frame(width: buttonSize, height: buttonSize)
     }
     
 }

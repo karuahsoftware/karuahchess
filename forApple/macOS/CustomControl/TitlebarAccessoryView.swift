@@ -19,27 +19,39 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 import SwiftUI
 
 struct TitlebarAccessoryView: View {
+    @ObservedObject private var engineSettingsVM : EngineSettingsViewModel = EngineSettingsViewModel.instance
     
     var body: some View {
         HStack {
-            DirectionIndicatorView(directionIndicatorVM: BoardViewModel.shared.directionIndicator).frame(width: 20, height: 20)
-            ActivityIndicatorView(activityIndicatorVM: BoardViewModel.shared.processingIndicator).frame(width:35, height:35)
+            DirectionIndicatorView(directionIndicatorVM: BoardViewModel.instance.directionIndicatorVM).frame(width: 20, height: 20)
+            ActivityIndicatorView(activityIndicatorVM: BoardViewModel.instance.activityIndicatorVM).frame(width:35, height:35)
             
             Spacer()
             
             Button(action: {
-                BoardViewModel.shared.rotateClick()
+                MenuSheet.shared.active = .engineSettings
                    }){
-                Image(systemName: "arrow.clockwise").foregroundColor(Color(.textColor))
+                HStack {
+                    Image(systemName: "gear").foregroundColor(Color(.textColor))
+                    Text("\(engineSettingsVM.value.limitEngineStrengthELOIndex + 1)")
+                }
             }
-            
+            .help("Engine Settings")
             
             Button(action: {
-                BoardViewModel.shared.showLastMove()
+                BoardViewModel.instance.rotateClick()
+                   }){
+                Image(systemName: "arrow.clockwise").foregroundColor(Color(.textColor))
+            }.keyboardShortcut("r", modifiers: [.command])
+            .help("Rotate ⌘R")
+            
+            Button(action: {
+                BoardViewModel.instance.showLastMove()
                    }){
                 Image(systemName: "eye.fill").foregroundColor(Color(.textColor))
                     
-            }
+            }.keyboardShortcut("l", modifiers: [.command])
+            .help("Last move ⌘L")
         }.padding(.init(top: 0, leading: 7, bottom: 0, trailing: 7))
     }
     

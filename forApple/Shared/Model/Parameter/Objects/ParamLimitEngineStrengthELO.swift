@@ -20,7 +20,7 @@ class ParamLimitEngineStrengthELO : ParamProtocol {
     var eloRating : Int
     
     required init() {
-        eloRating = 1800 // Default value
+        eloRating = 1350 // Default value
     }
     
 }

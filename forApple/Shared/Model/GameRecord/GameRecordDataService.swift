@@ -20,14 +20,13 @@ import SQLite3
 
 class GameRecordDataService : GameRecordDataServiceProtocol {
     
-    private static var objectInstances = NSHashTable<GameRecordDataService>(options: .weakMemory)
-    
     private var gameRecordDict: [Int: GameRecordArray]
     private(set) var currentGame: KaruahChessEngineC
     private var tempBoardA: KaruahChessEngineC
     private var tempBoardB: KaruahChessEngineC
     private var tempBoardC: KaruahChessEngineC
     
+    static let instance = GameRecordDataService()
     
     /// Constructor
     init() {
@@ -36,14 +35,13 @@ class GameRecordDataService : GameRecordDataServiceProtocol {
         tempBoardA = KaruahChessEngineC()
         tempBoardB = KaruahChessEngineC()
         tempBoardC = KaruahChessEngineC()
-        GameRecordDataService.objectInstances.add(self)
         
         load()
     }
     
     
     /// Loads game record
-    private func load() {
+    func load() {
         let board = KaruahChessEngineC()
         
         // Clear records from memory
@@ -368,19 +366,6 @@ class GameRecordDataService : GameRecordDataServiceProtocol {
         
         return recordIDList
         
-    }
- 
-    
-    /// Refreshes all instances
-    static func reloadAllInstances() {
-        let objectInstancesValid = NSHashTable<GameRecordDataService>(options: .weakMemory)
-        
-        for obj in objectInstances.allObjects {
-            obj.load()
-            objectInstancesValid.add(obj)
-        }
-        
-        objectInstances = objectInstancesValid
     }
  
     

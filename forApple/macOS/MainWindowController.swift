@@ -21,12 +21,16 @@ import SwiftUI
 class MainWindowController: NSWindowController, NSWindowDelegate {
     
     func windowDidResize(_ notification: Notification) {
-        if let window = NSApplication.shared.windows.first {
-            Device.shared.tileSize = MainWindowController.getTileSize(pSize: window.contentLayoutRect.size)
-            BoardViewModel.shared.pieceEditTool.Close() // Close the edit tool if it is open as it is not positioned correctly when window resizes
-        }
+        MainWindowController.refreshTileSize()
     }
     
+    /// Refreshes the tile size
+    static func refreshTileSize() {
+        if let window = NSApplication.shared.windows.first {
+            Device.instance.tileSize = MainWindowController.getTileSize(pSize: window.contentLayoutRect.size)
+            BoardViewModel.instance.pieceEditToolVM.close() // Close the edit tool if it is open as it is not positioned correctly when window resizes
+        }
+    }
     
     ///  Gets the size of a tile based on the screen dimensions
     /// - Parameters:
@@ -36,11 +40,15 @@ class MainWindowController: NSWindowController, NSWindowDelegate {
     /// - Returns: The size the tile should be
     static func getTileSize(pSize: CGSize) -> CGFloat {
         let padding: CGFloat = 5
-        if pSize.height < pSize.width {
-            return (pSize.height - padding) / 8
+        let availableHeight = pSize.height - Device.instance.navigationHeight - Device.instance.boardCoordPadding
+        let availableWidth = pSize.width - Device.instance.boardCoordPadding
+        
+        if availableHeight < availableWidth {
+            return (availableHeight - padding) / 8
         }
         else {
-            return (pSize.width - padding) / 8
+            return (availableWidth - padding) / 8
         }
+        
     }
 }

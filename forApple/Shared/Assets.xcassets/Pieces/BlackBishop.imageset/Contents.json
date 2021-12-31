@@ -1,17 +1,17 @@
 {
   "images" : [
     {
-      "filename" : "blackbishop1.png",
+      "filename" : "BlackBishop1.png",
       "idiom" : "universal",
       "scale" : "1x"
     },
     {
-      "filename" : "blackbishop2.png",
+      "filename" : "BlackBishop2.png",
       "idiom" : "universal",
       "scale" : "2x"
     },
     {
-      "filename" : "blackbishop3.png",
+      "filename" : "BlackBishop3.png",
       "idiom" : "universal",
       "scale" : "3x"
     }

@@ -20,10 +20,10 @@ import SwiftUI
 
 extension KaruahChessEngineC {
     func getBoardArraySafe() -> [UInt64] {
-        let arrayPointer = UnsafeMutablePointer<UInt64>.allocate(capacity: 366)
+        let arrayPointer = UnsafeMutablePointer<UInt64>.allocate(capacity: 276)
         self.getBoardArray(arrayPointer)
-        let array = Array(UnsafeBufferPointer(start: arrayPointer, count: 366))
-        arrayPointer.deinitialize(count: 366)
+        let array = Array(UnsafeBufferPointer(start: arrayPointer, count: 276))
+        arrayPointer.deinitialize(count: 276)
         arrayPointer.deallocate()
         return array
     }

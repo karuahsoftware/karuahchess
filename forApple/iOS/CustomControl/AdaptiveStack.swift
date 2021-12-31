@@ -19,7 +19,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 import SwiftUI
 
 struct AdaptiveStack<Content: View>: View {
-    @StateObject var device : Device = Device.shared
+    @ObservedObject var device : Device = Device.instance
     let horizontalAlignment: HorizontalAlignment
     let verticalAlignment: VerticalAlignment
     let spacing: CGFloat?

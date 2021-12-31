@@ -28,10 +28,6 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         // Use this method to optionally configure and attach the UIWindow `window` to the provided UIWindowScene `scene`.
         // If using a storyboard, the `window` property will automatically be initialized and attached to the scene.
         // This delegate does not imply the connecting scene or session are new (see `application:configurationForConnectingSceneSession` instead).
-
-        // Get shared info
-        //  let device = UIApplication.shared.delegate as! AppDelegate
-        
         // Create the SwiftUI view that provides the window contents.
         let contentView = ContentView()
         
@@ -40,7 +36,6 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         if let windowScene = scene as? UIWindowScene {
             let window = UIWindow(windowScene: windowScene)
             
-            //window.rootViewController = UIHostingController(rootView: contentView)
             let rootViewController = UIHostingController(rootView: contentView)
             navController = UINavigationController(rootViewController: rootViewController)
             window.rootViewController = navController
@@ -54,9 +49,15 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
             // Set initial tile size
             let size = windowScene.screen.bounds.size
             let statusBarHeight: CGFloat = windowScene.statusBarManager?.statusBarFrame.height ?? 0
-            let safearea = (UIApplication.shared.windows.first?.safeAreaInsets.top ?? 0) + (UIApplication.shared.windows.first?.safeAreaInsets.bottom ?? 0)
-            Device.shared.tileSize = getTileSize(pSize: size, pStatusBarHeight: statusBarHeight, pNavBarHeight: navBarHeight, pSafeArea: safearea)
-            Device.shared.isLandScape = size.width > size.height
+            let keyWindow = UIApplication.shared.connectedScenes
+                .filter({$0.activationState == .foregroundActive})
+                .compactMap({$0 as? UIWindowScene})
+                .first?.windows
+                .filter({$0.isKeyWindow}).first
+            
+            let safearea: CGFloat = (keyWindow?.safeAreaInsets.top ?? 0) + (keyWindow?.safeAreaInsets.bottom ?? 0)
+            Device.instance.tileSize = SceneDelegate.getTileSize(pSize: size, pStatusBarHeight: statusBarHeight, pNavBarHeight: navBarHeight, pSafeArea: safearea)
+            Device.instance.isLandScape = size.width > size.height
             
         }
         
@@ -73,9 +74,16 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         {
             let size = windowScene.screen.bounds.size
             let statusBarHeight: CGFloat = windowScene.statusBarManager?.statusBarFrame.height ?? 0
-            let safearea = (UIApplication.shared.windows.first?.safeAreaInsets.top ?? 0) + (UIApplication.shared.windows.first?.safeAreaInsets.bottom ?? 0)
-            Device.shared.tileSize = getTileSize(pSize: size, pStatusBarHeight: statusBarHeight, pNavBarHeight: navBarHeight, pSafeArea: safearea)
-            Device.shared.isLandScape = size.width > size.height
+            
+            let keyWindow = UIApplication.shared.connectedScenes
+                .filter({$0.activationState == .foregroundActive})
+                .compactMap({$0 as? UIWindowScene})
+                .first?.windows
+                .filter({$0.isKeyWindow}).first
+            
+            let safearea: CGFloat = (keyWindow?.safeAreaInsets.top ?? 0) + (keyWindow?.safeAreaInsets.bottom ?? 0)
+            Device.instance.tileSize = SceneDelegate.getTileSize(pSize: size, pStatusBarHeight: statusBarHeight, pNavBarHeight: navBarHeight, pSafeArea: safearea)
+            Device.instance.isLandScape = size.width > size.height
         }
     }
 
@@ -107,7 +115,30 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         // Use this method to save data, release shared resources, and store enough scene-specific state information
         // to restore the scene back to its current state.
     }
-
+    
+    /// Refreshes the tile size
+    static func refreshTileSize() {
+        if let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene {
+            let size = windowScene.screen.bounds.size
+            let statusBarHeight: CGFloat = windowScene.statusBarManager?.statusBarFrame.height ?? 0
+            
+            
+            let keyWindow = UIApplication.shared.connectedScenes
+                .filter({$0.activationState == .foregroundActive})
+                .compactMap({$0 as? UIWindowScene})
+                .first?.windows
+                .filter({$0.isKeyWindow}).first
+            
+            let safearea = (keyWindow?.safeAreaInsets.top ?? 0) + (keyWindow?.safeAreaInsets.bottom ?? 0)
+            
+            if let navController = keyWindow?.rootViewController as? UINavigationController {
+                let navBarHeight = navController.navigationBar.frame.height
+                Device.instance.tileSize = SceneDelegate.getTileSize(pSize: size, pStatusBarHeight: statusBarHeight, pNavBarHeight: navBarHeight, pSafeArea: safearea)
+                Device.instance.isLandScape = size.width > size.height
+                BoardViewModel.instance.pieceEditToolVM.close() // Close the edit tool if it is open as it is not positioned correctly when window resizes
+            }
+        }
+    }
     
     ///  Gets the size of a tile based on the screen dimensions
     /// - Parameters:
@@ -115,12 +146,16 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     ///   - pStatusBarHeight: The height of the status bar
     ///   - pNavBarHeight: The height of the navigation bar
     /// - Returns: The size the tile should be
-    func getTileSize(pSize: CGSize, pStatusBarHeight: CGFloat, pNavBarHeight: CGFloat, pSafeArea: CGFloat) -> CGFloat {
-        if pSize.height < pSize.width {
-            return (pSize.height - (pStatusBarHeight + pNavBarHeight + pSafeArea)) / 8
+    static func getTileSize(pSize: CGSize, pStatusBarHeight: CGFloat, pNavBarHeight: CGFloat, pSafeArea: CGFloat) -> CGFloat {
+        let availableHeight = pSize.height - Device.instance.navigationHeight - Device.instance.boardCoordPadding - (pStatusBarHeight + pNavBarHeight + pSafeArea)
+        let availableWidth = pSize.width - Device.instance.boardCoordPadding
+        
+        
+        if availableHeight < availableWidth {
+            return availableHeight / 8
         }
         else {
-            return pSize.width / 8
+            return availableWidth / 8
         }
     }
     
