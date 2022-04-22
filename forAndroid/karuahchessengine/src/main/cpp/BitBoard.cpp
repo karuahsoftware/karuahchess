@@ -17,7 +17,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
 #include "BitBoard.h"
-#include "helper.h"
+#include "Helper.h"
 #include "PiecePattern.h"
 #include <cstdint>
 #include <string>
@@ -25,7 +25,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 
 
-using namespace helper;
+using namespace Helper;
 
 // Constructor
 BitBoard::BitBoard()
@@ -112,11 +112,11 @@ void BitBoard::CalculateAttackPaths()
 
 	while (occupiedScan > 0)
 	{
-		posScan = helper::BitScanForward(occupiedScan);
+		posScan = Helper::BitScanForward(occupiedScan);
 		occupiedScan ^= 1uLL << posScan;
 		sqIndex = (63 - posScan);
 
-		sqMask = helper::BITMASK >> sqIndex;
+		sqMask = Helper::BITMASK >> sqIndex;
 		_attackPath[sqIndex] = 0ULL;
 		_nonAttackPawnPath[sqIndex] = 0ULL;
 
@@ -131,25 +131,25 @@ void BitBoard::CalculateAttackPaths()
 		}
 		else if ((sqMask & _positionWhiteBishop) > 0)
 		{
-			_attackPath[sqIndex] = helper::DiagonalMove[sqIndex][((helper::DiagonalRay[sqIndex] & blockers) * helper::DiagonalMagic[sqIndex]) >> 52];
+			_attackPath[sqIndex] = Helper::DiagonalMove[sqIndex][((Helper::DiagonalRay[sqIndex] & blockers) * Helper::DiagonalMagic[sqIndex]) >> 52];
 			_whiteAttack |= _attackPath[sqIndex];
-			_whiteAttackXRayBlackKing |= helper::DiagonalMove[sqIndex][((helper::DiagonalRay[sqIndex] & (blockers & ~_positionBlackKing)) * helper::DiagonalMagic[sqIndex]) >> 52];
+			_whiteAttackXRayBlackKing |= Helper::DiagonalMove[sqIndex][((Helper::DiagonalRay[sqIndex] & (blockers & ~_positionBlackKing)) * Helper::DiagonalMagic[sqIndex]) >> 52];
 
 		}
 		else if ((sqMask & _positionWhiteQueen) > 0)
 		{
 			// Queen pattern is the bishop pattern xor with rook pattern
-			_attackPath[sqIndex] = (helper::DiagonalMove[sqIndex][((helper::DiagonalRay[sqIndex] & blockers) * helper::DiagonalMagic[sqIndex]) >> 52] ^
-									helper::HorizontalVerticalMove[sqIndex][((helper::HorizontalVerticalRay[sqIndex] & blockers) * helper::HorizontalVerticalMagic[sqIndex]) >> 52]);
+			_attackPath[sqIndex] = (Helper::DiagonalMove[sqIndex][((Helper::DiagonalRay[sqIndex] & blockers) * Helper::DiagonalMagic[sqIndex]) >> 52] ^
+									Helper::HorizontalVerticalMove[sqIndex][((Helper::HorizontalVerticalRay[sqIndex] & blockers) * Helper::HorizontalVerticalMagic[sqIndex]) >> 52]);
 			_whiteAttack |= _attackPath[sqIndex];
-			_whiteAttackXRayBlackKing |= (helper::DiagonalMove[sqIndex][((helper::DiagonalRay[sqIndex] & (blockers & ~_positionBlackKing)) * helper::DiagonalMagic[sqIndex]) >> 52] ^
-										  helper::HorizontalVerticalMove[sqIndex][((helper::HorizontalVerticalRay[sqIndex] & (blockers & ~_positionBlackKing)) * helper::HorizontalVerticalMagic[sqIndex]) >> 52]);
+			_whiteAttackXRayBlackKing |= (Helper::DiagonalMove[sqIndex][((Helper::DiagonalRay[sqIndex] & (blockers & ~_positionBlackKing)) * Helper::DiagonalMagic[sqIndex]) >> 52] ^
+										  Helper::HorizontalVerticalMove[sqIndex][((Helper::HorizontalVerticalRay[sqIndex] & (blockers & ~_positionBlackKing)) * Helper::HorizontalVerticalMagic[sqIndex]) >> 52]);
 		}
 		else if ((sqMask & _positionWhiteRook) > 0)
 		{
-			_attackPath[sqIndex] = helper::HorizontalVerticalMove[sqIndex][((helper::HorizontalVerticalRay[sqIndex] & blockers) * helper::HorizontalVerticalMagic[sqIndex]) >> 52];
+			_attackPath[sqIndex] = Helper::HorizontalVerticalMove[sqIndex][((Helper::HorizontalVerticalRay[sqIndex] & blockers) * Helper::HorizontalVerticalMagic[sqIndex]) >> 52];
 			_whiteAttack |= _attackPath[sqIndex];
-			_whiteAttackXRayBlackKing |= helper::HorizontalVerticalMove[sqIndex][((helper::HorizontalVerticalRay[sqIndex] & (blockers & ~_positionBlackKing)) * helper::HorizontalVerticalMagic[sqIndex]) >> 52];
+			_whiteAttackXRayBlackKing |= Helper::HorizontalVerticalMove[sqIndex][((Helper::HorizontalVerticalRay[sqIndex] & (blockers & ~_positionBlackKing)) * Helper::HorizontalVerticalMagic[sqIndex]) >> 52];
 
 		}
 		else if ((sqMask & _positionWhiteKing) > 0)
@@ -158,7 +158,7 @@ void BitBoard::CalculateAttackPaths()
 		}
 		else if ((sqMask & _positionWhiteKnight) > 0)
 		{
-			_attackPath[sqIndex] = helper::KnightMove[sqIndex];
+			_attackPath[sqIndex] = Helper::KnightMove[sqIndex];
 			_whiteAttack |= _attackPath[sqIndex];
 		}
 		else if ((sqMask & _positionBlackPawn) > 0)
@@ -172,25 +172,25 @@ void BitBoard::CalculateAttackPaths()
 		}
 		else if ((sqMask & _positionBlackBishop) > 0)
 		{
-			_attackPath[sqIndex] = helper::DiagonalMove[sqIndex][((helper::DiagonalRay[sqIndex] & blockers) * helper::DiagonalMagic[sqIndex]) >> 52];
+			_attackPath[sqIndex] = Helper::DiagonalMove[sqIndex][((Helper::DiagonalRay[sqIndex] & blockers) * Helper::DiagonalMagic[sqIndex]) >> 52];
 			_blackAttack |= _attackPath[sqIndex];
-			_blackAttackXRayWhiteKing |= helper::DiagonalMove[sqIndex][((helper::DiagonalRay[sqIndex] & (blockers & ~_positionWhiteKing)) * helper::DiagonalMagic[sqIndex]) >> 52];
+			_blackAttackXRayWhiteKing |= Helper::DiagonalMove[sqIndex][((Helper::DiagonalRay[sqIndex] & (blockers & ~_positionWhiteKing)) * Helper::DiagonalMagic[sqIndex]) >> 52];
 		}
 		else if (((sqMask & _positionBlackQueen)) > 0)
 		{
 			// Queen pattern is the bishop pattern xor with rook pattern
-			_attackPath[sqIndex] = (helper::DiagonalMove[sqIndex][((helper::DiagonalRay[sqIndex] & blockers) * helper::DiagonalMagic[sqIndex]) >> 52] ^
-									helper::HorizontalVerticalMove[sqIndex][((helper::HorizontalVerticalRay[sqIndex] & blockers) * helper::HorizontalVerticalMagic[sqIndex]) >> 52]);
+			_attackPath[sqIndex] = (Helper::DiagonalMove[sqIndex][((Helper::DiagonalRay[sqIndex] & blockers) * Helper::DiagonalMagic[sqIndex]) >> 52] ^
+									Helper::HorizontalVerticalMove[sqIndex][((Helper::HorizontalVerticalRay[sqIndex] & blockers) * Helper::HorizontalVerticalMagic[sqIndex]) >> 52]);
 			_blackAttack |= _attackPath[sqIndex];
-			_blackAttackXRayWhiteKing |= (helper::DiagonalMove[sqIndex][((helper::DiagonalRay[sqIndex] & (blockers & ~_positionWhiteKing)) * helper::DiagonalMagic[sqIndex]) >> 52] ^
-									   helper::HorizontalVerticalMove[sqIndex][((helper::HorizontalVerticalRay[sqIndex] & (blockers & ~_positionWhiteKing)) * helper::HorizontalVerticalMagic[sqIndex]) >> 52]);
+			_blackAttackXRayWhiteKing |= (Helper::DiagonalMove[sqIndex][((Helper::DiagonalRay[sqIndex] & (blockers & ~_positionWhiteKing)) * Helper::DiagonalMagic[sqIndex]) >> 52] ^
+									   Helper::HorizontalVerticalMove[sqIndex][((Helper::HorizontalVerticalRay[sqIndex] & (blockers & ~_positionWhiteKing)) * Helper::HorizontalVerticalMagic[sqIndex]) >> 52]);
 
 		}
 		else if ((sqMask & _positionBlackRook) > 0)
 		{
-			_attackPath[sqIndex] = helper::HorizontalVerticalMove[sqIndex][((helper::HorizontalVerticalRay[sqIndex] & blockers) * helper::HorizontalVerticalMagic[sqIndex]) >> 52];
+			_attackPath[sqIndex] = Helper::HorizontalVerticalMove[sqIndex][((Helper::HorizontalVerticalRay[sqIndex] & blockers) * Helper::HorizontalVerticalMagic[sqIndex]) >> 52];
 			_blackAttack |= _attackPath[sqIndex];
-			_blackAttackXRayWhiteKing |= helper::HorizontalVerticalMove[sqIndex][((helper::HorizontalVerticalRay[sqIndex] & (blockers & ~_positionWhiteKing)) * helper::HorizontalVerticalMagic[sqIndex]) >> 52];
+			_blackAttackXRayWhiteKing |= Helper::HorizontalVerticalMove[sqIndex][((Helper::HorizontalVerticalRay[sqIndex] & (blockers & ~_positionWhiteKing)) * Helper::HorizontalVerticalMagic[sqIndex]) >> 52];
 		}
 		else if ((sqMask & _positionBlackKing) > 0)
 		{
@@ -198,7 +198,7 @@ void BitBoard::CalculateAttackPaths()
 		}
 		else if ((sqMask & _positionBlackKnight) > 0)
 		{
-			_attackPath[sqIndex] = helper::KnightMove[sqIndex];
+			_attackPath[sqIndex] = Helper::KnightMove[sqIndex];
 			_blackAttack |= _attackPath[sqIndex];
 		}
 
@@ -206,8 +206,8 @@ void BitBoard::CalculateAttackPaths()
 
 	// Calculate the king attack paths
 	if (whiteKingIndex > -1 && blackKingIndex > -1) {
-		_attackPath[whiteKingIndex] = helper::KingMove[whiteKingIndex] & ~(_blackAttack | _blackAttackXRayWhiteKing | _blackPotentialAttackPawn | helper::KingMove[blackKingIndex]);
-		_attackPath[blackKingIndex] = helper::KingMove[blackKingIndex] & ~(_whiteAttack | _whiteAttackXRayBlackKing | _whitePotentialAttackPawn | helper::KingMove[whiteKingIndex]);
+		_attackPath[whiteKingIndex] = Helper::KingMove[whiteKingIndex] & ~(_blackAttack | _blackAttackXRayWhiteKing | _blackPotentialAttackPawn | Helper::KingMove[blackKingIndex]);
+		_attackPath[blackKingIndex] = Helper::KingMove[blackKingIndex] & ~(_whiteAttack | _whiteAttackXRayBlackKing | _whitePotentialAttackPawn | Helper::KingMove[whiteKingIndex]);
 		_whiteAttack |= _attackPath[whiteKingIndex];
 		_blackAttack |= _attackPath[blackKingIndex];
 
@@ -246,10 +246,10 @@ uint64_t BitBoard::GetPotentialMove(const int pSqIndex)
 {
 	if (!_attackPathReady) CalculateAttackPaths();
 
-	if ((_whitePos & helper::BITMASK >> pSqIndex) > 0ULL) {
+	if ((_whitePos & Helper::BITMASK >> pSqIndex) > 0ULL) {
 		return (_attackPath[pSqIndex] | _nonAttackPawnPath[pSqIndex] | _castlePath[pSqIndex]) & ~_whitePos;
 	}
-	else if ((_blackPos & helper::BITMASK >> pSqIndex) > 0ULL) {
+	else if ((_blackPos & Helper::BITMASK >> pSqIndex) > 0ULL) {
 		return (_attackPath[pSqIndex] | _nonAttackPawnPath[pSqIndex] | _castlePath[pSqIndex]) & ~_blackPos;
 	}
 	else {
@@ -279,7 +279,7 @@ void BitBoard::Update(const int pSqIndex, const int pSpin)
 	Hash = Hash ^ ZobristSquareHash(pSqIndex);
 
 	// Update pawn hash key if update involves a pawn
-	if (((_positionWhitePawn | _positionBlackPawn) & (helper::BITMASK >> pSqIndex)) > 0ULL) HashPawn = HashPawn ^ ZobristSquareHash(pSqIndex);
+	if (((_positionWhitePawn | _positionBlackPawn) & (Helper::BITMASK >> pSqIndex)) > 0ULL) HashPawn = HashPawn ^ ZobristSquareHash(pSqIndex);
 
 	// Set board
 	SetSpin(pSqIndex, pSpin);
@@ -288,7 +288,7 @@ void BitBoard::Update(const int pSqIndex, const int pSpin)
 	Hash = Hash ^ ZobristSquareHash(pSqIndex);
 
 	// Update pawn hash key if update involves a pawn
-	if (pSpin == helper::WHITE_PAWN_SPIN || pSpin == helper::BLACK_PAWN_SPIN) HashPawn = HashPawn ^ ZobristSquareHash(pSqIndex);
+	if (pSpin == Helper::WHITE_PAWN_SPIN || pSpin == Helper::BLACK_PAWN_SPIN) HashPawn = HashPawn ^ ZobristSquareHash(pSqIndex);
 
 }
 
@@ -347,7 +347,7 @@ std::string BitBoard::GetBoard()
 
 	for (int i = 0; i < 64; i++)
 	{
-		char FENChar = helper::GetFENCharFromSpin(GetSpin(i));
+		char FENChar = Helper::GetFENCharFromSpin(GetSpin(i));
 
 		if (FENChar == '0') blankCount++;
 		else
@@ -404,12 +404,12 @@ std::string BitBoard::GetEnpassantFEN()
 	{
 		int enpassantTarget = -1;
 		int spin = GetSpin(StateEnpassantIndex);
-		if (spin == helper::WHITE_PAWN_SPIN) enpassantTarget = StateEnpassantIndex + 8;
-		else if (spin == helper::BLACK_PAWN_SPIN) enpassantTarget = StateEnpassantIndex - 8;
+		if (spin == Helper::WHITE_PAWN_SPIN) enpassantTarget = StateEnpassantIndex + 8;
+		else if (spin == Helper::BLACK_PAWN_SPIN) enpassantTarget = StateEnpassantIndex - 8;
 
 		if (enpassantTarget >= 0 && enpassantTarget <= 63)
 		{
-			std::string fenStr = helper::BoardCoordinateDict.at(enpassantTarget);
+			std::string fenStr = Helper::BoardCoordinateDict.at(enpassantTarget);
 			return fenStr;
 		}
 	}
@@ -500,7 +500,7 @@ void BitBoard::SetBoard(const std::string pFENstr)
 	for (int i = 0; i < 64; i++)
 	{
 		int currentSpin = GetSpin(i);
-		int newSpin = helper::GetSpinFromChar(boardArray[i]);
+		int newSpin = Helper::GetSpinFromChar(boardArray[i]);
 		if (newSpin != currentSpin)
 		{
 			Update(i, newSpin);
@@ -523,7 +523,7 @@ void BitBoard::SetBoard(const std::string pFENstr)
 /// <param name="pSpin"></param>
 void BitBoard::SetSpin(const int pSqIndex, const int pSpin)
 {
-	uint64_t sqMask = helper::BITMASK >> pSqIndex;
+	uint64_t sqMask = Helper::BITMASK >> pSqIndex;
 	uint64_t sqMaskComp = ~sqMask;
 
 	_positionBlackPawn &= sqMaskComp;
@@ -556,21 +556,21 @@ void BitBoard::SetSpin(const int pSqIndex, const int pSpin)
 /// <param name="pIndex"></param>
 int BitBoard::GetSpin(const int pIndex)
 {
-	uint64_t sqMask = helper::BITMASK >> pIndex;
+	uint64_t sqMask = Helper::BITMASK >> pIndex;
 
 
-	if ((sqMask & _positionBlackPawn) > 0) return helper::BLACK_PAWN_SPIN;
-	else if ((sqMask & _positionBlackRook) > 0) return helper::BLACK_ROOK_SPIN;
-	else if ((sqMask & _positionBlackKnight) > 0) return helper::BLACK_KNIGHT_SPIN;
-	else if ((sqMask & _positionBlackBishop) > 0) return helper::BLACK_BISHOP_SPIN;
-	else if ((sqMask & _positionBlackQueen) > 0) return helper::BLACK_QUEEN_SPIN;
-	else if ((sqMask & _positionBlackKing) > 0) return helper::BLACK_KING_SPIN;
-	else if ((sqMask & _positionWhitePawn) > 0) return helper::WHITE_PAWN_SPIN;
-	else if ((sqMask & _positionWhiteRook) > 0) return helper::WHITE_ROOK_SPIN;
-	else if ((sqMask & _positionWhiteKnight) > 0) return helper::WHITE_KNIGHT_SPIN;
-	else if ((sqMask & _positionWhiteBishop) > 0) return helper::WHITE_BISHOP_SPIN;
-	else if ((sqMask & _positionWhiteQueen) > 0) return helper::WHITE_QUEEN_SPIN;
-	else if ((sqMask & _positionWhiteKing) > 0) return helper::WHITE_KING_SPIN;
+	if ((sqMask & _positionBlackPawn) > 0) return Helper::BLACK_PAWN_SPIN;
+	else if ((sqMask & _positionBlackRook) > 0) return Helper::BLACK_ROOK_SPIN;
+	else if ((sqMask & _positionBlackKnight) > 0) return Helper::BLACK_KNIGHT_SPIN;
+	else if ((sqMask & _positionBlackBishop) > 0) return Helper::BLACK_BISHOP_SPIN;
+	else if ((sqMask & _positionBlackQueen) > 0) return Helper::BLACK_QUEEN_SPIN;
+	else if ((sqMask & _positionBlackKing) > 0) return Helper::BLACK_KING_SPIN;
+	else if ((sqMask & _positionWhitePawn) > 0) return Helper::WHITE_PAWN_SPIN;
+	else if ((sqMask & _positionWhiteRook) > 0) return Helper::WHITE_ROOK_SPIN;
+	else if ((sqMask & _positionWhiteKnight) > 0) return Helper::WHITE_KNIGHT_SPIN;
+	else if ((sqMask & _positionWhiteBishop) > 0) return Helper::WHITE_BISHOP_SPIN;
+	else if ((sqMask & _positionWhiteQueen) > 0) return Helper::WHITE_QUEEN_SPIN;
+	else if ((sqMask & _positionWhiteKing) > 0) return Helper::WHITE_KING_SPIN;
 
 
 	return 0;
@@ -586,20 +586,20 @@ int BitBoard::GetSpin(const int pIndex)
 uint64_t BitBoard::ZobristSquareHash(const int pSqIndex)
 {
 
-	uint64_t sqMask = helper::BITMASK >> pSqIndex;
+	uint64_t sqMask = Helper::BITMASK >> pSqIndex;
 
-	if ((sqMask & _positionBlackPawn) > 0) return helper::RandomBoardArray[BLACK_PAWN_INDEX_64 + pSqIndex];
-	else if ((sqMask & _positionBlackRook) > 0) return helper::RandomBoardArray[BLACK_ROOK_INDEX_64 + pSqIndex];
-	else if ((sqMask & _positionBlackKnight) > 0) return helper::RandomBoardArray[BLACK_KNIGHT_INDEX_64 + pSqIndex];
-	else if ((sqMask & _positionBlackBishop) > 0) return helper::RandomBoardArray[BLACK_BISHOP_INDEX_64 + pSqIndex];
-	else if ((sqMask & _positionBlackQueen) > 0) return helper::RandomBoardArray[BLACK_QUEEN_INDEX_64 + pSqIndex];
-	else if ((sqMask & _positionBlackKing) > 0) return helper::RandomBoardArray[BLACK_KING_INDEX_64 + pSqIndex];
-	else if ((sqMask & _positionWhitePawn) > 0) return helper::RandomBoardArray[WHITE_PAWN_INDEX_64 + pSqIndex];
-	else if ((sqMask & _positionWhiteRook) > 0) return helper::RandomBoardArray[WHITE_ROOK_INDEX_64 + pSqIndex];
-	else if ((sqMask & _positionWhiteKnight) > 0) return helper::RandomBoardArray[WHITE_KNIGHT_INDEX_64 + pSqIndex];
-	else if ((sqMask & _positionWhiteBishop) > 0) return helper::RandomBoardArray[WHITE_BISHOP_INDEX_64 + pSqIndex];
-	else if ((sqMask & _positionWhiteQueen) > 0) return helper::RandomBoardArray[WHITE_QUEEN_INDEX_64 + pSqIndex];
-	else if ((sqMask & _positionWhiteKing) > 0) return helper::RandomBoardArray[WHITE_KING_INDEX_64 + pSqIndex];
+	if ((sqMask & _positionBlackPawn) > 0) return Helper::RandomBoardArray[BLACK_PAWN_INDEX_64 + pSqIndex];
+	else if ((sqMask & _positionBlackRook) > 0) return Helper::RandomBoardArray[BLACK_ROOK_INDEX_64 + pSqIndex];
+	else if ((sqMask & _positionBlackKnight) > 0) return Helper::RandomBoardArray[BLACK_KNIGHT_INDEX_64 + pSqIndex];
+	else if ((sqMask & _positionBlackBishop) > 0) return Helper::RandomBoardArray[BLACK_BISHOP_INDEX_64 + pSqIndex];
+	else if ((sqMask & _positionBlackQueen) > 0) return Helper::RandomBoardArray[BLACK_QUEEN_INDEX_64 + pSqIndex];
+	else if ((sqMask & _positionBlackKing) > 0) return Helper::RandomBoardArray[BLACK_KING_INDEX_64 + pSqIndex];
+	else if ((sqMask & _positionWhitePawn) > 0) return Helper::RandomBoardArray[WHITE_PAWN_INDEX_64 + pSqIndex];
+	else if ((sqMask & _positionWhiteRook) > 0) return Helper::RandomBoardArray[WHITE_ROOK_INDEX_64 + pSqIndex];
+	else if ((sqMask & _positionWhiteKnight) > 0) return Helper::RandomBoardArray[WHITE_KNIGHT_INDEX_64 + pSqIndex];
+	else if ((sqMask & _positionWhiteBishop) > 0) return Helper::RandomBoardArray[WHITE_BISHOP_INDEX_64 + pSqIndex];
+	else if ((sqMask & _positionWhiteQueen) > 0) return Helper::RandomBoardArray[WHITE_QUEEN_INDEX_64 + pSqIndex];
+	else if ((sqMask & _positionWhiteKing) > 0) return Helper::RandomBoardArray[WHITE_KING_INDEX_64 + pSqIndex];
 	else return 0uLL;
 
 
@@ -640,7 +640,7 @@ template<int Colour> uint64_t BitBoard::GetOccupiedBySpin(const int pSpin)
 /// <returns></returns>
 uint64_t BitBoard::GetOccupied(const int pColour)
 {
-	if (pColour == helper::WHITEPIECE) return _positionWhitePawn | _positionWhiteKnight | _positionWhiteBishop | _positionWhiteRook | _positionWhiteQueen | _positionWhiteKing;
+	if (pColour == Helper::WHITEPIECE) return _positionWhitePawn | _positionWhiteKnight | _positionWhiteBishop | _positionWhiteRook | _positionWhiteQueen | _positionWhiteKing;
 	else return _positionBlackPawn | _positionBlackKnight | _positionBlackBishop | _positionBlackRook | _positionBlackQueen | _positionBlackKing;
 
 }
@@ -664,10 +664,10 @@ bool BitBoard::OnlyKingsRemain()
 template<int Colour> int BitBoard::KingIndex()
 {
 	if constexpr (Colour == WHITEPIECE) {
-		return _positionWhiteKing > 0 ? 63 - helper::BitScanForward(_positionWhiteKing) : -1;
+		return _positionWhiteKing > 0 ? 63 - Helper::BitScanForward(_positionWhiteKing) : -1;
 	}
 	else {
-		return _positionBlackKing > 0 ? 63 - helper::BitScanForward(_positionBlackKing) : -1;
+		return _positionBlackKing > 0 ? 63 - Helper::BitScanForward(_positionBlackKing) : -1;
 	}
 
 }
@@ -717,7 +717,7 @@ void BitBoard::SetState(const std::string pState)
 {
 	std::vector<std::string> stateArray;
 	stateArray.reserve(8);
-	helper::Split(pState, '|', stateArray);
+	Helper::Split(pState, '|', stateArray);
 
 	if (stateArray.size() == 8)
 	{
@@ -778,7 +778,7 @@ void BitBoard::Reset()
 {
 
 	// Initialise the state
-	StateActiveColour = helper::WHITEPIECE;
+	StateActiveColour = Helper::WHITEPIECE;
 	StateCastlingAvailability = 0b001111;
 	StateEnpassantIndex = -1;
 	StateHalfMoveCount = 0;
@@ -912,10 +912,10 @@ int BitBoard::VerifyBoardConfiguration() {
 	else if ((GetOccupiedBySpin<BLACKPIECE>(PAWN_SPIN) & (RANK1 | RANK8)) > 0) errorCode = 16;
 	else if (IsKingCheck(WHITEPIECE) && StateActiveColour == BLACKPIECE) errorCode = 17;
 	else if (IsKingCheck(BLACKPIECE) && StateActiveColour == WHITEPIECE) errorCode = 18;
-	else if ((GetSpin(63) != helper::WHITE_ROOK_SPIN || GetSpin(60) != helper::WHITE_KING_SPIN) && ((StateCastlingAvailability & 0b000010) > 0)) errorCode = 19;
-	else if ((GetSpin(56) != helper::WHITE_ROOK_SPIN || GetSpin(60) != helper::WHITE_KING_SPIN) && ((StateCastlingAvailability & 0b000001) > 0)) errorCode = 20;
-	else if ((GetSpin(7) != helper::BLACK_ROOK_SPIN || GetSpin(4) != helper::BLACK_KING_SPIN) && ((StateCastlingAvailability & 0b001000) > 0)) errorCode = 21;
-	else if ((GetSpin(0) != helper::BLACK_ROOK_SPIN || GetSpin(4) != helper::BLACK_KING_SPIN) && ((StateCastlingAvailability & 0b000100) > 0)) errorCode = 22;
+	else if ((GetSpin(63) != Helper::WHITE_ROOK_SPIN || GetSpin(60) != Helper::WHITE_KING_SPIN) && ((StateCastlingAvailability & 0b000010) > 0)) errorCode = 19;
+	else if ((GetSpin(56) != Helper::WHITE_ROOK_SPIN || GetSpin(60) != Helper::WHITE_KING_SPIN) && ((StateCastlingAvailability & 0b000001) > 0)) errorCode = 20;
+	else if ((GetSpin(7) != Helper::BLACK_ROOK_SPIN || GetSpin(4) != Helper::BLACK_KING_SPIN) && ((StateCastlingAvailability & 0b001000) > 0)) errorCode = 21;
+	else if ((GetSpin(0) != Helper::BLACK_ROOK_SPIN || GetSpin(4) != Helper::BLACK_KING_SPIN) && ((StateCastlingAvailability & 0b000100) > 0)) errorCode = 22;
 
 	return errorCode;
 }
@@ -927,9 +927,9 @@ template<int Colour> bool BitBoard::setStateCastlingAvailability(const int pCast
 {
 	// Check that castling availability is valid
 	if constexpr (Colour == WHITEPIECE) {
-		if (((GetSpin(63) != helper::WHITE_ROOK_SPIN || GetSpin(60) != helper::WHITE_KING_SPIN) &&
+		if (((GetSpin(63) != Helper::WHITE_ROOK_SPIN || GetSpin(60) != Helper::WHITE_KING_SPIN) &&
 			 ((pCastlingAvailability & 0b000010) > 0)) ||
-			((GetSpin(56) != helper::WHITE_ROOK_SPIN || GetSpin(60) != helper::WHITE_KING_SPIN) &&
+			((GetSpin(56) != Helper::WHITE_ROOK_SPIN || GetSpin(60) != Helper::WHITE_KING_SPIN) &&
 			 ((pCastlingAvailability & 0b000001) > 0)))
 			 {
 			return false;
@@ -941,9 +941,9 @@ template<int Colour> bool BitBoard::setStateCastlingAvailability(const int pCast
 		}
 	}
 	else {
-		if (((GetSpin(7) != helper::BLACK_ROOK_SPIN || GetSpin(4) != helper::BLACK_KING_SPIN) &&
+		if (((GetSpin(7) != Helper::BLACK_ROOK_SPIN || GetSpin(4) != Helper::BLACK_KING_SPIN) &&
 			 ((pCastlingAvailability & 0b001000) > 0)) ||
-			((GetSpin(0) != helper::BLACK_ROOK_SPIN || GetSpin(4) != helper::BLACK_KING_SPIN) &&
+			((GetSpin(0) != Helper::BLACK_ROOK_SPIN || GetSpin(4) != Helper::BLACK_KING_SPIN) &&
 			 ((pCastlingAvailability & 0b000100) > 0))) {
 			return false;
 		}

@@ -16,7 +16,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-#include "helper.h"
+#include "Helper.h"
 #include "Engine.h"
 #include "BitBoard.h"
 #include "Search.h"
@@ -511,11 +511,11 @@ Java_purpletreesoftware_karuahchess_engine_KaruahChessEngineC_getKingIndex (
 {
     auto boardItr = MainBoardMap.find(pId);
     if(boardItr != MainBoardMap.end()) {
-        if (pColour == helper::WHITEPIECE) {
-            return boardItr->second->KingIndex<helper::WHITEPIECE>();
+        if (pColour == Helper::WHITEPIECE) {
+            return boardItr->second->KingIndex<Helper::WHITEPIECE>();
         }
         else {
-            return boardItr->second->KingIndex<helper::BLACKPIECE>();
+            return boardItr->second->KingIndex<Helper::BLACKPIECE>();
         }
     }
     else {
@@ -585,7 +585,7 @@ Java_purpletreesoftware_karuahchess_engine_KaruahChessEngineC_move (
 
     auto boardItr = MainBoardMap.find(pId);
     if(boardItr != MainBoardMap.end()) {
-        helper::PawnPromotionEnum pawnPromotion = static_cast<helper::PawnPromotionEnum>(pPawnPromotionPiece);
+        Helper::PawnPromotionEnum pawnPromotion = static_cast<Helper::PawnPromotionEnum>(pPawnPromotionPiece);
         bool success = MoveRules::Move(pFromIndex, pToIndex, *boardItr->second, pawnPromotion,
                                        pValidateEnabled, pCommit);
 
@@ -778,7 +778,7 @@ Java_purpletreesoftware_karuahchess_engine_KaruahChessEngineC_getSpinFromPieceNa
     const char *piecenameChr = pEnv->GetStringUTFChars(pPieceName,0);
     std::string piecenameStr = piecenameChr;
 
-    return helper::GetSpinFromPieceName(piecenameStr);
+    return Helper::GetSpinFromPieceName(piecenameStr);
 }
 
 /// <summary>
@@ -792,7 +792,7 @@ Java_purpletreesoftware_karuahchess_engine_KaruahChessEngineC_getPieceNameFromCh
         jchar pFENChar)
 {
 
-    std::string piecename = helper::GetPieceNameFromChar((char)pFENChar);
+    std::string piecename = Helper::GetPieceNameFromChar((char)pFENChar);
     return pEnv->NewStringUTF(piecename.c_str());
 }
 
@@ -806,7 +806,7 @@ Java_purpletreesoftware_karuahchess_engine_KaruahChessEngineC_getFENCharFromSpin
         jobject pThis,
         jint pSpin)
 {
-    return (char16_t)helper::GetFENCharFromSpin(pSpin);
+    return (char16_t)Helper::GetFENCharFromSpin(pSpin);
 
 }
 
@@ -885,7 +885,7 @@ Java_purpletreesoftware_karuahchess_engine_KaruahChessEngineC_searchStart (
         }
 
         pEnv->SetIntField(mResultObj, errorFieldID, bestMove.error);
-        pEnv->SetObjectField(mResultObj, errorMessageFieldID, pEnv->NewStringUTF(helper::SearchErrorMessage.at(bestMove.error).c_str()));
+        pEnv->SetObjectField(mResultObj, errorMessageFieldID, pEnv->NewStringUTF(Helper::SearchErrorMessage.at(bestMove.error).c_str()));
 
         return mResultObj;
     } else {
@@ -915,11 +915,11 @@ Java_purpletreesoftware_karuahchess_engine_KaruahChessEngineC_setStateCastlingAv
     auto boardItr = MainBoardMap.find(pId);
     if(boardItr != MainBoardMap.end()) {
         bool success = false;
-        if (pColour == helper::WHITEPIECE) {
-            success = boardItr->second->setStateCastlingAvailability<helper::WHITEPIECE>(pCastlingAvailability);
+        if (pColour == Helper::WHITEPIECE) {
+            success = boardItr->second->setStateCastlingAvailability<Helper::WHITEPIECE>(pCastlingAvailability);
         }
         else {
-            success = boardItr->second->setStateCastlingAvailability<helper::BLACKPIECE>(pCastlingAvailability);
+            success = boardItr->second->setStateCastlingAvailability<Helper::BLACKPIECE>(pCastlingAvailability);
         }
 
         if (success) return  JNI_TRUE;

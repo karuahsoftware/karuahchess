@@ -17,15 +17,15 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
 #pragma once
-#include "helper.h"
+#include "Helper.h"
 #include <cstdint>
 
 
 	namespace PiecePattern {
 
 		// Functions
-		extern uint64_t Pattern(helper::PatternEnum pPattern, int pSqIndex, uint64_t pBlockers);
-		extern uint64_t PatternXRay(helper::PatternEnum pPattern, int pSqIndex, uint64_t pBlockers);
+		extern uint64_t Pattern(Helper::PatternEnum pPattern, int pSqIndex, uint64_t pBlockers);
+		extern uint64_t PatternXRay(Helper::PatternEnum pPattern, int pSqIndex, uint64_t pBlockers);
 		template<int Colour> extern uint64_t PawnEnpassant(const int pIndex, const int pEnpassantIndex);		
 		template<int Colour> extern uint64_t PawnPotentialAttack(const int pSqIndex);		
 		template<int Colour> extern uint64_t PawnPotentialAttackBB(const uint64_t p);

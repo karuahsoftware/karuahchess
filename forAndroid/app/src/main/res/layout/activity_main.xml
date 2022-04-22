@@ -28,7 +28,7 @@
 
     <com.google.android.material.appbar.AppBarLayout
             android:id="@+id/appBarTop"
-            android:layout_height="wrap_content"
+            android:layout_height="?android:attr/actionBarSize"
             android:layout_width="match_parent"
             >
 
@@ -76,7 +76,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="top|start"
-        >
+            >
         </purpletreesoftware.karuahchess.customcontrol.TilePanel>
 
         <purpletreesoftware.karuahchess.customcontrol.TileAnimation
@@ -84,7 +84,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="top|start"
-        >
+            >
         </purpletreesoftware.karuahchess.customcontrol.TileAnimation>
 
         <purpletreesoftware.karuahchess.customcontrol.CoordPanel
@@ -93,80 +93,95 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="top|start"
                 android:padding="0dp"
-        >
+            >
         </purpletreesoftware.karuahchess.customcontrol.CoordPanel>
 
-        <purpletreesoftware.karuahchess.customcontrol.MoveNavigator
-            android:id="@+id/navigatorLayout"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:layout_anchor="@id/boardPanelLayout"
-            app:layout_anchorGravity="start|bottom"
-            android:layout_gravity="start|bottom"
-            >
-        </purpletreesoftware.karuahchess.customcontrol.MoveNavigator>
-
-
-    <LinearLayout
-            android:id="@+id/floatingActionButtonLayout"
+        <LinearLayout
+            android:id="@+id/adjacentControlLayout"
             android:orientation="horizontal"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="bottom|end">
+            app:layout_anchor="@id/boardPanelLayout"
+            app:layout_anchorGravity="start|bottom"
+            android:layout_gravity="start|bottom">
 
+            <purpletreesoftware.karuahchess.customcontrol.MoveNavigator
+                android:id="@+id/navigatorLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:visibility="gone"
+                >
+            </purpletreesoftware.karuahchess.customcontrol.MoveNavigator>
 
+            <purpletreesoftware.karuahchess.customcontrol.ClockPanel
+                android:id="@+id/clockLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:visibility="gone"
+                >
+            </purpletreesoftware.karuahchess.customcontrol.ClockPanel>
 
-        <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:id="@+id/voiceRecognitionAction"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:backgroundTint="@color/colorInactive"
-            app:fabSize="normal"
-            android:src="@drawable/ic_mic"
-            android:layout_margin="10dp"
-            android:elevation="8dp"
-            app:maxImageSize="36dp"
-            android:visibility="gone"
-            />
+        </LinearLayout>
 
-        <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
-            android:id="@+id/engineSettingsAction"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:minWidth="50dp"
-            app:icon="@drawable/ic_settings"
-            android:layout_margin="10dp"
-            android:elevation="8dp"
-            app:iconSize="36dp"
-            app:fabSize="normal"
-            android:text=""
-            app:iconPadding="0dp"
-            android:padding="0dp"
-            />
-
-        <com.google.android.material.floatingactionbutton.FloatingActionButton
-                android:id="@+id/rotateAction"
+        <LinearLayout
+                android:id="@+id/floatingActionButtonLayout"
+                android:orientation="horizontal"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                app:fabSize="normal"
-                android:src="@drawable/ic_rotate"
-                android:layout_margin="10dp"
-                android:elevation="8dp"
-                app:maxImageSize="36dp"
-        />
+                android:layout_gravity="bottom|end">
 
-        <com.google.android.material.floatingactionbutton.FloatingActionButton
-                android:id="@+id/showLastMoveAction"
+            <com.google.android.material.floatingactionbutton.FloatingActionButton
+                android:id="@+id/newAction"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                app:fabSize="normal"
-                android:src="@drawable/ic_viewlast"
-                android:layout_margin="10dp"
+                app:fabSize="@integer/fabSize"
+                android:src="@drawable/ic_new"
+                android:layout_margin="@dimen/fabMargin"
                 android:elevation="8dp"
-                app:maxImageSize="36dp"
-        />
+                app:maxImageSize="@dimen/fabMaxImageSize"
+                />
 
-    </LinearLayout>
+
+            <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+                android:id="@+id/engineSettingsAction"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:minWidth="50dp"
+                app:icon="@drawable/ic_settings"
+                android:layout_margin="@dimen/fabMargin"
+                android:elevation="8dp"
+                app:iconSize="@dimen/fabMaxImageSize"
+                app:fabSize="@integer/fabSize"
+                android:minHeight="@dimen/fabMinHeight"
+                android:text=""
+                app:iconPadding="0dp"
+                android:padding="0dp"
+                />
+
+
+            <com.google.android.material.floatingactionbutton.FloatingActionButton
+                    android:id="@+id/rotateAction"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:fabSize="@integer/fabSize"
+                    android:src="@drawable/ic_rotate"
+                    android:layout_margin="@dimen/fabMargin"
+                    android:elevation="8dp"
+                    app:maxImageSize="@dimen/fabMaxImageSize"
+            />
+
+            <com.google.android.material.floatingactionbutton.FloatingActionButton
+                    android:id="@+id/showLastMoveAction"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:fabSize="@integer/fabSize"
+                    android:src="@drawable/ic_viewlast"
+                    android:layout_margin="@dimen/fabMargin"
+                    android:elevation="8dp"
+                    app:maxImageSize="@dimen/fabMaxImageSize"
+            />
+
+        </LinearLayout>
 
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
 </FrameLayout>

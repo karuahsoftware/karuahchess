@@ -22,7 +22,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #include <string>
 
 
-namespace helper {
+namespace Helper {
 
 	// enums
 	enum class RayTypeEnum : int { HorizontalVertical = 0, Diagonal = 1 };

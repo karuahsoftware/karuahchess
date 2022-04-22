@@ -16,7 +16,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-#include "helper.h"
+#include "Helper.h"
 #include "PiecePattern.h"
 #include "BitBoard.h"
 #include <cstdint>
@@ -36,7 +36,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 
 
-namespace helper {
+namespace Helper {
 
 	bool Initialised = false;
     uint64_t RowMask[64] { 0 };

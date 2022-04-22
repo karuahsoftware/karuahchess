@@ -17,7 +17,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
 #include "Engine.h"
-#include "helper.h"
+#include "Helper.h"
 #include "SFuci.h"
 #include "SFbitboard.h"
 #include "SFposition.h"
@@ -38,7 +38,7 @@ namespace Engine {
 	void init() {
 		if (!isInitialised) {
 
-			helper::init();
+			Helper::init();
 
 			Stockfish::UCI::init(Stockfish::Options);
 

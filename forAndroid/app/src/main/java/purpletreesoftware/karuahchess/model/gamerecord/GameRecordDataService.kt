@@ -22,7 +22,6 @@ import android.content.ContentValues
 import purpletreesoftware.karuahchess.common.App
 import purpletreesoftware.karuahchess.database.DatabaseHelper
 import purpletreesoftware.karuahchess.engine.KaruahChessEngineC
-import java.lang.ref.WeakReference
 import java.util.*
 import kotlin.collections.ArrayList
 
@@ -30,19 +29,19 @@ import kotlin.collections.ArrayList
 @ExperimentalUnsignedTypes
 class GameRecordDataService {
     companion object : IGameRecordDataService {
-        private var _gameRecordDict: HashMap<Int, GameRecordArray>
+        private var gameRecordDict: HashMap<Int, GameRecordArray>
 
         var currentGame: KaruahChessEngineC private set
-        private var _tempBoardA: KaruahChessEngineC
-        private var _tempBoardB: KaruahChessEngineC
-        private var _tempBoardC: KaruahChessEngineC
+        private var tempBoardA: KaruahChessEngineC
+        private var tempBoardB: KaruahChessEngineC
+        private var tempBoardC: KaruahChessEngineC
 
         init {
-            _gameRecordDict = HashMap()
+            gameRecordDict = HashMap()
             currentGame = KaruahChessEngineC()
-            _tempBoardA = KaruahChessEngineC()
-            _tempBoardB = KaruahChessEngineC()
-            _tempBoardC = KaruahChessEngineC()
+            tempBoardA = KaruahChessEngineC()
+            tempBoardB = KaruahChessEngineC()
+            tempBoardC = KaruahChessEngineC()
 
             load()
         }
@@ -55,7 +54,7 @@ class GameRecordDataService {
             val board = KaruahChessEngineC()
 
             // Clear records from memory
-            _gameRecordDict.clear()
+            gameRecordDict.clear()
 
             // Load game records in to memory
             val db = DatabaseHelper.getInstance(App.appContext).readableDatabase
@@ -71,14 +70,14 @@ class GameRecordDataService {
                     recArray.id = id
                     recArray.boardArray = board.getBoardArray()
                     recArray.stateArray = board.getStateArray()
-                    _gameRecordDict.put(id, recArray)
+                    gameRecordDict.put(id, recArray)
                 }
             }
 
             // If no records were loaded then create a default record
-            if (_gameRecordDict.count() == 0)
+            if (gameRecordDict.count() == 0)
             {
-                reset()
+                reset(0,0)
             }
 
             // Set current game to latest bitboard
@@ -106,8 +105,8 @@ class GameRecordDataService {
          * Gets a record set by Id
          */
         override fun get(pId: Int): GameRecordArray? {
-            if (_gameRecordDict.containsKey(pId)) {
-                val rec = _gameRecordDict[pId]
+            if (gameRecordDict.containsKey(pId)) {
+                val rec = gameRecordDict[pId]
                 return rec
             }
 
@@ -144,10 +143,10 @@ class GameRecordDataService {
             gameRecordArray.boardArray = currentGame.getBoardArray()
             gameRecordArray.stateArray = currentGame.getStateArray()
 
-            if (!_gameRecordDict.containsKey(gameRecordArray.id)) {
+            if (!gameRecordDict.containsKey(gameRecordArray.id)) {
 
                 // Add record to dictionary
-                _gameRecordDict.put(gameRecordArray.id, gameRecordArray)
+                gameRecordDict.put(gameRecordArray.id, gameRecordArray)
 
                 // Add record to database
                 val db = DatabaseHelper.getInstance(App.appContext).writableDatabase
@@ -170,15 +169,15 @@ class GameRecordDataService {
         {
             var result = 0
 
-            if (_gameRecordDict.containsKey(pGameRecordArray.id))
+            if (gameRecordDict.containsKey(pGameRecordArray.id))
             {
-                _tempBoardC.setBoardArray(pGameRecordArray.boardArray)
-                _tempBoardC.setStateArray(pGameRecordArray.stateArray)
-                val boardSquareStr: String = _tempBoardC.getBoard()
-                val gameStateStr: String = _tempBoardC.getState()
+                tempBoardC.setBoardArray(pGameRecordArray.boardArray)
+                tempBoardC.setStateArray(pGameRecordArray.stateArray)
+                val boardSquareStr: String = tempBoardC.getBoard()
+                val gameStateStr: String = tempBoardC.getState()
 
                 // Add record to dictionary
-                _gameRecordDict[pGameRecordArray.id] = pGameRecordArray
+                gameRecordDict[pGameRecordArray.id] = pGameRecordArray
 
                 // Add record to database
                 val db = DatabaseHelper.getInstance(App.appContext).writableDatabase
@@ -205,7 +204,7 @@ class GameRecordDataService {
         /**
          * Clears game record
          */
-        override fun reset() {
+        override fun reset(pWhiteClockOffset: Int, pBlackClockOffset: Int) {
 
 
             val db = DatabaseHelper.getInstance(App.appContext).writableDatabase
@@ -213,13 +212,13 @@ class GameRecordDataService {
             db.delete("GameRecord", null, null)
 
             // Clear dictionary
-            _gameRecordDict.clear()
+            gameRecordDict.clear()
 
             // Reset the current game
             currentGame.reset()
 
             // Create record of default setup
-            recordGameState(0,0)
+            recordGameState(pWhiteClockOffset, pBlackClockOffset)
         }
 
         /**
@@ -235,9 +234,9 @@ class GameRecordDataService {
 
 
             // Remove from dictionary
-            for (key in _gameRecordDict.keys.toList())
+            for (key in gameRecordDict.keys.toList())
             {
-                if (key >= pId) _gameRecordDict.remove(key)
+                if (key >= pId) gameRecordDict.remove(key)
             }
 
         }
@@ -277,14 +276,14 @@ class GameRecordDataService {
 
             //Loop through bit boards and detectchanges
             if (pBoardA != null && pBoardB != null) {
-                _tempBoardA.setBoardArray(pBoardA.boardArray);
-                _tempBoardA.setStateArray(pBoardA.stateArray);
-                _tempBoardB.setBoardArray(pBoardB.boardArray);
-                _tempBoardB.setStateArray(pBoardB.stateArray);
+                tempBoardA.setBoardArray(pBoardA.boardArray);
+                tempBoardA.setStateArray(pBoardA.stateArray);
+                tempBoardB.setBoardArray(pBoardB.boardArray);
+                tempBoardB.setStateArray(pBoardB.stateArray);
 
                 for (i in 0..63) {
-                    val sqAspin = _tempBoardA.getSpin(i)
-                    val sqBspin = _tempBoardB.getSpin(i)
+                    val sqAspin = tempBoardA.getSpin(i)
+                    val sqBspin = tempBoardB.getSpin(i)
                     if (sqAspin != sqBspin) changedIndexes = changedIndexes or mask
                     mask = mask shr 1
                 }
@@ -332,6 +331,13 @@ class GameRecordDataService {
 
             return recordIDList
 
+        }
+
+        /**
+         * Returns a count of the records in the hashmap
+         */
+        override fun recordCount(): Int {
+            return gameRecordDict.count()
         }
 
     }

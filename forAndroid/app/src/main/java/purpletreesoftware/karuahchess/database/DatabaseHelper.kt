@@ -47,7 +47,7 @@ class DatabaseHelper private constructor(context: Context) : SQLiteOpenHelper(co
 
     companion object {
 
-        private const val DATABASE_NAME : String = "KaruahChessV6.sqlite"
+        private const val DATABASE_NAME : String = "KaruahChessV7.sqlite"
         private const val DATABASE_VERSION : Int = 1
         private var Instance: DatabaseHelper? = null
 

@@ -214,7 +214,7 @@ class KaruahChessEngineC {
 
         private var idCounter = 0
         init {
-             System.loadLibrary("karuahchessengine-c")
+             System.loadLibrary("KaruahChessEngine-C")
         }
     }
 }

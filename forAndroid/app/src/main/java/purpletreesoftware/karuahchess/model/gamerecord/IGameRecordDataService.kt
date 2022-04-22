@@ -34,7 +34,7 @@ interface IGameRecordDataService {
 
     fun updateGameState(pGameRecordArray: GameRecordArray): Int
 
-    fun reset()
+    fun reset(pWhiteClockOffset: Int, pBlackClockOffset: Int)
 
     fun undo(): Boolean
 
@@ -43,5 +43,8 @@ interface IGameRecordDataService {
     fun getMaxId(): Int
 
     fun getAllRecordIDList(): ArrayList<Int>
+
+    fun recordCount(): Int
+
 
 }

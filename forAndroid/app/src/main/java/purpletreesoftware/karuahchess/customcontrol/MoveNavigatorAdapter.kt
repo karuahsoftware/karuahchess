@@ -22,6 +22,7 @@ import android.content.res.ColorStateList
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
+import androidx.recyclerview.widget.RecyclerView
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
@@ -111,6 +112,8 @@ class MoveNavigatorAdapter(private val pMoveNav: MoveNavigator, private val pGam
                 )
                 recButton.alpha = 0.8f
             }
+
+
 
         }
     }

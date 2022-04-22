@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="navButtonWidth">54dp</dimen>
+    <dimen name="navButtonWidthHalf">26dp</dimen>
+    <dimen name="navButtonNextWidth">60dp</dimen>
+    <dimen name="clockButtonWidth">60dp</dimen>
+
+    <integer name="fabSize">0</integer>
+    <dimen name="fabMargin">10dp</dimen>
+    <dimen name="fabMaxImageSize">36dp</dimen>
+    <dimen name="fabMinHeight">@dimen/design_fab_size_normal</dimen>
+</resources>

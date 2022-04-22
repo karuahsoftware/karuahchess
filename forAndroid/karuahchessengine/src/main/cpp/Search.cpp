@@ -20,7 +20,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #include "MoveRules.h"
 #include "BitBoard.h"
 #include "PiecePattern.h"
-#include "helper.h"
+#include "Helper.h"
 #include "Engine.h"
 #include "SFposition.h"
 #include "SFthread.h"
@@ -32,7 +32,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 namespace Search {
 
-    using namespace helper;
+    using namespace Helper;
 
     bool _cancel = false;
 
@@ -102,8 +102,8 @@ namespace Search {
 
             // Mirror the result as the karuah chess board is a mirror of
             // the sf board
-            const int fromIndex = helper::mirrorRank(Stockfish::from_sq(m));
-            const int toIndex = helper::mirrorRank(Stockfish::to_sq(m));
+            const int fromIndex = Helper::mirrorRank(Stockfish::from_sq(m));
+            const int toIndex = Helper::mirrorRank(Stockfish::to_sq(m));
 
             if (m == Stockfish::MOVE_NONE || m == Stockfish::MOVE_NULL) {
                 // No move found

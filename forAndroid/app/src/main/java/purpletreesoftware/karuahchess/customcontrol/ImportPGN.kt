@@ -24,7 +24,6 @@ import android.os.Bundle
 import androidx.fragment.app.DialogFragment
 import android.view.*
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import purpletreesoftware.karuahchess.MainActivity
 import purpletreesoftware.karuahchess.common.Constants
@@ -106,8 +105,9 @@ class ImportPGN : DialogFragment() {
         val pgnGame = pgnGameFilterB
         val success = processGame(pgnGame)
         if (success) {
-            GlobalScope.launch(Dispatchers.Main) {
-                val mainactivity = activity as MainActivity
+            val mainactivity = activity as MainActivity
+            mainactivity.uiScope.launch(Dispatchers.Main) {
+                mainactivity.binding.clockLayout.setClock(0, 0)
                 mainactivity.navigateMaxRecord()
                 dismiss()
             }
@@ -363,7 +363,7 @@ class ImportPGN : DialogFragment() {
 
             GameRecordDataService.load()
             val mainactivity = activity as MainActivity
-            GlobalScope.launch(Dispatchers.Main) {
+            mainactivity.uiScope.launch(Dispatchers.Main) {
                 mainactivity.navigateMaxRecord()
             }
         }

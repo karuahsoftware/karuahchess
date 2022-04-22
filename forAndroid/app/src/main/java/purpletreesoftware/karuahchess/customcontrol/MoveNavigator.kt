@@ -22,11 +22,9 @@ import android.content.Context
 import android.content.res.Configuration
 import android.graphics.Rect
 import android.util.AttributeSet
-import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.LinearLayout
-import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.recyclerview.widget.RecyclerView
 import purpletreesoftware.karuahchess.MainActivity
 import purpletreesoftware.karuahchess.databinding.MovenavigatorpanelBinding
@@ -69,7 +67,7 @@ class MoveNavigator : LinearLayout {
 
         // Set the navigate previous button listener
         binding.leftNavPreviousButton.setOnClickListener {
-            GlobalScope.launch(Dispatchers.Main) {
+            activity.uiScope.launch(Dispatchers.Main) {
                 val prevId = getPreviousRecordId(BoardSquareDataService.gameRecordCurrentValue)
                 if (prevId > -1) {
                     activity.navigateGameRecord(prevId, true, false, true)
@@ -85,7 +83,7 @@ class MoveNavigator : LinearLayout {
 
         // Set the navigate next button listener
         binding.rightNavNextButton.setOnClickListener {
-            GlobalScope.launch(Dispatchers.Main) {
+            activity.uiScope.launch(Dispatchers.Main) {
                 val nextId = getNextRecordId(BoardSquareDataService.gameRecordCurrentValue)
 
                 if (nextId > -1) {
@@ -102,7 +100,7 @@ class MoveNavigator : LinearLayout {
 
         // Set the navigate next button listener
         binding.upNavNextButton.setOnClickListener {
-            GlobalScope.launch(Dispatchers.Main) {
+            activity.uiScope.launch(Dispatchers.Main) {
                 val nextId = getNextRecordId(BoardSquareDataService.gameRecordCurrentValue)
 
                 if (nextId > -1) {
@@ -119,7 +117,7 @@ class MoveNavigator : LinearLayout {
 
         // Set the navigate previous button listener
         binding.downNavPreviousButton.setOnClickListener {
-            GlobalScope.launch(Dispatchers.Main) {
+            activity.uiScope.launch(Dispatchers.Main) {
                 val prevId = getPreviousRecordId(BoardSquareDataService.gameRecordCurrentValue)
                 if (prevId > -1) {
                     activity.navigateGameRecord(prevId, true, false, true)
@@ -134,8 +132,6 @@ class MoveNavigator : LinearLayout {
         }
     }
 
-
-
     /**
      * Show the control and load the data
      */
@@ -143,8 +139,8 @@ class MoveNavigator : LinearLayout {
         if (this.visibility == View.VISIBLE) {
             recordList = pNavList
 
-            // Set orientation
-            setOrientation()
+            // Set orientation and size
+            setLayout()
 
             // Fill data
             moveNavAdapter = MoveNavigatorAdapter(this, pNavList, pSelectedId)
@@ -220,7 +216,7 @@ class MoveNavigator : LinearLayout {
     /**
      * Sets the orientation of the control
      */
-    private fun setOrientation() {
+    private fun setLayout() {
 
         val activity = context as MainActivity
 
@@ -236,14 +232,6 @@ class MoveNavigator : LinearLayout {
                     showScrollIndicator()
                 }
             }
-
-            // Change the gravity so it attaches to the right of the board
-            val params =  CoordinatorLayout.LayoutParams(CoordinatorLayout.LayoutParams.WRAP_CONTENT, CoordinatorLayout.LayoutParams.MATCH_PARENT);
-            params.gravity = Gravity.TOP or Gravity.END
-            params.anchorGravity = Gravity.TOP or Gravity.END
-            params.anchorId = activity.binding.boardPanelLayout.id
-            this.layoutParams = params
-
 
             binding.mainNavLayout.orientation = LinearLayout.VERTICAL
 
@@ -266,13 +254,6 @@ class MoveNavigator : LinearLayout {
                 }
             }
 
-            // Change the gravity so it attaches to the right of the board
-            val mainParams =  CoordinatorLayout.LayoutParams(CoordinatorLayout.LayoutParams.MATCH_PARENT, CoordinatorLayout.LayoutParams.WRAP_CONTENT);
-            mainParams.gravity = Gravity.START or Gravity.BOTTOM
-            mainParams.anchorGravity = Gravity.START or Gravity.BOTTOM
-            mainParams.anchorId = activity.binding.boardPanelLayout.id
-            this.layoutParams = mainParams
-
             binding.mainNavLayout.orientation = LinearLayout.HORIZONTAL
 
             // Set next and previous navigation buttons
@@ -281,6 +262,8 @@ class MoveNavigator : LinearLayout {
             binding.upNavNextButton.visibility = View.GONE
             binding.downNavPreviousButton.visibility = View.GONE
         }
+
+
     }
 
     /**

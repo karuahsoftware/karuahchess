@@ -34,8 +34,8 @@
 
         <com.google.android.material.imageview.ShapeableImageView
             android:id="@+id/leftNavImage"
-            android:layout_width="30dp"
-            android:layout_height="60dp"
+            android:layout_width="@dimen/navButtonWidthHalf"
+            android:layout_height="@dimen/navButtonWidth"
             android:src="@drawable/ic_chevron_left"
             android:layout_gravity="start"
             android:scaleType="centerCrop"
@@ -45,8 +45,8 @@
 
         <com.google.android.material.imageview.ShapeableImageView
             android:id="@+id/rightNavImage"
-            android:layout_width="30dp"
-            android:layout_height="60dp"
+            android:layout_width="@dimen/navButtonWidthHalf"
+            android:layout_height="@dimen/navButtonWidth"
             android:src="@drawable/ic_chevron_right"
             android:layout_gravity="end"
             android:scaleType="centerCrop"
@@ -56,8 +56,8 @@
 
         <com.google.android.material.imageview.ShapeableImageView
             android:id="@+id/upNavImage"
-            android:layout_width="60dp"
-            android:layout_height="30dp"
+            android:layout_width="@dimen/navButtonWidth"
+            android:layout_height="@dimen/navButtonWidthHalf"
             android:src="@drawable/ic_chevron_left"
             android:layout_gravity="top"
             android:scaleType="centerCrop"
@@ -68,8 +68,8 @@
 
         <com.google.android.material.imageview.ShapeableImageView
             android:id="@+id/downNavImage"
-            android:layout_width="60dp"
-            android:layout_height="30dp"
+            android:layout_width="@dimen/navButtonWidth"
+            android:layout_height="@dimen/navButtonWidthHalf"
             android:src="@drawable/ic_chevron_right"
             android:layout_gravity="bottom"
             android:scaleType="centerCrop"
@@ -77,8 +77,6 @@
             android:alpha="0.2"
             android:visibility="visible"
             />
-
-
     </FrameLayout>
 
     <ImageButton android:id="@+id/leftNavPreviousButton"
@@ -102,7 +100,7 @@
         style="@style/ButtonNavigatorNextStyle"
         android:rotation="-90"
         android:src="@drawable/ic_next"
-        android:adjustViewBounds="true"
+        android:adjustViewBounds="false"
         android:scaleType="fitCenter"
         />
 

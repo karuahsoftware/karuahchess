@@ -6,15 +6,15 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 
 add_definitions(-DNDEBUG -USE_POPCNT)
 
-add_library(karuahchessengine-c
+add_library(KaruahChessEngine-C
     SHARED
-        src/main/cpp/karuahchessengine-c.cpp
+        src/main/cpp/KaruahChessEngine-C.cpp
         src/main/cpp/BitBoard.h
         src/main/cpp/BitBoard.cpp
         src/main/cpp/Engine.h
         src/main/cpp/Engine.cpp
-        src/main/cpp/helper.h
-        src/main/cpp/helper.cpp
+        src/main/cpp/Helper.h
+        src/main/cpp/Helper.cpp
         src/main/cpp/MoveRules.h
         src/main/cpp/MoveRules.cpp
         src/main/cpp/PiecePattern.h

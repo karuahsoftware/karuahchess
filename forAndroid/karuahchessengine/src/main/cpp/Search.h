@@ -17,7 +17,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
 #pragma once
-#include "helper.h"
+#include "Helper.h"
 #include "BitBoard.h"
 #include <cstdint>
 #include <chrono>

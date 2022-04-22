@@ -293,6 +293,9 @@ class TileAnimation: ConstraintLayout {
                         instruction.imageData.startAnimation(animation)
 
                     }
+                    else -> {
+                        // Do nothing
+                    }
                 }
 
             }

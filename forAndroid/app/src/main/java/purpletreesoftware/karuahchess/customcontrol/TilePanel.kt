@@ -354,8 +354,6 @@ class TilePanel: ConstraintLayout {
     fun drawTiles(pPanelWidth:Int, pPanelHeight:Int, pApproximateBoardMargin: Int) {
 
         // Set up tile list
-
-        //val boardLayout = findViewById<View>(R.id.boardLayout) as ConstraintLayout
         val cset = ConstraintSet()
 
         binding.boardLayout.removeAllViews()
