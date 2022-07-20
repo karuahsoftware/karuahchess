@@ -60,29 +60,33 @@ import purpletreesoftware.karuahchess.rules.Move
 import purpletreesoftware.karuahchess.rules.Move.HighlightEnum
 import purpletreesoftware.karuahchess.sound.TextReader
 import purpletreesoftware.karuahchess.viewmodel.*
+import purpletreesoftware.karuahchess.R.color
 import java.io.InputStream
 
 
 @ExperimentalUnsignedTypes
 class MainActivity : AppCompatActivity(), TilePanel.OnTilePanelInteractionListener, PieceEditTool.OnPieceEditToolInteractionListener, PawnPromotion.OnPawnPromotionInteractionListener {
 
-    private var _dbHelper: DatabaseHelper? = null
-    private lateinit var _move: Move
-    private var _userInteracted: Boolean = false
-    private var _lockPanel = false
-    private var _computerMoveProcessing = false
-    private lateinit var _textReader: TextReader
-    private var _editMenuItem: MenuItem? = null
-    private val _bufferBoard = KaruahChessEngineC()
-    private val _pieceChannel = Channel<Int>()
+    private var dbHelper: DatabaseHelper? = null
+    private lateinit var pieceMove: Move
+    private var userInteracted: Boolean = false
+    private var lockPanel = false
+    private var computerMoveProcessing = false
+    private var computerHintProcessing = false
+    private var userMoveProcessing = false
+    private lateinit var textReader: TextReader
+    private var editMenuItem: MenuItem? = null
+    private val bufferTempBoard = KaruahChessEngineC()
+    private val hintBoard = KaruahChessEngineC()
+    private val pieceChannel = Channel<Int>()
     private var sndPool: SoundPool? = null
     private var sndMove: Int = 0
     lateinit var binding: ActivityMainBinding
     private val navThrottler = Semaphore(1)
 
     // Coroutine job
-    private val _mainjob = SupervisorJob()
-    val uiScope = CoroutineScope(Dispatchers.Main + _mainjob)
+    private val mainjob = SupervisorJob()
+    val uiScope = CoroutineScope(Dispatchers.Main + mainjob)
 
     // Public variables
     enum class BoardStatusEnum(val value: Int) { Ready(0), Checkmate(1), Stalemate(2), Resigned(3), TimeExpired(4) }
@@ -118,10 +122,10 @@ class MainActivity : AppCompatActivity(), TilePanel.OnTilePanelInteractionListen
         setSupportActionBar(binding.toolbarTop)
 
         // database helper
-        _dbHelper = DatabaseHelper.getInstance(this)
+        dbHelper = DatabaseHelper.getInstance(this)
 
         // Text reader
-        _textReader = TextReader(this)
+        textReader = TextReader(this)
         
         // View Models
         aboutVM = ViewModelProvider(this).get(AboutViewModel::class.java)
@@ -177,26 +181,20 @@ class MainActivity : AppCompatActivity(), TilePanel.OnTilePanelInteractionListen
             newGame()
         }
 
-        // Set rotate action button
-        binding.rotateAction.setOnClickListener{
-            endPieceAnimation()
-            val currentRotationParam = ParameterDataService.get(ParamRotateBoard::class.java)
-            var newRotation = currentRotationParam.value + 90
-            if (newRotation >= 360) newRotation = 0
-            currentRotationParam.value = newRotation
-            ParameterDataService.set(currentRotationParam)
-            rotateBoard(newRotation)
+        // Set hints action button
+        setHint()
+        binding.showHintAction.setOnClickListener {
+            showHint()
         }
 
-        // Set engine settings button
-        binding.engineSettingsAction.setOnClickListener { showEngineSettingsDialog() }
+        // Set level indicator
         refreshEngineSettingsLevelIndicator()
 
         // Set board layout listener
         binding.boardPanelLayout.setTilePanelInteractionListener(this)
 
         // Move
-        _move = Move(binding.boardPanelLayout)
+        pieceMove = Move(binding.boardPanelLayout)
 
 
         // Sounds
@@ -264,11 +262,13 @@ class MainActivity : AppCompatActivity(), TilePanel.OnTilePanelInteractionListen
 
         // Set initial values
         menu.findItem(R.id.action_highlight).isChecked = ParameterDataService.get(ParamMoveHighlight::class.java).enabled
-        _editMenuItem = menu.findItem(R.id.action_edit)
-        _editMenuItem?.isChecked = ParameterDataService.get(ParamArrangeBoard::class.java).enabled
+        editMenuItem = menu.findItem(R.id.action_edit)
+        editMenuItem?.isChecked = ParameterDataService.get(ParamArrangeBoard::class.java).enabled
         menu.findItem(R.id.action_clock).isChecked = ParameterDataService.get(ParamClock::class.java).enabled
         menu.findItem(R.id.action_coordinates).isChecked = ParameterDataService.get(ParamBoardCoord::class.java).enabled
         menu.findItem(R.id.action_navigator).isChecked = ParameterDataService.get(ParamNavigator::class.java).enabled
+        menu.findItem(R.id.action_hint).isChecked = ParameterDataService.get(ParamHint::class.java).enabled
+
         return true
     }
 
@@ -310,7 +310,7 @@ class MainActivity : AppCompatActivity(), TilePanel.OnTilePanelInteractionListen
             }
             R.id.action_switchdirection -> {
                 //Cancel any move tasks
-                stopMoveJob()
+                stopSearchJob()
 
                 // Flip direction
                 val board = KaruahChessEngineC()
@@ -328,7 +328,7 @@ class MainActivity : AppCompatActivity(), TilePanel.OnTilePanelInteractionListen
 
                 true
             }
-            R.id.action_soundcoloursettings -> {
+            R.id.action_soundsettings -> {
                 showSoundColourSettingsDialog()
                 true
             }
@@ -377,6 +377,10 @@ class MainActivity : AppCompatActivity(), TilePanel.OnTilePanelInteractionListen
                 else showMessage("${item.title} is disabled", "", Toast.LENGTH_SHORT)
                 true
             }
+            R.id.action_boardsettings -> {
+                showBoardSettingsDialog()
+                true
+            }
             R.id.action_importpgn -> {
                 showImportPGNDialog()
                 true
@@ -387,6 +391,17 @@ class MainActivity : AppCompatActivity(), TilePanel.OnTilePanelInteractionListen
             }
             R.id.action_save -> {
                 saveGameRecordAsFile()
+                true
+            }
+            R.id.action_hint -> {
+                val hint = ParameterDataService.get(ParamHint::class.java)
+                hint.enabled = !item.isChecked
+                item.isChecked = hint.enabled
+                ParameterDataService.set(hint)
+                if(hint.enabled) showMessage("${item.title} button is enabled","", Toast.LENGTH_SHORT)
+                else showMessage("${item.title} button is disabled","", Toast.LENGTH_SHORT)
+
+                setHint()
                 true
             }
             else -> super.onOptionsItemSelected(item)
@@ -403,7 +418,7 @@ class MainActivity : AppCompatActivity(), TilePanel.OnTilePanelInteractionListen
         val lastChanges = GameRecordDataService.getBoardSquareChanges(currentBoard, previousBoard)
 
         if (lastChanges != 0uL) {
-            binding.boardPanelLayout.setRedHighlightFullFadeOut(lastChanges)
+            binding.boardPanelLayout.setHighlightFullFadeOut(lastChanges, color.colorMagenta)
             showMessage("Last move","", Toast.LENGTH_SHORT)
         }
         else {
@@ -417,11 +432,11 @@ class MainActivity : AppCompatActivity(), TilePanel.OnTilePanelInteractionListen
      */
     override fun onTileMoveAction(pFromTile: Tile?, pToTile: Tile?) {
         val arrangeBoardEnabled = ParameterDataService.get(ParamArrangeBoard::class.java).enabled
-        _userInteracted = true
-        _move.Clear()
+        userInteracted = true
+        pieceMove.Clear()
 
 
-        if (pFromTile != null && pToTile != null && !_lockPanel) {
+        if (pFromTile != null && pToTile != null && !lockPanel) {
             if(!arrangeBoardEnabled) {
                 uiScope.launch(Dispatchers.Main) {
                     userMoveAdd(pFromTile, false)
@@ -443,9 +458,9 @@ class MainActivity : AppCompatActivity(), TilePanel.OnTilePanelInteractionListen
     override fun onTileClick(pTile: Tile?) {
         val arrangeBoardEnabled = ParameterDataService.get(ParamArrangeBoard::class.java).enabled
         val gameFinished: Boolean = GameRecordDataService.currentGame.getStateGameStatus() != BoardStatusEnum.Ready.value
-        _userInteracted = true
+        userInteracted = true
 
-        if (pTile != null && !gameFinished && !_lockPanel && !arrangeBoardEnabled) {
+        if (pTile != null && !gameFinished && !lockPanel && !arrangeBoardEnabled) {
 
             uiScope.launch(Dispatchers.Main) {
                 userMoveAdd(pTile, true)
@@ -473,13 +488,13 @@ class MainActivity : AppCompatActivity(), TilePanel.OnTilePanelInteractionListen
         if (arrangeBoardEnabled) {
             val record: GameRecordArray? = GameRecordDataService.get(BoardSquareDataService.gameRecordCurrentValue)
             if(record != null) {
-                _bufferBoard.setBoardArray(record.boardArray)
-                _bufferBoard.setStateArray(record.stateArray)
+                bufferTempBoard.setBoardArray(record.boardArray)
+                bufferTempBoard.setStateArray(record.stateArray)
 
-                val mResult = _bufferBoard.arrangeUpdate(pFen, pToIndex)
+                val mResult = bufferTempBoard.arrangeUpdate(pFen, pToIndex)
                 if (mResult.success) {
-                    record.boardArray = _bufferBoard.getBoardArray()
-                    record.stateArray = _bufferBoard.getStateArray()
+                    record.boardArray = bufferTempBoard.getBoardArray()
+                    record.stateArray = bufferTempBoard.getStateArray()
 
                     BoardSquareDataService.update(binding.boardPanelLayout,record)
                     GameRecordDataService.updateGameState(record)
@@ -488,7 +503,7 @@ class MainActivity : AppCompatActivity(), TilePanel.OnTilePanelInteractionListen
                 }
 
                 // Clear the move selected
-                _move.Clear()
+                pieceMove.Clear()
             }
         }
     }
@@ -501,12 +516,12 @@ class MainActivity : AppCompatActivity(), TilePanel.OnTilePanelInteractionListen
         if (arrangeBoardEnabled) {
             val record: GameRecordArray? = GameRecordDataService.get(BoardSquareDataService.gameRecordCurrentValue)
             if(record != null) {
-                _bufferBoard.setBoardArray(record.boardArray)
-                _bufferBoard.setStateArray(record.stateArray)
-                val mResult = _bufferBoard.arrange(pFromIndex, pToIndex)
+                bufferTempBoard.setBoardArray(record.boardArray)
+                bufferTempBoard.setStateArray(record.stateArray)
+                val mResult = bufferTempBoard.arrange(pFromIndex, pToIndex)
                 if (mResult.success) {
-                    record.boardArray = _bufferBoard.getBoardArray()
-                    record.stateArray = _bufferBoard.getStateArray()
+                    record.boardArray = bufferTempBoard.getBoardArray()
+                    record.stateArray = bufferTempBoard.getStateArray()
                     BoardSquareDataService.update(binding.boardPanelLayout,record)
                     GameRecordDataService.updateGameState(record)
                 } else {
@@ -514,7 +529,7 @@ class MainActivity : AppCompatActivity(), TilePanel.OnTilePanelInteractionListen
                 }
 
                 // Clear the move selected
-                _move.Clear()
+                pieceMove.Clear()
             }
         }
     }
@@ -530,7 +545,7 @@ class MainActivity : AppCompatActivity(), TilePanel.OnTilePanelInteractionListen
         val maxRecId = GameRecordDataService.getMaxId()
         if (BoardSquareDataService.gameRecordCurrentValue != maxRecId) {
             navigateMaxRecord()
-            _move.Clear()
+            pieceMove.Clear()
             return
         }
 
@@ -541,22 +556,23 @@ class MainActivity : AppCompatActivity(), TilePanel.OnTilePanelInteractionListen
         val highlight = if(moveHighlightEnabled) HighlightEnum.MovePath else HighlightEnum.Select
 
         // Create proposed move
-        val moveSelected = _move.Add(pTile.index, GameRecordDataService.currentGame, highlight)
+        val moveSelected = pieceMove.Add(pTile.index, GameRecordDataService.currentGame, highlight)
 
         // Restart the computer move (if required)
         startComputerMoveTask()
 
         if (moveSelected) {
+            userMoveProcessing = true
             val boardBeforeMove = GameRecordDataService.getCurrentGame()
 
             // Ask user what pawn promotion piece they wish to use, if a promoting pawn move
             var promotionPiece: Int = PawnPromotionEnum.Queen.value // default
-            if (GameRecordDataService.currentGame.isPawnPromotion(_move.fromIndex, _move.toIndex)) {
+            if (GameRecordDataService.currentGame.isPawnPromotion(pieceMove.fromIndex, pieceMove.toIndex)) {
                 promotionPiece = showPawnPromotionDialog(GameRecordDataService.currentGame.getStateActiveColour())
             }
 
             val gameStatusBeforeMove = GameRecordDataService.currentGame.getStateGameStatus()
-            val moveResult = GameRecordDataService.currentGame.move(_move.fromIndex, _move.toIndex, promotionPiece, pValidateEnabled = true, pCommit = true)
+            val moveResult = GameRecordDataService.currentGame.move(pieceMove.fromIndex, pieceMove.toIndex, promotionPiece, pValidateEnabled = true, pCommit = true)
 
             if (moveResult.success) {
 
@@ -615,7 +631,8 @@ class MainActivity : AppCompatActivity(), TilePanel.OnTilePanelInteractionListen
 
 
             // Clear the move selected
-            _move.Clear()
+            pieceMove.Clear()
+            userMoveProcessing = false
         }
 
         return
@@ -629,37 +646,29 @@ class MainActivity : AppCompatActivity(), TilePanel.OnTilePanelInteractionListen
         val arrangeBoardEnabled =  ParameterDataService.get(ParamArrangeBoard::class.java).enabled
         val computerPlayerEnabled =  ParameterDataService.get(ParamComputerPlayer::class.java).enabled
         val computerMoveFirstEnabled =  ParameterDataService.get(ParamComputerMoveFirst::class.java).enabled
-        val randomiseFirstMoveEnabled = ParameterDataService.get(ParamRandomiseFirstMove::class.java).enabled
-        val limitEngineStrengthELO = ParameterDataService.get(ParamLimitEngineStrengthELO::class.java).eloRating
-        val limitAdvancedEnabled = ParameterDataService.get(ParamLimitAdvanced::class.java).enabled
-        val limitDepth = ParameterDataService.get(ParamLimitDepth::class.java).depth
-        val limitNodes = ParameterDataService.get(ParamLimitNodes::class.java).nodes
-        val limitMoveDuration = ParameterDataService.get(ParamLimitMoveDuration::class.java).moveDurationMS
-        val limitThreads = ParameterDataService.get(ParamLimitThreads::class.java).threads
-
         val computerColour = if (computerMoveFirstEnabled) Constants.WHITEPIECE else Constants.BLACKPIECE
-
         val turnColour = GameRecordDataService.currentGame.getStateActiveColour()
         val boardStatus = GameRecordDataService.currentGame.getStateGameStatus()
 
-        if (boardStatus == 0 && (!_computerMoveProcessing) && (!arrangeBoardEnabled) && computerPlayerEnabled && computerColour == turnColour) {
-            _lockPanel = true
+        if (boardStatus == 0 && (!computerMoveProcessing) && (!computerHintProcessing) && (!arrangeBoardEnabled) && computerPlayerEnabled && computerColour == turnColour) {
+            lockPanel = true
+            computerMoveProcessing = true
 
             // Clear the user move since starting computer move
-            _move.Clear()
+            pieceMove.Clear()
 
-            _computerMoveProcessing = true
             binding.moveProgressBar.visibility = View.VISIBLE
 
             val searchOptions = SearchOptions()
-            searchOptions.randomiseFirstMove = randomiseFirstMoveEnabled
-            searchOptions.limitStrengthELO = limitEngineStrengthELO
+            searchOptions.randomiseFirstMove = ParameterDataService.get(ParamRandomiseFirstMove::class.java).enabled
+            searchOptions.limitStrengthELO =  ParameterDataService.get(ParamLimitEngineStrengthELO::class.java).eloRating
 
+            val limitAdvancedEnabled = ParameterDataService.get(ParamLimitAdvanced::class.java).enabled
             if (limitAdvancedEnabled) {
-                searchOptions.limitDepth = limitDepth
-                searchOptions.limitNodes = limitNodes
-                searchOptions.limitMoveDuration = limitMoveDuration
-                searchOptions.limitThreads = limitThreads
+                searchOptions.limitDepth = ParameterDataService.get(ParamLimitDepth::class.java).depth
+                searchOptions.limitNodes = ParameterDataService.get(ParamLimitNodes::class.java).nodes
+                searchOptions.limitMoveDuration = ParameterDataService.get(ParamLimitMoveDuration::class.java).moveDurationMS
+                searchOptions.limitThreads = ParameterDataService.get(ParamLimitThreads::class.java).threads
             } else {
                 searchOptions.limitDepth = 10
                 searchOptions.limitNodes = 500000000
@@ -729,15 +738,88 @@ class MainActivity : AppCompatActivity(), TilePanel.OnTilePanelInteractionListen
             }
 
 
-            // Unlock panel
+            // Unlock panel, stop the progress indicator
             binding.moveProgressBar.visibility = View.GONE
-            _computerMoveProcessing = false
-
-            _lockPanel = false
+            computerMoveProcessing = false
+            lockPanel = false
 
         }
 
         return
+    }
+
+
+    /**
+     * Find the best move for a board layout
+     */
+    private suspend fun startHintTask(pRecord: GameRecordArray)
+    {
+        hintBoard.setBoardArray(pRecord.boardArray)
+        hintBoard.setStateArray(pRecord.stateArray)
+
+        val arrangeBoardEnabled =  ParameterDataService.get(ParamArrangeBoard::class.java).enabled
+        val boardStatus = hintBoard.getStateGameStatus()
+
+        if (boardStatus == 0 && (!computerMoveProcessing) && (!computerHintProcessing) && (!arrangeBoardEnabled) ) {
+            lockPanel = true
+            computerHintProcessing = true
+
+            binding.moveProgressBar.visibility = View.VISIBLE
+
+            val searchOptions = SearchOptions()
+            searchOptions.randomiseFirstMove = false
+            searchOptions.limitStrengthELO = 2850
+
+            val limitAdvancedEnabled = ParameterDataService.get(ParamLimitAdvanced::class.java).enabled
+            if (limitAdvancedEnabled) {
+                searchOptions.limitDepth = ParameterDataService.get(ParamLimitDepth::class.java).depth
+                searchOptions.limitNodes = ParameterDataService.get(ParamLimitNodes::class.java).nodes
+                searchOptions.limitMoveDuration = ParameterDataService.get(ParamLimitMoveDuration::class.java).moveDurationMS
+                searchOptions.limitThreads = ParameterDataService.get(ParamLimitThreads::class.java).threads
+            } else {
+                searchOptions.limitDepth = 10
+                searchOptions.limitNodes = 500000000
+                searchOptions.limitMoveDuration = 0
+                searchOptions.limitThreads = if (Runtime.getRuntime().availableProcessors() > 1) Runtime.getRuntime().availableProcessors() - 1 else 1
+            }
+
+            val topMove = withContext(Dispatchers.IO) { hintBoard.searchStart(searchOptions) }
+
+            if ((!topMove.cancelled) && (topMove.error == 0)) {
+                val topMoveBits: ULong = (Constants.BITMASK shr topMove.moveFromIndex) or (Constants.BITMASK shr topMove.moveToIndex)
+                val boardColourIndex = Constants.darkSquareColourList.indexOf(ParameterDataService.get(ParamColourDarkSquares::class.java).argb())
+                var highlightColour = color.colorMagenta
+                if (boardColourIndex > -1) {
+                    highlightColour = Constants.hintColourList[boardColourIndex]
+                }
+                binding.boardPanelLayout.setHighlightFullFadeOut(topMoveBits, highlightColour)
+                showMessage("Best move hint","", Toast.LENGTH_SHORT)
+            }
+            else {
+                if (topMove.error > 0) {
+                    showMessage("Invalid board configuration. ${topMove.errorMessage} ", "", Toast.LENGTH_LONG)
+                }
+            }
+
+            binding.moveProgressBar.visibility = View.GONE
+            computerHintProcessing = false
+            lockPanel = false
+        }
+        else {
+            when {
+                boardStatus != 0 -> {
+                    showMessage("Unable to show a hint as the game has finished.", "", Toast.LENGTH_LONG)
+                }
+                arrangeBoardEnabled -> {
+                    showMessage("Unable to show a hint in edit mode.", "", Toast.LENGTH_LONG)
+                }
+                computerMoveProcessing -> {
+                    showMessage("Unable to show a hint as processing a move.", "", Toast.LENGTH_LONG)
+                }
+            }
+        }
+
+
     }
 
 
@@ -760,8 +842,8 @@ class MainActivity : AppCompatActivity(), TilePanel.OnTilePanelInteractionListen
      */
     private fun readText(pText: String) {
         val soundRead = ParameterDataService.get(ParamSoundRead::class.java)
-        if (_textReader.ready && soundRead.enabled) {
-            _textReader.tts?.speak(pText, TextToSpeech.QUEUE_ADD, null, "")
+        if (textReader.ready && soundRead.enabled) {
+            textReader.tts?.speak(pText, TextToSpeech.QUEUE_ADD, null, "")
         }
     }
 
@@ -820,7 +902,7 @@ class MainActivity : AppCompatActivity(), TilePanel.OnTilePanelInteractionListen
     {
 
         if (pLockPanel) {
-            _lockPanel = true
+            lockPanel = true
         }
 
 
@@ -828,7 +910,7 @@ class MainActivity : AppCompatActivity(), TilePanel.OnTilePanelInteractionListen
 
 
         if (pLockPanel) {
-            _lockPanel = false
+            lockPanel = false
         }
     }
 
@@ -838,8 +920,8 @@ class MainActivity : AppCompatActivity(), TilePanel.OnTilePanelInteractionListen
     private fun newGame(){
 
         val positiveButtonClick = { _: DialogInterface, _: Int ->
-            _lockPanel = true
-            stopMoveJob()
+            lockPanel = true
+            stopSearchJob()
 
             val clockEnabled = ParameterDataService.get(ParamClock::class.java).enabled
             if (clockEnabled) {
@@ -859,7 +941,7 @@ class MainActivity : AppCompatActivity(), TilePanel.OnTilePanelInteractionListen
             }
 
             uiScope.launch(Dispatchers.Main) { navigateMaxRecord() }
-            _lockPanel = false
+            lockPanel = false
 
             // Show start move message
             val computerPlayerEnabled =  ParameterDataService.get(ParamComputerPlayer::class.java).enabled
@@ -891,11 +973,11 @@ class MainActivity : AppCompatActivity(), TilePanel.OnTilePanelInteractionListen
      */
     private suspend fun undoMove(){
 
-        stopMoveJob()
+        stopSearchJob()
         val boardBeforeUndo = GameRecordDataService.get()
         val undo = GameRecordDataService.undo()
         if (undo) {
-            _lockPanel = true
+            lockPanel = true
             val boardAfterUndo = GameRecordDataService.get()
             if (boardBeforeUndo != null && boardAfterUndo != null) {
                 // Update the clock
@@ -916,7 +998,7 @@ class MainActivity : AppCompatActivity(), TilePanel.OnTilePanelInteractionListen
             navigateMaxRecord()
 
 
-            _lockPanel = false
+            lockPanel = false
         }
 
     }
@@ -932,10 +1014,11 @@ class MainActivity : AppCompatActivity(), TilePanel.OnTilePanelInteractionListen
     /**
      * Ends any running move job
      */
-    fun stopMoveJob() {
-        _move.Clear()
+    fun stopSearchJob() {
+        pieceMove.Clear()
         endPieceAnimation()
         GameRecordDataService.currentGame.cancelSearch()
+        hintBoard.cancelSearch()
     }
 
     /**
@@ -1064,8 +1147,6 @@ class MainActivity : AppCompatActivity(), TilePanel.OnTilePanelInteractionListen
 
         var title = ""
 
-
-
         // 0  Game ready, game not started, 1 game commenced, 2 CheckMate, 3 Stalemate, 4 Resign
         if (board.getStateGameStatus() == BoardStatusEnum.Checkmate.value && board.getStateActiveColour() == Constants.BLACKPIECE) {
             gameFinished = true
@@ -1130,7 +1211,7 @@ class MainActivity : AppCompatActivity(), TilePanel.OnTilePanelInteractionListen
     /**
      * Sets the board rotation to [pRotation] degrees
      */
-    private fun rotateBoard(pRotation: Int) {
+    fun rotateBoard(pRotation: Int) {
         binding.boardPanelLayout.rotate(pRotation)
         binding.animationPanelLayout.rotate(pRotation)
         binding.coordPanelLayout.draw(binding.boardPanelLayout.frameSize, binding.boardPanelLayout.frameSize, binding.boardPanelLayout.tileSize, pRotation)
@@ -1180,7 +1261,7 @@ class MainActivity : AppCompatActivity(), TilePanel.OnTilePanelInteractionListen
      * Show pgn import dialog
      */
     private fun showImportPGNDialog() {
-
+        stopSearchJob()
         val fm = supportFragmentManager
         val importPGNDialogFragment = ImportPGN.newInstance()
         importPGNDialogFragment.show(fm, null)
@@ -1191,7 +1272,7 @@ class MainActivity : AppCompatActivity(), TilePanel.OnTilePanelInteractionListen
      */
     private fun showCastlingRightsDialog(pKingSpin: Int) {
         // Cancel any move jobs first
-        stopMoveJob()
+        stopSearchJob()
 
         // Get the current board in view and open the castling dialog
         val record = GameRecordDataService.get(BoardSquareDataService.gameRecordCurrentValue)
@@ -1224,12 +1305,22 @@ class MainActivity : AppCompatActivity(), TilePanel.OnTilePanelInteractionListen
     }
 
     /**
+     * Show board settings dialog
+     */
+    private fun showBoardSettingsDialog() {
+
+        val fm = supportFragmentManager
+        val boardSettingsDialogFragment = BoardSettings.newInstance()
+        boardSettingsDialogFragment.show(fm, null)
+    }
+
+    /**
      * Show sound settings dialog
      */
     private fun showSoundColourSettingsDialog() {
 
         val fm = supportFragmentManager
-        val soundColourSettingsDialogFragment = SoundColourSettings.newInstance()
+        val soundColourSettingsDialogFragment = SoundSettings.newInstance()
         soundColourSettingsDialogFragment.show(fm, null)
     }
 
@@ -1262,7 +1353,7 @@ class MainActivity : AppCompatActivity(), TilePanel.OnTilePanelInteractionListen
         pawnPromotionDialogFragment.setPawnPromotionInteractionListener(this)
         pawnPromotionDialogFragment.show(fm, "PawnPromotionDialog")
 
-        return _pieceChannel.receive()
+        return pieceChannel.receive()
 
     }
 
@@ -1289,7 +1380,7 @@ class MainActivity : AppCompatActivity(), TilePanel.OnTilePanelInteractionListen
             else -> PawnPromotionEnum.Queen.value
         }
 
-        _pieceChannel.trySend(pieceValue)
+        pieceChannel.trySend(pieceValue)
         pDialog.dismiss()
     }
 
@@ -1298,6 +1389,7 @@ class MainActivity : AppCompatActivity(), TilePanel.OnTilePanelInteractionListen
      */
     private fun loadGameRecordFromFileUri(pFileUri: Uri) {
         try {
+            stopSearchJob()
             val file: InputStream? = contentResolver.openInputStream(pFileUri)
             val importDB = ImportDB()
             val fileResult = if(file != null) {
@@ -1306,7 +1398,6 @@ class MainActivity : AppCompatActivity(), TilePanel.OnTilePanelInteractionListen
             else { 0 }
 
             if(fileResult > 0) {
-                _move.Clear()
                 uiScope.launch(Dispatchers.Main) { navigateMaxRecord() }
                 loadChessClock(true, GameRecordDataService.getCurrentGame())
                 showMessage("Game successfully loaded.", "", Toast.LENGTH_SHORT)
@@ -1397,7 +1488,7 @@ class MainActivity : AppCompatActivity(), TilePanel.OnTilePanelInteractionListen
                     loadChessClock(false, updatedBoard)
                 }
 
-                _move.Clear()
+                pieceMove.Clear()
 
                 // Refresh the navigation
                 refreshNavigation(pReloadNav, pScrollNav)
@@ -1494,7 +1585,7 @@ class MainActivity : AppCompatActivity(), TilePanel.OnTilePanelInteractionListen
         if (status == BoardStatusEnum.Ready.value && GameRecordDataService.currentGame.getStateFullMoveCount() > 0) {
 
             // Stop task if running
-            stopMoveJob()
+            stopSearchJob()
 
             // Set the state of the game to resign
             GameRecordDataService.currentGame.setStateGameStatus(BoardStatusEnum.Resigned.value)
@@ -1538,7 +1629,7 @@ class MainActivity : AppCompatActivity(), TilePanel.OnTilePanelInteractionListen
         if (status == BoardStatusEnum.Ready.value) {
 
             // Stop task if running
-            stopMoveJob()
+            stopSearchJob()
 
             // Set the state of the game to time expired
             GameRecordDataService.currentGame.setStateGameStatus(BoardStatusEnum.TimeExpired.value)
@@ -1570,8 +1661,11 @@ class MainActivity : AppCompatActivity(), TilePanel.OnTilePanelInteractionListen
         val edit = ParameterDataService.get(ParamArrangeBoard::class.java)
         edit.enabled = !edit.enabled
         ParameterDataService.set(edit)
-        _editMenuItem?.isChecked = edit.enabled
-        if (edit.enabled) showMessage("Edit board is enabled","", Toast.LENGTH_SHORT)
+        editMenuItem?.isChecked = edit.enabled
+        if (edit.enabled) {
+            stopSearchJob()
+            showMessage("Edit board is enabled","", Toast.LENGTH_SHORT)
+        }
         else showMessage("Edit board is disabled","", Toast.LENGTH_SHORT)
 
         binding.boardPanelLayout.shake(edit.enabled)
@@ -1679,11 +1773,63 @@ class MainActivity : AppCompatActivity(), TilePanel.OnTilePanelInteractionListen
     }
 
     /**
+     * Refresh the level indicator
+     */
+    fun refreshEngineSettingsLevelIndicator() {
+        val computerPlayerEnabled =
+            ParameterDataService.get(ParamComputerPlayer::class.java).enabled
+        if (computerPlayerEnabled) {
+            binding.levelIndicatorText.text = "Level ${(Constants.eloarray.indexOf(ParameterDataService.get(ParamLimitEngineStrengthELO::class.java).eloRating) + 1)}"
+        }
+        else {
+            binding.levelIndicatorText.text = ""
+        }
+    }
+
+    /**
+     * Play piece move sound effect
+     */
+    private fun playPieceMoveSoundEffect() {
+        val soundEffect = ParameterDataService.get(ParamSoundEffect::class.java)
+        if (soundEffect.enabled) {
+            // Sounds
+            sndPool?.play(sndMove,1F,1F,0,0,1F)
+
+        }
+    }
+
+
+    /**
+     * Show or hide the hints feature
+     */
+    private fun setHint() {
+        val hintsEnabled = ParameterDataService.get(ParamHint::class.java).enabled
+        if (hintsEnabled) {
+            binding.showHintAction.visibility = View.VISIBLE
+        }
+        else {
+            binding.showHintAction.visibility = View.GONE
+        }
+    }
+
+    /**
+     * Show a hint
+     */
+    private fun showHint() {
+        val record = GameRecordDataService.get(BoardSquareDataService.gameRecordCurrentValue)
+        if(record != null) {
+            uiScope.launch(Dispatchers.Main) { startHintTask(record) }
+        }
+
+    }
+
+    /**
      * Routines to run on pause
      */
     override fun onPause() {
         // Stop any searches
         GameRecordDataService.currentGame.cancelSearch()
+        hintBoard.cancelSearch()
 
         // Close the promotion dialog
         supportFragmentManager.findFragmentByTag("PawnPromotionDialog")?.let {
@@ -1702,7 +1848,7 @@ class MainActivity : AppCompatActivity(), TilePanel.OnTilePanelInteractionListen
     override fun onDestroy() {
 
         // Shutdown tts
-        _textReader.tts?.shutdown()
+        textReader.tts?.shutdown()
 
 
         super.onDestroy()
@@ -1727,23 +1873,5 @@ class MainActivity : AppCompatActivity(), TilePanel.OnTilePanelInteractionListen
 
 
 
-    /**
-     * Refresh the level indicator
-     */
-    fun refreshEngineSettingsLevelIndicator() {
-        binding.engineSettingsAction.text = (Constants.eloarray.indexOf(ParameterDataService.get(ParamLimitEngineStrengthELO::class.java).eloRating) + 1).toString()
-    }
 
-    /**
-     * Play piece move sound effect
-     */
-    private fun playPieceMoveSoundEffect() {
-        val soundEffect = ParameterDataService.get(ParamSoundEffect::class.java)
-        if (soundEffect.enabled) {
-            // Sounds
-            sndPool?.play(sndMove,1F,1F,0,0,1F)
-
-        }
-
-    }
 }

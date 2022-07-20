@@ -19,13 +19,12 @@
         <TextView android:id="@+id/fragmentTitleText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Sound and Colour"
+            android:text="Sound"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             android:layout_marginTop="0dp"
             style="@style/TextAppearance.MaterialComponents.Headline6"
             />
-
 
 
         <CheckBox android:id="@+id/soundReadCheckBox"
@@ -50,39 +49,14 @@
             android:layout_marginBottom="0dp"
             />
 
-        <TextView android:id="@+id/darksquarecolourTitleText"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Board colour"
-            style="@style/TextAppearance.MaterialComponents.Body1"
-            app:layout_constraintTop_toBottomOf="@id/soundEffectCheckBox"
-            app:layout_constraintStart_toStartOf="parent"
-            android:layout_marginTop="20dp"
-            android:layout_marginBottom="0dp"
-            />
 
-        <Spinner
-            android:id="@+id/darksquarecolourspinner"
-            android:layout_width="150dp"
-            android:layout_height="wrap_content"
-            android:popupElevation="3dp"
-            android:spinnerMode="dropdown"
-            style="@style/TextAppearance.MaterialComponents.Body1"
-            app:layout_constraintTop_toBottomOf="@id/darksquarecolourTitleText"
-            app:layout_constraintStart_toStartOf="parent"
-            android:layout_marginTop="3dp"
-            android:layout_marginStart="0dp"
-            android:layout_marginBottom="0dp"
-            android:background="@drawable/bordergreen"
-            android:padding="5dp"
-            />
 
         <androidx.constraintlayout.widget.Barrier
             android:id="@+id/bottomBarrier"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:barrierDirection="bottom"
-            app:constraint_referenced_ids="darksquarecolourspinner"
+            app:constraint_referenced_ids="soundEffectCheckBox"
 
             />
 

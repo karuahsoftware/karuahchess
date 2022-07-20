@@ -18,6 +18,8 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 package purpletreesoftware.karuahchess.common
 
+import purpletreesoftware.karuahchess.R.color
+
 class Constants {
 
     @ExperimentalUnsignedTypes
@@ -115,11 +117,20 @@ class Constants {
             "Level 20, Elo 2775",
             "Level 21, Elo 2850")
 
+        // Board square colour
         val darkSquareColourList = arrayListOf(
             ColourARGB(255,90,120,153, "Blue"),
             ColourARGB(255,222,184,135, "Brown"),
             ColourARGB(255,100,153,100, "Green"),
             ColourARGB(255,153,153,153, "Grey")
+        )
+
+        // Hint highlight colour for corresponding (by list index) board square colour
+        val hintColourList = arrayListOf(
+            color.colorMango,
+            color.colorEmeraldGreen,
+            color.colorMango,
+            color.colorMango
         )
 
 

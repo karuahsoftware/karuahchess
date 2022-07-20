@@ -169,7 +169,7 @@ class EngineSettings : DialogFragment() {
         binding.defaultButton.setOnClickListener { resetToDefault() }
         binding.stopSearchButton.setOnClickListener {
             val mainActivity = activity as MainActivity
-            mainActivity.stopMoveJob()
+            mainActivity.stopSearchJob()
             dismiss()
         }
 

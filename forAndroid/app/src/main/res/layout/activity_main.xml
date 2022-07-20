@@ -41,24 +41,37 @@
                 style="@style/MainToolbar"
             >
 
-            <ImageView xmlns:android="http://schemas.android.com/apk/res/android"
-                       android:id="@+id/indicatorImageView"
-                       android:layout_width="20dp"
-                       android:layout_height="20dp"
-                       android:adjustViewBounds="true"
-                       android:background="@drawable/indicatorwhite"
-                       android:contentDescription="Indicator"
-                       android:layout_gravity="center_vertical|start"
-                       android:text=""
-                       android:layout_margin="0dp"/>
+            <ImageView
+               android:id="@+id/indicatorImageView"
+               android:layout_width="24dp"
+               android:layout_height="24dp"
+               android:adjustViewBounds="true"
+               android:background="@drawable/indicatorwhite"
+               android:contentDescription="Indicator"
+               android:layout_gravity="center_vertical|start"
+               android:text=""
+               android:layout_marginTop="0dp"
+               android:layout_marginBottom="0dp"
+               android:layout_marginStart="4dp"
+               android:layout_marginEnd="4dp"
+                />
+
+            <TextView
+                android:id="@+id/levelIndicatorText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical|start"
+                android:text=""
+                style="@style/TextAppearance.MaterialComponents.Body1"
+                android:textColor="@color/colorWhite"/>
 
             <ProgressBar
-                    android:id="@+id/moveProgressBar"
-                    android:indeterminate="true"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:visibility="gone"/>
+                android:id="@+id/moveProgressBar"
+                android:indeterminate="true"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:visibility="gone"/>
 
         </com.google.android.material.appbar.MaterialToolbar>
 
@@ -142,34 +155,6 @@
                 />
 
 
-            <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
-                android:id="@+id/engineSettingsAction"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:minWidth="50dp"
-                app:icon="@drawable/ic_settings"
-                android:layout_margin="@dimen/fabMargin"
-                android:elevation="8dp"
-                app:iconSize="@dimen/fabMaxImageSize"
-                app:fabSize="@integer/fabSize"
-                android:minHeight="@dimen/fabMinHeight"
-                android:text=""
-                app:iconPadding="0dp"
-                android:padding="0dp"
-                />
-
-
-            <com.google.android.material.floatingactionbutton.FloatingActionButton
-                    android:id="@+id/rotateAction"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    app:fabSize="@integer/fabSize"
-                    android:src="@drawable/ic_rotate"
-                    android:layout_margin="@dimen/fabMargin"
-                    android:elevation="8dp"
-                    app:maxImageSize="@dimen/fabMaxImageSize"
-            />
-
             <com.google.android.material.floatingactionbutton.FloatingActionButton
                     android:id="@+id/showLastMoveAction"
                     android:layout_width="wrap_content"
@@ -180,6 +165,18 @@
                     android:elevation="8dp"
                     app:maxImageSize="@dimen/fabMaxImageSize"
             />
+
+
+            <com.google.android.material.floatingactionbutton.FloatingActionButton
+                android:id="@+id/showHintAction"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:fabSize="@integer/fabSize"
+                android:src="@drawable/ic_lightbulb"
+                android:layout_margin="@dimen/fabMargin"
+                android:elevation="8dp"
+                app:maxImageSize="@dimen/fabMaxImageSize"
+                />
 
         </LinearLayout>
 

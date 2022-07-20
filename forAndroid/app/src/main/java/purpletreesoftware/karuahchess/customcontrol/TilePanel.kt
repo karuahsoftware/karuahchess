@@ -34,6 +34,7 @@ import android.view.DragEvent
 import android.view.HapticFeedbackConstants
 import android.view.LayoutInflater
 import purpletreesoftware.karuahchess.R
+import purpletreesoftware.karuahchess.R.color
 import purpletreesoftware.karuahchess.common.Constants
 import purpletreesoftware.karuahchess.databinding.TilepanelBinding
 
@@ -124,8 +125,8 @@ class TilePanel: ConstraintLayout {
         // Inflate view
         _binding = TilepanelBinding.inflate(LayoutInflater.from(context), this, true)
 
-        val darkSquareColour = ContextCompat.getColor(context,R.color.colorBlackSquare)
-        val lightSquareColour = ContextCompat.getColor(context,R.color.colorWhiteSquare)
+        val darkSquareColour = ContextCompat.getColor(context, color.colorBlackSquare)
+        val lightSquareColour = ContextCompat.getColor(context, color.colorWhiteSquare)
 
         // Create tiles
         for(tileIndex in 0..63) {
@@ -253,19 +254,17 @@ class TilePanel: ConstraintLayout {
         }
     }
 
-
-
     /**
      * Show squares that moved last
      */
-    fun setRedHighlightFullFadeOut(pBits: ULong) {
+    fun setHighlightFullFadeOut(pBits: ULong, pColour: Int) {
         if (tileSize > 0) {
             val size = (tileSize - 2)
             var sqId: ULong = 0b10000000_00000000_00000000_00000000_00000000_00000000_00000000_00000000uL
 
             for (i in 0..63) {
                 if ((sqId and pBits) != 0uL) {
-                    val square: Drawable = getRectangle(size)
+                    val square: Drawable = getRectangle(size, pColour)
                     _tileList[i].highlight.setImageDrawable(square)
                     val fadeInAnimation = AnimationUtils.loadAnimation(this.context, R.anim.fadeout)
                     fadeInAnimation.fillAfter = true
@@ -285,7 +284,7 @@ class TilePanel: ConstraintLayout {
 
         if (tileSize > 0) {
             var sqId: ULong = 0b10000000_00000000_00000000_00000000_00000000_00000000_00000000_00000000uL
-            val circleColour = ContextCompat.getColor(this.context, R.color.colorDarkGreen)
+            val circleColour = ContextCompat.getColor(this.context, color.colorDarkGreen)
 
             for (i in 0..63) {
                 val size = if (_tileList[i].piece.drawable == null) (tileSize * 0.3).toInt() else (tileSize * 0.95).toInt()
@@ -314,7 +313,7 @@ class TilePanel: ConstraintLayout {
 
             for (i in 0..63) {
                 if ((sqId and pBits) != 0uL) {
-                    val square: Drawable = getRectangle(size)
+                    val square: Drawable = getRectangle(size, color.colorMagenta)
                     _tileList[i].highlight.setImageDrawable(square)
                 } else {
                     _tileList[i].highlight.setImageResource(0)
@@ -330,7 +329,7 @@ class TilePanel: ConstraintLayout {
     fun setCheckIndicator(pKingIndex: Int) {
         if (tileSize > 0) {
 
-            val circleColour = ContextCompat.getColor(this.context, R.color.colorRed)
+            val circleColour = ContextCompat.getColor(this.context, color.colorRed)
 
             for (i in 0..63) {
                 val size = (tileSize * 0.95).toInt()
@@ -444,11 +443,11 @@ class TilePanel: ConstraintLayout {
     }
 
     /**
-     * Gets a square shape
+     * Gets a square shape filled in
      */
-    private fun getRectangle(pSize: Int): Drawable {
+    private fun getRectangle(pSize: Int, pColour: Int): Drawable {
 
-        val colour = ContextCompat.getColor(this.context, R.color.colorMagenta)
+        val colour = ContextCompat.getColor(this.context, pColour)
         val rect = GradientDrawable()
         rect.shape = GradientDrawable.RECTANGLE
         rect.setStroke(2, colour)
@@ -456,6 +455,7 @@ class TilePanel: ConstraintLayout {
         rect.setSize(pSize,pSize)
         return rect
     }
+
 
     /**
      * Gets tile image from [pSpin]
@@ -566,7 +566,7 @@ class TilePanel: ConstraintLayout {
      * Apply specified [pDarkSqColour] to the board
      */
     fun applyBoardColour(pDarkSqColour: Int) {
-        val lightSquareColour = ContextCompat.getColor(context,R.color.colorWhiteSquare)
+        val lightSquareColour = ContextCompat.getColor(context, color.colorWhiteSquare)
 
         for(tileIndex in 0..63) {
             val sqColour = if (isDarkSquare(tileIndex)) pDarkSqColour else lightSquareColour

@@ -18,4 +18,6 @@
     <color name="colorButtonDefaultTextFade">#781C1C1C</color>
     <color name="colorButtonDialogText">#FFFFFF</color>
     <color name="colorButtonDialogTint">#777777</color>
+    <color name="colorMango">#F4BB44</color>
+    <color name="colorEmeraldGreen">#03A65A</color>
 </resources>

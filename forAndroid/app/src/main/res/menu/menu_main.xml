@@ -19,7 +19,7 @@
                       app:showAsAction="never" />
 
                 <item android:id="@+id/action_enginesettings"
-                      android:title="Engine Settings"
+                      android:title="Engine"
                       android:checkable="false"
                       android:orderInCategory="102"
                       app:showAsAction="never" />
@@ -42,17 +42,29 @@
                     android:checkable="true"
                     android:orderInCategory="105"
                     app:showAsAction="never" />
-                <item android:id="@+id/action_navigator"
-                    android:title="Navigator"
+                <item android:id="@+id/action_hint"
+                    android:title="Hint"
                     android:checkable="true"
                     android:orderInCategory="106"
                     app:showAsAction="never" />
+                <item android:id="@+id/action_navigator"
+                    android:title="Navigator"
+                    android:checkable="true"
+                    android:orderInCategory="107"
+                    app:showAsAction="never" />
+
         </group>
         <group android:id="@+id/grp3">
-                <item android:id="@+id/action_soundcoloursettings"
-                      android:title="Sound &amp; Colour"
+                <item android:id="@+id/action_boardsettings"
+                    android:title="Board"
+                    android:checkable="false"
+                    android:orderInCategory="108"
+                    app:showAsAction="never" />
+
+                <item android:id="@+id/action_soundsettings"
+                      android:title="Sound"
                       android:checkable="false"
-                      android:orderInCategory="107"
+                      android:orderInCategory="109"
                       app:showAsAction="never" />
 
         </group>
@@ -60,39 +72,39 @@
                 <item android:id="@+id/action_edit"
                       android:title="Edit"
                       android:checkable="true"
-                      android:orderInCategory="108"
+                      android:orderInCategory="110"
                       app:showAsAction="never" />
                 <item android:id="@+id/action_undo"
                       android:title="Undo"
                       android:checkable="false"
-                      android:orderInCategory="109"
+                      android:orderInCategory="111"
                       app:showAsAction="never" />
                 <item android:id="@+id/action_switchdirection"
                       android:title="Switch Direction"
                       android:checkable="false"
-                      android:orderInCategory="110"
+                      android:orderInCategory="112"
                       app:showAsAction="never" />
                 <item android:id="@+id/action_importpgn"
                       android:title="Import PGN"
                       android:checkable="false"
-                      android:orderInCategory="111"
+                      android:orderInCategory="113"
                       app:showAsAction="never" />
                 <item android:id="@+id/action_load"
                       android:title="Load Game"
                       android:checkable="false"
-                      android:orderInCategory="112"
+                      android:orderInCategory="114"
                       app:showAsAction="never" />
                 <item android:id="@+id/action_save"
                       android:title="Save Game"
                       android:checkable="false"
-                      android:orderInCategory="113"
+                      android:orderInCategory="115"
                       app:showAsAction="never" />
         </group>
         <group android:id="@+id/grp5">
                 <item android:id="@+id/action_about"
                 android:title="About"
                 android:checkable="false"
-                android:orderInCategory="114"
+                android:orderInCategory="116"
                 app:showAsAction="never" />
         </group>
 
