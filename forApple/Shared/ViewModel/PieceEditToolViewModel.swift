@@ -32,7 +32,7 @@ import SwiftUI
     /// - Parameter pTile: The tile that was clicked
     func show(pTile: TileView) {
         // Ensure nothing is higlighted
-        BoardViewModel.instance.tilePanelVM.setHighLightFull(pBits: 0)
+        BoardViewModel.instance.tilePanelVM.setHighLightFull(pBits: 0, pColour: Color("Magenta"))
         
         if visible == true {
             close()
@@ -65,7 +65,7 @@ import SwiftUI
             posXY = CGPoint(x: posX, y: posY)
             
             // Highlight square being modified
-            pTile.tileVM.setHighLightFull(pActive: true)
+            pTile.tileVM.setHighLightFull(pActive: true, pColour: Color("Magenta"))
             
             visible = true
         }
@@ -78,7 +78,7 @@ import SwiftUI
     
     func close() {
         if visible {
-            BoardViewModel.instance.tilePanelVM.setHighLightFull(pBits: 0)
+            BoardViewModel.instance.tilePanelVM.setHighLightFull(pBits: 0, pColour: Color("Magenta"))
             lastTileIndexTapped = -1
             visible = false
         }

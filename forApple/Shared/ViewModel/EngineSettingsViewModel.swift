@@ -20,34 +20,8 @@ import SwiftUI
 
 @MainActor class EngineSettingsViewModel: ObservableObject {
     static let instance = EngineSettingsViewModel()
-    @Published var value = EngineSettingsValue()
     
-    
-    /// Resets the values to their default
-    func resetToDefault() {
-        value.computerPlayerEnabled = ParamComputerPlayer().enabled
-        value.computerMovesFirst = ParamComputerMoveFirst().enabled
-        value.randomiseFirstMove = ParamRandomiseFirstMove().enabled
-        
-        if let eloIndex = Constants.eloarray.firstIndex(of: ParamLimitEngineStrengthELO().eloRating) {
-            value.limitEngineStrengthELOIndex = eloIndex
-        }
-        else {
-            value.limitEngineStrengthELOIndex = 0
-        }
-        
-        value.levelAuto = ParamLevelAuto().enabled
-        value.limitAdvanced = ParamLimitAdvanced().enabled
-        value.limitDepth = Double(ParamLimitDepth().depth)
-        value.limitNodes = ParamLimitNodes().nodes
-        value.limitMoveDuration = ParamLimitMoveDuration().moveDurationMS
-        value.limitThreads = Double(ParamLimitThreads().threads)
-        
-    }
-}
-
-struct EngineSettingsValue {
-    var computerPlayerEnabled: Bool = ParameterDataService.instance.get(pParameterClass: ParamComputerPlayer.self).enabled {
+    @Published var computerPlayerEnabled: Bool = ParameterDataService.instance.get(pParameterClass: ParamComputerPlayer.self).enabled {
         didSet {
             let parameter = ParamComputerPlayer()
             parameter.enabled = computerPlayerEnabled
@@ -55,7 +29,7 @@ struct EngineSettingsValue {
         }
     }
    
-    var computerMovesFirst: Bool = ParameterDataService.instance.get(pParameterClass: ParamComputerMoveFirst.self).enabled {
+    @Published var computerMovesFirst: Bool = ParameterDataService.instance.get(pParameterClass: ParamComputerMoveFirst.self).enabled {
         didSet {
         let parameter = ParamComputerMoveFirst()
         parameter.enabled = computerMovesFirst
@@ -63,7 +37,7 @@ struct EngineSettingsValue {
         }
     }
     
-    var randomiseFirstMove: Bool = ParameterDataService.instance.get(pParameterClass: ParamRandomiseFirstMove.self).enabled {
+    @Published var randomiseFirstMove: Bool = ParameterDataService.instance.get(pParameterClass: ParamRandomiseFirstMove.self).enabled {
         didSet {
         let parameter = ParamRandomiseFirstMove()
         parameter.enabled = randomiseFirstMove
@@ -71,7 +45,7 @@ struct EngineSettingsValue {
         }
     }
     
-    var levelAuto: Bool = ParameterDataService.instance.get(pParameterClass: ParamLevelAuto.self).enabled {
+    @Published var levelAuto: Bool = ParameterDataService.instance.get(pParameterClass: ParamLevelAuto.self).enabled {
         didSet {
         let parameter = ParamLevelAuto()
         parameter.enabled = levelAuto
@@ -79,32 +53,16 @@ struct EngineSettingsValue {
         }
     }
     
-    private var _limitEngineStrengthELOIndex: Int = 0
-    var limitEngineStrengthELOIndex: Int  {
-        get {
-            return eloIndex(pEloRating: ParameterDataService.instance.get(pParameterClass: ParamLimitEngineStrengthELO.self).eloRating)
-        }
-        set {
-            _limitEngineStrengthELOIndex = newValue
-            let parameter = ParamLimitEngineStrengthELO()
-            parameter.eloRating = Constants.eloarray[_limitEngineStrengthELOIndex]
+   
+    @Published var limitSkillLevel: Int = ParameterDataService.instance.get(pParameterClass: ParamLimitSkillLevel.self).level {
+        didSet {
+            let parameter = ParamLimitSkillLevel()
+            parameter.level = limitSkillLevel
             _ = ParameterDataService.instance.set(pObj: parameter)
         }
     }
     
-    
-    // Looks up the elo index
-    func eloIndex(pEloRating: Int) -> Int {
-        if let eloIndex = Constants.eloarray.firstIndex(of: pEloRating) {
-            return eloIndex
-        }
-        else {
-            return 0
-        }
-        
-    }
-    
-    var limitAdvanced: Bool = ParameterDataService.instance.get(pParameterClass: ParamLimitAdvanced.self).enabled {
+    @Published var limitAdvanced: Bool = ParameterDataService.instance.get(pParameterClass: ParamLimitAdvanced.self).enabled {
         didSet {
         let parameter = ParamLimitAdvanced()
         parameter.enabled = limitAdvanced
@@ -112,7 +70,7 @@ struct EngineSettingsValue {
         }
     }
     
-    var limitDepth: Double = Double(ParameterDataService.instance.get(pParameterClass: ParamLimitDepth.self).depth) {
+    @Published var limitDepth: Double = Double(ParameterDataService.instance.get(pParameterClass: ParamLimitDepth.self).depth) {
         didSet {
         let parameter = ParamLimitDepth()
         parameter.depth = Int(limitDepth)
@@ -120,9 +78,9 @@ struct EngineSettingsValue {
         }
     }
     
-    var limitNodesIsValid: Bool = true
+    @Published var limitNodesIsValid: Bool = true
     
-    var limitNodes: Int = ParameterDataService.instance.get(pParameterClass: ParamLimitNodes.self).nodes {
+    @Published var limitNodes: Int = ParameterDataService.instance.get(pParameterClass: ParamLimitNodes.self).nodes {
         didSet {
             if limitNodes >= 10 && limitNodes <= 2000000000 {
                 let parameter = ParamLimitNodes()
@@ -136,9 +94,9 @@ struct EngineSettingsValue {
         }
     }
     
-    var limitMoveDurationIsValid: Bool = true
+    @Published var limitMoveDurationIsValid: Bool = true
     
-    var limitMoveDuration: Int = ParameterDataService.instance.get(pParameterClass: ParamLimitMoveDuration.self).moveDurationMS {
+    @Published var limitMoveDuration: Int = ParameterDataService.instance.get(pParameterClass: ParamLimitMoveDuration.self).moveDurationMS {
         didSet {
             if limitMoveDuration >= 0 && limitMoveDuration <= 600000 {
                 let parameter = ParamLimitMoveDuration()
@@ -152,7 +110,7 @@ struct EngineSettingsValue {
         }
     }
     
-    var limitThreads: Double = Double(ParameterDataService.instance.get(pParameterClass: ParamLimitThreads.self).threads) {
+    @Published var limitThreads: Double = Double(ParameterDataService.instance.get(pParameterClass: ParamLimitThreads.self).threads) {
         didSet {
         let parameter = ParamLimitThreads()
         parameter.threads = Int(limitThreads)
@@ -161,6 +119,22 @@ struct EngineSettingsValue {
     }
     
     
+    /// Resets the values to their default
+    func resetToDefault() {
+        computerPlayerEnabled = ParamComputerPlayer().enabled
+        computerMovesFirst = ParamComputerMoveFirst().enabled
+        randomiseFirstMove = ParamRandomiseFirstMove().enabled
+        limitSkillLevel = ParamLimitSkillLevel().level
+        levelAuto = ParamLevelAuto().enabled
+        limitAdvanced = ParamLimitAdvanced().enabled
+        limitDepth = Double(ParamLimitDepth().depth)
+        limitNodes = ParamLimitNodes().nodes
+        limitMoveDuration = ParamLimitMoveDuration().moveDurationMS
+        limitThreads = Double(ParamLimitThreads().threads)
+        
+    }
     
     
 }
+
+

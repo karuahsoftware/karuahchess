@@ -18,9 +18,9 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 import SwiftUI
 
-struct SoundColourSettings: View {
+struct SoundSettings: View {
     
-    @ObservedObject private var soundColourSettingsVM : SoundColourSettingsViewModel = SoundColourSettingsViewModel.instance
+    @ObservedObject private var soundSettingsVM : SoundSettingsViewModel = SoundSettingsViewModel.instance
     private let menuSheet : MenuSheet
     
     // Initialisation
@@ -35,26 +35,20 @@ struct SoundColourSettings: View {
                     HStack {
                         Image(systemName: "music.note")
                         .imageScale(.large)
-                        Text("Sound and Colour").font(.headline)
+                        Text("Sound").font(.headline)
                     }.padding(.bottom, 10)
                     
-                    Toggle(isOn: $soundColourSettingsVM.value.soundReadEnabled) {
+                    Toggle(isOn: $soundSettingsVM.soundReadEnabled) {
                         Text("Read messages out loud")
                             .font(.body)
                     }
                     
-                    Toggle(isOn: $soundColourSettingsVM.value.soundEffectEnabled) {
+                    Toggle(isOn: $soundSettingsVM.soundEffectEnabled) {
                         Text("Sound effects")
                             .font(.body)
                     }
                     
-                    
-                    Picker(selection: $soundColourSettingsVM.value.darkSquareColour, label: Text("Board colour")) {
-                        ForEach(Constants.darkSquareColourArray, id: \.self) {colourItem in
-                            Text(colourItem.text)
-                        }
-                    }
-                    .pickerStyle(DefaultPickerStyle())
+                    Spacer().frame(maxWidth: .infinity)
                     
                 }.frame(minWidth: 200, maxWidth: .infinity, minHeight: 50, maxHeight: .infinity)
                 

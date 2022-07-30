@@ -19,10 +19,11 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #pragma once
 #import <Foundation/Foundation.h>
 
-
 #ifdef __cplusplus
 #include "cpp/BitBoard.h"
 #endif
+
+
 
 @interface KaruahChessEngineC : NSObject
 #ifdef __cplusplus

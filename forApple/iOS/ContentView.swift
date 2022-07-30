@@ -189,6 +189,7 @@ struct NavLogoItem: View {
         HStack(alignment: .center) {
             Text("Karuah Chess").font(.body)
             DirectionIndicatorView(directionIndicatorVM: BoardViewModel.instance.directionIndicatorVM).frame(width: 20, height: 20)
+            LevelIndicatorView()
             ActivityIndicatorView(activityIndicatorVM: BoardViewModel.instance.activityIndicatorVM).frame(width:35, height:35)
         }
         

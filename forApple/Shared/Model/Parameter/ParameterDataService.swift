@@ -69,6 +69,10 @@ class ParameterDataService : ParameterDataServiceProtocol {
                             if let obj = try? JSONDecoder().decode(ParamColourDarkSquares.self, from: data) {
                                 parameters[name] = obj
                             }
+                        case String(describing: ParamHint.self):
+                            if let obj = try? JSONDecoder().decode(ParamHint.self, from: data) {
+                                parameters[name] = obj
+                            }
                         case String(describing: ParamLevelAuto.self):
                             if let obj = try? JSONDecoder().decode(ParamLevelAuto.self, from: data) {
                                 parameters[name] = obj
@@ -81,8 +85,8 @@ class ParameterDataService : ParameterDataServiceProtocol {
                             if let obj = try? JSONDecoder().decode(ParamLimitDepth.self, from: data) {
                                 parameters[name] = obj
                             }
-                        case String(describing: ParamLimitEngineStrengthELO.self):
-                            if let obj = try? JSONDecoder().decode(ParamLimitEngineStrengthELO.self, from: data) {
+                        case String(describing: ParamLimitSkillLevel.self):
+                            if let obj = try? JSONDecoder().decode(ParamLimitSkillLevel.self, from: data) {
                                 parameters[name] = obj
                             }
                         case String(describing: ParamLimitMoveDuration.self):

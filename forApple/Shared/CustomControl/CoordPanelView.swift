@@ -28,18 +28,20 @@ struct CoordPanelView: View {
     var body: some View {
         let index = boardRotation == 0 ? 0 : boardRotation == 90 ? 1 : boardRotation == 180 ? 2 : 3
         
-        VStack(alignment: .leading) {
+        VStack(alignment: .leading, spacing: 1) {
             VStack(spacing: 0) {
                 ForEach(verticalArray[index], id: \.self) {item in
                     Text(item).frame(height: device.tileSize)
                 }
             }.offset(x: 1)
+                
             
             HStack(spacing: 0) {
                ForEach(horizontalArray[index], id: \.self) {item in
                     Text(item).frame(width: device.tileSize)
                }
             }.offset(x: device.boardCoordPadding)
+                
         }
         
         

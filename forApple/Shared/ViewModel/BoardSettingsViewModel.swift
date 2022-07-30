@@ -18,30 +18,11 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 import SwiftUI
 
-@MainActor class SoundColourSettingsViewModel: ObservableObject {
-    static let instance = SoundColourSettingsViewModel()
-    @Published var value = SoundColourSettingsValue()
-}
-
-struct SoundColourSettingsValue {
-    var soundReadEnabled: Bool = ParameterDataService.instance.get(pParameterClass: ParamSoundRead.self).enabled {
-        didSet {
-            let parameter = ParamSoundRead()
-            parameter.enabled = soundReadEnabled
-            _ = ParameterDataService.instance.set(pObj: parameter)
-        }
-    }
-    
-    var soundEffectEnabled: Bool = ParameterDataService.instance.get(pParameterClass: ParamSoundEffect.self).enabled {
-        didSet {
-            let parameter = ParamSoundEffect()
-            parameter.enabled = soundEffectEnabled
-            _ = ParameterDataService.instance.set(pObj: parameter)
-        }
-    }
+@MainActor class BoardSettingsViewModel: ObservableObject {
+    static let instance = BoardSettingsViewModel()
     
     
-    var darkSquareColour: ColourARGB = ParameterDataService.instance.get(pParameterClass: ParamColourDarkSquares.self).argb() {
+    @Published var darkSquareColour: ColourARGB = ParameterDataService.instance.get(pParameterClass: ParamColourDarkSquares.self).argb() {
         didSet {
             let parameter = ParamColourDarkSquares()
             parameter.a = darkSquareColour.a
@@ -53,7 +34,6 @@ struct SoundColourSettingsValue {
         }
     }
      
-   
-    
-    
 }
+
+

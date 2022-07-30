@@ -28,16 +28,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // Create the database if not exists
         KaruahChessDB.createIfNotExists()
         
-        /*
-        if #available(iOS 15.0, *) {
-            let navigationBarAppearance = UINavigationBarAppearance()
-            navigationBarAppearance.configureWithDefaultBackground()
-            UINavigationBar.appearance().standardAppearance = navigationBarAppearance
-            UINavigationBar.appearance().compactAppearance = navigationBarAppearance
-            UINavigationBar.appearance().scrollEdgeAppearance = navigationBarAppearance
-        }
-        */
-        
         return true
     }
 

@@ -1,6 +1,6 @@
 /*
   Stockfish, a UCI chess playing engine derived from Glaurung 2.1
-  Copyright (C) 2004-2021 The Stockfish developers (see AUTHORS file)
+  Copyright (C) 2004-2022 The Stockfish developers (see AUTHORS file)
 
   Stockfish is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -21,7 +21,6 @@
 
 #include "SFbitboard.h"
 #include "SFmisc.h"
-
 
 namespace Stockfish {
 
@@ -53,7 +52,6 @@ namespace Stockfish {
         Square to = Square(s + step);
         return is_ok(to) && distance(s, to) <= 2 ? square_bb(to) : Bitboard(0);
     }
-
 
 
     /// Bitboards::init() initializes various bitboard tables. It is called at

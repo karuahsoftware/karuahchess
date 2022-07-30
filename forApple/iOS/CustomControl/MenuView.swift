@@ -35,7 +35,7 @@ struct MenuView: View {
                         Label() {
                             Text("New Game")
                         } icon: {
-                            Image(systemName: "plus")
+                            Image(systemName: "target")
                                 .resizable()
                                 .aspectRatio(contentMode: .fit)
                                 .font(Font.system(.headline))
@@ -106,7 +106,7 @@ struct MenuView: View {
                    
                 Section {
                     
-                    Toggle(isOn: $menuSettingsVM.value.coordinatesEnabled) {
+                    Toggle(isOn: $menuSettingsVM.coordinatesEnabled) {
                         Label() {
                             Text("Coordinates")
                         } icon: {
@@ -122,11 +122,11 @@ struct MenuView: View {
                         }
                     }
                     
-                    Toggle(isOn: $menuSettingsVM.value.moveHighlightEnabled) {
+                    Toggle(isOn: $menuSettingsVM.moveHighlightEnabled) {
                         Label() {
                             Text("Highlight Moves")
                         } icon: {
-                            Image(systemName: "target")
+                            Image(systemName: "circle.hexagonpath")
                                 .resizable()
                                 .aspectRatio(contentMode: .fit)
                                 .font(Font.system(.headline))
@@ -138,7 +138,7 @@ struct MenuView: View {
                         }
                     }
                     
-                    Toggle(isOn: $menuSettingsVM.value.navigatorEnabled) {
+                    Toggle(isOn: $menuSettingsVM.navigatorEnabled) {
                         Label() {
                             Text("Navigator")
                         } icon: {
@@ -154,12 +154,45 @@ struct MenuView: View {
                         }
                             
                     }
+                    
+                    Toggle(isOn: $menuSettingsVM.hintEnabled) {
+                        Label() {
+                            Text("Hint Button")
+                        } icon: {
+                            Image(systemName: "lightbulb")
+                                .resizable()
+                                .aspectRatio(contentMode: .fit)
+                                .font(Font.system(.headline))
+                                .padding(3)
+                                .frame(width: 28, height: 28)
+                                .background(Color.orange)
+                                .foregroundColor(Color.white)
+                                .cornerRadius(6)
+                        }
+                            
+                    }
                 }
             
                 Section {
-                    NavigationLink(destination: SoundColourSettings(showMenu: $showMenu)) {
+                    NavigationLink(destination: BoardSettings(showMenu: $showMenu)) {
                         Label() {
-                            Text("Sound and Colour")
+                            Text("Board")
+                        } icon: {
+                            Image(systemName: "square.grid.3x3.square")
+                                .resizable()
+                                .aspectRatio(contentMode: .fit)
+                                .font(Font.system(.headline))
+                                .padding(3)
+                                .frame(width: 28, height: 28)
+                                .background(Color.green)
+                                .foregroundColor(Color.white)
+                                .cornerRadius(6)
+                        }
+                    }
+                    
+                    NavigationLink(destination: SoundSettings(showMenu: $showMenu)) {
+                        Label() {
+                            Text("Sound")
                         } icon: {
                             Image(systemName: "music.note")
                                 .resizable()
@@ -172,12 +205,11 @@ struct MenuView: View {
                                 .cornerRadius(6)
                         }
                     }
-                
                 }
                 
                     
                 Section {
-                    Toggle(isOn: $menuSettingsVM.value.arrangeBoardEnabled) {
+                    Toggle(isOn: $menuSettingsVM.arrangeBoardEnabled) {
                         Label() {
                             Text("Edit")
                         } icon: {

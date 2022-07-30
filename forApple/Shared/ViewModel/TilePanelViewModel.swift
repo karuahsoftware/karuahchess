@@ -108,15 +108,15 @@ import SwiftUI
     
     /// Full square highlight - magenta
     /// - Parameter pBits: Bits to highlight
-    func setHighLightFull(pBits: UInt64) {
+    func setHighLightFull(pBits: UInt64, pColour: Color) {
         if Device.instance.tileSize > 0 {
             
             for i in 0...63 {
                 if ((Constants.BITMASK >> i) & pBits) > 0 {
-                    tileList[i].tileVM.setHighLightFull(pActive: true)
+                    tileList[i].tileVM.setHighLightFull(pActive: true, pColour: pColour)
                 }
                 else {
-                    tileList[i].tileVM.setHighLightFull(pActive: false)
+                    tileList[i].tileVM.setHighLightFull(pActive: false, pColour: pColour)
                 }
             }
         }
@@ -124,15 +124,15 @@ import SwiftUI
     
     /// Full square highlight - magenta with fade out
     /// - Parameter pBits: Bits to highlight
-    func setHighLightFullFadeOut(pBits: UInt64) {
+    func setHighLightFullFadeOut(pBits: UInt64, pColour: Color) {
         if Device.instance.tileSize > 0 {
             
             for i in 0...63 {
                 if ((Constants.BITMASK >> i) & pBits) > 0 {
-                    tileList[i].tileVM.setHighLightFullFadeOut(pActive: true)
+                    tileList[i].tileVM.setHighLightFullFadeOut(pActive: true, pColour: pColour)
                 }
                 else {
-                    tileList[i].tileVM.setHighLightFullFadeOut(pActive: false)
+                    tileList[i].tileVM.setHighLightFullFadeOut(pActive: false, pColour: pColour)
                 }
                 
                 

@@ -18,41 +18,36 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 import SwiftUI
 
-struct SoundColourSettings: View {
+struct SoundSettings: View {
     @Binding var showMenu: Bool
     
-    @ObservedObject var soundColourSettingsVM : SoundColourSettingsViewModel = SoundColourSettingsViewModel.instance
+    @ObservedObject var soundSettingsVM : SoundSettingsViewModel = SoundSettingsViewModel.instance
     
     
     var body: some View {
         Form {
             
-            Toggle(isOn: $soundColourSettingsVM.value.soundReadEnabled) {
+            Toggle(isOn: $soundSettingsVM.soundReadEnabled) {
                 Text("Read messages out loud")
                     .font(.body)
                     .foregroundColor(Color(.label))
             }.padding(.top, 10)
                     
-            Toggle(isOn: $soundColourSettingsVM.value.soundEffectEnabled) {
+            Toggle(isOn: $soundSettingsVM.soundEffectEnabled) {
                 Text("Sound effects")
                     .font(.body)
                     .foregroundColor(Color(.label))
             }.padding(.top, 10)
             
-            Picker(selection: $soundColourSettingsVM.value.darkSquareColour, label: Text("Board colour")) {
-                ForEach(Constants.darkSquareColourArray, id: \.self) {colourItem in
-                    Text(colourItem.text)
-                }
-            }
-            .pickerStyle(DefaultPickerStyle())
             
-                Spacer()
-                    .frame(maxWidth: .infinity)
+            
+            Spacer()
+                .frame(maxWidth: .infinity)
                     
                 
             }
             .padding(0)
-            .navigationBarTitle(Text("Sound and Colour"), displayMode: .inline)
+            .navigationBarTitle(Text("Sound"), displayMode: .inline)
             .navigationBarItems(trailing: Button("Close") {
                 self.showMenu = false
             })

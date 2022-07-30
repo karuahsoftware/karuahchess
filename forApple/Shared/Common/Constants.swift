@@ -17,6 +17,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
 import SQLite3
+import SwiftUI
 
 class Constants  {
     
@@ -90,34 +91,41 @@ class Constants  {
          "2" : [48, 49, 50, 51, 52, 53, 54, 55],
          "1" : [56, 57, 58, 59, 60, 61, 62, 63]]
            
-    static let eloarray: [Int] = [1350, 1425, 1500, 1575, 1650, 1725, 1800, 1875, 1950, 2025, 2100, 2175, 2250, 2325, 2400, 2475, 2550, 2625, 2700, 2775, 2850]
-    static let strengthArrayLabel: [String] =
+    
+    static let skillLevelList: [String] =
         ["Beginner",
-        "Level 2, Elo 1425",
-        "Level 3, Elo 1500",
-        "Level 4, Elo 1575",
-        "Level 5, Elo 1650",
-        "Level 6, Elo 1725",
-        "Level 7, Elo 1800",
-        "Level 8, Elo 1875",
-        "Level 9, Elo 1950",
-        "Level 10, Elo 2025",
-        "Level 11, Elo 2100",
-        "Level 12, Elo 2125",
-        "Level 13, Elo 2250",
-        "Level 14, Elo 2325",
-        "Level 15, Elo 2400",
-        "Level 16, Elo 2475",
-        "Level 17, Elo 2550",
-        "Level 18, Elo 2625",
-        "Level 19, Elo 2700",
-        "Level 20, Elo 2775",
-        "Level 21, Elo 2850"]
+        "Level 2",
+        "Level 3",
+        "Level 4",
+        "Level 5",
+        "Level 6",
+        "Level 7",
+        "Level 8",
+        "Level 9",
+        "Level 10",
+        "Level 11",
+        "Level 12",
+        "Level 13",
+        "Level 14",
+        "Level 15",
+        "Level 16",
+        "Level 17",
+        "Level 18",
+        "Level 19",
+        "Level 20",
+        "Level 21"]
     
     static let darkSquareColourArray: [ColourARGB] =
     [ColourARGB(a: 255, r: 90, g: 120, b: 153, text: "Blue"),
      ColourARGB(a: 255, r: 222, g: 184, b: 135, text: "Brown"),
      ColourARGB(a: 255, r: 100, g: 153, b: 100, text: "Green"),
      ColourARGB(a: 255, r: 153, g: 153, b: 153, text: "Grey")]
+    
+    static let hintColourArray: [Color] =
+    [Color(red: 244 / 255, green: 187 / 255, blue: 68 / 255),
+     Color(red: 3 / 255, green: 166 / 255, blue: 90 / 255),
+     Color(red: 244 / 255, green: 187 / 255, blue: 68 / 255),
+     Color(red: 244 / 255, green: 187 / 255, blue: 68 / 255)]
+    
     
 }

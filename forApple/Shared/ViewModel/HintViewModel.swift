@@ -16,11 +16,21 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-class ParamLimitEngineStrengthELO : ParamProtocol {
-    var eloRating : Int
+import SwiftUI
+
+@MainActor class HintViewModel: ObservableObject {
+    static let instance = HintViewModel()
     
-    required init() {
-        eloRating = 1350 // Default value
+    @Published var enabled: Bool = ParameterDataService.instance.get(pParameterClass: ParamHint.self).enabled {
+        didSet {
+            let parameter = ParamSoundRead()
+            parameter.enabled = enabled
+            _ = ParameterDataService.instance.set(pObj: parameter)
+        }
     }
     
+    
+     
 }
+
+

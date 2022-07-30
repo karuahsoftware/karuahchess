@@ -19,7 +19,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 import SwiftUI
 
 @objc class SearchOptions: NSObject {
-    @objc var limitStrengthELO: Int32 = 1350
+    @objc var limitSkillLevel: Int32 = 0
     @objc var limitDepth: Int32 = 0
     @objc var limitNodes: Int32 = 0
     @objc var limitMoveDuration: Int32 = 0

@@ -20,12 +20,8 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #import "CompressionC.h"
 #import <zlib.h>
 
-#if TARGET_OS_IPHONE
-    #import <UIKit/UIKit.h>
-#else
-    #import <AppKit/AppKit.h>
-#endif
-#import "Karuah_Chess-Swift.h"
+
+
 
 
 @implementation CompressionC

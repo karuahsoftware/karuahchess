@@ -19,10 +19,10 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 import SwiftUI
 
 struct FloatingActionView: View {
-
+    @State private var showingNewGameAlert = false
     @ObservedObject private var device : Device = Device.instance
-    @ObservedObject private var engineSettingsVM : EngineSettingsViewModel = EngineSettingsViewModel.instance
-    @ObservedObject private var menuSettingsVM : MenuSettingsViewModel = MenuSettingsViewModel.instance
+    @ObservedObject private var hintVM : HintViewModel = HintViewModel.instance
+   
     @Binding var showMenu: Bool
     
     var body: some View {
@@ -35,29 +35,9 @@ struct FloatingActionView: View {
                 Spacer()
                 
                 Button(action: {
-                    showMenu = true
-                    menuSettingsVM.isShowingEngineSettings = true
-                    
+                    self.showingNewGameAlert = true
                        }){
-                           HStack(spacing: 0) {
-                            Image(systemName: "gear")
-                                .resizable()
-                                .padding()
-                                .aspectRatio(contentMode: .fit)
-                            Text("\(engineSettingsVM.value.limitEngineStrengthELOIndex + 1)")
-                                .padding(.trailing)
-                        }.background(Color("ActionGreen"))
-                         .foregroundColor(Color.black)
-                         .clipShape(Capsule())
-                         .shadow(radius: 8)
-                         .frame(width: calcButtonSize(device.tileSize) * 1.8, height: calcButtonSize(device.tileSize) * 1.1)
-                }
-                
-                
-                Button(action: {
-                    BoardViewModel.instance.rotateClick()
-                       }){
-                            Image(systemName: "arrow.clockwise")
+                            Image(systemName: "target")
                                 .resizable()
                                 .padding()
                                 .aspectRatio(contentMode: .fill)
@@ -66,6 +46,13 @@ struct FloatingActionView: View {
                                 .clipShape(Circle())
                                 .shadow(radius: 8)
                                 .frame(width: calcButtonSize(device.tileSize) * 1.1, height: calcButtonSize(device.tileSize) * 1.1)
+                       }.alert(isPresented: $showingNewGameAlert) {
+                           Alert(title: Text("New"), message: Text("Start a new game?"), primaryButton: .destructive(Text("Yes")) {
+                               Task(priority: .userInitiated)  {
+                                   self.showMenu = false
+                                   await BoardViewModel.instance.newGame()
+                               }
+                           } , secondaryButton: .cancel())
                        }
                 
                 Button(action: {
@@ -82,6 +69,23 @@ struct FloatingActionView: View {
                              .frame(width: calcButtonSize(device.tileSize) * 1.1, height: calcButtonSize(device.tileSize) * 1.1)
                        }
                 
+                if hintVM.enabled {
+                    Button(action: {
+                        Task(priority: .userInitiated) {
+                            await BoardViewModel.instance.showHint()
+                        }
+                           }){
+                             Image(systemName: "lightbulb")
+                                 .resizable()
+                                 .padding()
+                                 .aspectRatio(contentMode: .fill)
+                                 .background(Color("ActionGreen"))
+                                 .foregroundColor(Color.black)
+                                 .clipShape(Circle())
+                                 .shadow(radius: 8)
+                                 .frame(width: calcButtonSize(device.tileSize) * 1.1, height: calcButtonSize(device.tileSize) * 1.1)
+                           }
+                }
                 
             }.padding()
             

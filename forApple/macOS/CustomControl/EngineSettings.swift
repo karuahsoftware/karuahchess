@@ -25,7 +25,7 @@ struct EngineSettings: View {
     @FocusState private var limitMoveDurationIsFocused : Bool
     @FocusState private var limitNodesIsFocused : Bool
     
-    private var maxThreads: Double = ProcessInfo.processInfo.activeProcessorCount > 1 ? Double(ProcessInfo.processInfo.activeProcessorCount - 1) : Double(1)
+    private var maxThreads: Double = ProcessInfo.processInfo.activeProcessorCount > 1 ? Double(ProcessInfo.processInfo.activeProcessorCount) : Double(1)
     
     let formatter: NumberFormatter = {
         let formatter = NumberFormatter()
@@ -49,58 +49,59 @@ struct EngineSettings: View {
                         ActivityIndicatorView(activityIndicatorVM: BoardViewModel.instance.activityIndicatorVM).frame(width:35, height:35)
                     }.padding(.bottom, 10)
                     
-                    Toggle(isOn: $engineSettingsVM.value.computerPlayerEnabled) {
+                    Toggle(isOn: $engineSettingsVM.computerPlayerEnabled) {
                         Text("Computer player enabled")
                             .font(.body)
                     }
                         
                     Group {
-                        Toggle(isOn: $engineSettingsVM.value.computerMovesFirst) {
+                        Toggle(isOn: $engineSettingsVM.computerMovesFirst) {
                             Text("Computer moves first")
                                 .font(.body)
                         }
                         
-                        Toggle(isOn: $engineSettingsVM.value.randomiseFirstMove) {
+                        Toggle(isOn: $engineSettingsVM.randomiseFirstMove) {
                             Text("Randomise first computer move")
                                 .font(.body)
                         }
                         
-                        Toggle(isOn: $engineSettingsVM.value.levelAuto) {
+                        Toggle(isOn: $engineSettingsVM.levelAuto) {
                             Text("Increase strength after win")
                                 .font(.body)
                         }
                         
-                        Picker(selection: $engineSettingsVM.value.limitEngineStrengthELOIndex, label: Text("Computer Strength").font(.body).opacity(!$engineSettingsVM.value.computerPlayerEnabled.wrappedValue ? 0.5 : 1)) {
-                            ForEach(0 ..< Constants.strengthArrayLabel.count) {
-                                Text(Constants.strengthArrayLabel[$0])
+                    
+                        Picker(selection: $engineSettingsVM.limitSkillLevel, label: Text("Strength").font(.body).opacity(!$engineSettingsVM.computerPlayerEnabled.wrappedValue ? 0.5 : 1)) {
+                            ForEach(0 ..< Constants.skillLevelList.count, id: \.self) {
+                                Text(Constants.skillLevelList[$0]).tag($0)
                             }
                         }
                         .pickerStyle(DefaultPickerStyle())
-                          
                         
-                        Toggle(isOn: $engineSettingsVM.value.limitAdvanced) {
+                        
+                        Toggle(isOn: $engineSettingsVM.limitAdvanced) {
                             Text("Advanced search settings")
                                 .font(.body)
                         }
                         .padding(.top)
                         
                         Group {
-                            Slider(value: $engineSettingsVM.value.limitDepth, in: 0...35, step:1) {
-                                Text("Depth limit \(getValueZeroOff(pValue: Int($engineSettingsVM.value.limitDepth.wrappedValue)))")
+                            Slider(value: $engineSettingsVM.limitDepth, in: 0...35, step:1) {
+                                Text("Depth limit \(getValueZeroOff(pValue: Int($engineSettingsVM.limitDepth.wrappedValue)))")
                                     .font(.body)
                                     .opacity(getAdvancedSettingsOpacity())
                             }
                             
                             HStack(alignment: .top) {
                                 Text("Node limit").opacity(getAdvancedSettingsOpacity())
-                                TextField("", value: $engineSettingsVM.value.limitNodes, formatter: NumberFormatter())
+                                TextField("", value: $engineSettingsVM.limitNodes, formatter: NumberFormatter())
                                     .focused($limitNodesIsFocused)
                                     .help(Text("Valid values are 10 to \(formatter.string(from: 2000000000) ?? "")"))
                                     .frame(width: 100)
                                 
                             }
                             
-                            if !$engineSettingsVM.value.limitNodesIsValid.wrappedValue {
+                            if !$engineSettingsVM.limitNodesIsValid.wrappedValue {
                                 HStack {
                                     Image(systemName: "arrow.turn.left.up")
                                     .imageScale(.large)
@@ -115,14 +116,14 @@ struct EngineSettings: View {
                             
                             HStack(alignment: .top) {
                                 Text("Move time limit (ms)").opacity(getAdvancedSettingsOpacity())
-                                TextField("", value: $engineSettingsVM.value.limitMoveDuration, formatter: NumberFormatter())
+                                TextField("", value: $engineSettingsVM.limitMoveDuration, formatter: NumberFormatter())
                                     .focused($limitMoveDurationIsFocused)
                                     .help(Text("Valid values are 0 to \(formatter.string(from: 600000) ?? ""). Set to 0 for no limit."))
                                     .frame(width: 100)
                                 
                             }
                             
-                            if !$engineSettingsVM.value.limitMoveDurationIsValid.wrappedValue {
+                            if !$engineSettingsVM.limitMoveDurationIsValid.wrappedValue {
                                 HStack {
                                     Image(systemName: "arrow.turn.left.up")
                                     .imageScale(.large)
@@ -136,16 +137,16 @@ struct EngineSettings: View {
                             }
                             
                             if maxThreads > 1 {
-                                Slider(value: $engineSettingsVM.value.limitThreads, in: 1...maxThreads, step:1) {
-                                    Text("CPU threads \(getValueZeroOff(pValue: Int($engineSettingsVM.value.limitThreads.wrappedValue)))")
+                                Slider(value: $engineSettingsVM.limitThreads, in: 1...maxThreads, step:1) {
+                                    Text("CPU threads \(getValueZeroOff(pValue: Int($engineSettingsVM.limitThreads.wrappedValue)))")
                                         .font(.body)
                                         .opacity(getAdvancedSettingsOpacity())
                                 }
                             }
                             
-                        }.disabled(!$engineSettingsVM.value.limitAdvanced.wrappedValue)
+                        }.disabled(!$engineSettingsVM.limitAdvanced.wrappedValue)
                         
-                    }.disabled(!$engineSettingsVM.value.computerPlayerEnabled.wrappedValue)
+                    }.disabled(!$engineSettingsVM.computerPlayerEnabled.wrappedValue)
                     
                 }.frame(minWidth: 50, maxWidth: .infinity, minHeight: 50, maxHeight: .infinity)
                 
@@ -161,9 +162,7 @@ struct EngineSettings: View {
                 }
                 
                 Button(action: {
-                    Task(priority: .userInitiated) {
-                        await BoardViewModel.instance.endMoveJob()
-                    }
+                    BoardViewModel.instance.stopSearchJob()
                 }){
                     Text("Stop search")
                 }
@@ -187,7 +186,7 @@ struct EngineSettings: View {
     }
     
     private func getAdvancedSettingsOpacity() -> Double {
-        return !($engineSettingsVM.value.limitAdvanced.wrappedValue && $engineSettingsVM.value.computerPlayerEnabled.wrappedValue) ? 0.5 : 1
+        return !($engineSettingsVM.limitAdvanced.wrappedValue && $engineSettingsVM.computerPlayerEnabled.wrappedValue) ? 0.5 : 1
     }
     
     

@@ -19,31 +19,28 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 import SwiftUI
 
 struct TitlebarAccessoryView: View {
-    @ObservedObject private var engineSettingsVM : EngineSettingsViewModel = EngineSettingsViewModel.instance
+    @ObservedObject private var hintVM : HintViewModel = HintViewModel.instance
     
     var body: some View {
         HStack {
             DirectionIndicatorView(directionIndicatorVM: BoardViewModel.instance.directionIndicatorVM).frame(width: 20, height: 20)
+            LevelIndicatorView()
             ActivityIndicatorView(activityIndicatorVM: BoardViewModel.instance.activityIndicatorVM).frame(width:35, height:35)
             
             Spacer()
             
             Button(action: {
-                MenuSheet.shared.active = .engineSettings
-                   }){
-                HStack {
-                    Image(systemName: "gear").foregroundColor(Color(.textColor))
-                    Text("\(engineSettingsVM.value.limitEngineStrengthELOIndex + 1)")
+                let action : ()->Void = {
+                    Task(priority: .userInitiated) {
+                        await BoardViewModel.instance.newGame()
+                    }
                 }
-            }
-            .help("Engine Settings")
-            
-            Button(action: {
-                BoardViewModel.instance.rotateClick()
+                BoardViewModel.instance.boardMessageAlertVM.show("Start a new game?", "", BoardMessageAlertViewModel.alertTypeEnum.YesNo, action)
                    }){
-                Image(systemName: "arrow.clockwise").foregroundColor(Color(.textColor))
-            }.keyboardShortcut("r", modifiers: [.command])
-            .help("Rotate ⌘R")
+                    Image(systemName: "target").foregroundColor(Color(.textColor))
+            }
+            .help("New Game ⌘N")
+            
             
             Button(action: {
                 BoardViewModel.instance.showLastMove()
@@ -52,6 +49,19 @@ struct TitlebarAccessoryView: View {
                     
             }.keyboardShortcut("l", modifiers: [.command])
             .help("Last move ⌘L")
+            
+            if hintVM.enabled {
+                Button(action: {
+                    Task(priority: .userInitiated) {
+                    await BoardViewModel.instance.showHint()
+                    }
+                       }){
+                    Image(systemName: "lightbulb").foregroundColor(Color(.textColor))
+                        
+                }.keyboardShortcut("h", modifiers: [.command])
+                .help("Hint ⌘H")
+            }
+            
         }.padding(.init(top: 0, leading: 7, bottom: 0, trailing: 7))
     }
     

@@ -31,7 +31,7 @@ import SwiftUI
     /// - Parameter pTile: The tile that was clicked
     func show(_ pTile: TileView, _ pRecord: GameRecordArray) {
         // Ensure nothing is higlighted
-        BoardViewModel.instance.tilePanelVM.setHighLightFull(pBits: 0)
+        BoardViewModel.instance.tilePanelVM.setHighLightFull(pBits: 0, pColour: Color("Magenta"))
         
         if visible == true {
             close()
@@ -42,7 +42,7 @@ import SwiftUI
             kingSpin = pTile.tileVM.spin
             
             // Highlight square being modified
-            pTile.tileVM.setHighLightFull(pActive: true)
+            pTile.tileVM.setHighLightFull(pActive: true, pColour: Color("Magenta"))
             
             // Set the control state
             setControlState(pRecord)
@@ -59,7 +59,7 @@ import SwiftUI
     func close() {
         // save before closing
         if visible {save()
-            BoardViewModel.instance.tilePanelVM.setHighLightFull(pBits: 0)
+            BoardViewModel.instance.tilePanelVM.setHighLightFull(pBits: 0, pColour: Color("Magenta"))
             lastTileIndexTapped = -1
             visible = false
         }

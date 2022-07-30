@@ -44,27 +44,38 @@ class Menu : NSObject {
     }
     
     @objc func coordinates(_ sender: NSMenuItem) {
-        menuSettingsVM.value.coordinatesEnabled.toggle()
-        sender.state = menuSettingsVM.value.coordinatesEnabled ? .on : .off
+        menuSettingsVM.coordinatesEnabled.toggle()
+        sender.state = menuSettingsVM.coordinatesEnabled ? .on : .off
     }
     
     @objc func highlightMoves(_ sender: NSMenuItem) {
-        menuSettingsVM.value.moveHighlightEnabled.toggle()
-        sender.state = menuSettingsVM.value.moveHighlightEnabled ? .on : .off
+        menuSettingsVM.moveHighlightEnabled.toggle()
+        sender.state = menuSettingsVM.moveHighlightEnabled ? .on : .off
     }
+    
+    
+    @objc func hint(_ sender: NSMenuItem) {
+        menuSettingsVM.hintEnabled.toggle()
+        sender.state = menuSettingsVM.hintEnabled ? .on : .off
+    }
+     
     
     @objc func navigator(_ sender: NSMenuItem) {
-        menuSettingsVM.value.navigatorEnabled.toggle()
-        sender.state = menuSettingsVM.value.navigatorEnabled ? .on : .off
+        menuSettingsVM.navigatorEnabled.toggle()
+        sender.state = menuSettingsVM.navigatorEnabled ? .on : .off
     }
     
-    @objc func soundColourSettings() {
-        MenuSheet.shared.active = .soundColourSettings
+    @objc func boardSettings() {
+        MenuSheet.shared.active = .boardSettings
+    }
+    
+    @objc func soundSettings() {
+        MenuSheet.shared.active = .soundSettings
     }
     
     @objc func edit(_ sender: NSMenuItem) {
-        menuSettingsVM.value.arrangeBoardEnabled.toggle()
-        sender.state = menuSettingsVM.value.arrangeBoardEnabled ? .on : .off
+        menuSettingsVM.arrangeBoardEnabled.toggle()
+        sender.state = menuSettingsVM.arrangeBoardEnabled ? .on : .off
     }
     
     @objc func undo() {
@@ -115,7 +126,7 @@ class Menu : NSObject {
         // New Game
         do {
             let menuItem = NSMenuItem(title: "New Game", action: #selector(self.newGame), keyEquivalent: "n")
-            menuItem.image = NSImage(systemSymbolName: "plus", accessibilityDescription: "New Game")
+            menuItem.image = NSImage(systemSymbolName: "target", accessibilityDescription: "New Game")
             menuItem.target = self
             appMenu.addItem(menuItem)
         }
@@ -143,7 +154,7 @@ class Menu : NSObject {
             let menuItem = NSMenuItem(title: "Coordinates", action: #selector(self.coordinates), keyEquivalent: "")
             menuItem.image = NSImage(systemSymbolName: "globe", accessibilityDescription: "Coordinates")
             menuItem.target = self
-            menuItem.state = menuSettingsVM.value.coordinatesEnabled ? .on : .off
+            menuItem.state = menuSettingsVM.coordinatesEnabled ? .on : .off
             appMenu.addItem(menuItem)
             
         }
@@ -151,9 +162,9 @@ class Menu : NSObject {
         // Highlight Moves
         do {
             let menuItem = NSMenuItem(title: "Highlight Moves", action: #selector(self.highlightMoves), keyEquivalent: "")
-            menuItem.image = NSImage(systemSymbolName: "target", accessibilityDescription: "Highlight Moves")
+            menuItem.image = NSImage(systemSymbolName: "circle.hexagonpath", accessibilityDescription: "Highlight Moves")
             menuItem.target = self
-            menuItem.state = menuSettingsVM.value.moveHighlightEnabled ? .on : .off
+            menuItem.state = menuSettingsVM.moveHighlightEnabled ? .on : .off
             appMenu.addItem(menuItem)
             
         }
@@ -163,17 +174,35 @@ class Menu : NSObject {
             let menuItem = NSMenuItem(title: "Navigator", action: #selector(self.navigator), keyEquivalent: "")
             menuItem.image = NSImage(systemSymbolName: "play", accessibilityDescription: "Navigator")
             menuItem.target = self
-            menuItem.state = menuSettingsVM.value.navigatorEnabled ? .on : .off
+            menuItem.state = menuSettingsVM.navigatorEnabled ? .on : .off
+            appMenu.addItem(menuItem)
+            
+        }
+        
+        // Hint
+        do {
+            let menuItem = NSMenuItem(title: "Hint Button", action: #selector(self.hint), keyEquivalent: "")
+            menuItem.image = NSImage(systemSymbolName: "lightbulb", accessibilityDescription: "Hint")
+            menuItem.target = self
+            menuItem.state = menuSettingsVM.hintEnabled ? .on : .off
             appMenu.addItem(menuItem)
             
         }
         
         appMenu.addItem(NSMenuItem.separator())
         
-        // Sound and colour settings
+        // Board settings
         do {
-            let menuItem = NSMenuItem(title: "Sound & Colour", action: #selector(self.soundColourSettings), keyEquivalent: "")
-            menuItem.image = NSImage(systemSymbolName: "music.note", accessibilityDescription: "Sound & Colour")
+            let menuItem = NSMenuItem(title: "Board", action: #selector(self.boardSettings), keyEquivalent: "")
+            menuItem.image = NSImage(systemSymbolName: "square.grid.3x3.square", accessibilityDescription: "Board")
+            menuItem.target = self
+            appMenu.addItem(menuItem)
+        }
+        
+        // Sound settings
+        do {
+            let menuItem = NSMenuItem(title: "Sound", action: #selector(self.soundSettings), keyEquivalent: "")
+            menuItem.image = NSImage(systemSymbolName: "music.note", accessibilityDescription: "Sound")
             menuItem.target = self
             appMenu.addItem(menuItem)
         }
@@ -185,7 +214,7 @@ class Menu : NSObject {
             let menuItem = NSMenuItem(title: "Edit", action: #selector(self.edit), keyEquivalent: "e")
             menuItem.image = NSImage(systemSymbolName: "pencil", accessibilityDescription: "Edit")
             menuItem.target = self
-            menuItem.state = menuSettingsVM.value.arrangeBoardEnabled ? .on : .off
+            menuItem.state = menuSettingsVM.arrangeBoardEnabled ? .on : .off
             appMenu.addItem(menuItem)
         }
         

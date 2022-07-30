@@ -1,6 +1,6 @@
 /*
   Stockfish, a UCI chess playing engine derived from Glaurung 2.1
-  Copyright (C) 2004-2021 The Stockfish developers (see AUTHORS file)
+  Copyright (C) 2004-2022 The Stockfish developers (see AUTHORS file)
 
   Stockfish is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -30,7 +30,6 @@
 #include "SFthread.h"
 #include "SFtt.h"
 #include "SFuci.h"
-
 
 using std::string;
 
@@ -660,6 +659,7 @@ namespace Stockfish {
         ++st->rule50;
         ++st->pliesFromNull;
 
+
         Color us = sideToMove;
         Color them = ~us;
         Square from = from_sq(m);
@@ -766,7 +766,6 @@ namespace Stockfish {
 
                 remove_piece(to);
                 put_piece(promotion, to);
-
 
                 // Update hash keys
                 k ^= Zobrist::psq[pc][to] ^ Zobrist::psq[promotion][to];
@@ -896,7 +895,6 @@ namespace Stockfish {
         rto = relative_square(us, kingSide ? SQ_F1 : SQ_D1);
         to = relative_square(us, kingSide ? SQ_G1 : SQ_C1);
 
-
         // Remove both pieces first since squares could overlap in Chess960
         remove_piece(Do ? from : to);
         remove_piece(Do ? rfrom : rto);
@@ -926,9 +924,9 @@ namespace Stockfish {
         }
 
         st->key ^= Zobrist::side;
+        ++st->rule50;
         prefetch(TT.first_entry(key()));
 
-        ++st->rule50;
         st->pliesFromNull = 0;
 
         sideToMove = ~sideToMove;
@@ -1232,7 +1230,7 @@ namespace Stockfish {
                     assert(0 && "pos_is_ok: Bitboards");
 
         StateInfo si = *st;
-       
+
         set_state(&si);
         if (std::memcmp(&si, st, sizeof(StateInfo)))
             assert(0 && "pos_is_ok: State");

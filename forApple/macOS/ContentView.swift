@@ -40,6 +40,7 @@ struct ContentView: View {
                     .border(device.tileDarkSquareColour, width: 1)
                     .offset(x: device.boardCoordPadding)
                     .zIndex(2)
+                    
                                             
                 // Animation Layout
                 TileAnimationView(tileAnimationVM: boardVM.tileAnimationVM)
@@ -89,8 +90,10 @@ struct ContentView: View {
                 switch item {
                 case .engineSettings:
                     EngineSettings(pMenuSheet: menuSheet)
-                case .soundColourSettings:
-                    SoundColourSettings(pMenuSheet: menuSheet)
+                case .boardSettings:
+                    BoardSettings(pMenuSheet: menuSheet)
+                case .soundSettings:
+                    SoundSettings(pMenuSheet: menuSheet)
                 case .about:
                     AboutView(pMenuSheet: menuSheet)
                 }

@@ -20,11 +20,12 @@ import SwiftUI
 
 actor SearchActor {
     
-    
-    
-    
     func searchStart(pSearchOptions: SearchOptions) -> SearchResult {
         return GameRecordDataService.instance.currentGame.searchStart(pSearchOptions) as? SearchResult ?? SearchResult()
+    }
+    
+    nonisolated func cancelSearch() {
+        GameRecordDataService.instance.currentGame.cancelSearch()
     }
     
 }

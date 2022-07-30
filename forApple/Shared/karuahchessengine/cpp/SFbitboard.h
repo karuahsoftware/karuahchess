@@ -1,6 +1,6 @@
 /*
   Stockfish, a UCI chess playing engine derived from Glaurung 2.1
-  Copyright (C) 2004-2021 The Stockfish developers (see AUTHORS file)
+  Copyright (C) 2004-2022 The Stockfish developers (see AUTHORS file)
 
   Stockfish is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -23,7 +23,6 @@
 
 #include "SFtypes.h"
 
-
 namespace Stockfish {
 
     namespace Bitbases {
@@ -36,7 +35,6 @@ namespace Stockfish {
     namespace Bitboards {
 
         void init();
-
 
     } // namespace Stockfish::Bitboards
 
@@ -348,7 +346,7 @@ namespace Stockfish {
 
 #else // Assumed gcc or compatible compiler
 
-            return __builtin_popcountll(b);
+        return __builtin_popcountll(b);
 
 #endif
     }
@@ -372,49 +370,49 @@ namespace Stockfish {
 
     #ifdef _WIN64  // MSVC, WIN64
 
-        inline Square lsb(Bitboard b) {
-            assert(b);
-            unsigned long idx;
-            _BitScanForward64(&idx, b);
-            return (Square)idx;
-        }
+    inline Square lsb(Bitboard b) {
+        assert(b);
+        unsigned long idx;
+        _BitScanForward64(&idx, b);
+        return (Square)idx;
+    }
 
-        inline Square msb(Bitboard b) {
-            assert(b);
-            unsigned long idx;
-            _BitScanReverse64(&idx, b);
-            return (Square)idx;
-        }
+    inline Square msb(Bitboard b) {
+        assert(b);
+        unsigned long idx;
+        _BitScanReverse64(&idx, b);
+        return (Square)idx;
+    }
 
 #else  // MSVC, WIN32
 
-        inline Square lsb(Bitboard b) {
-            assert(b);
-            unsigned long idx;
+    inline Square lsb(Bitboard b) {
+        assert(b);
+        unsigned long idx;
 
-            if (b & 0xffffffff) {
-                _BitScanForward(&idx, int32_t(b));
-                return Square(idx);
-            }
-            else {
-                _BitScanForward(&idx, int32_t(b >> 32));
-                return Square(idx + 32);
-            }
+        if (b & 0xffffffff) {
+            _BitScanForward(&idx, int32_t(b));
+            return Square(idx);
         }
-
-        inline Square msb(Bitboard b) {
-            assert(b);
-            unsigned long idx;
-
-            if (b >> 32) {
-                _BitScanReverse(&idx, int32_t(b >> 32));
-                return Square(idx + 32);
-            }
-            else {
-                _BitScanReverse(&idx, int32_t(b));
-                return Square(idx);
-            }
+        else {
+            _BitScanForward(&idx, int32_t(b >> 32));
+            return Square(idx + 32);
         }
+    }
+
+    inline Square msb(Bitboard b) {
+        assert(b);
+        unsigned long idx;
+
+        if (b >> 32) {
+            _BitScanReverse(&idx, int32_t(b >> 32));
+            return Square(idx + 32);
+        }
+        else {
+            _BitScanReverse(&idx, int32_t(b));
+            return Square(idx);
+        }
+    }
 
 #endif
 

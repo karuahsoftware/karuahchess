@@ -37,7 +37,7 @@ struct TileView: View {
                 // Full highlight magenta
                 if tileVM.highlightFull {
                    Rectangle()
-                    .fill(Color("Magenta"))
+                        .fill(tileVM.hightlightFullColor)
                     .frame(width: device.tileSize, height: device.tileSize)
                 }
                 
@@ -45,11 +45,11 @@ struct TileView: View {
                 // Full highlight magenta with fade out
                 if tileVM.highlightFullFadeOut && fadeOutModifier.animatableData < 1 {
                    Rectangle()
-                    .fill(Color("Magenta"))
+                    .fill(tileVM.hightlightFullColor)
                     .frame(width: device.tileSize, height: device.tileSize)
                     .modifier(fadeOutModifier)
                     .onAppear() {
-                        withAnimation(.easeIn(duration: 3)) {
+                        withAnimation(.easeIn(duration: 5)) {
                             highLightFullFadeOutComplete = 1
                         }
                     }
@@ -164,7 +164,7 @@ struct TileView: View {
             .onTapGesture {
                 BoardViewModel.instance.onTileClick(pTile: self)
             }
-            .onDrop(of: ["public.utf8-plain-text"], delegate: PieceMoveDelegate(toIndex: index))
+            .onDrop(of: ["public.utf8-plain-text"], delegate: PieceMoveDelegate(toIndex: index, highLightColour: Color("Magenta")))
             .rotationEffect(Angle(degrees: -BoardViewModel.instance.boardRotation))
             
             
@@ -200,18 +200,18 @@ struct TileView: View {
     /// Drop delegate for drag and drop functionality
    struct PieceMoveDelegate: DropDelegate {
         var toIndex: Int
-        
+        var highLightColour: Color
         
         func validateDrop(info: DropInfo) -> Bool {
             return info.hasItemsConforming(to: ["public.utf8-plain-text"])
         }
         
         func dropEntered(info: DropInfo) {
-          BoardViewModel.instance.tilePanelVM.setHighLightFull(pBits: Constants.BITMASK >> toIndex)
+          BoardViewModel.instance.tilePanelVM.setHighLightFull(pBits: Constants.BITMASK >> toIndex, pColour: highLightColour)
         }
         
         func dropExited(info: DropInfo) {
-           BoardViewModel.instance.tilePanelVM.setHighLightFull(pBits: 0)
+           BoardViewModel.instance.tilePanelVM.setHighLightFull(pBits: 0, pColour: highLightColour)
         }
         
         func dropUpdated(info: DropInfo) -> DropProposal? {
@@ -234,7 +234,7 @@ struct TileView: View {
                 }
             }
             
-            BoardViewModel.instance.tilePanelVM.setHighLightFull(pBits: 0)
+            BoardViewModel.instance.tilePanelVM.setHighLightFull(pBits: 0, pColour: highLightColour)
         
                 
             return true

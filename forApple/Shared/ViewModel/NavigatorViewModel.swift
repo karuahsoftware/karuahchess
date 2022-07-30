@@ -22,10 +22,9 @@ import SwiftUI
     
     @Published var recordIdList : [Int] = [Int]()
     
-    var enabled : Bool{
+    @Published var enabled : Bool{
         willSet {
             BoardViewModel.instance.refreshTileSize(pCoordPanelEnabled: BoardViewModel.instance.coordPanelEnabled, pNavigationEnabled: newValue)
-            objectWillChange.send()
         }
     }
     

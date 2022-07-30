@@ -20,12 +20,10 @@ import SwiftUI
 
 @MainActor class MenuSettingsViewModel: ObservableObject {
     static let instance = MenuSettingsViewModel()
-    @Published var value = MenuSettingsValue()
+    
     @Published var isShowingEngineSettings = false
-}
-
-@MainActor struct MenuSettingsValue {
-    var arrangeBoardEnabled : Bool = ParameterDataService.instance.get(pParameterClass: ParamArrangeBoard.self).enabled {
+    
+    @Published var arrangeBoardEnabled : Bool = ParameterDataService.instance.get(pParameterClass: ParamArrangeBoard.self).enabled {
         didSet {
             BoardViewModel.instance.tilePanelVM.editMode(pEnable: arrangeBoardEnabled)
             let parameter = ParamArrangeBoard()
@@ -35,13 +33,14 @@ import SwiftUI
                 BoardViewModel.instance.pieceEditToolVM.close()
                 BoardViewModel.instance.castlingRightsVM.close()
             }
-            Task (priority: .userInitiated) {
-                await BoardViewModel.instance.endMoveJob()
+            Task(priority: .userInitiated) {
+                await BoardViewModel.instance.stopSearchJob()
             }
+            
         }
     }
     
-    var coordinatesEnabled : Bool = ParameterDataService.instance.get(pParameterClass: ParamBoardCoord.self).enabled {
+    @Published var coordinatesEnabled : Bool = ParameterDataService.instance.get(pParameterClass: ParamBoardCoord.self).enabled {
         didSet {
             let parameter = ParamBoardCoord()
             parameter.enabled = coordinatesEnabled
@@ -51,7 +50,7 @@ import SwiftUI
         }
     }
     
-    var moveHighlightEnabled : Bool = ParameterDataService.instance.get(pParameterClass: ParamMoveHighlight.self).enabled {
+    @Published var moveHighlightEnabled : Bool = ParameterDataService.instance.get(pParameterClass: ParamMoveHighlight.self).enabled {
         didSet {
             let parameter = ParamMoveHighlight()
             parameter.enabled = moveHighlightEnabled
@@ -60,7 +59,7 @@ import SwiftUI
         }
     }
     
-    var navigatorEnabled : Bool = ParameterDataService.instance.get(pParameterClass: ParamNavigator.self).enabled {
+    @Published var navigatorEnabled : Bool = ParameterDataService.instance.get(pParameterClass: ParamNavigator.self).enabled {
         didSet {
             let parameter = ParamNavigator()
             parameter.enabled = navigatorEnabled
@@ -70,7 +69,17 @@ import SwiftUI
         }
     }
     
-    var soundReadEnabled: Bool = ParameterDataService.instance.get(pParameterClass: ParamSoundRead.self).enabled {
+    @Published var hintEnabled : Bool = ParameterDataService.instance.get(pParameterClass: ParamHint.self).enabled {
+        didSet {
+            let parameter = ParamHint()
+            parameter.enabled = hintEnabled
+            _ = ParameterDataService.instance.set(pObj: parameter)
+            HintViewModel.instance.enabled = hintEnabled
+
+        }
+    }
+    
+    @Published var soundReadEnabled: Bool = ParameterDataService.instance.get(pParameterClass: ParamSoundRead.self).enabled {
         didSet {
             let parameter = ParamSoundRead()
             parameter.enabled = soundReadEnabled
@@ -79,14 +88,7 @@ import SwiftUI
         }
     }
     
-    var soundEffectEnabled: Bool = ParameterDataService.instance.get(pParameterClass: ParamSoundEffect.self).enabled {
-        didSet {
-            let parameter = ParamSoundEffect()
-            parameter.enabled = soundEffectEnabled
-            _ = ParameterDataService.instance.set(pObj: parameter)
-            
-        }
-    }
-    
     
 }
+
+

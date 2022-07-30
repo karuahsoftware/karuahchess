@@ -32,18 +32,21 @@ import AVFoundation
     static let textReader = AVSpeechSynthesizer()
     let move: Move
     var computerMoveProcessing = false
+    var computerHintProcessing = false
     let pieceEditToolVM : PieceEditToolViewModel
     let boardMessageAlertVM : BoardMessageAlertViewModel
     let castlingRightsVM : CastlingRightsViewModel
     let navigatorVM : NavigatorViewModel 
     let pawnPromotionVM : PawnPromotionViewModel
     var audioPlayerPieceMoveSound: AVAudioPlayer?
+    let hintBoardActor = HintActor()
+    let srchActor = SearchActor()
     
     @Published var showFileExporter: Bool = false
     @Published var exportFileDocument: ExportFileDocument? = nil
     @Published var showFileImporter: Bool = false
-    
     @Published var boardRotation : Double
+    
     
     var coordPanelEnabled : Bool{
         willSet {
@@ -51,7 +54,6 @@ import AVFoundation
             objectWillChange.send()
         }
     }
-    
     
     enum MoveTypeEnum : Int { case None = 0, Normal = 1, Enpassant = 2, Castle = 3, Promotion = 4}
     enum BoardStatusEnum : Int { case Ready = 0, Checkmate = 1, Stalemate = 2, Resigned = 3}
@@ -122,7 +124,7 @@ import AVFoundation
         let lastChanges = GameRecordDataService.instance.getBoardSquareChanges(pBoardA: currentBoard, pBoardB: previousBoard)
         
         if lastChanges != 0 {
-            tilePanelVM.setHighLightFullFadeOut(pBits: lastChanges)
+            tilePanelVM.setHighLightFullFadeOut(pBits: lastChanges, pColour: Color("Magenta"))
             readText(pText: "Last move")
         }
         else {
@@ -320,35 +322,27 @@ import AVFoundation
         let arrangeBoardEnabled = ParameterDataService.instance.get(pParameterClass: ParamArrangeBoard.self).enabled
         let computerPlayerEnabled = ParameterDataService.instance.get(pParameterClass: ParamComputerPlayer.self).enabled
         let computerMoveFirstEnabled = ParameterDataService.instance.get(pParameterClass: ParamComputerMoveFirst.self).enabled
-        let randomiseFirstMoveEnabled = ParameterDataService.instance.get(pParameterClass: ParamRandomiseFirstMove.self).enabled
-        let limitEngineStrengthELO = ParameterDataService.instance.get(pParameterClass: ParamLimitEngineStrengthELO.self).eloRating
-        let limitAdvancedEnabled = ParameterDataService.instance.get(pParameterClass: ParamLimitAdvanced.self).enabled
-        let limitDepth = ParameterDataService.instance.get(pParameterClass: ParamLimitDepth.self).depth
-        let limitNodes = ParameterDataService.instance.get(pParameterClass: ParamLimitNodes.self).nodes
-        let limitMoveDuration = ParameterDataService.instance.get(pParameterClass: ParamLimitMoveDuration.self).moveDurationMS
-        let limitThreads = ParameterDataService.instance.get(pParameterClass: ParamLimitThreads.self).threads
-        
         let computerColour = computerMoveFirstEnabled ? Constants.WHITEPIECE : Constants.BLACKPIECE
         let turnColour = Int(GameRecordDataService.instance.currentGame.getStateActiveColour())
         let boardStatus = Int(GameRecordDataService.instance.currentGame.getStateGameStatus())
         
-        if boardStatus == 0 && (!computerMoveProcessing) && (!arrangeBoardEnabled) && computerPlayerEnabled && computerColour == turnColour {
+        if boardStatus == 0 && (!computerMoveProcessing) && (!computerHintProcessing) && (!arrangeBoardEnabled) && computerPlayerEnabled && computerColour == turnColour {
             lockPanel = true
             // Clear the user move since starting computer move
             await move.clear()
             computerMoveProcessing = true
-            
             activityIndicatorVM.enabled = true
-            
+        
             let searchOptions = SearchOptions()
-            searchOptions.randomiseFirstMove = randomiseFirstMoveEnabled
-            searchOptions.limitStrengthELO = Int32(limitEngineStrengthELO)
+            searchOptions.randomiseFirstMove = ParameterDataService.instance.get(pParameterClass: ParamRandomiseFirstMove.self).enabled
+            searchOptions.limitSkillLevel = Int32(ParameterDataService.instance.get(pParameterClass: ParamLimitSkillLevel.self).level)
             
+            let limitAdvancedEnabled = ParameterDataService.instance.get(pParameterClass: ParamLimitAdvanced.self).enabled
             if limitAdvancedEnabled {
-                searchOptions.limitDepth = Int32(limitDepth)
-                searchOptions.limitNodes = Int32(limitNodes)
-                searchOptions.limitMoveDuration = Int32(limitMoveDuration)
-                searchOptions.limitThreads = Int32(limitThreads)
+                searchOptions.limitDepth = Int32(ParameterDataService.instance.get(pParameterClass: ParamLimitDepth.self).depth)
+                searchOptions.limitNodes = Int32(ParameterDataService.instance.get(pParameterClass: ParamLimitNodes.self).nodes)
+                searchOptions.limitMoveDuration = Int32(ParameterDataService.instance.get(pParameterClass: ParamLimitMoveDuration.self).moveDurationMS)
+                searchOptions.limitThreads = Int32(ParameterDataService.instance.get(pParameterClass: ParamLimitThreads.self).threads)
             } else {
                 searchOptions.limitDepth = 10
                 searchOptions.limitNodes = 500000000
@@ -356,7 +350,6 @@ import AVFoundation
                 searchOptions.limitThreads = ProcessInfo.processInfo.activeProcessorCount > 1 ? Int32(ProcessInfo.processInfo.activeProcessorCount - 1) : Int32(1)
             }
             
-            let srchActor = SearchActor()
             let topMove = await srchActor.searchStart(pSearchOptions: searchOptions)
         
             if (!topMove.cancelled) && (topMove.error == 0) {
@@ -407,6 +400,77 @@ import AVFoundation
            
     }
     
+    /// Find the best move for a board layout
+    private func startHintTask(pRecord: GameRecordArray) async {
+        hintBoardActor.hintBoard.setBoardArray(pRecord.boardArray)
+        hintBoardActor.hintBoard.setStateArray(pRecord.stateArray)
+        
+        let arrangeBoardEnabled = ParameterDataService.instance.get(pParameterClass: ParamArrangeBoard.self).enabled
+        let boardStatus = Int(hintBoardActor.hintBoard.getStateGameStatus())
+        
+        if boardStatus == 0 && (!computerMoveProcessing) && (!computerHintProcessing) && (!arrangeBoardEnabled) {
+            lockPanel = true
+            computerHintProcessing = true
+            
+            activityIndicatorVM.enabled = true
+            
+            let searchOptions = SearchOptions()
+            searchOptions.randomiseFirstMove = false
+            searchOptions.limitSkillLevel = 20
+            
+            let limitAdvancedEnabled = ParameterDataService.instance.get(pParameterClass: ParamLimitAdvanced.self).enabled
+            if limitAdvancedEnabled {
+                searchOptions.limitDepth = Int32(ParameterDataService.instance.get(pParameterClass: ParamLimitDepth.self).depth)
+                searchOptions.limitNodes = Int32(ParameterDataService.instance.get(pParameterClass: ParamLimitNodes.self).nodes)
+                searchOptions.limitMoveDuration = Int32(ParameterDataService.instance.get(pParameterClass: ParamLimitMoveDuration.self).moveDurationMS)
+                searchOptions.limitThreads = Int32(ParameterDataService.instance.get(pParameterClass: ParamLimitThreads.self).threads)
+            } else {
+                searchOptions.limitDepth = 10
+                searchOptions.limitNodes = 500000000
+                searchOptions.limitMoveDuration = 0
+                searchOptions.limitThreads = ProcessInfo.processInfo.activeProcessorCount > 1 ? Int32(ProcessInfo.processInfo.activeProcessorCount - 1) : Int32(1)
+            }
+            
+            let topMove = await hintBoardActor.searchStart(pSearchOptions: searchOptions)
+        
+            if (!topMove.cancelled) && (topMove.error == 0) {
+                let topMoveBits: UInt64 = (Constants.BITMASK >> topMove.moveFromIndex) | (Constants.BITMASK >> topMove.moveToIndex)
+                if let boardColourIndex = Constants.darkSquareColourArray.firstIndex(of: ParameterDataService.instance.get(pParameterClass: ParamColourDarkSquares.self).argb()) {
+                let highlightColour = Constants.hintColourArray[boardColourIndex]
+                    tilePanelVM.setHighLightFullFadeOut(pBits: topMoveBits, pColour: highlightColour)
+                    
+                    // On mac only read the text so message doesn't cover the highlighted move
+                    #if os(macOS)
+                        readText(pText: "Best move hint")
+                    #else
+                        showMessage(pTextFull: "Best move hint", pTextShort: "", pDurationms: Constants.TOAST_SHORT)
+                    #endif
+                }
+            }
+            else {
+                if topMove.error > 0 {
+                    showMessage(pTextFull: "Invalid board configuration. \(topMove.errorMessage).", pTextShort: "", pDurationms: Constants.TOAST_LONG)
+                }
+            }
+            
+            self.activityIndicatorVM.enabled = false
+            computerHintProcessing = false
+            lockPanel = false
+           
+        } else {
+            if boardStatus != 0 {
+                showMessage(pTextFull: "Unable to show a hint as the game has finished.", pTextShort: "", pDurationms: Constants.TOAST_LONG)
+            }
+            else if arrangeBoardEnabled {
+                showMessage(pTextFull: "Unable to show a hint in edit mode.", pTextShort: "", pDurationms: Constants.TOAST_LONG)
+            }
+            else if computerMoveProcessing {
+                showMessage(pTextFull: "Unable to show a hint as processing a move.", pTextShort: "", pDurationms: Constants.TOAST_LONG)
+            }
+            
+        }
+           
+    }
     
     /// Get SSML for board square id
     /// - Parameter pMoveDataStr: Move Data String
@@ -575,7 +639,7 @@ import AVFoundation
     
     /// Starts a new game
     func newGame() async {
-        await endMoveJob()
+        stopSearchJob()
         endPieceAnimation()
     
         lockPanel = true
@@ -591,11 +655,11 @@ import AVFoundation
         
         // Just close the pawn prompt if it is open
         guard await pawnPromotionVM.getWaitCount() == 0 else {
-            await endMoveJob()
+            stopSearchJob()
             return
         }
         
-        await endMoveJob()
+        stopSearchJob()
         endPieceAnimation()
             
         if let boardBeforeUndo = GameRecordDataService.instance.get() {
@@ -617,10 +681,15 @@ import AVFoundation
     
     
     /// Ends any running move job
-    func endMoveJob () async {
-        GameRecordDataService.instance.currentGame.cancelSearch()
-        await pawnPromotionVM.cancel()
-        await move.clear()
+    func stopSearchJob() {
+        
+        Task(priority: .userInitiated) {
+            await pawnPromotionVM.cancel()
+            await move.clear()
+        }
+        
+        hintBoardActor.cancelSearch()
+        srchActor.cancelSearch()
     }
     
     
@@ -761,7 +830,7 @@ import AVFoundation
             // Only resign if game is not already finished
             if status == BoardStatusEnum.Ready.rawValue && GameRecordDataService.instance.currentGame.getStateFullMoveCount() > 0 {
                 // Stop task if running
-                await endMoveJob()
+                stopSearchJob()
                 
                 // End any animation if running
                 
@@ -811,14 +880,11 @@ import AVFoundation
         }
         
         if levelAutoEnabled && humanWinAgainstComputer {
-            let limitEngineStrength = ParameterDataService.instance.get(pParameterClass: ParamLimitEngineStrengthELO.self)
-            let nextElo = limitEngineStrength.eloRating + 75
-            if Constants.eloarray.firstIndex(of: nextElo) != nil {
-                limitEngineStrength.eloRating = nextElo
+            let nextSkillLevel = EngineSettingsViewModel.instance.limitSkillLevel + 1
+            if 0 ..< Constants.skillLevelList.endIndex ~= nextSkillLevel {
                 // Update using the view model so the level indicater on the main screen gets updated
-                let nextLevel = EngineSettingsViewModel.instance.value.eloIndex(pEloRating: nextElo)
-                EngineSettingsViewModel.instance.value.limitEngineStrengthELOIndex = nextLevel
-                showMessage(pTextFull: "Congratulations! You have now progressed to the next level. The engine playing strength is now set to Level \(nextLevel + 1), which has an ELO of \(nextElo)", pTextShort: "", pDurationms: Constants.TOAST_EXTRALONG)
+                EngineSettingsViewModel.instance.limitSkillLevel = nextSkillLevel
+                showMessage(pTextFull: "Congratulations! You have now progressed to the next level. The engine playing strength is now set to \(Constants.skillLevelList[nextSkillLevel]).", pTextShort: "", pDurationms: Constants.TOAST_EXTRALONG)
             }
         }
         
@@ -851,7 +917,7 @@ import AVFoundation
     
     /// Flips the direction of the current game
     func switchDirection() async {
-        await endMoveJob()
+        stopSearchJob()
         
         let board = KaruahChessEngineC()
         if let record = GameRecordDataService.instance.get(pId: BoardSquareDataService.instance.gameRecordCurrentValue) {
@@ -870,7 +936,7 @@ import AVFoundation
     func saveGame() async {
         
         // End any move jobs that might be running
-        await endMoveJob()
+        stopSearchJob()
         
         // Create a filename string
         let dateFormatter = DateFormatter()
@@ -889,7 +955,7 @@ import AVFoundation
     /// Loads a game from a file
     func loadGame(_ pUrl: URL) async {
         
-        await endMoveJob()
+        stopSearchJob()
 
         if let fileData = try? Data(contentsOf: pUrl) {
             // Uncompress the file if it is compressed
@@ -959,5 +1025,13 @@ import AVFoundation
             audioPlayerPieceMoveSound?.play()
         }
     }
+    
+    /// Show hint
+    func showHint() async {
+        if let record = GameRecordDataService.instance.get(pId: BoardSquareDataService.instance.gameRecordCurrentValue) {
+            await startHintTask(pRecord: record)
+        }
+    }
+    
     
 }

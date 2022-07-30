@@ -29,7 +29,11 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #else
     #import <AppKit/AppKit.h>
 #endif
-#import "Karuah_Chess-Swift.h"
+
+
+#import <Speech/Speech.h>  // Required for auto generated bridging header
+#import "Karuah_Chess-Swift.h"  // Auto generated bridging header
+
 
 
 @implementation KaruahChessEngineC
@@ -268,7 +272,7 @@ using namespace helper;
     Search::SearchStatistics statistics;
     Search::SearchOptions options;
     options.randomiseFirstMove = pSearchOptions.randomiseFirstMove;
-    options.limitStrengthELO = pSearchOptions.limitStrengthELO;
+    options.limitSkillLevel = pSearchOptions.limitSkillLevel;
     options.limitDepth = pSearchOptions.limitDepth;
     options.limitNodes = pSearchOptions.limitNodes;
     options.limitMoveDuration = pSearchOptions.limitMoveDuration;
