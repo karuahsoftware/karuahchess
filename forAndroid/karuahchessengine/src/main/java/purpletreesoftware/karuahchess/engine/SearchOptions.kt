@@ -19,7 +19,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 package purpletreesoftware.karuahchess.engine
 
 class SearchOptions {
-    var limitStrengthELO: Int = 1350
+    var limitSkillLevel: Int = 0
     var limitDepth: Int = 0
     var limitNodes: Int = 0
     var limitMoveDuration: Int = 0

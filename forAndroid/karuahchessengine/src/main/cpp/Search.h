@@ -43,7 +43,7 @@ namespace Search {
 	};
 
 	struct SearchOptions {
-		int limitStrengthELO = 1350;
+		int limitSkillLevel = 0;
 		int limitDepth = 0;
 		int limitNodes = 0;
 		int limitMoveDuration = 0;

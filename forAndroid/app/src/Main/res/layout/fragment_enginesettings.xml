@@ -71,7 +71,7 @@
             android:layout_marginBottom="0dp"
             />
 
-        <TextView android:id="@+id/eloStrengthTitleText"
+        <TextView android:id="@+id/skillLevelTitleText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Strength"
@@ -84,14 +84,14 @@
             />
 
         <Spinner
-            android:id="@+id/elospinner"
+            android:id="@+id/skillLevelSpinner"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:popupElevation="3dp"
             android:spinnerMode="dropdown"
             style="@style/TextAppearance.MaterialComponents.Body1"
             app:layout_constraintTop_toBottomOf="@id/levelAutoCheckBox"
-            app:layout_constraintStart_toEndOf="@id/eloStrengthTitleText"
+            app:layout_constraintStart_toEndOf="@id/skillLevelTitleText"
             android:layout_marginTop="10dp"
             android:layout_marginStart="5dp"
             android:layout_marginBottom="0dp"
@@ -100,18 +100,18 @@
             />
 
         <androidx.constraintlayout.widget.Barrier
-            android:id="@+id/eloBarrier"
+            android:id="@+id/advancedBarrier"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:barrierDirection="bottom"
-            app:constraint_referenced_ids="elospinner,eloStrengthTitleText" />
+            app:constraint_referenced_ids="skillLevelSpinner,skillLevelTitleText" />
 
         <CheckBox android:id="@+id/computerAdvancedSettingsCheckBox"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Advanced search settings"
             style="@style/TextAppearance.MaterialComponents.Body1"
-            app:layout_constraintTop_toBottomOf="@id/eloBarrier"
+            app:layout_constraintTop_toBottomOf="@id/advancedBarrier"
             app:layout_constraintStart_toStartOf="parent"
             android:layout_marginTop="20dp"
             android:layout_marginBottom="0dp"

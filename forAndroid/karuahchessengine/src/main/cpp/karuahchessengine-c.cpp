@@ -843,8 +843,8 @@ Java_purpletreesoftware_karuahchess_engine_KaruahChessEngineC_searchStart (
         jfieldID randomiseFirstMoveFieldID = pEnv->GetFieldID(mSearchOptions, "randomiseFirstMove","Z");
         options.randomiseFirstMove = pEnv->GetBooleanField(pSearchOptions, randomiseFirstMoveFieldID);
 
-        jfieldID limitStrengthELOFieldID = pEnv->GetFieldID(mSearchOptions, "limitStrengthELO","I");
-        options.limitStrengthELO = pEnv->GetIntField(pSearchOptions, limitStrengthELOFieldID);
+        jfieldID limitSkillLevelFieldID = pEnv->GetFieldID(mSearchOptions, "limitSkillLevel","I");
+        options.limitSkillLevel = pEnv->GetIntField(pSearchOptions, limitSkillLevelFieldID);
 
         jfieldID limitDepthFieldID = pEnv->GetFieldID(mSearchOptions, "limitDepth","I");
         options.limitDepth = pEnv->GetIntField(pSearchOptions, limitDepthFieldID);

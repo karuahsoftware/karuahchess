@@ -96,19 +96,19 @@ class EngineSettings : DialogFragment() {
         binding.computerAdvancedSettingsCheckBox.setOnClickListener { setControlState() }
 
 
-        // Set elo spinner
+        // Set skill level spinner
         val adapter: ArrayAdapter<String> = ArrayAdapter<String>(
             activity as Context,
             android.R.layout.simple_spinner_item,
-            Constants.strengthArrayLabel
+            Constants.skillLevelList
         )
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-        binding.elospinner.adapter = adapter
+        binding.skillLevelSpinner.adapter = adapter
 
         // Set the spinner position
-        val eloIndex = Constants.eloarray.indexOf(ParameterDataService.get(ParamLimitEngineStrengthELO::class.java).eloRating)
-        if (eloIndex > -1) {
-            binding.elospinner.setSelection(eloIndex)
+        val skillLevel = ParameterDataService.get(ParamLimitSkillLevel::class.java).level
+        if (skillLevel in 0..Constants.skillLevelList.lastIndex) {
+            binding.skillLevelSpinner.setSelection(skillLevel)
         }
 
         // Advanced settings
@@ -116,7 +116,10 @@ class EngineSettings : DialogFragment() {
         binding.depthLimitSlider.addOnChangeListener { slider, value, fromUser ->
             binding.depthLimitValueText.text = getValueZeroOff(value.toInt())
         }
-        binding.depthLimitSlider.value = ParameterDataService.get(ParamLimitDepth::class.java).depth.toFloat()
+        val limitDepth = ParameterDataService.get(ParamLimitDepth::class.java).depth.toFloat()
+        if (limitDepth in binding.depthLimitSlider.valueFrom .. binding.depthLimitSlider.valueTo) {
+            binding.depthLimitSlider.value = limitDepth
+        }
 
         binding.nodeLimitValueEditText.error = null
         binding.nodeLimitValueEditText.filters = arrayOf<InputFilter>(
@@ -159,8 +162,11 @@ class EngineSettings : DialogFragment() {
             binding.threadsLimitValueText.text = getValueZeroOff(value.toInt())
         }
 
-        binding.threadsLimitSlider.valueTo = if (Runtime.getRuntime().availableProcessors() > 1) (Runtime.getRuntime().availableProcessors() - 1).toFloat() else 1.toFloat()
-        binding.threadsLimitSlider.value = ParameterDataService.get(ParamLimitThreads::class.java).threads.toFloat()
+        binding.threadsLimitSlider.valueTo = if (Runtime.getRuntime().availableProcessors() > 1) (Runtime.getRuntime().availableProcessors()).toFloat() else 1.toFloat()
+        val threadLimit = ParameterDataService.get(ParamLimitThreads::class.java).threads.toFloat()
+        if (threadLimit in binding.threadsLimitSlider.valueFrom .. binding.threadsLimitSlider.valueTo) {
+            binding.threadsLimitSlider.value = threadLimit
+        }
 
 
 
@@ -212,11 +218,10 @@ class EngineSettings : DialogFragment() {
             ParameterDataService.set(levelAuto)
         }
 
-        val limitEngineStrengthELO = ParameterDataService.get(ParamLimitEngineStrengthELO::class.java)
-        if (limitEngineStrengthELO.eloRating != Constants.eloarray[binding.elospinner.selectedItemPosition]) {
-            limitEngineStrengthELO.eloRating =
-                Constants.eloarray[binding.elospinner.selectedItemPosition]
-            ParameterDataService.set(limitEngineStrengthELO)
+        val limitSkillLevel = ParameterDataService.get(ParamLimitSkillLevel::class.java)
+        if (limitSkillLevel.level != binding.skillLevelSpinner.selectedItemPosition) {
+            limitSkillLevel.level = binding.skillLevelSpinner.selectedItemPosition
+            ParameterDataService.set(limitSkillLevel)
         }
 
         val computerAdvancedSettings = ParameterDataService.get(ParamLimitAdvanced::class.java)
@@ -270,8 +275,8 @@ class EngineSettings : DialogFragment() {
             binding.computerMoveFirstCheckBox.isEnabled = true
             binding.randomiseFirstMoveCheckBox.isEnabled = true
             binding.levelAutoCheckBox.isEnabled = true
-            binding.eloStrengthTitleText.isEnabled = true
-            binding.elospinner.isEnabled = true
+            binding.skillLevelTitleText.isEnabled = true
+            binding.skillLevelSpinner.isEnabled = true
             binding.computerAdvancedSettingsCheckBox.isEnabled = true
             advanced = binding.computerAdvancedSettingsCheckBox.isEnabled && binding.computerAdvancedSettingsCheckBox.isChecked == true
             advancedOpacity = if (advanced) 1.0F else 0.38F
@@ -279,8 +284,8 @@ class EngineSettings : DialogFragment() {
             binding.computerMoveFirstCheckBox.isEnabled = false
             binding.randomiseFirstMoveCheckBox.isEnabled = false
             binding.levelAutoCheckBox.isEnabled = false
-            binding.eloStrengthTitleText.isEnabled = false
-            binding.elospinner.isEnabled = false
+            binding.skillLevelTitleText.isEnabled = false
+            binding.skillLevelSpinner.isEnabled = false
             binding.computerAdvancedSettingsCheckBox.isEnabled = false
             advanced = false
             advancedOpacity = 0.38F
@@ -312,7 +317,7 @@ class EngineSettings : DialogFragment() {
         binding.computerMoveFirstCheckBox.isChecked = ParamComputerMoveFirst().enabled
         binding.randomiseFirstMoveCheckBox.isChecked = ParamRandomiseFirstMove().enabled
         binding.levelAutoCheckBox.isChecked = ParamLevelAuto().enabled
-        binding.elospinner.setSelection(Constants.eloarray.indexOf(ParamLimitEngineStrengthELO().eloRating))
+        binding.skillLevelSpinner.setSelection(ParamLimitSkillLevel().level)
         binding.computerAdvancedSettingsCheckBox.isChecked = ParamLimitAdvanced().enabled
         binding.depthLimitSlider.value = ParamLimitDepth().depth.toFloat()
         binding.nodeLimitValueEditText.setText(if (ParamLimitNodes().nodes > 0)  ParamLimitNodes().nodes.toString() else "")

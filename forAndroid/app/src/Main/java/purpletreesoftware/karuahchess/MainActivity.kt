@@ -661,7 +661,7 @@ class MainActivity : AppCompatActivity(), TilePanel.OnTilePanelInteractionListen
 
             val searchOptions = SearchOptions()
             searchOptions.randomiseFirstMove = ParameterDataService.get(ParamRandomiseFirstMove::class.java).enabled
-            searchOptions.limitStrengthELO =  ParameterDataService.get(ParamLimitEngineStrengthELO::class.java).eloRating
+            searchOptions.limitSkillLevel =  ParameterDataService.get(ParamLimitSkillLevel::class.java).level
 
             val limitAdvancedEnabled = ParameterDataService.get(ParamLimitAdvanced::class.java).enabled
             if (limitAdvancedEnabled) {
@@ -768,7 +768,7 @@ class MainActivity : AppCompatActivity(), TilePanel.OnTilePanelInteractionListen
 
             val searchOptions = SearchOptions()
             searchOptions.randomiseFirstMove = false
-            searchOptions.limitStrengthELO = 2850
+            searchOptions.limitSkillLevel = 20
 
             val limitAdvancedEnabled = ParameterDataService.get(ParamLimitAdvanced::class.java).enabled
             if (limitAdvancedEnabled) {
@@ -1062,15 +1062,14 @@ class MainActivity : AppCompatActivity(), TilePanel.OnTilePanelInteractionListen
         // Increase strength level
         if (levelAutoEnabled && humanWinAgainstComputer)
         {
-            val limitEngineStrengthELO = ParameterDataService.get(ParamLimitEngineStrengthELO::class.java)
-            val nextElo = limitEngineStrengthELO.eloRating + 75
-            val eloIndex = Constants.eloarray.indexOf(nextElo)
-            if (eloIndex > -1)
+            val limitSkillLevel = ParameterDataService.get(ParamLimitSkillLevel::class.java)
+            val nextSkillLevel = limitSkillLevel.level + 1
+            if (nextSkillLevel in 0..Constants.skillLevelList.lastIndex)
             {
-                limitEngineStrengthELO.eloRating = nextElo
-                ParameterDataService.set(limitEngineStrengthELO)
+                limitSkillLevel.level = nextSkillLevel
+                ParameterDataService.set(limitSkillLevel)
                 refreshEngineSettingsLevelIndicator()
-                showBoardMessageDialog("Level Increase", "Congratulations, you have now progressed to the next level. The engine playing strength is now set to ${Constants.strengthArrayLabel[eloIndex]}.",R.drawable.ic_goldstar)
+                showBoardMessageDialog("Level Increase", "Congratulations, you have now progressed to the next level. The engine playing strength is now set to ${Constants.skillLevelList[nextSkillLevel]}.",R.drawable.ic_goldstar)
 
             }
 
@@ -1776,10 +1775,15 @@ class MainActivity : AppCompatActivity(), TilePanel.OnTilePanelInteractionListen
      * Refresh the level indicator
      */
     fun refreshEngineSettingsLevelIndicator() {
-        val computerPlayerEnabled =
-            ParameterDataService.get(ParamComputerPlayer::class.java).enabled
+        val computerPlayerEnabled = ParameterDataService.get(ParamComputerPlayer::class.java).enabled
         if (computerPlayerEnabled) {
-            binding.levelIndicatorText.text = "Level ${(Constants.eloarray.indexOf(ParameterDataService.get(ParamLimitEngineStrengthELO::class.java).eloRating) + 1)}"
+            val skillLevel = ParameterDataService.get(ParamLimitSkillLevel::class.java).level
+            if (skillLevel in 0..Constants.skillLevelList.lastIndex) {
+                binding.levelIndicatorText.text = "${(Constants.skillLevelList[skillLevel])}"
+            }
+            else {
+                binding.levelIndicatorText.text = ""
+            }
         }
         else {
             binding.levelIndicatorText.text = ""

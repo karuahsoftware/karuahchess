@@ -19,5 +19,5 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 package purpletreesoftware.karuahchess.model.parameterobj
 
 class ParamHint :  java.io.Serializable{
-    var enabled: Boolean = false
+    var enabled: Boolean = true
 }

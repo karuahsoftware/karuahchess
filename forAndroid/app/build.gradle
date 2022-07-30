@@ -8,8 +8,8 @@ android {
         applicationId "purpletreesoftware.karuahchess"
         minSdkVersion 28
         targetSdkVersion 32
-        versionCode 74
-        versionName "1.74"
+        versionCode 76
+        versionName "1.76"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
