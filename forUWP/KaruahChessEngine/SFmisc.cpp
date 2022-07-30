@@ -1,6 +1,6 @@
 /*
   Stockfish, a UCI chess playing engine derived from Glaurung 2.1
-  Copyright (C) 2004-2021 The Stockfish developers (see AUTHORS file)
+  Copyright (C) 2004-2022 The Stockfish developers (see AUTHORS file)
 
   Stockfish is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -17,6 +17,7 @@
 */
 
 #ifdef _WIN32
+
 
 #ifndef NOMINMAX
 #define NOMINMAX
@@ -54,8 +55,9 @@ namespace Stockfish {
 
         /// Version number. If Version is left empty, then compile date in the format
         /// DD-MM-YY and show in engine_info.
-        const string Version = "14";
+        const string Version = "15";
 
+        
 
     } // namespace
 
@@ -85,6 +87,8 @@ namespace Stockfish {
         return ss.str();
     }
 
+
+    
     /// prefetch() preloads the given address in L1/L2 cache. This is a non-blocking
     /// function that doesn't stall the CPU waiting for data to be loaded from memory,
     /// which can be quite slow.
@@ -105,7 +109,7 @@ namespace Stockfish {
 #  if (defined(__INTEL_COMPILER) || defined(_MSC_VER)) && (defined(_M_X64) || defined(_M_IX86))
         _mm_prefetch((char*)addr, _MM_HINT_T0);
 #  elif (defined(__INTEL_COMPILER) || defined(_MSC_VER)) && (defined(_M_ARM) || defined(_M_ARM64))
-            __prefetch(addr);
+        __prefetch(addr);
 #  else
         __builtin_prefetch(addr);
 #  endif
@@ -219,7 +223,7 @@ namespace Stockfish {
         constexpr size_t alignment = 4096; // assumed small page size
 #endif
 
-        // round up to multiples of alignment
+  // round up to multiples of alignment
         size_t size = ((allocSize + alignment - 1) / alignment) * alignment;
         void* mem = std_aligned_alloc(alignment, size);
 #if defined(MADV_HUGEPAGE)
@@ -256,5 +260,6 @@ namespace Stockfish {
 #endif
 
 
+    
 
 } // namespace Stockfish

@@ -48,21 +48,19 @@ namespace Search {
         // Don't perform a search if the engine can't cope with the board configuration
         int searchError = pBoard.VerifyBoardConfiguration();
 
-
+        
         if (searchError == 0) {
             // Set engine threads
             Engine::setThreads(pSearchOptions.limitThreads);
 
             // Set options
-            if (pSearchOptions.limitStrengthELO >= 1350 && pSearchOptions.limitStrengthELO < 2850) {
-                // Limit engine strength
-                Stockfish::Options["UCI_LimitStrength"] << Stockfish::UCI::Option(true);
-                Stockfish::Options["UCI_Elo"] << Stockfish::UCI::Option(pSearchOptions.limitStrengthELO, 1350, 2850);
+            if (pSearchOptions.limitSkillLevel >= 0 && pSearchOptions.limitSkillLevel < 20) {
+                // Set engine strength
+                Stockfish::Options["Skill Level"] << Stockfish::UCI::Option(pSearchOptions.limitSkillLevel, 0, 20);
             }
             else {
                 // Set engine to max
-                Stockfish::Options["UCI_LimitStrength"] << Stockfish::UCI::Option(false);
-                Stockfish::Options["UCI_Elo"] << Stockfish::UCI::Option(1350, 1350, 2850);
+                Stockfish::Options["Skill Level"] << Stockfish::UCI::Option(20, 0, 20);
             }
 
             // Get the board position

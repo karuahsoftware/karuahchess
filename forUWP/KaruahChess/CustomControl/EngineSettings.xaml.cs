@@ -33,7 +33,7 @@ namespace KaruahChess.CustomControl
         public CustomStyleTemplate StyleTemplate { get; set; }
 
         private ViewModel.BoardViewModel _boardVM;
-        private readonly List<string> strengthLabelList = Constants.strengthLabelList;
+        private readonly List<string> skillLevelList = Constants.skillLevelList;
 
         private readonly string nodeLimitToolTip = "Valid values are 10 to " + 2000000000.ToString("N0") + ".";
         private readonly string moveDurationLimitToolTip = "Valid values are 1 to " + 600000.ToString("N0") + ". Leave blank for no limit.";
@@ -54,9 +54,9 @@ namespace KaruahChess.CustomControl
             }
             PagePopup.IsOpen = false;
 
-            // Set maximum threads selectable to be less than the logical processors on the machine
-            // Set to one less than the maximum so some processing power is left over for the application
-            ThreadsSlider.Maximum = Environment.ProcessorCount > 1 ? Environment.ProcessorCount - 1 : 1;
+            // Set maximum threads selectable to be equal to the logical processors on the machine
+            // Default is to set to one less than the maximum so some processing power is left over for the application
+            ThreadsSlider.Maximum = Environment.ProcessorCount > 1 ? Environment.ProcessorCount : 1;
             
         }
 
@@ -82,13 +82,13 @@ namespace KaruahChess.CustomControl
             ComputerPlayerCheckBox.IsChecked = _boardVM.ComputerPlayerEnabled;
             ComputerMoveFirstCheckBox.IsChecked = _boardVM.ComputerMoveFirstEnabled;
             RandomiseFirstMoveCheckBox.IsChecked = _boardVM.RandomiseFirstMoveEnabled;
-            ComputerStrengthCombo.SelectedIndex = Constants.eloList.IndexOf(_boardVM.limitEngineStrengthELO);
+            ComputerSkillLevelCombo.SelectedIndex = Math.Clamp(_boardVM.LimitSkillLevel, 0, Constants.skillLevelList.Count - 1);
             LevelAutoCheckBox.IsChecked = _boardVM.LevelAutoEnabled;
             ComputerAdvancedSettingsCheckBox.IsChecked = _boardVM.LimitAdvancedEnabled;
-            DepthLimitSlider.Value = _boardVM.limitDepth;
+            DepthLimitSlider.Value = Math.Clamp(_boardVM.limitDepth, DepthLimitSlider.Minimum, DepthLimitSlider.Maximum);
             NodeLimitTextBox.Text = _boardVM.limitNodes.ToString();
             MoveDurationLimitTextBox.Text = _boardVM.limitMoveDuration == 0 ? "" : _boardVM.limitMoveDuration.ToString();
-            ThreadsSlider.Value = _boardVM.limitThreads;
+            ThreadsSlider.Value = Math.Clamp(_boardVM.limitThreads, ThreadsSlider.Minimum, ThreadsSlider.Maximum);
 
             SetControlState();
 
@@ -153,7 +153,7 @@ namespace KaruahChess.CustomControl
             ComputerPlayerCheckBox.IsChecked = new ParamComputerPlayer().Enabled;
             ComputerMoveFirstCheckBox.IsChecked = new ParamComputerMoveFirst().Enabled;
             RandomiseFirstMoveCheckBox.IsChecked = new ParamRandomiseFirstMove().Enabled;
-            ComputerStrengthCombo.SelectedIndex = Constants.eloList.IndexOf(new ParamLimitEngineStrengthELO().eloRating);
+            ComputerSkillLevelCombo.SelectedIndex = Math.Clamp(new ParamLimitSkillLevel().level, 0, Constants.skillLevelList.Count - 1);
             LevelAutoCheckBox.IsChecked = new ParamLevelAuto().Enabled;
             ComputerAdvancedSettingsCheckBox.IsChecked = new ParamLimitAdvanced().Enabled;
             DepthLimitSlider.Value = new ParamLimitDepth().depth;
@@ -174,7 +174,7 @@ namespace KaruahChess.CustomControl
         /// <param name="e"></param>
         private void StopSearch_Click(object sender, RoutedEventArgs e)
         {
-            _boardVM.stopMoveJob();
+            _boardVM.StopSearchJob();
         }
 
         /// <summary>
@@ -205,8 +205,7 @@ namespace KaruahChess.CustomControl
             _boardVM.ComputerMoveFirstEnabled = ComputerMoveFirstCheckBox.IsChecked == true;
             _boardVM.RandomiseFirstMoveEnabled = RandomiseFirstMoveCheckBox.IsChecked == true;
             _boardVM.LevelAutoEnabled = LevelAutoCheckBox.IsChecked == true;
-            int eloRating = Constants.eloList[ComputerStrengthCombo.SelectedIndex];
-            _boardVM.limitEngineStrengthELO = eloRating;
+            _boardVM.LimitSkillLevel = ComputerSkillLevelCombo.SelectedIndex;
             
             _boardVM.LimitAdvancedEnabled = ComputerAdvancedSettingsCheckBox.IsChecked == true;
             _boardVM.limitDepth = (int)DepthLimitSlider.Value;
@@ -239,8 +238,8 @@ namespace KaruahChess.CustomControl
                 ComputerMoveFirstCheckBox.IsEnabled = true;
                 RandomiseFirstMoveCheckBox.IsEnabled = true;
                 LevelAutoCheckBox.IsEnabled = true;
-                ComputerStrengthCombo.IsEnabled = true;
-                ComputerStrengthTitleText.Opacity = 1.0;
+                ComputerSkillLevelCombo.IsEnabled = true;
+                ComputerSkillLevelTitleText.Opacity = 1.0;
                 ComputerAdvancedSettingsCheckBox.IsEnabled = true;
                 advanced = ComputerAdvancedSettingsCheckBox.IsEnabled && (ComputerAdvancedSettingsCheckBox.IsChecked == true);
                 advancedOpacity = advanced ? 1 : 0.5;
@@ -251,8 +250,8 @@ namespace KaruahChess.CustomControl
                 ComputerMoveFirstCheckBox.IsEnabled = false;
                 RandomiseFirstMoveCheckBox.IsEnabled = false;
                 LevelAutoCheckBox.IsEnabled = false;
-                ComputerStrengthCombo.IsEnabled = false;
-                ComputerStrengthTitleText.Opacity = 0.5;
+                ComputerSkillLevelCombo.IsEnabled = false;
+                ComputerSkillLevelTitleText.Opacity = 0.5;
                 ComputerAdvancedSettingsCheckBox.IsEnabled = false;
                 advanced = false;
                 advancedOpacity = 0.5;

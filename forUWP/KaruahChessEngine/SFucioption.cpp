@@ -1,6 +1,6 @@
 /*
   Stockfish, a UCI chess playing engine derived from Glaurung 2.1
-  Copyright (C) 2004-2021 The Stockfish developers (see AUTHORS file)
+  Copyright (C) 2004-2022 The Stockfish developers (see AUTHORS file)
 
   Stockfish is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -54,7 +54,7 @@ namespace Stockfish {
         void init(OptionsMap& o) {
 
             constexpr int MaxHashMB = Is64Bit ? 33554432 : 2048;
-
+                        
             o["Threads"] << Option(1, 1, 512, on_threads);
             o["Hash"] << Option(16, 1, MaxHashMB, on_hash_size);
             o["Clear Hash"] << Option(on_clear_hash);
@@ -68,10 +68,11 @@ namespace Stockfish {
             o["UCI_AnalyseMode"] << Option(false);
             o["UCI_LimitStrength"] << Option(false);
             o["UCI_Elo"] << Option(1350, 1350, 2850);
-            o["UCI_ShowWDL"] << Option(false);
+            o["UCI_ShowWDL"] << Option(false);            
             o["SyzygyProbeDepth"] << Option(1, 1, 100);
             o["Syzygy50MoveRule"] << Option(true);
             o["SyzygyProbeLimit"] << Option(7, 0, 7);
+            
         }
 
 
@@ -163,7 +164,7 @@ namespace Stockfish {
 
             assert(!type.empty());
 
-            if ((type != "button" && v.empty())
+            if ((type != "button" && type != "string" && v.empty())
                 || (type == "check" && v != "true" && v != "false")
                 || (type == "spin" && (stof(v) < min || stof(v) > max)))
                 return *this;

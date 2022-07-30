@@ -207,7 +207,7 @@ namespace KaruahChess.CustomControl
                 Tag = ' ' 
             };
 
-            eraseButton.Tapped += EditPieceSelect_Tapped;
+            eraseButton.Click += EditPieceSelect_Click;
             mainStackA.Children.Add(eraseButton);
 
             Button sqArrowButton = new Button
@@ -220,7 +220,7 @@ namespace KaruahChess.CustomControl
                 FontSize = _fontSize,
                 Tag = ' '
             };
-            sqArrowButton.Tapped += EditPieceArrow_Tapped;
+            sqArrowButton.Click += EditPieceArrow_Click;
             mainStackA.Children.Add(sqArrowButton);
                                
         }
@@ -252,7 +252,7 @@ namespace KaruahChess.CustomControl
                 };
                 pieceButton.Tag = fen;
 
-                pieceButton.Tapped += EditPieceSelect_Tapped;
+                pieceButton.Click += EditPieceSelect_Click;
 
                 mainStackB.Children.Add(pieceButton);
             }
@@ -264,7 +264,7 @@ namespace KaruahChess.CustomControl
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void EditPieceSelect_Tapped(object sender, RoutedEventArgs e)
+        private void EditPieceSelect_Click(object sender, RoutedEventArgs e)
         {
             char fen = (char)((Button)sender).Tag;
             _boardVM.ArrangeUpdate(fen, SqIndex);
@@ -276,7 +276,7 @@ namespace KaruahChess.CustomControl
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void EditPieceArrow_Tapped(object sender, RoutedEventArgs e)
+        private void EditPieceArrow_Click(object sender, RoutedEventArgs e)
         {
             EditPieceColour *= -1;
 

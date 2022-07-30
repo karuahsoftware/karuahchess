@@ -17,7 +17,18 @@
         </ResourceDictionary>
     </UserControl.Resources>
     
-    <Canvas x:Name="PieceCanvas" Background="{x:Bind StyleTemplate.Background, Mode=OneWay}">       
+    <Canvas x:Name="PieceCanvas" Background="{x:Bind StyleTemplate.Background, Mode=OneWay}">
+        <Rectangle  x:Name="PieceRectangle" StrokeThickness="2"   Stroke="Magenta" Height="20" Width="20" Opacity="0" >
+            <Rectangle.Resources>
+                <Storyboard x:Key="PieceRectangleStoryboard">
+                    <DoubleAnimation From="1" To="0" Storyboard.TargetProperty="Opacity" Storyboard.TargetName="PieceRectangle"   Duration="0:0:4" >
+                        <DoubleAnimation.EasingFunction>
+                            <QuinticEase EasingMode="EaseIn" />
+                        </DoubleAnimation.EasingFunction>
+                    </DoubleAnimation>
+                </Storyboard>
+            </Rectangle.Resources>
+        </Rectangle>
         <Ellipse  x:Name="PieceEllipse" Fill="DarkGreen"  Stroke="DarkGreen" Height="20" Width="20" Opacity="0" >
             <Ellipse.Resources>
                 <Storyboard x:Key="PieceEllipseStoryboard">
@@ -28,18 +39,7 @@
                     </DoubleAnimation>
                 </Storyboard>                
             </Ellipse.Resources>
-        </Ellipse>
-        <Rectangle  x:Name="PieceRectangle" StrokeThickness="2"   Stroke="Magenta" Height="20" Width="20" Opacity="0" >
-            <Rectangle.Resources>
-                <Storyboard x:Key="PieceRectangleStoryboard">
-                    <DoubleAnimation From="1" To="0" Storyboard.TargetProperty="Opacity" Storyboard.TargetName="PieceRectangle"   Duration="0:0:7" >
-                        <DoubleAnimation.EasingFunction>
-                            <QuinticEase EasingMode="EaseOut" />
-                        </DoubleAnimation.EasingFunction>
-                    </DoubleAnimation>
-                </Storyboard>
-            </Rectangle.Resources>
-        </Rectangle>
+        </Ellipse>        
         <Ellipse  x:Name="PieceEllipseUnderAttack" Fill="Red" Stroke="Red" Height="20" Width="20" Opacity="0" >
             <Ellipse.Resources>
                 <Storyboard x:Key="PieceEllipseUnderAttackStoryboard">

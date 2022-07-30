@@ -22,13 +22,13 @@ using Windows.UI.Xaml;
 
 namespace KaruahChess.CustomControl
 {
-    public class ChessClockStyleTemplate : DependencyObject
+    public class ClockStyleTemplate : DependencyObject
     {
         
         /// <summary>
         /// Constructor
         /// </summary>
-        public ChessClockStyleTemplate() {  
+        public ClockStyleTemplate() {  
         }
 
 
@@ -43,7 +43,7 @@ namespace KaruahChess.CustomControl
 
         // Using a DependencyProperty as the backing store for FontSize.  
         public static readonly DependencyProperty FontSizeProperty =
-            DependencyProperty.Register("FontSize", typeof(double), typeof(ChessClockStyleTemplate), new PropertyMetadata((double)11));
+            DependencyProperty.Register("FontSize", typeof(double), typeof(ClockStyleTemplate), new PropertyMetadata((double)11));
 
 
 

@@ -22,26 +22,28 @@ using Windows.UI.Xaml.Controls;
 using KaruahChess.Common;
 using System.Collections.Generic;
 using KaruahChess.Model.ParameterObjects;
+using Windows.UI.Xaml.Media;
+using Windows.Foundation;
 
 namespace KaruahChess.CustomControl
 {
-    public sealed partial class SoundColourSettings : UserControl
+    public sealed partial class BoardSettings : UserControl
     {
         /// <summary>
         /// A class containing styling info for the control
         /// </summary>
         public CustomStyleTemplate StyleTemplate { get; set; }
 
-        private ViewModel.BoardViewModel _boardVM;
+        ViewModel.BoardViewModel _boardVM;
 
-        private readonly List<ColourARGB> darkSquareColourList = Constants.darkSquareColourList;
+        readonly List<ColourARGB> darkSquareColourList = Constants.darkSquareColourList;
 
-
+        RotateTransform orientationImageTransform = new RotateTransform();
 
         /// <summary>
         /// Constructor
         /// </summary>
-        public SoundColourSettings()
+        public BoardSettings()
         {
 
             this.InitializeComponent();
@@ -70,10 +72,13 @@ namespace KaruahChess.CustomControl
         /// </summary>
         /// <returns></returns>
         public void Show()
-        {
-            SoundReadCheckBox.IsChecked = _boardVM.SoundReadEnabled;
-            SoundEffectCheckBox.IsChecked = _boardVM.SoundEffectEnabled;
+        {            
             DarkSquareCombo.SelectedIndex = Constants.darkSquareColourList.IndexOf(_boardVM.ColourDarkSquaresARGB);
+                                    
+            orientationImage.RenderTransformOrigin = new Point(0.5, 0.5);
+            orientationImage.RenderTransform = orientationImageTransform;
+            orientationImageTransform.Angle = -_boardVM.RotateBoardValue;
+
             PagePopup.IsOpen = true;
         }
 
@@ -119,14 +124,36 @@ namespace KaruahChess.CustomControl
         /// Saves form values
         /// </summary>
         private void save()
-        {
-            _boardVM.SoundReadEnabled = SoundReadCheckBox.IsChecked == true;
-            _boardVM.SoundEffectEnabled = SoundEffectCheckBox.IsChecked == true;
+        {            
             ColourARGB darkSquareColour = DarkSquareCombo.SelectedIndex > -1 ? Constants.darkSquareColourList[DarkSquareCombo.SelectedIndex] : new ParamColourDarkSquares().ARGB();
             _boardVM.ColourDarkSquaresARGB = darkSquareColour;
 
             // Refresh colour
             _boardVM.ApplyBoardColour();
+
+            int newRotate = -(int)orientationImageTransform.Angle;
+            _boardVM.RotateBoardValue = newRotate;
+
+            if (_boardVM.coordinatesControl != null)
+            {
+                _boardVM.coordinatesControl.SetCoordLabels(newRotate);
+            }
+        }
+
+        /// <summary>
+        /// Rotation click event
+        /// </summary>        
+        private void btnRotate_Click(object sender, RoutedEventArgs e)
+        {
+            double currentRotate = orientationImageTransform.Angle;
+            double newRotate = (currentRotate + 90);
+
+            if (newRotate > 270 || newRotate < -270)
+            {
+                newRotate = 0;
+            }
+
+            orientationImageTransform.Angle = newRotate;
         }
 
         

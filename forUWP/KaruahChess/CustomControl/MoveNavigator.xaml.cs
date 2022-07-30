@@ -84,7 +84,7 @@ namespace KaruahChess.CustomControl
                     };
 
                     // Add button to stackpanel
-                    navButton.Tapped += NavigatorStack_ItemClick;
+                    navButton.Click += NavigatorStack_ItemClick;
                     navigatorStack.Children.Add(navButton);
 
                 }

@@ -34,7 +34,7 @@ namespace KaruahChess.Model
         int RecordGameState(int pWhiteClockOffset, int pBlackClockOffset);
         int UpdateGameState(GameRecordArray pGameRecordArray);
 
-        void Reset();
+        void Reset(int pWhiteClockOffset, int pBlackClockOffset);
         
        
         bool Undo();
@@ -44,5 +44,7 @@ namespace KaruahChess.Model
         List<int> GetAllRecordIDList();
 
         void newTransaction();
+
+        int RecordCount();
     }
 }

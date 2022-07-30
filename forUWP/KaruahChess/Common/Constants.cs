@@ -18,6 +18,8 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 using System;
 using System.Collections.Generic;
+using Windows.UI;
+using Windows.UI.Xaml.Media;
 
 namespace KaruahChess.Common
 {
@@ -44,30 +46,29 @@ namespace KaruahChess.Common
         public const int WHITEPIECE = 1;
         public const int BLACKPIECE = -1;
 
-        // ELO Strength options
-        public static List<int> eloList = new List<int> { 1350, 1425, 1500, 1575, 1650, 1725, 1800, 1875, 1950, 2025, 2100, 2175, 2250, 2325, 2400, 2475, 2550, 2625, 2700, 2775, 2850 };
-        public static List<string> strengthLabelList = new List<string> {
+        // Skill level       
+        public static List<string> skillLevelList = new List<string> {
             "Beginner",
-            "Level 2, Elo 1425",
-            "Level 3, Elo 1500",
-            "Level 4, Elo 1575",
-            "Level 5, Elo 1650",
-            "Level 6, Elo 1725",
-            "Level 7, Elo 1800",
-            "Level 8, Elo 1875",
-            "Level 9, Elo 1950",
-            "Level 10, Elo 2025",
-            "Level 11, Elo 2100",
-            "Level 12, Elo 2175",
-            "Level 13, Elo 2250",
-            "Level 14, Elo 2325",
-            "Level 15, Elo 2400",
-            "Level 16, Elo 2475",
-            "Level 17, Elo 2550",
-            "Level 18, Elo 2625",
-            "Level 19, Elo 2700",
-            "Level 20, Elo 2775",
-            "Level 21, Elo 2850"};
+            "Level 2",
+            "Level 3",
+            "Level 4",
+            "Level 5",
+            "Level 6",
+            "Level 7",
+            "Level 8",
+            "Level 9",
+            "Level 10",
+            "Level 11",
+            "Level 12",
+            "Level 13",
+            "Level 14",
+            "Level 15",
+            "Level 16",
+            "Level 17",
+            "Level 18",
+            "Level 19",
+            "Level 20",
+            "Level 21"};
 
         
         // Colours in the format alpha, red, green, blue
@@ -77,7 +78,22 @@ namespace KaruahChess.Common
             new ColourARGB(255,100,153,100, "Green"),
             new ColourARGB(255,153,153,153, "Grey")
             };
-        
-       
+
+        public static List<SolidColorBrush> hintColourList = new List<SolidColorBrush> {
+            new SolidColorBrush(Color.FromArgb(255,244,187,68)),
+            new SolidColorBrush(Color.FromArgb(255,3,166,90)),
+            new SolidColorBrush(Color.FromArgb(255,244,187,68)),
+            new SolidColorBrush(Color.FromArgb(255,244,187,68))
+            };
+
+        public static List<string> clockResetLabel = new List<string> { "1 min", "3 min", "5 min", "10 min", "15 min", "30 min", "45 min", "60 min", "90 min" };
+        public static List<int> clockResetSeconds = new List<int> { 60, 180, 300, 600, 900, 1800, 2700, 3600, 5400 };
+        public static List<string> clockHour = new List<string> { "00", "01", "02", "03", "04", "05", "06", "07", "08", "09", "10" };
+        public static List<string> clockMinSec = new List<string> { "00", "01", "02", "03", "04", "05", "06", "07", "08", "09",
+                                                                    "10", "11", "12", "13", "14", "15", "16", "17", "18", "19",
+                                                                    "20", "21", "22", "23", "24", "25", "26", "27", "28", "29",
+                                                                    "30", "31", "32", "33", "34", "35", "36", "37", "38", "39",
+                                                                    "40", "41", "42", "43", "44", "45", "46", "47", "48", "49",
+                                                                    "50", "51", "52", "53", "54", "55", "56", "57", "58", "59"};
     }
 }

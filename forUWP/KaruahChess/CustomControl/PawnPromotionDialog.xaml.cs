@@ -101,7 +101,7 @@ namespace KaruahChess.CustomControl
                 };
                 pieceButton.Tag = fen;
 
-                pieceButton.Tapped += PawnPromotePieceSelect_Tapped;
+                pieceButton.Click += PawnPromotePieceSelect_Click;
 
                 mainStackA.Children.Add(pieceButton);
             }
@@ -113,7 +113,7 @@ namespace KaruahChess.CustomControl
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void PawnPromotePieceSelect_Tapped(object sender, RoutedEventArgs e)
+        private void PawnPromotePieceSelect_Click(object sender, RoutedEventArgs e)
         {
             char fen = (char)((Button)sender).Tag;
 

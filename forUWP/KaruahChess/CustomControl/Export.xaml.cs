@@ -73,7 +73,7 @@ namespace KaruahChess.CustomControl
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void Close_Tapped(object sender, RoutedEventArgs e)
+        private void Close_Click(object sender, RoutedEventArgs e)
         {
             ExportErrorText.Text = "";
             ExportTextBox.Text = "";
@@ -111,7 +111,7 @@ namespace KaruahChess.CustomControl
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void FEN_Tapped(object sender, RoutedEventArgs e)
+        private void FEN_Click(object sender, RoutedEventArgs e)
         {
 
             ExportErrorText.Text = "";
@@ -130,11 +130,12 @@ namespace KaruahChess.CustomControl
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void Clear_Tapped(object sender, RoutedEventArgs e)
+        private void Clear_Click(object sender, RoutedEventArgs e)
         {
             ExportErrorText.Text = "";
             ExportTextBox.Text = "";
         }
 
+        
     }
 }

@@ -26,7 +26,7 @@ namespace KaruahChess.Database
 {
     public static class KaruahChessDB
     {
-        public static readonly string dbname = "KaruahChessV9.sqlite";
+        public static readonly string dbname = "KaruahChessV10.sqlite";
         public static readonly string dbpath = Path.Combine(Windows.Storage.ApplicationData.Current.LocalFolder.Path, dbname);
         public static readonly string connectionString = "Filename=" + dbpath + ";";
 

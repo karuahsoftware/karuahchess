@@ -1,6 +1,6 @@
 /*
   Stockfish, a UCI chess playing engine derived from Glaurung 2.1
-  Copyright (C) 2004-2021 The Stockfish developers (see AUTHORS file)
+  Copyright (C) 2004-2022 The Stockfish developers (see AUTHORS file)
 
   Stockfish is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -42,7 +42,7 @@ namespace Stockfish {
         // Overwrite less valuable entries (cheapest checks first)
         if (b == BOUND_EXACT
             || (uint16_t)k != key16
-            || d - DEPTH_OFFSET > depth8 - 4)
+            || d - DEPTH_OFFSET + 2 * pv > depth8 - 4)
         {
             assert(d > DEPTH_OFFSET);
             assert(d < 256 + DEPTH_OFFSET);
@@ -90,6 +90,7 @@ namespace Stockfish {
         for (size_t idx = 0; idx < Options["Threads"]; ++idx)
         {
             threads.emplace_back([this, idx]() {
+
 
                 // Each thread will zero its part of the hash table
                 const size_t stride = size_t(clusterCount / Options["Threads"]),

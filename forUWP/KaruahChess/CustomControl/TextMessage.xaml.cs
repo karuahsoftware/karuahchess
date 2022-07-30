@@ -104,7 +104,7 @@ namespace KaruahChess.CustomControl
 
             if (pAnimation == AnimationEnum.FadeOut)
             {
-                var duration = new TimeSpan(0, 0, 3);
+                var duration = pType == TypeEnum.Error ? new TimeSpan(0, 0, 8) : new TimeSpan(0, 0, 3);
                 FadeOut(duration);
             }
             else if (pAnimation == AnimationEnum.Flash) { 

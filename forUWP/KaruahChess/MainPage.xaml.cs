@@ -38,20 +38,27 @@ namespace KaruahChess
             BoardVM.SetBoardTextMessageControl(BoardTextMessage);
             BoardVM.SetBoardTilePanelControl(BoardTilePanel);            
             BoardVM.SetPieceAnimationControl(PieceAnimationControl);            
-            BoardVM.SetAboutPageControl(AboutPageControl);            
-            BoardVM.SetChessClockControl(ChessClockControl);
+            BoardVM.SetAboutPageControl(AboutPageControl);                        
             BoardVM.SetCoordinatesControl(CoordinatesControl);            
             BoardVM.SetVoiceHelpControl(VoiceHelpControl);
 
-            
+            ChessClockControl.SetBoardVM(BoardVM);
+            BoardVM.SetChessClockControl(ChessClockControl);
+
+            ClockSettingsControl.SetBoardVM(BoardVM);
+            BoardVM.SetClockSettingsControl(ClockSettingsControl);
+
             PieceEditToolControl.SetBoardVM(BoardVM);
             BoardVM.SetPieceTypeSelectControl(PieceEditToolControl);
             
             EngineSettingsControl.SetBoardVM(BoardVM);
             BoardVM.SetEngineSettingsControl(EngineSettingsControl);
 
-            SoundColourSettingsControl.SetBoardVM(BoardVM);
-            BoardVM.SetSoundColourSettingsControl(SoundColourSettingsControl);
+            BoardSettingsControl.SetBoardVM(BoardVM);
+            BoardVM.SetBoardSettingsControl(BoardSettingsControl);
+
+            SoundSettingsControl.SetBoardVM(BoardVM);
+            BoardVM.SetSoundSettingsControl(SoundSettingsControl);
                        
             ImportPGNControl.SetBoardVM(BoardVM);
             BoardVM.SetImportPGNControl(ImportPGNControl);

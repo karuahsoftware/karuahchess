@@ -70,10 +70,8 @@ namespace KaruahChess.CustomControl
 
         /// <summary>
         /// Close the popup
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void Close_Tapped(object sender, RoutedEventArgs e)
+        /// </summary>        
+        private void btnCloseButton_Click(object sender, RoutedEventArgs e)
         {
             PagePopup.IsOpen = false;
         }
@@ -93,6 +91,6 @@ namespace KaruahChess.CustomControl
             return version;
         }
 
-
+        
     }
 }

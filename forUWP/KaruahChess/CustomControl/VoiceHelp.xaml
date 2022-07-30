@@ -98,7 +98,7 @@
             
                 </StackPanel>
             </ScrollViewer>
-            <Button  x:Name="btnCloseButton" Grid.Row="1" Grid.Column="0" Content="Close" Width="80"  VerticalAlignment="Top" Tapped="Close_Tapped" FontSize="{x:Bind StyleTemplate.FontSize}" Style="{StaticResource ButtonStyle}"/>                
+            <Button  x:Name="btnCloseButton" Grid.Row="1" Grid.Column="0" Content="Close" Width="80"  VerticalAlignment="Top" Click="Close_Click" FontSize="{x:Bind StyleTemplate.FontSize}" Style="{StaticResource ButtonStyle}"/>                
             
             
             

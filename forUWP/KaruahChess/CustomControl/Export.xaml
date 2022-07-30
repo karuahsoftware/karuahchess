@@ -56,9 +56,9 @@
             <TextBlock x:Name="ExportErrorText" TextWrapping="WrapWholeWords" FontSize="{x:Bind StyleTemplate.FontSize}" FontWeight="Normal" VerticalAlignment="Center" Text="" Foreground="Red" Grid.Row="2" Grid.Column="0"/>
 
             <StackPanel Orientation="Horizontal"  Grid.Row="3" Grid.Column="0">
-                <Button  x:Name="btnCloseButton" Content="Close" Width="80"  VerticalAlignment="Top" Tapped="Close_Tapped" FontSize="{x:Bind StyleTemplate.FontSize}" Style="{StaticResource ButtonStyle}"/>
-                <Button  x:Name="btnExportButton" Content="FEN" Width="100"  VerticalAlignment="Top" Tapped="FEN_Tapped" FontSize="{x:Bind StyleTemplate.FontSize}" Style="{StaticResource ButtonStyle}"/>
-                <Button  x:Name="btnClearButton" Content="Clear" Width="100"  VerticalAlignment="Top" Tapped="Clear_Tapped" FontSize="{x:Bind StyleTemplate.FontSize}" Style="{StaticResource ButtonStyle}"/>
+                <Button  x:Name="btnCloseButton" Content="Close" Width="80"  VerticalAlignment="Top" Click="Close_Click" FontSize="{x:Bind StyleTemplate.FontSize}" Style="{StaticResource ButtonStyle}"/>
+                <Button  x:Name="btnExportButton" Content="FEN" Width="100"  VerticalAlignment="Top" Click="FEN_Click" FontSize="{x:Bind StyleTemplate.FontSize}" Style="{StaticResource ButtonStyle}"/>
+                <Button  x:Name="btnClearButton" Content="Clear" Width="100"  VerticalAlignment="Top" Click="Clear_Click" FontSize="{x:Bind StyleTemplate.FontSize}" Style="{StaticResource ButtonStyle}"/>
             </StackPanel>
 
             

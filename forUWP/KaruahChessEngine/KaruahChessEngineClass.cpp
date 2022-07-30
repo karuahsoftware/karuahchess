@@ -395,7 +395,7 @@ namespace winrt::KaruahChessEngine::implementation
 		Search::SearchStatistics statistics;
 		Search::SearchOptions options;
 		options.randomiseFirstMove = pSearchOptions.randomiseFirstMove;
-		options.limitStrengthELO = pSearchOptions.limitStrengthELO;
+		options.limitSkillLevel = pSearchOptions.limitSkillLevel;
 		options.limitDepth = pSearchOptions.limitDepth;
 		options.limitNodes = pSearchOptions.limitNodes;
 		options.limitMoveDuration = pSearchOptions.limitMoveDuration;

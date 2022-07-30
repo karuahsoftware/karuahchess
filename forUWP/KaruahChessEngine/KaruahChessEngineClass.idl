@@ -41,7 +41,7 @@ namespace KaruahChessEngine
 
 	struct SearchOptions
 	{
-		Int32 limitStrengthELO;
+		Int32 limitSkillLevel;
 		Int32 limitDepth;
 		Int32 limitNodes;
 		Int32 limitMoveDuration;

@@ -116,13 +116,17 @@ namespace KaruahChess.Model
                 {
                     _parameters.Add(param.Name, param.Value.Deserialize<ParamClock>());
                 }
+                else if (param.Name == typeof(ParamClockDefault).Name)
+                {
+                    _parameters.Add(param.Name, param.Value.Deserialize<ParamClockDefault>());
+                }
                 else if (param.Name == typeof(ParamNavigator).Name)
                 {
                     _parameters.Add(param.Name, param.Value.Deserialize<ParamNavigator>());
                 }
-                else if (param.Name == typeof(ParamLimitEngineStrengthELO).Name)
+                else if (param.Name == typeof(ParamLimitSkillLevel).Name)
                 {
-                    _parameters.Add(param.Name, param.Value.Deserialize<ParamLimitEngineStrengthELO>());
+                    _parameters.Add(param.Name, param.Value.Deserialize<ParamLimitSkillLevel>());
                 }
                 else if (param.Name == typeof(ParamLimitAdvanced).Name)
                 {

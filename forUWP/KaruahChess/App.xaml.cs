@@ -24,6 +24,7 @@ using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
 using KaruahChess.Database;
 
+
 namespace KaruahChess
 {
     /// <summary>
@@ -39,8 +40,8 @@ namespace KaruahChess
         {
             this.InitializeComponent();
             this.Suspending += OnSuspending;
-                       
 
+            
             // Create database if it does not exist            
             KaruahChessDB.CreateIfNotExists();
         }

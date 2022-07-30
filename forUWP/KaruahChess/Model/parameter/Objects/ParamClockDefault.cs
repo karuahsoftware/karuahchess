@@ -22,20 +22,20 @@ using System.Runtime.Serialization;
 namespace KaruahChess.Model.ParameterObjects
 {
     [DataContract]
-    public class ParamLimitNodes
+    public class ParamClockDefault
     {
-   
-
         [DataMember]
-        public int nodes { get; set; }
+        public int Index { get; set; }
 
-       
-
-        public ParamLimitNodes()
+        public ParamClockDefault()
         {
             // Set default value
-            nodes = 1000000;
-            
+            Index = 2;
         }
     }
 }
+
+
+
+
+

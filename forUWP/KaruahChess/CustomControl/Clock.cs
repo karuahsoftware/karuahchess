@@ -16,59 +16,70 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-
 using System;
-using Windows.UI.Xaml.Controls;
-using KaruahChess.Common;
+using System.Diagnostics;
 
 namespace KaruahChess.CustomControl
 {
-    public sealed partial class LevelIndicator : UserControl
+    public class Clock
     {
-        /// <summary>
-        /// A class containing styling info for the control
-        /// </summary>
-        public CustomStyleTemplate StyleTemplate { get; set; }
+        Stopwatch timeStopwatch = new Stopwatch();
+        TimeSpan timeLimit = new TimeSpan(0, 0, 0);
 
-        private ViewModel.BoardViewModel _boardVM;
-
+       
         /// <summary>
-        /// Constructor
+        /// Starts the timer
         /// </summary>
-        public LevelIndicator()
+        public void Start()
         {
-            this.InitializeComponent();
+            timeStopwatch.Start();
+        }
 
-            if (StyleTemplate == null)
+        /// <summary>
+        /// Pause the timer
+        /// </summary>
+        public void Pause()
+        {
+            if (timeStopwatch.IsRunning)
             {
-                StyleTemplate = (CustomStyleTemplate)CustomStyleDefaultResourceDictionary["CustomStyleTemplateDefaultObject"];
+                timeStopwatch.Stop();
             }
-
         }
 
-        /// <summary>
-        /// Sets the board view model
-        /// </summary>
-        /// <param name="pBoardVM"></param>
-        public void SetBoardVM(ViewModel.BoardViewModel pBoardVM)
-        {
-            _boardVM = pBoardVM;
-        }
-                
 
         /// <summary>
-        /// Gets the level text
+        /// Set a new time limit
         /// </summary>
-        private string getLevelText(int pSkillLevel, bool pComputerPlayerEnabled)
+        public void SetNewLimit(TimeSpan pTimeLimit)
         {
-            if (pComputerPlayerEnabled)
+            timeStopwatch.Stop();
+            timeStopwatch.Reset();
+            timeLimit = pTimeLimit;            
+        }
+
+
+        /// <summary>
+        /// Calculates remaining time
+        /// </summary>
+        public TimeSpan RemainingTime() {
+            
+            if(TimeSpan.Compare(timeLimit,timeStopwatch.Elapsed) <= 0)
             {
-                return "Level " + (pSkillLevel + 1).ToString();
+                return new TimeSpan(0, 0, 0);
             }
             else
             {
-                return String.Empty;
+                return timeLimit.Subtract(timeStopwatch.Elapsed);
             }
         }
+
+        
+        /// <summary>
+        /// Returns true if the clock is paused
+        /// </summary>
+        public bool IsPaused() { 
+            return !timeStopwatch.IsRunning;
+        }
+
     }
 }

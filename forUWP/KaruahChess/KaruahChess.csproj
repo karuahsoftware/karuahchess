@@ -11,7 +11,7 @@
     <AssemblyName>KaruahChess</AssemblyName>
     <DefaultLanguage>en-US</DefaultLanguage>
     <TargetPlatformIdentifier>UAP</TargetPlatformIdentifier>
-    <TargetPlatformVersion>10.0.19041.0</TargetPlatformVersion>
+    <TargetPlatformVersion>10.0.22000.0</TargetPlatformVersion>
     <TargetPlatformMinVersion>10.0.18362.0</TargetPlatformMinVersion>
     <MinimumVisualStudioVersion>14</MinimumVisualStudioVersion>
     <FileAlignment>512</FileAlignment>
@@ -132,7 +132,6 @@
     <UseDotNetNativeToolchain>true</UseDotNetNativeToolchain>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="Analysis\LoggerEvent.cs" />
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
@@ -141,8 +140,15 @@
     <Compile Include="CustomControl\CastlingRightsDialog.xaml.cs">
       <DependentUpon>CastlingRightsDialog.xaml</DependentUpon>
     </Compile>
-    <Compile Include="CustomControl\SoundColourSettings.xaml.cs">
-      <DependentUpon>SoundColourSettings.xaml</DependentUpon>
+    <Compile Include="CustomControl\Clock.cs" />
+    <Compile Include="CustomControl\ClockSettings.xaml.cs">
+      <DependentUpon>ClockSettings.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="CustomControl\BoardSettings.xaml.cs">
+      <DependentUpon>BoardSettings.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="CustomControl\SoundSettings.xaml.cs">
+      <DependentUpon>SoundSettings.xaml</DependentUpon>
     </Compile>
     <Compile Include="CustomControl\Export.xaml.cs">
       <DependentUpon>Export.xaml</DependentUpon>
@@ -170,10 +176,10 @@
       <DependentUpon>AboutPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="CustomControl\CanvasCustom.cs" />
-    <Compile Include="CustomControl\ChessClock.xaml.cs">
-      <DependentUpon>ChessClock.xaml</DependentUpon>
+    <Compile Include="CustomControl\ClockPanel.xaml.cs">
+      <DependentUpon>ClockPanel.xaml</DependentUpon>
     </Compile>
-    <Compile Include="CustomControl\ChessClockStyleTemplate.cs" />
+    <Compile Include="CustomControl\ClockStyleTemplate.cs" />
     <Compile Include="CustomControl\Coordinates.xaml.cs">
       <DependentUpon>Coordinates.xaml</DependentUpon>
     </Compile>
@@ -215,10 +221,12 @@
     <Compile Include="Model\GameRecord\GameRecordDataService.cs" />
     <Compile Include="Model\GameRecord\IGameRecordDataService.cs" />
     <Compile Include="Model\Parameter\IParameterDataService.cs" />
+    <Compile Include="Model\Parameter\Objects\ParamClockDefault.cs" />
     <Compile Include="Model\Parameter\Objects\ParamLevelAuto.cs" />
     <Compile Include="Model\Parameter\Objects\ParamLimitAdvanced.cs" />
     <Compile Include="Model\Parameter\Objects\ParamColourDarkSquares.cs" />
     <Compile Include="Model\Parameter\Objects\ParamLimitDepth.cs" />
+    <Compile Include="Model\Parameter\Objects\ParamLimitSkillLevel.cs" />
     <Compile Include="Model\Parameter\Objects\ParamLimitMoveDuration.cs" />
     <Compile Include="Model\Parameter\Objects\ParamLimitNodes.cs" />
     <Compile Include="Model\Parameter\Objects\ParamLimitThreads.cs" />
@@ -263,6 +271,7 @@
     <Content Include="Assets\BadgeLogo.scale-200.png" />
     <Content Include="Assets\Square310x310Logo.png" />
     <Content Include="Assets\Square310x310Logo.scale-100.png" />
+    <Content Include="Media\orientation.png" />
     <Content Include="Media\piecesound.wav" />
     <Content Include="Assets\Square44x44Logo.scale-100.png" />
     <Content Include="Assets\Square44x44Logo.scale-400.png" />
@@ -332,15 +341,23 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="CustomControl\ChessClock.xaml">
+    <Page Include="CustomControl\ClockPanel.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="CustomControl\ChessClockStyleDefault.xaml">
+    <Page Include="CustomControl\ClockStyleDefault.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="CustomControl\SoundColourSettings.xaml">
+    <Page Include="CustomControl\ClockSettings.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="CustomControl\BoardSettings.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="CustomControl\SoundSettings.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
@@ -419,13 +436,10 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.Data.Sqlite">
-      <Version>5.0.11</Version>
+      <Version>6.0.7</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.NETCore.UniversalWindowsPlatform">
-      <Version>6.2.13</Version>
-    </PackageReference>
-    <PackageReference Include="Microsoft.Services.Store.Engagement">
-      <Version>10.1901.28001</Version>
+      <Version>6.2.14</Version>
     </PackageReference>
   </ItemGroup>
   <ItemGroup>
@@ -434,9 +448,6 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <SDKReference Include="Microsoft.Services.Store.Engagement, Version=10.0">
-      <Name>Microsoft Engagement Framework</Name>
-    </SDKReference>
     <SDKReference Include="Microsoft.VCLibs, Version=14.0">
       <Name>Visual C++ 2015 Runtime for Universal Windows Platform Apps</Name>
     </SDKReference>

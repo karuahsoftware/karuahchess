@@ -17,15 +17,22 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
 using System;
-using Microsoft.Services.Store.Engagement;
+using System.Runtime.Serialization;
 
-
-namespace KaruahChess.Analysis
+namespace KaruahChess.Model.ParameterObjects
 {
-    public class LoggerEvent
+    [DataContract]
+    public class ParamLimitSkillLevel
     {
-        
-        
+        [DataMember]
+        public int level { get; set; }
 
+
+        public ParamLimitSkillLevel()
+        {
+            // Set default value
+            level = 0;
+            
+        }
     }
 }

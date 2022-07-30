@@ -99,7 +99,7 @@ namespace KaruahChess.Model
             // If no records were loaded then create a default record
             if (_gameRecordDict.Count == 0)
             {
-                Reset();
+                Reset(0, 0);
             }
 
             // Set current game to latest bitboard
@@ -248,7 +248,7 @@ namespace KaruahChess.Model
         /// <summary>
         /// Clears game record
         /// </summary>
-        public void Reset() {
+        public void Reset(int pWhiteClockOffset, int pBlackClockOffset) {
 
             // Clear records
            using (var connection = KaruahChessDB.GetDBConnection()) {   
@@ -268,7 +268,7 @@ namespace KaruahChess.Model
             CurrentGame.Reset();
 
             // Create record of default setup
-            RecordGameState(0,0);
+            RecordGameState(pWhiteClockOffset, pBlackClockOffset);
         }
 
         /// <summary>
@@ -420,6 +420,14 @@ namespace KaruahChess.Model
             return recordIDList;
 
         }
+
+        /// <summary>
+        /// Returns a count of the records in the dictionary
+        /// </summary>
+        public int RecordCount() {
+            return _gameRecordDict.Count();
+        }
+
 
     }
 }

@@ -60,7 +60,7 @@
                         </TextBlock>
 
                         <TextBlock  TextWrapping="WrapWholeWords" FontSize="{x:Bind StyleTemplate.FontSize}" Margin="0,0,0,10"> 
-                            Karuah Chess uses StockFish. You can find out more about StockFish at <Hyperlink NavigateUri="https://stockfishchess.org" >https://stockfishchess.org</Hyperlink>.
+                            Karuah Chess uses StockFish 15. You can find out more about StockFish at <Hyperlink NavigateUri="https://stockfishchess.org" >https://stockfishchess.org</Hyperlink>.
                         </TextBlock>
 
                         <TextBlock  TextWrapping="WrapWholeWords" FontSize="{x:Bind StyleTemplate.FontSize}" Margin="0,0,0,10"> 
@@ -83,7 +83,7 @@
                 </StackPanel>
             </ScrollViewer>
 
-            <Button  x:Name="btnCloseButton" Grid.Row="1" Grid.Column="0"  Content="Close" Width="80"  VerticalAlignment="Top" Tapped="Close_Tapped" FontSize="{x:Bind StyleTemplate.FontSize}" Style="{StaticResource ButtonStyle}"/>
+            <Button  x:Name="btnCloseButton" Grid.Row="1" Grid.Column="0"  Content="Close" Width="80"  VerticalAlignment="Top" Click="btnCloseButton_Click" FontSize="{x:Bind StyleTemplate.FontSize}" Style="{StaticResource ButtonStyle}"/>
         </Grid>
     </Popup>
 </UserControl>

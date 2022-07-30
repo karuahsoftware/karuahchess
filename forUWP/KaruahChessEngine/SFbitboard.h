@@ -1,6 +1,6 @@
 /*
   Stockfish, a UCI chess playing engine derived from Glaurung 2.1
-  Copyright (C) 2004-2021 The Stockfish developers (see AUTHORS file)
+  Copyright (C) 2004-2022 The Stockfish developers (see AUTHORS file)
 
   Stockfish is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -23,7 +23,6 @@
 
 #include "SFtypes.h"
 
-
 namespace Stockfish {
 
     namespace Bitbases {
@@ -36,7 +35,6 @@ namespace Stockfish {
     namespace Bitboards {
 
         void init();
-
 
     } // namespace Stockfish::Bitboards
 
@@ -67,9 +65,9 @@ namespace Stockfish {
     constexpr Bitboard Center = (FileDBB | FileEBB) & (Rank4BB | Rank5BB);
 
     constexpr Bitboard KingFlank[FILE_NB] = {
-            QueenSide ^ FileDBB, QueenSide, QueenSide,
-            CenterFiles, CenterFiles,
-            KingSide, KingSide, KingSide ^ FileEBB
+      QueenSide ^ FileDBB, QueenSide, QueenSide,
+      CenterFiles, CenterFiles,
+      KingSide, KingSide, KingSide ^ FileEBB
     };
 
     extern uint8_t PopCnt16[1 << 16];

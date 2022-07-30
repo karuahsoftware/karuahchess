@@ -79,7 +79,7 @@ namespace KaruahChess.CustomControl
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void Close_Tapped(object sender, RoutedEventArgs e)
+        private void Close_Click(object sender, RoutedEventArgs e)
         {
             PagePopup.IsOpen = false;
         }
@@ -115,7 +115,7 @@ namespace KaruahChess.CustomControl
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void Import_Tapped(object sender, RoutedEventArgs e)
+        private void Import_Click(object sender, RoutedEventArgs e)
         {
 
             ImportErrorText.Text = "";
@@ -401,9 +401,7 @@ namespace KaruahChess.CustomControl
         /// </summary>
         /// <param name="pGameRecordList"></param>
         private void LoadGameIntoDatabase(List<GameRecordArray> pGameRecordList)
-        {
-            // Reset the chess clock
-            _boardVM.ResetChessClock();
+        {            
             KaruahChessEngineClass board = new KaruahChessEngineClass();
 
             // Do the import

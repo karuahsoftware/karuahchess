@@ -54,7 +54,8 @@ namespace KaruahChess.ViewModel
         // variables             
         bool _boardResizeTimerRunning;
         Move _move ;                           
-        CancellationTokenSource _ctsComputer;           
+        CancellationTokenSource _ctsComputer;
+        CancellationTokenSource _ctsHint;
         TextMessage _boardTextMessageControl;
         AboutPage _aboutPageControl;        
         ImportPGN _importPGNControl;
@@ -62,28 +63,35 @@ namespace KaruahChess.ViewModel
         MoveNavigator _moveNavigatorControl;
         TilePanel _boardTilePanelControl;
         PieceAnimation _pieceAnimationControl;
-        Coordinates _coordinatesControl;
-         
         VoiceRecognition _voiceRecogniser;
-        ChessClock _chessClockControl;
         VoiceHelp _voiceHelpControl;
         EngineSettings _engineSettingsControl;
-        SoundColourSettings _soundColourSettingsControl;
+        SoundSettings _soundSettingsControl;
+        BoardSettings _boardSettingsControl;
         BoardAnimation _boardAnimation;
         PieceEditTool _pieceEditToolControl;
         LevelIndicator _levelIndicatorControl;
+        ClockSettings _clockSettingsControl;
         bool _pawnPromotionDialogOpen = false;
         MediaPlayerElement _mediaplayerReadText;
         MediaPlayerElement _mediaplayerPieceMoveSound;
-
+        KaruahChessEngineClass hintBoard = new KaruahChessEngineClass();
+        ContentDialog boardContentDialog = null;
+        int boardContentDialogCount = 0;
         SemaphoreSlim navThrottler = new SemaphoreSlim(initialCount: 1);
+        private bool _userMoveProcessing = false;
+
+        public Coordinates coordinatesControl;
+        public ClockPanel chessClockControl;
 
         public enum MoveTypeEnum { None = 0, Normal = 1, EnPassant = 2, Castle = 3, Promotion = 4 }
         // 0  Game ready, 1 CheckMate, 2 Stalemate, 3 Resign
-        public enum BoardStatusEnum { Ready = 0, Checkmate = 1, Stalemate = 2, Resigned = 3 }
+        public enum BoardStatusEnum { Ready = 0, Checkmate = 1, Stalemate = 2, Resigned = 3, TimeExpired = 4 }
         public enum PawnPromotionEnum { Knight = 2, Bishop = 3, Rook = 4, Queen = 5 }
 
 
+        // Error codes
+        private static int noCaptureDevices = -1072845856;
 
         /// <summary>
         /// Options menu items
@@ -202,6 +210,20 @@ namespace KaruahChess.ViewModel
         }
 
         /// <summary>
+        /// Hint in progress indicator
+        /// </summary>
+        private bool _computerHintProcessing;
+        public bool ComputerHintProcessing
+        {
+            get { return _computerHintProcessing; }
+            set
+            {
+                _computerHintProcessing = value;
+                RaisePropertyChanged(nameof(ComputerHintProcessing));
+            }
+        }
+
+        /// <summary>
         /// Feedback visibility
         /// </summary>
         private Visibility _feedbackVisibility;
@@ -315,22 +337,21 @@ namespace KaruahChess.ViewModel
         /// <summary>
         /// Limit Engine Strength
         /// </summary>  
-        private ParamLimitEngineStrengthELO _limitEngineStrengthELO;
-        public int limitEngineStrengthELO
+        private ParamLimitSkillLevel _limitSkillLevel;
+        public int LimitSkillLevel
         {
             get
             {
-                var paramLimitEngineStrengthELOObj = ParameterDataService.instance.Get<ParamLimitEngineStrengthELO>();
-                _limitEngineStrengthELO = paramLimitEngineStrengthELOObj;
-                return _limitEngineStrengthELO.eloRating;
+                _limitSkillLevel = ParameterDataService.instance.Get<ParamLimitSkillLevel>();
+                return _limitSkillLevel.level;
             }
             set
             {
-                if (_limitEngineStrengthELO != null && _limitEngineStrengthELO.eloRating != value)
+                if (_limitSkillLevel != null && _limitSkillLevel.level != value)
                 {
-                    _limitEngineStrengthELO.eloRating = value;
-                    ParameterDataService.instance.Set<ParamLimitEngineStrengthELO>(_limitEngineStrengthELO);                    
-                    RaisePropertyChanged(nameof(limitEngineStrengthELO));
+                    _limitSkillLevel.level = value;
+                    ParameterDataService.instance.Set<ParamLimitSkillLevel>(_limitSkillLevel);                    
+                    RaisePropertyChanged(nameof(LimitSkillLevel));
                 }
             }
         }
@@ -553,7 +574,7 @@ namespace KaruahChess.ViewModel
         }
 
         /// <summary>
-        /// Move highlight Enabled
+        /// Clock Enabled
         /// </summary>  
         private ParamClock _clockEnabled;
         public bool ClockEnabled
@@ -570,6 +591,16 @@ namespace KaruahChess.ViewModel
                 {
                     _clockEnabled.Enabled = value;
                     ParameterDataService.instance.Set<ParamClock>(_clockEnabled);
+                    ResizeBoard();
+                    // Set clock
+                    if (value) {
+                        chessClockControl.Show();
+                        LoadChessClock(true, GameRecordDataService.instance.GetCurrentGame());
+                    }
+                    else  {
+                        chessClockControl.Hide();
+                    }
+
                     RaisePropertyChanged(nameof(ClockEnabled));
 
                 }
@@ -808,10 +839,8 @@ namespace KaruahChess.ViewModel
             
             // Set the window size changed event                        
             Window.Current.SizeChanged += OnWindowSizeChanged;
-                                   
-            
-            // Set feedback button visibility
-            SetFeedbackVisibility();
+                                 
+                       
 
         }
 
@@ -834,8 +863,16 @@ namespace KaruahChess.ViewModel
             // Apply board colour
             ApplyBoardColour();
 
-            // Set clock offset
-            LoadChessClock(true, GameRecordDataService.instance.GetCurrentGame());
+            // Set clock
+            if (ClockEnabled)
+            {
+                chessClockControl.Show();
+                LoadChessClock(true, GameRecordDataService.instance.GetCurrentGame());
+            }
+            else
+            {
+                chessClockControl.Hide();
+            }
 
             // Set board shake state
             BoardSquare.Shake(ArrangeBoardEnabled);
@@ -892,9 +929,9 @@ namespace KaruahChess.ViewModel
         /// Sets the chess clock control
         /// </summary>
         /// <param name="pChessClockControl"></param>
-        public void SetChessClockControl(ChessClock pChessClockControl)
+        public void SetChessClockControl(ClockPanel pChessClockControl)
         {
-            _chessClockControl = pChessClockControl;
+            chessClockControl = pChessClockControl;
 
         }
 
@@ -934,7 +971,7 @@ namespace KaruahChess.ViewModel
         /// <param name="pCoordinatesControl"></param>
         public void SetCoordinatesControl(Coordinates pCoordinatesControl)
         {
-            _coordinatesControl = pCoordinatesControl;
+            coordinatesControl = pCoordinatesControl;
 
         }
 
@@ -974,9 +1011,18 @@ namespace KaruahChess.ViewModel
         /// Sets the sound settings control
         /// </summary>
         /// <param name="pSoundSettingsControl"></param>
-        public void SetSoundColourSettingsControl(SoundColourSettings pSoundColourSettingsControl)
+        public void SetSoundSettingsControl(SoundSettings pSoundSettingsControl)
         {
-            _soundColourSettingsControl = pSoundColourSettingsControl;
+            _soundSettingsControl = pSoundSettingsControl;
+
+        }
+
+        /// <summary>
+        /// Sets the board settings control
+        /// </summary>        
+        public void SetBoardSettingsControl(BoardSettings pBoardSettingsControl)
+        {
+            _boardSettingsControl = pBoardSettingsControl;
 
         }
 
@@ -991,6 +1037,16 @@ namespace KaruahChess.ViewModel
         }
 
         /// <summary>
+        /// Sets the clock settings control
+        /// </summary>
+        /// <param name="pClockSettingsControl"></param>
+        public void SetClockSettingsControl(ClockSettings pClockSettingsControl)
+        {
+            _clockSettingsControl = pClockSettingsControl;
+
+        }
+
+        /// <summary>
         /// Highlights the last move
         /// </summary>
         /// <param name="sender"></param>
@@ -998,31 +1054,12 @@ namespace KaruahChess.ViewModel
         public void btnLastMove_Click(object sender, RoutedEventArgs e)
         {            
             HighlightLastMove();
+            
         }
 
      
 
-        /// <summary>
-        /// Rotate the board
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        public void btnRotate_Click(object sender, RoutedEventArgs e)
-        {
-            var currentRotate = RotateBoardValue;
-            int newRotate = (currentRotate - 90);
-
-            if (newRotate > 270 || newRotate < -270) {
-                newRotate = 0;
-            }
-
-            RotateBoardValue = newRotate;
-
-            if (_coordinatesControl != null) {
-                _coordinatesControl.SetCoordLabels(newRotate);
-            }
-
-        }
+        
 
         /// <summary>
         /// Undo the last move
@@ -1033,16 +1070,7 @@ namespace KaruahChess.ViewModel
         {
             LockPanel = true;
 
-            // Clear any moves selected
-            _move.Clear();
-
-            // Ensure animations are cleared
-            EndPieceAnimation();
-
-            // Cancel any computer move tasks
-            if (_ctsComputer != null) {
-                _ctsComputer.Cancel();
-            }
+            StopSearchJob();
 
             // Do the undo
             var oldBoard = GameRecordDataService.instance.Get();
@@ -1077,9 +1105,7 @@ namespace KaruahChess.ViewModel
         public void btnSwitchDirection_Click(object sender, RoutedEventArgs e)
         {
             //Cancel any move tasks 
-            if (_ctsComputer != null) {
-                _ctsComputer.Cancel();
-            }
+            StopSearchJob();
 
             // Get current board in view
             KaruahChessEngineClass board = new KaruahChessEngineClass();
@@ -1100,17 +1126,14 @@ namespace KaruahChess.ViewModel
 
         
         /// <summary>
-        /// Edit board tapped
+        /// Edit board clicked
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
         public void btnArrangeBoard_Click(object sender, RoutedEventArgs e)
         {
             //Cancel any move tasks 
-            if (_ctsComputer != null)
-            {
-                _ctsComputer.Cancel();
-            }
+            StopSearchJob();
 
             CheckChessClock();
            
@@ -1133,9 +1156,23 @@ namespace KaruahChess.ViewModel
                 PrimaryButtonCommand = new RelayCommand(NewGame)
             };
 
-            await dialog.ShowAsync();
+            
+            await showContentDialog(dialog);
+            
+                
         }
 
+        /// <summary>
+        /// Start a new game
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        async public void btnHint_Click(object sender, RoutedEventArgs e)
+        {
+            GameRecordArray currentGameRecord = GameRecordDataService.instance.GetCurrentGame();
+            await StartHintTask(currentGameRecord);
+
+        }
 
         /// <summary>
         /// Open voice help screen
@@ -1148,19 +1185,7 @@ namespace KaruahChess.ViewModel
 
         }
 
-        /// <summary>
-        /// Feedback button
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        public async void btnFeedback_Click(object sender, RoutedEventArgs e)
-        {
-            var launcher = Microsoft.Services.Store.Engagement.StoreServicesFeedbackLauncher.GetDefault();
-            await launcher.LaunchAsync();
-
-        }
-
-
+        
         /// <summary>
         /// Save game
         /// </summary>
@@ -1215,12 +1240,7 @@ namespace KaruahChess.ViewModel
 
                 if (file != null)
                 {
-                    //Cancel any move tasks 
-                    if (_ctsComputer != null)
-                    {
-                        _ctsComputer.Cancel();
-                    }
-                    EndPieceAnimation();
+                    StopSearchJob();
 
                     // Do the import
                     await ImportDB.Import(file, ImportDB.ImportType.GameXML);
@@ -1255,8 +1275,7 @@ namespace KaruahChess.ViewModel
         /// <param name="sender"></param>
         /// <param name="e"></param>
         public async void btnResign_Click(object sender, RoutedEventArgs e)
-        {         
-            
+        {
             var dialog = new ContentDialog
             {
                 Title = "Resign from current game?",
@@ -1266,7 +1285,7 @@ namespace KaruahChess.ViewModel
                 PrimaryButtonCommand = new RelayCommand(ResignGame)
             };
 
-            await dialog.ShowAsync();
+            await showContentDialog(dialog);
         }
 
         /// <summary>
@@ -1293,6 +1312,7 @@ namespace KaruahChess.ViewModel
         {
             if (_importPGNControl != null)
             {
+                StopSearchJob();
                 _importPGNControl.Show();
                 PositionBoardMessage();
 
@@ -1360,7 +1380,7 @@ namespace KaruahChess.ViewModel
                     {
                         var record = GameRecordDataService.instance.Get(GameRecordCurrentValue);
                         CastlingRightsDialog castlingRights = new CastlingRightsDialog(sq.PieceType, sq.PieceColour, record, this);
-                        castlingRights.ShowAsync();
+                        await showContentDialog(castlingRights);
                     }
                     else
                     {
@@ -1430,14 +1450,35 @@ namespace KaruahChess.ViewModel
         /// <summary>
         /// Sound settings button event
         /// </summary>
-        public void btnSoundColourSettings_Click(object sender, RoutedEventArgs e)
+        public void btnSoundSettings_Click(object sender, RoutedEventArgs e)
         {
-            if (_soundColourSettingsControl != null)
+            if (_soundSettingsControl != null)
             {
-                _soundColourSettingsControl.Show();
+                _soundSettingsControl.Show();
             }
         }
 
+        /// <summary>
+        /// Sound settings button event
+        /// </summary>
+        public void btnBoardSettings_Click(object sender, RoutedEventArgs e)
+        {
+            if (_boardSettingsControl != null)
+            {
+                _boardSettingsControl.Show();
+            }
+        }
+
+        /// <summary>
+        /// Shows the clock settings dialog
+        /// </summary>
+        public void ShowClockSettingsDialog()
+        {
+            if (_clockSettingsControl != null)
+            {
+                _clockSettingsControl.Show();
+            }
+        }
 
         /// <summary>
         /// Starts the animation
@@ -1583,6 +1624,7 @@ namespace KaruahChess.ViewModel
 
             if (moveSelected)
             {
+                _userMoveProcessing = true;
                 GameRecordArray boardBeforeMove = GameRecordDataService.instance.GetCurrentGame();                
                 
                 // Ask user what pawn promotion piece they wish to use, if a promoting pawn move
@@ -1592,7 +1634,7 @@ namespace KaruahChess.ViewModel
                     _pawnPromotionDialogOpen = true;
                     var promotionDialog = new PawnPromotionDialog();
                     promotionDialog.CreateContent(GameRecordDataService.instance.CurrentGame.GetStateActiveColour());
-                    await promotionDialog.ShowAsync();
+                    await showContentDialog(promotionDialog);
                     promotionPiece = promotionDialog.Result;
                     _pawnPromotionDialogOpen = false;
                 }
@@ -1639,13 +1681,13 @@ namespace KaruahChess.ViewModel
 
                     // Continue if nothing changed during the animation
                     if (transId == GameRecordDataService.instance.transactionId)
-                    {
-
-                        // Check the clock
-                        CheckChessClock();
+                    {                                                
 
                         // Record the game
                         RecordCurrentGameState();
+
+                        // Check the clock
+                        CheckChessClock();
 
                         // Update score if checkmate occurred
                         if (gameStatusBeforeMove == (int)BoardStatusEnum.Ready && GameRecordDataService.instance.CurrentGame.GetStateGameStatus() == (int)BoardStatusEnum.Checkmate)
@@ -1666,6 +1708,7 @@ namespace KaruahChess.ViewModel
 
                 // Clear the move selected
                 _move.Clear();
+                _userMoveProcessing = false;
 
             }
 
@@ -1699,7 +1742,7 @@ namespace KaruahChess.ViewModel
             var turnColour = GameRecordDataService.instance.CurrentGame.GetStateActiveColour();
             var boardStatus = GameRecordDataService.instance.CurrentGame.GetStateGameStatus();
             
-            if (boardStatus == 0 && (!ComputerMoveProcessing) && (!ArrangeBoardEnabled) && ComputerPlayerEnabled && computerColour == turnColour) {
+            if (boardStatus == 0 && (!ComputerMoveProcessing) && (!ComputerHintProcessing) && (!ArrangeBoardEnabled) && ComputerPlayerEnabled && computerColour == turnColour) {
                 LockPanel = true;
 
                 // Clear the user move since starting computer move
@@ -1717,7 +1760,7 @@ namespace KaruahChess.ViewModel
                 // Start the search      
                 SearchOptions options;
                 options.randomiseFirstMove = RandomiseFirstMoveEnabled;
-                options.limitStrengthELO = limitEngineStrengthELO;  
+                options.limitSkillLevel = LimitSkillLevel;  
                 
                 if (LimitAdvancedEnabled) { 
                     options.limitDepth = limitDepth;
@@ -1770,9 +1813,10 @@ namespace KaruahChess.ViewModel
                         // Continue if nothing changed during the animation
                         if (transId == GameRecordDataService.instance.transactionId)
                         {
-                            CheckChessClock();
+                            
                             RecordCurrentGameState();
-                                                        
+                            CheckChessClock();
+
                             // Update score if checkmate occurred
                             if (gameStatusBeforeMove == (int)BoardStatusEnum.Ready && GameRecordDataService.instance.CurrentGame.GetStateGameStatus() == (int)BoardStatusEnum.Checkmate)
                             {
@@ -1815,6 +1859,100 @@ namespace KaruahChess.ViewModel
             }
         }
 
+
+        /// <summary>
+        /// Start hint task
+        /// </summary>
+        /// <returns></returns>
+        private async Task StartHintTask(GameRecordArray pRecord)
+        {
+            hintBoard.SetBoardArray(pRecord.BoardArray);
+            hintBoard.SetStateArray(pRecord.StateArray);
+
+
+            int boardStatus = hintBoard.GetStateGameStatus();
+
+            if (boardStatus == 0 && (!(_userMoveProcessing) && !ComputerMoveProcessing) && (!ComputerHintProcessing) && (!ArrangeBoardEnabled))
+            {
+                LockPanel = true;
+                ComputerHintProcessing = true;
+                
+
+                SearchOptions searchOptions = new SearchOptions();
+                searchOptions.randomiseFirstMove = false;
+                searchOptions.limitSkillLevel = 20;
+
+
+                if (LimitAdvancedEnabled)
+                {
+                    searchOptions.limitDepth = limitDepth;
+                    searchOptions.limitNodes = limitNodes;
+                    searchOptions.limitMoveDuration = limitMoveDuration;
+                    searchOptions.limitThreads = limitThreads;
+                }
+                else
+                {
+                    searchOptions.limitDepth = 10;
+                    searchOptions.limitNodes = 500000000;
+                    searchOptions.limitMoveDuration = 0;
+                    searchOptions.limitThreads = Environment.ProcessorCount > 1 ? Environment.ProcessorCount - 1 : 1;
+                }
+
+                _ctsHint = new CancellationTokenSource();
+                var token = _ctsHint.Token;
+                token.Register(() => hintBoard.CancelSearch());
+                var moveTask = Task.Run(() => hintBoard.SearchStart(searchOptions), token);
+                SearchResult topMove = await moveTask;
+
+
+                if ((!topMove.cancelled) && (topMove.error == 0))
+                {
+                    HashSet<int> moveIndexes = new HashSet<int>();
+                    if (topMove.moveFromIndex != topMove.moveToIndex)
+                    {
+                        moveIndexes.Add(topMove.moveFromIndex);
+                        moveIndexes.Add(topMove.moveToIndex);
+                    }
+
+                    int boardColourIndex = Constants.darkSquareColourList.IndexOf(ColourDarkSquaresARGB);
+                    if (boardColourIndex > -1)
+                    {
+                        BoardSquare.RectangleShow(moveIndexes, Constants.hintColourList[boardColourIndex]);
+                        ReadText("Best move hint.");
+                    }
+                }
+                else
+                {
+                    if (topMove.error > 0)
+                    {
+                        ShowBoardMessage("", "Invalid board configuration. " + topMove.errorMessage, TextMessage.TypeEnum.Info, TextMessage.AnimationEnum.FadeOut);
+                    }
+                }
+
+                ComputerHintProcessing = false;
+                LockPanel = false;
+            }
+            else
+            {
+
+                if (boardStatus != 0)
+                {
+                    ShowBoardMessage("", "Unable to show a hint as the game has finished.", TextMessage.TypeEnum.Info, TextMessage.AnimationEnum.FadeOut);
+                }
+                else if (ArrangeBoardEnabled)
+                {
+                    ShowBoardMessage("", "Unable to show a hint in edit mode.", TextMessage.TypeEnum.Info, TextMessage.AnimationEnum.FadeOut);
+                }
+                else if (ComputerMoveProcessing)
+                {
+                    ShowBoardMessage("", "Unable to show a hint as processing a move.", TextMessage.TypeEnum.Info, TextMessage.AnimationEnum.FadeOut);
+                }
+
+            }
+
+            
+        }
+
         /// <summary>
         /// Converts int to colour
         /// </summary>
@@ -1844,33 +1982,38 @@ namespace KaruahChess.ViewModel
         {
 
             // Stop task if running
-            stopMoveJob();
-           
-
-            // Initialise a new game
             LockPanel = true;
-            GameRecordDataService.instance.Reset();
-            BoardSquareDataService.instance.Update(GameRecordDataService.instance.GetCurrentGame(), true);
+            StopSearchJob();
+           
+            
+            if (ClockEnabled)
+            {
+                // Initialise a new game            
+                int defaultSecondsIndex = ParameterDataService.instance.Get<ParamClockDefault>().Index;
+                if (defaultSecondsIndex < Constants.clockResetSeconds.Count)
+                {
+                    int defaultSeconds = Constants.clockResetSeconds[defaultSecondsIndex];
+                    GameRecordDataService.instance.Reset(defaultSeconds, defaultSeconds);
+                    chessClockControl.SetClock(defaultSeconds, defaultSeconds);                    
+                }
+                else
+                {
+                    GameRecordDataService.instance.Reset(0, 0);
+                    chessClockControl.SetClock(0, 0);
+                }
+            }
+            else
+            {
+                GameRecordDataService.instance.Reset(0, 0);
+            }
+
 
 
             // Ensure max record game is on the board  
             NavigateMaxRecord();
-
-
-            // Set edit to false if true
-            if (ArrangeBoardEnabled) {
-                ArrangeBoardEnabled = false;
-            }
-            
-            // Clear the clock
-            ResetChessClock();
-
-            // Update board indicators
-            UpdateBoardIndicators(GameRecordDataService.instance.GetCurrentGame());
-
-            
             LockPanel = false;
-
+                                              
+            
             // Show start move message
             if (ComputerPlayerEnabled && ComputerMoveFirstEnabled)
             {                
@@ -1904,16 +2047,17 @@ namespace KaruahChess.ViewModel
            
             // Only resign if game is not already finished
             if (status == (int)BoardStatusEnum.Ready && GameRecordDataService.instance.CurrentGame.GetStateFullMoveCount() > 0) {
-                stopMoveJob();
+                StopSearchJob();
 
                 // Set the state of the game to resign
                 GameRecordDataService.instance.CurrentGame.SetStateGameStatus((int)BoardStatusEnum.Resigned);
 
                 // Record current game state                    
                 RecordCurrentGameState();
+                CheckChessClock();
 
                 var turn = GameRecordDataService.instance.CurrentGame.GetStateActiveColour();
-                // Do animation, update score and display message
+                // Do animation, display message
                 if (turn == -1)
                 {
                     await doKingFallAnimation(ColourEnum.White);
@@ -1931,6 +2075,42 @@ namespace KaruahChess.ViewModel
             }
         }
 
+        /// <summary>
+        /// Time has expired
+        /// </summary>
+        public async Task TimeExpired(ColourEnum pWinner)
+        {
+                // Check that not in edit mode               
+            if (ArrangeBoardEnabled) {
+                // Cannot expire time if in edit mode
+                return;
+            }
+
+            // Ensure game record is set to the latest
+            NavigateMaxRecord();
+
+            int status = GameRecordDataService.instance.CurrentGame.GetStateGameStatus();
+
+            // Only expire time if game is not already finished
+            if (status == (int)BoardStatusEnum.Ready) {
+
+                // Stop task if running
+                StopSearchJob();
+
+                // Set the state of the game to time expired
+                GameRecordDataService.instance.CurrentGame.SetStateGameStatus((int)BoardStatusEnum.TimeExpired);
+                               
+
+                // Record current game state
+                RecordCurrentGameState();
+
+                // Do animation, display message                
+                await doKingFallAnimation(pWinner);
+
+            }
+
+        }
+
 
         /// <summary>
         /// Updates score after checkmate
@@ -1938,7 +2118,7 @@ namespace KaruahChess.ViewModel
         /// <param name="pBoard"></param>
         /// <returns></returns>
         private async Task afterCheckMate(KaruahChessEngineClass pBoard)
-        {
+            {
             bool humanWinAgainstComputer = false;
             if (pBoard.GetStateActiveColour() == (int)ColourEnum.Black)
             {
@@ -1955,15 +2135,14 @@ namespace KaruahChess.ViewModel
                 await doKingFallAnimation(ColourEnum.Black);
             }
 
-            // Increase strength level
+            // Increase skill level
             if (LevelAutoEnabled && humanWinAgainstComputer)
             {
-                int nextElo = limitEngineStrengthELO + 75;
-                int eloIndex = Constants.eloList.IndexOf(nextElo);
-                if (eloIndex > -1)
+                int nextSkillLevel = LimitSkillLevel + 1;                                                
+                if (nextSkillLevel >=0 && nextSkillLevel <= (Constants.skillLevelList.Count - 1))
                 {
-                    limitEngineStrengthELO = nextElo;
-                    ShowBoardMessage("", "Congratulations, you have now progressed to the next level. The engine playing strength is now set to " + Constants.strengthLabelList[eloIndex] + ".", TextMessage.TypeEnum.Award, TextMessage.AnimationEnum.Fixed);
+                    LimitSkillLevel = nextSkillLevel;
+                    ShowBoardMessage("", "Congratulations, you have now progressed to the next level. The engine playing strength is now set to " + Constants.skillLevelList[nextSkillLevel] + ".", TextMessage.TypeEnum.Award, TextMessage.AnimationEnum.Fixed);
                 }
 
             }
@@ -2026,10 +2205,19 @@ namespace KaruahChess.ViewModel
                 {
                     gameFinished = true;
                     msgTitle = "Black resigned. White wins.";                    
-                }                
-                
+                }
+                else if (ClockEnabled && board.GetStateGameStatus() == (int)BoardStatusEnum.TimeExpired && chessClockControl.WhiteClock.RemainingTime().TotalSeconds == 0 && chessClockControl.BlackClock.RemainingTime().TotalSeconds > 0)
+                {
+                    gameFinished = true;
+                    msgTitle = "Black wins! White time has expired.";
+                }
+                else if (ClockEnabled && board.GetStateGameStatus() == (int)BoardStatusEnum.TimeExpired && chessClockControl.WhiteClock.RemainingTime().TotalSeconds > 0 && chessClockControl.BlackClock.RemainingTime().TotalSeconds == 0)
+                {
+                    gameFinished = true;
+                    msgTitle = "White wins! Black time has expired.";
+                }
 
-                if (gameFinished == true && _chessClockControl != null) _chessClockControl.StopAll();
+                
 
                 ShowBoardMessage(msgTitle, msg, TextMessage.TypeEnum.Info, TextMessage.AnimationEnum.Fixed);
                
@@ -2143,6 +2331,7 @@ namespace KaruahChess.ViewModel
             // Get functionality status
             bool navigatorBarEnabled = NavigatorEnabled;
             bool coordEnabled = BoardCoordEnabled;
+            bool clockEnabled = ClockEnabled;
 
             // Get window bounds
             var windowWidth = Window.Current.Bounds.Width;
@@ -2175,6 +2364,9 @@ namespace KaruahChess.ViewModel
             if (navigatorBarEnabled) navigatorBarHeight = 34;
             else navigatorBarHeight = 0;
 
+            double clockHeight;
+            if (clockEnabled) clockHeight = 34;
+            else clockHeight = 0;
 
             var boardBorderHorizontalThickness = boardBorderThickness.Left + boardBorderThickness.Right;
             var boardBorderVerticalThickness = boardBorderThickness.Top + boardBorderThickness.Bottom;
@@ -2184,7 +2376,7 @@ namespace KaruahChess.ViewModel
             var rootVerticalPadding = RootPadding.Top + RootPadding.Bottom;
 
             var boardWidthAvailable = windowWidth - boardBorderHorizontalThickness - boardHorizontalMargin - rootHorizontalPadding;
-            var boardHeightAvailable = windowHeight - menuBarHeight - navigatorBarHeight - boardBorderVerticalThickness - boardVerticalMargin - rootVerticalPadding;
+            var boardHeightAvailable = windowHeight - menuBarHeight - navigatorBarHeight - clockHeight - boardBorderVerticalThickness - boardVerticalMargin - rootVerticalPadding;
 
             // Calculate tilesize
             double tileSize;
@@ -2215,12 +2407,12 @@ namespace KaruahChess.ViewModel
             BoardWidth = tileRowWidth + boardHorizontalMargin + boardBorderHorizontalThickness + rootHorizontalPadding;
 
             // Set coordinates
-            if (_coordinatesControl != null && _boardTilePanelControl != null) {
-                _coordinatesControl.Show(coordEnabled);
+            if (coordinatesControl != null && _boardTilePanelControl != null) {
+                coordinatesControl.Show(coordEnabled);
                 if (coordEnabled) { 
                     var coordinateWidth = tileRowWidth + boardHorizontalMargin + boardBorderHorizontalThickness;
                     var coordianteHeight = tileRowWidth + boardVerticalMargin + boardBorderVerticalThickness;
-                    _coordinatesControl.Draw(tileSize, coordinateWidth, coordianteHeight, RotateBoardValue);
+                    coordinatesControl.Draw(tileSize, coordinateWidth, coordianteHeight, RotateBoardValue);
                 }
 
             }
@@ -2310,21 +2502,7 @@ namespace KaruahChess.ViewModel
                         
         }
         
-        /// <summary>
-        /// Sets the visibility of the feedback button
-        /// </summary>
-        private void SetFeedbackVisibility()
-        {
-            if (Microsoft.Services.Store.Engagement.StoreServicesFeedbackLauncher.IsSupported())
-            {
-                FeedbackVisibility = Visibility.Visible;
-            }
-            else
-            {
-                FeedbackVisibility = Visibility.Collapsed;
-            }
-        }
-
+        
         
         /// <summary>
         /// Shows board message
@@ -2334,7 +2512,7 @@ namespace KaruahChess.ViewModel
             // Marshall back to UI thread
             await Windows.ApplicationModel.Core.CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
             {
-
+                
                 // Show message
                 if (_boardTextMessageControl != null) {
                     if (!(pMessage == string.Empty && pTitle == string.Empty))
@@ -2420,9 +2598,19 @@ namespace KaruahChess.ViewModel
                 _engineSettingsControl.SetPosition(BoardWidth);
             }
                         
-            if (_soundColourSettingsControl != null)
+            if (_soundSettingsControl != null)
             {
-                _soundColourSettingsControl.SetPosition(BoardWidth);
+                _soundSettingsControl.SetPosition(BoardWidth);
+            }
+
+            if (_boardSettingsControl != null)
+            {
+                _boardSettingsControl.SetPosition(BoardWidth);
+            }
+
+            if (_clockSettingsControl != null)
+            {
+                _clockSettingsControl.SetPosition(BoardWidth);
             }
 
         }
@@ -2437,11 +2625,10 @@ namespace KaruahChess.ViewModel
                 int whiteClock = 0;
                 int blackClock = 0;
                 // Update the clock offset before saving            
-                if (_chessClockControl != null && _chessClockControl.ClockEnabled)
-                {
-                    _chessClockControl.UpdateCurrentTime(); // Ensure time is up to date before saving                    
-                    whiteClock = (int)Math.Round(_chessClockControl.WhiteTotalTime);
-                    blackClock = (int)Math.Round(_chessClockControl.BlackTotalTime);                   
+                if (chessClockControl != null && ClockEnabled)
+                {                                      
+                    whiteClock = (int)chessClockControl.WhiteClock.RemainingTime().TotalSeconds;
+                    blackClock = (int)chessClockControl.BlackClock.RemainingTime().TotalSeconds;
                 }
 
                 // Record current game state                 
@@ -2547,32 +2734,43 @@ namespace KaruahChess.ViewModel
                 }
 
                 // Read text
-                using (var speech = new SpeechSynthesizer())
-                {                
-                    VoiceInformation voiceInfo = SpeechSynthesizer.DefaultVoice;
-                
-                    if (voiceInfo != null) {                        
-                        var tcs = new TaskCompletionSource<bool>();
-                        string langTag = voiceInfo.Language;                                
-                        string ssml = @"<speak version='1.0' xmlns='http://www.w3.org/2001/10/synthesis' xml:lang='" + langTag + "'>" + pText + "</speak>";                                            
-                        SpeechSynthesisStream stream = await speech.SynthesizeSsmlToStreamAsync(ssml);
-                        var source = MediaSource.CreateFromStream(stream, stream.ContentType);
-                                                
-                        var mediaEndedHandler = new TypedEventHandler<Windows.Media.Playback.MediaPlayer, object>((player, resource) =>
+                try
+                {
+                    
+                    using (var speech = new SpeechSynthesizer())
+                    {
+                        VoiceInformation voiceInfo = SpeechSynthesizer.DefaultVoice;
+
+                        if (voiceInfo != null)
                         {
-                            tcs.TrySetResult(true);
-                        });
-                        _mediaplayerReadText.Source = source;
-                        _mediaplayerReadText.MediaPlayer.MediaEnded += mediaEndedHandler;
-                        _mediaplayerReadText.MediaPlayer.PlaybackSession.Position = new TimeSpan(0, 0, 0);
-                        _mediaplayerReadText.MediaPlayer.Play();
+                            var tcs = new TaskCompletionSource<bool>();
+                            string langTag = voiceInfo.Language;
+                            string ssml = @"<speak version='1.0' xmlns='http://www.w3.org/2001/10/synthesis' xml:lang='" + langTag + "'>" + pText + "</speak>";
+                            SpeechSynthesisStream stream = await speech.SynthesizeSsmlToStreamAsync(ssml);
+                            var source = MediaSource.CreateFromStream(stream, stream.ContentType);
 
-                        // Wait here, but timeout after 2 seconds
-                        await Task.WhenAny(tcs.Task, Task.Delay(2000));
+                            var mediaEndedHandler = new TypedEventHandler<Windows.Media.Playback.MediaPlayer, object>((player, resource) =>
+                            {
+                                tcs.TrySetResult(true);
+                            });
+                            _mediaplayerReadText.Source = source;
+                            _mediaplayerReadText.MediaPlayer.MediaEnded += mediaEndedHandler;
+                            _mediaplayerReadText.MediaPlayer.PlaybackSession.Position = new TimeSpan(0, 0, 0);
+                            _mediaplayerReadText.MediaPlayer.Play();
 
-                        _mediaplayerReadText.MediaPlayer.MediaEnded -= mediaEndedHandler;
+                            // Wait here, but timeout after 2 seconds
+                            await Task.WhenAny(tcs.Task, Task.Delay(2000));
+
+                            _mediaplayerReadText.MediaPlayer.MediaEnded -= mediaEndedHandler;
+                        }
                     }
                 }
+                catch (System.IO.FileNotFoundException)
+                {
+                    SoundReadEnabled = false;
+                    ShowBoardMessage("Error", "Speech Synthesizer is unavailable. The read messages out loud option in the sound settings has now been disabled. To use this feature text to speech settings must be enabled on your operating system.", TextMessage.TypeEnum.Error, TextMessage.AnimationEnum.FadeOut);
+                }
+
 
                 VoiceRecogniserIgnoreDecrement();
 
@@ -2589,56 +2787,67 @@ namespace KaruahChess.ViewModel
         public async void btnStartVoiceListen_Checked(object sender, RoutedEventArgs e)
         {
             AppBarToggleButton btn = (AppBarToggleButton)sender;
-
             ListenText = string.Empty;
-            bool permitted = await VoiceRecognition.CheckMicrophonePermission();
-                      
-            if (permitted)
+
+            try
             {
-                if (_voiceRecogniser == null) { 
-                    _voiceRecogniser = new VoiceRecognition();
-                }
-                                
-                Language speechLanguage = SpeechRecognizer.SystemSpeechLanguage;
-                                
-                if (speechLanguage != null) { 
-                    string langTag = speechLanguage.LanguageTag;
-                    if (VoiceRecognition.SupportedLanguages.Contains(langTag)) {
-                        try { 
+                bool permitted = await VoiceRecognition.CheckMicrophonePermission();
+
+                if (permitted)
+                {
+                    if (_voiceRecogniser == null)
+                    {
+                        _voiceRecogniser = new VoiceRecognition();
+                    }
+
+                    Language speechLanguage = SpeechRecognizer.SystemSpeechLanguage;
+
+                    if (speechLanguage != null)
+                    {
+                        string langTag = speechLanguage.LanguageTag;
+                        if (VoiceRecognition.SupportedLanguages.Contains(langTag))
+                        {                           
                             await _voiceRecogniser.Initialise(speechLanguage, MoveVoiceActionA, MoveVoiceActionB, PieceFindVoiceAction, HelpVoiceAction);
                             await ShowBoardMessage("", "Voice command activated. Say 'Help' for voice commands.", TextMessage.TypeEnum.Info, TextMessage.AnimationEnum.FadeOut);
-                            
                         }
-                        catch (Exception ex)
+                        else
                         {
                             btn.IsChecked = false;
-                            await ShowBoardMessage("Error", ex.Message, TextMessage.TypeEnum.Error, TextMessage.AnimationEnum.FadeOut);                            
+                            var msgA = "Voice commands not available. ";
+                            var msgB = "Default speech language must be set to English - AU, CA, GB, IN, NZ, or US.";
+                            await ShowBoardMessage("", msgA + msgB, TextMessage.TypeEnum.Error, TextMessage.AnimationEnum.FadeOut);
                         }
                     }
                     else
                     {
                         btn.IsChecked = false;
-                        var msgA = "Voice commands not available. ";
-                        var msgB = "Default speech language must be set to English - AU, CA, GB, IN, NZ, or US.";                        
-                        await ShowBoardMessage("", msgA + msgB, TextMessage.TypeEnum.Error, TextMessage.AnimationEnum.FadeOut);                                               
+                        var msg = "Voice commands not available. No speech languages are installed on your system.";
+                        await ShowBoardMessage("", msg, TextMessage.TypeEnum.Error, TextMessage.AnimationEnum.FadeOut);
                     }
+
                 }
                 else
                 {
                     btn.IsChecked = false;
-                    var msg = "Voice commands not available. No speech languages are installed on your system.";
-                    await ShowBoardMessage("", msg, TextMessage.TypeEnum.Error, TextMessage.AnimationEnum.FadeOut);                                       
-                }
+                    var msg = "To use voice commands, your system privacy settings must first allow access to the microphone.";
+                    await ShowBoardMessage("", msg, TextMessage.TypeEnum.Error, TextMessage.AnimationEnum.FadeOut);
 
-            }
-            else
-            {
-                btn.IsChecked = false;
-                var msg = "To use voice commands, your system privacy settings must first allow access to the microphone.";
-                await ShowBoardMessage("", msg, TextMessage.TypeEnum.Error, TextMessage.AnimationEnum.FadeOut);                
-                
+                }
             }
             
+            catch (Exception ex)
+            {
+                btn.IsChecked = false;
+
+                if (ex.HResult == noCaptureDevices)
+                {
+                    await ShowBoardMessage("Error", "No microphone device appears to be available. Check that your microphone is enabled and that this app has permission to use the microphone.", TextMessage.TypeEnum.Error, TextMessage.AnimationEnum.FadeOut);
+                }
+                else
+                {
+                    await ShowBoardMessage("Error", ex.Message, TextMessage.TypeEnum.Error, TextMessage.AnimationEnum.FadeOut);
+                }
+            }
         }
 
 
@@ -2873,19 +3082,31 @@ namespace KaruahChess.ViewModel
         /// <summary>
         /// Starts the chess clock based on current turn
         /// </summary>
-        private void CheckChessClock()
+        public void CheckChessClock()
         {
-            if (_chessClockControl != null) {
+            if (chessClockControl != null) {
                 if (ArrangeBoardEnabled)
                 {
-                    _chessClockControl.StopAll();
+                    chessClockControl.PauseClock();
                 }
                 else {
-                    var turn = GameRecordDataService.instance.CurrentGame.GetStateActiveColour();
-                    _chessClockControl.Start(turn);
+                    // Only start the clock if the game has not finished
+                    bool gameFinished = GameRecordDataService.instance.CurrentGame.GetStateGameStatus() != (int)BoardStatusEnum.Ready;
+                    if (!gameFinished)
+                    {
+                        int turn = GameRecordDataService.instance.CurrentGame.GetStateActiveColour();
+                        chessClockControl.Start(turn);
+                    }
+                    else
+                    {
+                        chessClockControl.PauseClock();
+                    }
                 }
 
-                if (GameRecordCurrentValue == GameRecordDataService.instance.GetMaxId()) _chessClockControl.ShowCurrentTime();
+                if ((!chessClockControl.IsPaused()) && GameRecordCurrentValue == GameRecordDataService.instance.GetMaxId())
+                {
+                    chessClockControl.ShowCurrentTime();
+                }                
                 
             }
 
@@ -2899,40 +3120,71 @@ namespace KaruahChess.ViewModel
             var board = new KaruahChessEngineClass();
             board.SetBoardArray(pRecord.BoardArray);
             board.SetStateArray(pRecord.StateArray);
-
+            
             // Loads the initial offset
             if (pLoadInitialOffset)
             {
-                if (_chessClockControl != null) _chessClockControl.ResetAll();
-                ClockWhiteOffset = board.GetStateWhiteClockOffset();
-                ClockBlackOffset = board.GetStateBlackClockOffset();
+                if (GameRecordDataService.instance.RecordCount() == 1)
+                {                    
+                    int defaultSecondsIndex = ParameterDataService.instance.Get<ParamClockDefault>().Index;
+                    if (defaultSecondsIndex < Constants.clockResetSeconds.Count) {
+                        int defaultSeconds = Constants.clockResetSeconds[defaultSecondsIndex];
+                                                    
+                        if (board.GetStateWhiteClockOffset() == 0 || board.GetStateBlackClockOffset() == 0) {
+                            InitialiseClockFirstMove(defaultSeconds, defaultSeconds);
+                            board.SetStateWhiteClockOffset(defaultSeconds);
+                            board.SetStateBlackClockOffset(defaultSeconds);
+                        }
+                }
+            }
+
+                chessClockControl.WhiteClock.SetNewLimit(new TimeSpan(0, 0, board.GetStateWhiteClockOffset()));
+                chessClockControl.BlackClock.SetNewLimit(new TimeSpan(0, 0, board.GetStateBlackClockOffset()));
+                chessClockControl.ShowCurrentTime();
             }
 
             // Switches between historical and current
-            if (_chessClockControl != null)
-            {                
-                if (GameRecordCurrentValue == GameRecordDataService.instance.GetMaxId()) _chessClockControl.ShowCurrentTime();                                    
-                else _chessClockControl.ShowHistoricalTime(board.GetStateWhiteClockOffset(),
-                                                           board.GetStateBlackClockOffset());
-                
-            }
-        }
-
-        /// <summary>
-        /// Reset the chess clock
-        /// </summary>
-        public void ResetChessClock()
-        {
-            ClockBlackOffset = 0;
-            ClockWhiteOffset = 0;
-
-            if (_chessClockControl != null)
+            if (GameRecordCurrentValue == GameRecordDataService.instance.GetMaxId())
             {
-                _chessClockControl.ResetAll();
-                _chessClockControl.UpdateCurrentTime(); // Ensure time is up to date before saving                     
+                chessClockControl.ShowCurrentTime();
+            }
+            else
+            {
+                chessClockControl.ShowHistoricalTime(board.GetStateWhiteClockOffset(), board.GetStateBlackClockOffset());
+            }
+
+            
+        }
+
+      
+        /// <summary>
+        /// Update clock for the first move
+        /// </summary>
+        public void InitialiseClockFirstMove(int pWhiteSecondsRemaining, int pBlackSecondsRemaining)
+        {
+            // Update the current record state if only one record exists
+            if (GameRecordDataService.instance.RecordCount() == 1)
+            {
+                GameRecordArray record = GameRecordDataService.instance.Get(GameRecordCurrentValue);
+                if (record != null)
+                {
+                    KaruahChessEngineClass bufferBoard = new KaruahChessEngineClass();
+                    bufferBoard.SetBoardArray(record.BoardArray);
+                    bufferBoard.SetStateArray(record.StateArray);
+
+                    bufferBoard.SetStateWhiteClockOffset(pWhiteSecondsRemaining);
+                    bufferBoard.SetStateBlackClockOffset(pBlackSecondsRemaining);
+
+                    bufferBoard.GetBoardArray(record.BoardArray);
+                    bufferBoard.GetStateArray(record.StateArray);
+
+                    BoardSquareDataService.instance.Update(record, true);
+                    GameRecordDataService.instance.UpdateGameState(record);
+                }
             }
         }
 
+        
         /// <summary>
         /// Navigate to game record
         /// </summary>
@@ -3021,6 +3273,7 @@ namespace KaruahChess.ViewModel
             {
                 SolidColorBrush rectColour = new SolidColorBrush(Color.FromArgb(255, 233, 30, 99));
                 BoardSquare.RectangleShow(lastChanges, rectColour);
+                ReadText("Last move.");
             }
             else
             {                
@@ -3066,7 +3319,7 @@ namespace KaruahChess.ViewModel
         /// <summary>
         /// Stops a running move job
         /// </summary>
-        public void stopMoveJob()
+        public void StopSearchJob()
         {
             // Clear any moves selected
             _move.Clear();
@@ -3078,6 +3331,11 @@ namespace KaruahChess.ViewModel
             if (_ctsComputer != null)
             {
                 _ctsComputer.Cancel();
+            }
+
+            if (_ctsHint != null)
+            {
+                _ctsHint.Cancel();
             }
         }
 
@@ -3107,8 +3365,47 @@ namespace KaruahChess.ViewModel
             }
         }
 
+        /// <summary>
+        /// Shows a content dialog.
+        /// Only one content dialog is allowed to be shown at a time otherwise a crash may occur.
+        /// </summary>
+        async private Task showContentDialog(ContentDialog pDialog)
+        {
+            if (boardContentDialogCount > 0)
+            {
+                // Only allow one content dialog to be shown at a time.
+                // Trying to show multiple dialogs will crash
+                return;
+            }
+            
+            boardContentDialog = pDialog;
+
+            boardContentDialog.Closed += contentDialogClosed;
+            boardContentDialogCount++;
+            await pDialog.ShowAsync();
+            
+            boardContentDialog.Hide();
+            boardContentDialog = null;
+
+        }
+
+        /// <summary>
+        /// Closed event for content dialog
+        /// </summary>   
+        private void contentDialogClosed(ContentDialog sender, ContentDialogClosedEventArgs args)
+        {
+            boardContentDialogCount--;
+        }
+
         
-        
+        /// <summary>
+        /// Indicates if the computer is processing
+        /// </summary>        
+        public bool IsComputerProcessing(bool pBusyMove, bool pBusyHint)
+        {
+            return pBusyMove || pBusyHint;
+        }
+
     }
 
 

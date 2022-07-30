@@ -1,6 +1,6 @@
 /*
   Stockfish, a UCI chess playing engine derived from Glaurung 2.1
-  Copyright (C) 2004-2021 The Stockfish developers (see AUTHORS file)
+  Copyright (C) 2004-2022 The Stockfish developers (see AUTHORS file)
 
   Stockfish is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -209,10 +209,10 @@ namespace Stockfish {
     };
 
     constexpr Value PieceValue[PHASE_NB][PIECE_NB] = {
-            { VALUE_ZERO, PawnValueMg, KnightValueMg, BishopValueMg, RookValueMg, QueenValueMg, VALUE_ZERO, VALUE_ZERO,
-                    VALUE_ZERO, PawnValueMg, KnightValueMg, BishopValueMg, RookValueMg, QueenValueMg, VALUE_ZERO, VALUE_ZERO },
-            { VALUE_ZERO, PawnValueEg, KnightValueEg, BishopValueEg, RookValueEg, QueenValueEg, VALUE_ZERO, VALUE_ZERO,
-                    VALUE_ZERO, PawnValueEg, KnightValueEg, BishopValueEg, RookValueEg, QueenValueEg, VALUE_ZERO, VALUE_ZERO }
+      { VALUE_ZERO, PawnValueMg, KnightValueMg, BishopValueMg, RookValueMg, QueenValueMg, VALUE_ZERO, VALUE_ZERO,
+        VALUE_ZERO, PawnValueMg, KnightValueMg, BishopValueMg, RookValueMg, QueenValueMg, VALUE_ZERO, VALUE_ZERO },
+      { VALUE_ZERO, PawnValueEg, KnightValueEg, BishopValueEg, RookValueEg, QueenValueEg, VALUE_ZERO, VALUE_ZERO,
+        VALUE_ZERO, PawnValueEg, KnightValueEg, BishopValueEg, RookValueEg, QueenValueEg, VALUE_ZERO, VALUE_ZERO }
     };
 
     typedef int Depth;
@@ -465,10 +465,6 @@ inline T& operator/=(T& d, int i) { return d = T(int(d) / i); }
         return Move((from << 6) + to);
     }
 
-    constexpr Move reverse_move(Move m) {
-        return make_move(to_sq(m), from_sq(m));
-    }
-
     template<MoveType T>
     constexpr Move make(Square from, Square to, PieceType pt = KNIGHT) {
         return Move(T + ((pt - KNIGHT) << 12) + (from << 6) + to);
@@ -486,5 +482,3 @@ inline T& operator/=(T& d, int i) { return d = T(int(d) / i); }
 } // namespace Stockfish
 
 #endif // #ifndef TYPES_H_INCLUDED
-
-

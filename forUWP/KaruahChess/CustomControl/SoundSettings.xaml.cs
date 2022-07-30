@@ -16,14 +16,16 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-
 using System;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+using KaruahChess.Common;
+using System.Collections.Generic;
+using KaruahChess.Model.ParameterObjects;
 
 namespace KaruahChess.CustomControl
 {
-    public sealed partial class VoiceHelp : UserControl
+    public sealed partial class SoundSettings : UserControl
     {
         /// <summary>
         /// A class containing styling info for the control
@@ -32,10 +34,12 @@ namespace KaruahChess.CustomControl
 
         private ViewModel.BoardViewModel _boardVM;
 
+        
+
         /// <summary>
         /// Constructor
         /// </summary>
-        public VoiceHelp()
+        public SoundSettings()
         {
 
             this.InitializeComponent();
@@ -47,6 +51,7 @@ namespace KaruahChess.CustomControl
             }
             PagePopup.IsOpen = false;
         }
+
 
         /// <summary>
         /// Sets the board view model
@@ -63,9 +68,10 @@ namespace KaruahChess.CustomControl
         /// </summary>
         /// <returns></returns>
         public void Show()
-        {                        
+        {
+            SoundReadCheckBox.IsChecked = _boardVM.SoundReadEnabled;
+            SoundEffectCheckBox.IsChecked = _boardVM.SoundEffectEnabled;            
             PagePopup.IsOpen = true;
-
         }
 
         /// <summary>
@@ -100,7 +106,20 @@ namespace KaruahChess.CustomControl
         /// <param name="e"></param>
         private void Close_Click(object sender, RoutedEventArgs e)
         {
+            save();
             PagePopup.IsOpen = false;
+                        
+        }
+
+
+        /// <summary>
+        /// Saves form values
+        /// </summary>
+        private void save()
+        {
+            _boardVM.SoundReadEnabled = SoundReadCheckBox.IsChecked == true;
+            _boardVM.SoundEffectEnabled = SoundEffectCheckBox.IsChecked == true;
+            
         }
 
         
