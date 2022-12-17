@@ -50,6 +50,10 @@ class Constants  {
     static let WHITEPIECE = 1
     static let BLACKPIECE = -1
     
+    // Node Limits
+    static let NODELIMIT_STANDARD = 2000000
+    static let NODELIMIT_HIGH = 100000000
+    
     static let FileDict : [String: [Int]] =
         ["a" : [ 0, 8, 16, 24, 32, 40, 48, 56 ],
         "b" : [ 1, 9, 17, 25, 33, 41, 49, 57 ],
@@ -92,28 +96,27 @@ class Constants  {
          "1" : [56, 57, 58, 59, 60, 61, 62, 63]]
            
     
-    static let skillLevelList: [String] =
-        ["Beginner",
-        "Level 2",
-        "Level 3",
-        "Level 4",
-        "Level 5",
-        "Level 6",
-        "Level 7",
-        "Level 8",
-        "Level 9",
-        "Level 10",
-        "Level 11",
-        "Level 12",
-        "Level 13",
-        "Level 14",
-        "Level 15",
-        "Level 16",
-        "Level 17",
-        "Level 18",
-        "Level 19",
-        "Level 20",
-        "Level 21"]
+    static let strengthList: [Strength] =
+    [Strength(label: "Beginner", skillLevel: -9, depth: 5, timeLimitms: 80),
+     Strength(label:"Level 2", skillLevel: -5 ,depth: 5, timeLimitms: 100),
+     Strength(label:"Level 3", skillLevel: -1, depth: 5, timeLimitms: 200),
+     Strength(label:"Level 4", skillLevel: 1, depth: 5, timeLimitms: 300),
+     Strength(label:"Level 5", skillLevel: 2, depth: 5, timeLimitms: 400),
+     Strength(label:"Level 6", skillLevel: 3, depth: 5, timeLimitms: 500),
+     Strength(label:"Level 7", skillLevel: 5, depth: 5, timeLimitms: 600),
+     Strength(label:"Level 8", skillLevel: 7, depth: 5, timeLimitms: 700),
+     Strength(label:"Level 9", skillLevel: 8, depth: 5, timeLimitms: 1000),
+     Strength(label:"Level 10", skillLevel: 9, depth: 6, timeLimitms: 2000),
+     Strength(label:"Level 11", skillLevel: 10, depth: 6, timeLimitms: 2000),
+     Strength(label:"Level 12", skillLevel: 11, depth: 7, timeLimitms: 2000),
+     Strength(label:"Level 13", skillLevel: 12, depth: 7, timeLimitms: 2000),
+     Strength(label:"Level 14", skillLevel: 13, depth: 8, timeLimitms: 2000),
+     Strength(label:"Level 15", skillLevel: 14, depth: 9, timeLimitms: 4000),
+     Strength(label:"Level 17", skillLevel: 16, depth: 13, timeLimitms: 10000),
+     Strength(label:"Level 18", skillLevel: 17, depth: 15, timeLimitms: 10000),
+     Strength(label:"Level 19", skillLevel: 18, depth: 18, timeLimitms: 10000),
+     Strength(label:"Level 20", skillLevel: 19, depth: 20, timeLimitms: 10000),
+     Strength(label:"Level 21",  skillLevel: 20, depth: 22, timeLimitms: 10000)]
     
     static let darkSquareColourArray: [ColourARGB] =
     [ColourARGB(a: 255, r: 90, g: 120, b: 153, text: "Blue"),

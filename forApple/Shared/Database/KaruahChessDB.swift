@@ -20,7 +20,7 @@ import SwiftUI
 import SQLite3
 
 class KaruahChessDB {
-    private static let dbname = "KaruahChessV4.sqlite"
+    private static let dbname = "KaruahChessV5.sqlite"
     
     
     // Create the database if it does not exist

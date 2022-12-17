@@ -93,10 +93,6 @@ class ParameterDataService : ParameterDataServiceProtocol {
                             if let obj = try? JSONDecoder().decode(ParamLimitMoveDuration.self, from: data) {
                                 parameters[name] = obj
                             }
-                        case String(describing: ParamLimitNodes.self):
-                            if let obj = try? JSONDecoder().decode(ParamLimitNodes.self, from: data) {
-                                parameters[name] = obj
-                            }
                         case String(describing: ParamLimitThreads.self):
                             if let obj = try? JSONDecoder().decode(ParamLimitThreads.self, from: data) {
                                 parameters[name] = obj

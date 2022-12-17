@@ -23,8 +23,8 @@ struct LevelIndicatorView: View {
     
     
     var body: some View {
-        if engineSettingsVM.computerPlayerEnabled && 0 ..< Constants.skillLevelList.endIndex ~= engineSettingsVM.limitSkillLevel {
-            Text("\(Constants.skillLevelList[engineSettingsVM.limitSkillLevel])")
+        if engineSettingsVM.computerPlayerEnabled && 0 ..< Constants.strengthList.endIndex ~= engineSettingsVM.limitSkillLevel {
+            Text("\(Constants.strengthList[engineSettingsVM.limitSkillLevel].label)")
         }
         else {
             EmptyView()

@@ -335,18 +335,23 @@ import AVFoundation
         
             let searchOptions = SearchOptions()
             searchOptions.randomiseFirstMove = ParameterDataService.instance.get(pParameterClass: ParamRandomiseFirstMove.self).enabled
-            searchOptions.limitSkillLevel = Int32(ParameterDataService.instance.get(pParameterClass: ParamLimitSkillLevel.self).level)
+            
+            let limitSkillLevel = Int(ParameterDataService.instance.get(pParameterClass: ParamLimitSkillLevel.self).level)
+            let strengthSetting = Constants.strengthList[min(max(limitSkillLevel, 0), Constants.strengthList.endIndex - 1)]
+            
+            searchOptions.limitSkillLevel = Int32(strengthSetting.skillLevel)
             
             let limitAdvancedEnabled = ParameterDataService.instance.get(pParameterClass: ParamLimitAdvanced.self).enabled
             if limitAdvancedEnabled {
                 searchOptions.limitDepth = Int32(ParameterDataService.instance.get(pParameterClass: ParamLimitDepth.self).depth)
-                searchOptions.limitNodes = Int32(ParameterDataService.instance.get(pParameterClass: ParamLimitNodes.self).nodes)
-                searchOptions.limitMoveDuration = Int32(ParameterDataService.instance.get(pParameterClass: ParamLimitMoveDuration.self).moveDurationMS)
+                let limitMoveDuration: Int = ParameterDataService.instance.get(pParameterClass: ParamLimitMoveDuration.self).moveDurationMS
+                searchOptions.limitNodes = Int32(limitMoveDuration > 0 ? Constants.NODELIMIT_HIGH : Constants.NODELIMIT_STANDARD)
+                searchOptions.limitMoveDuration = Int32(limitMoveDuration)
                 searchOptions.limitThreads = Int32(ParameterDataService.instance.get(pParameterClass: ParamLimitThreads.self).threads)
             } else {
-                searchOptions.limitDepth = 10
-                searchOptions.limitNodes = 500000000
-                searchOptions.limitMoveDuration = 0
+                searchOptions.limitDepth = Int32(strengthSetting.depth)
+                searchOptions.limitNodes = Int32(Constants.NODELIMIT_STANDARD)
+                searchOptions.limitMoveDuration = Int32(strengthSetting.timeLimitms)
                 searchOptions.limitThreads = ProcessInfo.processInfo.activeProcessorCount > 1 ? Int32(ProcessInfo.processInfo.activeProcessorCount - 1) : Int32(1)
             }
             
@@ -416,20 +421,13 @@ import AVFoundation
             
             let searchOptions = SearchOptions()
             searchOptions.randomiseFirstMove = false
-            searchOptions.limitSkillLevel = 20
             
-            let limitAdvancedEnabled = ParameterDataService.instance.get(pParameterClass: ParamLimitAdvanced.self).enabled
-            if limitAdvancedEnabled {
-                searchOptions.limitDepth = Int32(ParameterDataService.instance.get(pParameterClass: ParamLimitDepth.self).depth)
-                searchOptions.limitNodes = Int32(ParameterDataService.instance.get(pParameterClass: ParamLimitNodes.self).nodes)
-                searchOptions.limitMoveDuration = Int32(ParameterDataService.instance.get(pParameterClass: ParamLimitMoveDuration.self).moveDurationMS)
-                searchOptions.limitThreads = Int32(ParameterDataService.instance.get(pParameterClass: ParamLimitThreads.self).threads)
-            } else {
-                searchOptions.limitDepth = 10
-                searchOptions.limitNodes = 500000000
-                searchOptions.limitMoveDuration = 0
-                searchOptions.limitThreads = ProcessInfo.processInfo.activeProcessorCount > 1 ? Int32(ProcessInfo.processInfo.activeProcessorCount - 1) : Int32(1)
-            }
+        
+            searchOptions.limitSkillLevel = Int32(Constants.strengthList[Constants.strengthList.endIndex - 1].skillLevel)
+            searchOptions.limitDepth = Int32(Constants.strengthList[Constants.strengthList.endIndex - 1].depth)
+            searchOptions.limitNodes = Int32(Constants.NODELIMIT_STANDARD)
+            searchOptions.limitMoveDuration = Int32(Constants.strengthList[Constants.strengthList.endIndex - 1].timeLimitms)
+            searchOptions.limitThreads = ProcessInfo.processInfo.activeProcessorCount > 1 ? Int32(ProcessInfo.processInfo.activeProcessorCount - 1) : Int32(1)
             
             let topMove = await hintBoardActor.searchStart(pSearchOptions: searchOptions)
         
@@ -881,10 +879,10 @@ import AVFoundation
         
         if levelAutoEnabled && humanWinAgainstComputer {
             let nextSkillLevel = EngineSettingsViewModel.instance.limitSkillLevel + 1
-            if 0 ..< Constants.skillLevelList.endIndex ~= nextSkillLevel {
+            if 0 ..< Constants.strengthList.endIndex ~= nextSkillLevel {
                 // Update using the view model so the level indicater on the main screen gets updated
                 EngineSettingsViewModel.instance.limitSkillLevel = nextSkillLevel
-                showMessage(pTextFull: "Congratulations! You have now progressed to the next level. The engine playing strength is now set to \(Constants.skillLevelList[nextSkillLevel]).", pTextShort: "", pDurationms: Constants.TOAST_EXTRALONG)
+                showMessage(pTextFull: "Congratulations! You have now progressed to the next level. The engine playing strength is now set to \(Constants.strengthList[nextSkillLevel].label).", pTextShort: "", pDurationms: Constants.TOAST_EXTRALONG)
             }
         }
         

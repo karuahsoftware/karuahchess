@@ -78,21 +78,6 @@ import SwiftUI
         }
     }
     
-    @Published var limitNodesIsValid: Bool = true
-    
-    @Published var limitNodes: Int = ParameterDataService.instance.get(pParameterClass: ParamLimitNodes.self).nodes {
-        didSet {
-            if limitNodes >= 10 && limitNodes <= 2000000000 {
-                let parameter = ParamLimitNodes()
-                parameter.nodes = limitNodes
-                _ = ParameterDataService.instance.set(pObj: parameter)
-                limitNodesIsValid = true
-            }
-            else {
-                limitNodesIsValid = false
-            }
-        }
-    }
     
     @Published var limitMoveDurationIsValid: Bool = true
     
@@ -128,7 +113,6 @@ import SwiftUI
         levelAuto = ParamLevelAuto().enabled
         limitAdvanced = ParamLimitAdvanced().enabled
         limitDepth = Double(ParamLimitDepth().depth)
-        limitNodes = ParamLimitNodes().nodes
         limitMoveDuration = ParamLimitMoveDuration().moveDurationMS
         limitThreads = Double(ParamLimitThreads().threads)
         

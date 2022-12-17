@@ -26,8 +26,6 @@
 		3A159E0A26D10091001100CC /* ParamLimitDepth.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A159E0826D10091001100CC /* ParamLimitDepth.swift */; };
 		3A159E0C26D100E9001100CC /* ParamLimitMoveDuration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A159E0B26D100E9001100CC /* ParamLimitMoveDuration.swift */; };
 		3A159E0D26D100E9001100CC /* ParamLimitMoveDuration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A159E0B26D100E9001100CC /* ParamLimitMoveDuration.swift */; };
-		3A159E0F26D10143001100CC /* ParamLimitNodes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A159E0E26D10143001100CC /* ParamLimitNodes.swift */; };
-		3A159E1026D10143001100CC /* ParamLimitNodes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A159E0E26D10143001100CC /* ParamLimitNodes.swift */; };
 		3A159E1226D1018D001100CC /* ParamLimitThreads.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A159E1126D1018D001100CC /* ParamLimitThreads.swift */; };
 		3A159E1326D1018D001100CC /* ParamLimitThreads.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A159E1126D1018D001100CC /* ParamLimitThreads.swift */; };
 		3A159E1526D10496001100CC /* ParamRandomiseFirstMove.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A159E1426D10496001100CC /* ParamRandomiseFirstMove.swift */; };
@@ -75,6 +73,8 @@
 		3A8061B4288BF5A100F7729C /* ParamHint.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A8061B2288BF5A100F7729C /* ParamHint.swift */; };
 		3A8061B6288BFADD00F7729C /* HintActor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A8061B5288BFADD00F7729C /* HintActor.swift */; };
 		3A8061B7288BFADD00F7729C /* HintActor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A8061B5288BFADD00F7729C /* HintActor.swift */; };
+		3A96EDBF2945DEC0008A05DF /* Strength.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A96EDBE2945DEC0008A05DF /* Strength.swift */; };
+		3A96EDC02945DEC0008A05DF /* Strength.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A96EDBE2945DEC0008A05DF /* Strength.swift */; };
 		3AA5A1DB25D4EF6A00CD2121 /* Menu.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AA5A1DA25D4EF6A00CD2121 /* Menu.swift */; };
 		3AC1DD2525D22D7F0054F636 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AC1DD2425D22D7F0054F636 /* AppDelegate.swift */; };
 		3AC2C8EF25E65C30004E1744 /* GameRecordParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AC2C8EE25E65C30004E1744 /* GameRecordParser.swift */; };
@@ -266,7 +266,6 @@
 		3A159E0526D1002B001100CC /* ParamLimitAdvanced.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ParamLimitAdvanced.swift; sourceTree = "<group>"; };
 		3A159E0826D10091001100CC /* ParamLimitDepth.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ParamLimitDepth.swift; sourceTree = "<group>"; };
 		3A159E0B26D100E9001100CC /* ParamLimitMoveDuration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ParamLimitMoveDuration.swift; sourceTree = "<group>"; };
-		3A159E0E26D10143001100CC /* ParamLimitNodes.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ParamLimitNodes.swift; sourceTree = "<group>"; };
 		3A159E1126D1018D001100CC /* ParamLimitThreads.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ParamLimitThreads.swift; sourceTree = "<group>"; };
 		3A159E1426D10496001100CC /* ParamRandomiseFirstMove.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ParamRandomiseFirstMove.swift; sourceTree = "<group>"; };
 		3A182C7125D133D200C7A31F /* KaruahChessApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KaruahChessApp.swift; sourceTree = "<group>"; };
@@ -299,6 +298,7 @@
 		3A7816FB27708D4800DCE7E6 /* SoundSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SoundSettings.swift; sourceTree = "<group>"; };
 		3A8061B2288BF5A100F7729C /* ParamHint.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ParamHint.swift; sourceTree = "<group>"; };
 		3A8061B5288BFADD00F7729C /* HintActor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HintActor.swift; sourceTree = "<group>"; };
+		3A96EDBE2945DEC0008A05DF /* Strength.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Strength.swift; sourceTree = "<group>"; };
 		3AA5A1DA25D4EF6A00CD2121 /* Menu.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Menu.swift; sourceTree = "<group>"; };
 		3AC1DD2425D22D7F0054F636 /* AppDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		3AC2C8EE25E65C30004E1744 /* GameRecordParser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameRecordParser.swift; sourceTree = "<group>"; };
@@ -633,6 +633,7 @@
 			isa = PBXGroup;
 			children = (
 				3ADFD8EA25D8F7A200D6EB6E /* BoardButtonStyle.swift */,
+				3A96EDBE2945DEC0008A05DF /* Strength.swift */,
 				3AF792F925B6F63800A86A35 /* Constants.swift */,
 				3AF4923A275E0C03006BC8F1 /* ColourARGB.swift */,
 				3AF792FA25B6F63800A86A35 /* Extensions.swift */,
@@ -739,7 +740,6 @@
 				3A159E0826D10091001100CC /* ParamLimitDepth.swift */,
 				3AF7933025B6F65A00A86A35 /* ParamLimitSkillLevel.swift */,
 				3A159E0B26D100E9001100CC /* ParamLimitMoveDuration.swift */,
-				3A159E0E26D10143001100CC /* ParamLimitNodes.swift */,
 				3A159E1126D1018D001100CC /* ParamLimitThreads.swift */,
 				3AF7932A25B6F65A00A86A35 /* ParamMoveHighlight.swift */,
 				3AF7932E25B6F65A00A86A35 /* ParamNavigator.swift */,
@@ -941,7 +941,6 @@
 				3A35C938288BB9BF00DE83F7 /* LevelIndicatorView.swift in Sources */,
 				3AF7937325B6F65A00A86A35 /* GameRecordDataServiceProtocol.swift in Sources */,
 				3AF7935925B6F65A00A86A35 /* TileShakeEffect.swift in Sources */,
-				3A159E0F26D10143001100CC /* ParamLimitNodes.swift in Sources */,
 				3AF792E625B6F5E400A86A35 /* PiecePattern.cpp in Sources */,
 				3AF792E825B6F5E400A86A35 /* SFposition.cpp in Sources */,
 				3A3A004525CF6F4F00252B36 /* SceneDelegate.swift in Sources */,
@@ -977,6 +976,7 @@
 				3AF7936B25B6F65A00A86A35 /* MenuView.swift in Sources */,
 				3A8061B3288BF5A100F7729C /* ParamHint.swift in Sources */,
 				3AF7934725B6F65A00A86A35 /* TileAnimationInstruction.swift in Sources */,
+				3A96EDBF2945DEC0008A05DF /* Strength.swift in Sources */,
 				3A639ACC262AF38F00E4C29F /* TilePanelViewModel.swift in Sources */,
 				3A05E3E325D911BE004E223F /* BoardButtonStyle.swift in Sources */,
 				3AF792CE25B6F5E400A86A35 /* SFbitbase.cpp in Sources */,
@@ -1055,6 +1055,7 @@
 				3A2785F0288A33F8001F4FE6 /* BoardSettings.swift in Sources */,
 				3A4A71A6264AA02F00F68478 /* PawnPromotionViewModel.swift in Sources */,
 				3AF792D525B6F5E400A86A35 /* SFbitboard.cpp in Sources */,
+				3A96EDC02945DEC0008A05DF /* Strength.swift in Sources */,
 				3AA5A1DB25D4EF6A00CD2121 /* Menu.swift in Sources */,
 				3AF7935225B6F65A00A86A35 /* TilePanelView.swift in Sources */,
 				3A226878276D71BE0082F8DB /* TileAnimationMoveFadeModifier.swift in Sources */,
@@ -1116,7 +1117,6 @@
 				3ADFD8EB25D8F7A200D6EB6E /* BoardButtonStyle.swift in Sources */,
 				3A2785F2288A3470001F4FE6 /* BoardSettingsViewModel.swift in Sources */,
 				3A182C7425D1343D00C7A31F /* KaruahChessApp.swift in Sources */,
-				3A159E1026D10143001100CC /* ParamLimitNodes.swift in Sources */,
 				3AF7934A25B6F65A00A86A35 /* TileFallEffect.swift in Sources */,
 				3AF7938C25B6F65A00A86A35 /* ParamArrangeBoard.swift in Sources */,
 				3AF7938625B6F65A00A86A35 /* ParamComputerPlayer.swift in Sources */,
@@ -1258,7 +1258,7 @@
 				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
 				CODE_SIGN_ENTITLEMENTS = "Karuah Chess.entitlements";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 11;
+				CURRENT_PROJECT_VERSION = 12;
 				DEVELOPMENT_TEAM = JQA45NT8J5;
 				ENABLE_PREVIEWS = YES;
 				GCC_PREPROCESSOR_DEFINITIONS_NOT_USED_IN_PRECOMPS = USE_POPCNT;
@@ -1268,7 +1268,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.11;
+				MARKETING_VERSION = 1.12;
 				PRODUCT_BUNDLE_IDENTIFIER = karuahsoftware.karuahchess;
 				PRODUCT_NAME = "Karuah Chess";
 				SCAN_ALL_SOURCE_FILES_FOR_INCLUDES = NO;
@@ -1289,7 +1289,7 @@
 				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
 				CODE_SIGN_ENTITLEMENTS = "Karuah Chess.entitlements";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 11;
+				CURRENT_PROJECT_VERSION = 12;
 				DEVELOPMENT_TEAM = JQA45NT8J5;
 				ENABLE_PREVIEWS = YES;
 				GCC_PREPROCESSOR_DEFINITIONS_NOT_USED_IN_PRECOMPS = (
@@ -1302,7 +1302,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.11;
+				MARKETING_VERSION = 1.12;
 				PRODUCT_BUNDLE_IDENTIFIER = karuahsoftware.karuahchess;
 				PRODUCT_NAME = "Karuah Chess";
 				SCAN_ALL_SOURCE_FILES_FOR_INCLUDES = NO;
@@ -1324,7 +1324,7 @@
 				CODE_SIGN_ENTITLEMENTS = macOS/macOS.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 11;
+				CURRENT_PROJECT_VERSION = 12;
 				DEVELOPMENT_TEAM = JQA45NT8J5;
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
@@ -1335,7 +1335,7 @@
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 12.0;
-				MARKETING_VERSION = 1.11;
+				MARKETING_VERSION = 1.12;
 				PRODUCT_BUNDLE_IDENTIFIER = karuahsoftware.karuahchess;
 				PRODUCT_NAME = "Karuah Chess";
 				SDKROOT = macosx;
@@ -1354,7 +1354,7 @@
 				CODE_SIGN_ENTITLEMENTS = macOS/macOS.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 11;
+				CURRENT_PROJECT_VERSION = 12;
 				DEVELOPMENT_TEAM = JQA45NT8J5;
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
@@ -1368,7 +1368,7 @@
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 12.0;
-				MARKETING_VERSION = 1.11;
+				MARKETING_VERSION = 1.12;
 				PRODUCT_BUNDLE_IDENTIFIER = karuahsoftware.karuahchess;
 				PRODUCT_NAME = "Karuah Chess";
 				SDKROOT = macosx;

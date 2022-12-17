@@ -16,11 +16,9 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-class ParamLimitNodes : ParamProtocol {
-    var nodes : Int
-    
-    required init() {
-        nodes = 1000000 // Default value
-    }
-    
+struct Strength {
+    var label: String
+    var skillLevel: Int
+    var depth: Int
+    var timeLimitms: Int
 }

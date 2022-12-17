@@ -22,7 +22,6 @@ struct EngineSettings: View {
     @Binding var showMenu: Bool
     @ObservedObject private var engineSettingsVM : EngineSettingsViewModel = EngineSettingsViewModel.instance
     @FocusState private var limitMoveDurationIsFocused : Bool
-    @FocusState private var limitNodesIsFocused : Bool
     
     private var maxThreads: Double = ProcessInfo.processInfo.activeProcessorCount > 1 ? Double(ProcessInfo.processInfo.activeProcessorCount) : Double(1)
     
@@ -63,8 +62,8 @@ struct EngineSettings: View {
                     }
                     
                     Picker(selection: $engineSettingsVM.limitSkillLevel, label: Text("Strength").font(.body).opacity(!$engineSettingsVM.computerPlayerEnabled.wrappedValue ? 0.5 : 1)) {
-                        ForEach(0 ..< Constants.skillLevelList.count, id: \.self) {
-                            Text(Constants.skillLevelList[$0]).tag($0)
+                        ForEach(0 ..< Constants.strengthList.count, id: \.self) {
+                            Text(Constants.strengthList[$0].label).tag($0)
                         }
                     }
                     .pickerStyle(DefaultPickerStyle())
@@ -87,29 +86,6 @@ struct EngineSettings: View {
                         }
                         .opacity(getAdvancedSettingsOpacity())
                         
-                        
-                        HStack(alignment: .top) {
-                            Text("Node limit")
-                            TextField("", value: $engineSettingsVM.limitNodes, formatter: NumberFormatter())
-                                .keyboardType(.numberPad)
-                                .focused($limitNodesIsFocused)
-                                .help(Text("Valid values are 10 to \(formatter.string(from: 2000000000) ?? "")"))
-                                .frame(width: 170)
-                        }.opacity(getAdvancedSettingsOpacity())
-                        
-                        
-                        if !$engineSettingsVM.limitNodesIsValid.wrappedValue {
-                            HStack {
-                                Image(systemName: "arrow.turn.left.up")
-                                .imageScale(.large)
-                                .foregroundColor(Color.red)
-                                .padding(.leading)
-                                
-                                Text("Valid values are 10 to \(formatter.string(from: 2000000000) ?? "") ")
-                                .foregroundColor(Color.red)
-                                .padding(0)
-                            }.opacity(getAdvancedSettingsOpacity())
-                        }
                         
                         HStack(alignment: .top) {
                             Text("Move time limit (ms)")
@@ -170,7 +146,6 @@ struct EngineSettings: View {
             }
             
             Button(action: {
-                limitNodesIsFocused = false
                 limitMoveDurationIsFocused = false
                 engineSettingsVM.resetToDefault()
             }){
