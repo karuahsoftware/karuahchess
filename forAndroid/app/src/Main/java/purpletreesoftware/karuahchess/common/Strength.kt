@@ -16,8 +16,11 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-package purpletreesoftware.karuahchess.model.parameterobj
+package purpletreesoftware.karuahchess.common
 
-class ParamLimitNodes :  java.io.Serializable{
-    var nodes: Int = 1000000
+data class Strength(val pLabel: String , val pSkillLevel: Int , val pDepth: Int , val pTimeLimitms: Int)
+{
+    override fun toString(): String {
+        return pLabel
+    }
 }

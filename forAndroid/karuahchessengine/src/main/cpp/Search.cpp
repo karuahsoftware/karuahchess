@@ -54,13 +54,14 @@ namespace Search {
             Engine::setThreads(pSearchOptions.limitThreads);
 
             // Set options
-            if (pSearchOptions.limitSkillLevel >= 0 && pSearchOptions.limitSkillLevel < 20) {
+            if (pSearchOptions.limitSkillLevel >= -10 && pSearchOptions.limitSkillLevel < 20) {
                 // Set engine strength
-                Stockfish::Options["Skill Level"] << Stockfish::UCI::Option(pSearchOptions.limitSkillLevel, 0, 20);
+                Stockfish::Options["Skill Level"] << Stockfish::UCI::Option(pSearchOptions.limitSkillLevel, -10, 20);
+
             }
             else {
                 // Set engine to max
-                Stockfish::Options["Skill Level"] << Stockfish::UCI::Option(20, 0, 20);
+                Stockfish::Options["Skill Level"] << Stockfish::UCI::Option(20, -10, 20);
             }
 
             // Get the board position
@@ -137,7 +138,6 @@ namespace Search {
         pStatistics.EndTime = std::chrono::steady_clock::now();
         pStatistics.DurationMS = std::chrono::duration_cast<std::chrono::milliseconds>(pStatistics.EndTime - pStatistics.StartTime);
         pBestMove.cancelled = _cancel;
-
 
     }
 

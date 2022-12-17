@@ -42,6 +42,7 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import kotlinx.coroutines.*
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.sync.Semaphore
+import purpletreesoftware.karuahchess.R.color
 import purpletreesoftware.karuahchess.common.*
 import purpletreesoftware.karuahchess.customcontrol.*
 import purpletreesoftware.karuahchess.database.DatabaseHelper
@@ -60,7 +61,6 @@ import purpletreesoftware.karuahchess.rules.Move
 import purpletreesoftware.karuahchess.rules.Move.HighlightEnum
 import purpletreesoftware.karuahchess.sound.TextReader
 import purpletreesoftware.karuahchess.viewmodel.*
-import purpletreesoftware.karuahchess.R.color
 import java.io.InputStream
 
 
@@ -146,7 +146,7 @@ class MainActivity : AppCompatActivity(), TilePanel.OnTilePanelInteractionListen
             )
             params.gravity = Gravity.TOP or Gravity.END
             params.anchorGravity = Gravity.TOP or Gravity.END
-            params.anchorId = binding.boardPanelLayout.id
+            params.anchorId = binding.totalBoardBoundaryView.id
             adjacentControlLayout.layoutParams = params
 
             // set the orientation to horizontal
@@ -160,7 +160,7 @@ class MainActivity : AppCompatActivity(), TilePanel.OnTilePanelInteractionListen
             )
             mainParams.gravity = Gravity.START or Gravity.BOTTOM
             mainParams.anchorGravity = Gravity.START or Gravity.BOTTOM
-            mainParams.anchorId = binding.boardPanelLayout.id
+            mainParams.anchorId = binding.totalBoardBoundaryView.id
             adjacentControlLayout.layoutParams = mainParams
 
             // set the orientation to vertical
@@ -216,8 +216,7 @@ class MainActivity : AppCompatActivity(), TilePanel.OnTilePanelInteractionListen
         val mainFrame = binding.mainFrame
         mainFrame.afterMeasured {
             // Draw the board
-            val showCoord = ParameterDataService.get(ParamBoardCoord::class.java).enabled
-            drawBoard(showCoord)
+            drawBoard()
 
             // Move progress bar visibility
             binding.moveProgressBar.visibility = View.GONE
@@ -352,6 +351,7 @@ class MainActivity : AppCompatActivity(), TilePanel.OnTilePanelInteractionListen
                 if(clock.enabled) showMessage("${item.title} is enabled","", Toast.LENGTH_SHORT)
                 else showMessage("${item.title} is disabled","", Toast.LENGTH_SHORT)
 
+                drawBoard()
                 true
             }
             R.id.action_coordinates -> {
@@ -362,7 +362,7 @@ class MainActivity : AppCompatActivity(), TilePanel.OnTilePanelInteractionListen
                 if(coordinates.enabled) showMessage("${item.title} is enabled","", Toast.LENGTH_SHORT)
                 else showMessage("${item.title} is disabled","", Toast.LENGTH_SHORT)
 
-                drawBoard(coordinates.enabled)
+                drawBoard()
                 true
             }
             R.id.action_navigator -> {
@@ -375,6 +375,8 @@ class MainActivity : AppCompatActivity(), TilePanel.OnTilePanelInteractionListen
 
                 if(navParam.enabled) showMessage("${item.title} is enabled", "", Toast.LENGTH_SHORT)
                 else showMessage("${item.title} is disabled", "", Toast.LENGTH_SHORT)
+
+                drawBoard()
                 true
             }
             R.id.action_boardsettings -> {
@@ -661,18 +663,23 @@ class MainActivity : AppCompatActivity(), TilePanel.OnTilePanelInteractionListen
 
             val searchOptions = SearchOptions()
             searchOptions.randomiseFirstMove = ParameterDataService.get(ParamRandomiseFirstMove::class.java).enabled
-            searchOptions.limitSkillLevel =  ParameterDataService.get(ParamLimitSkillLevel::class.java).level
+
+            val limitSkillLevel = ParameterDataService.get(ParamLimitSkillLevel::class.java).level
+            val strengthSetting = Constants.strengthList[limitSkillLevel.coerceIn(0, Constants.strengthList.lastIndex)]
+
+            searchOptions.limitSkillLevel =  strengthSetting.pSkillLevel
 
             val limitAdvancedEnabled = ParameterDataService.get(ParamLimitAdvanced::class.java).enabled
             if (limitAdvancedEnabled) {
                 searchOptions.limitDepth = ParameterDataService.get(ParamLimitDepth::class.java).depth
-                searchOptions.limitNodes = ParameterDataService.get(ParamLimitNodes::class.java).nodes
-                searchOptions.limitMoveDuration = ParameterDataService.get(ParamLimitMoveDuration::class.java).moveDurationMS
+                val limitMoveDuration = ParameterDataService.get(ParamLimitMoveDuration::class.java).moveDurationMS
+                searchOptions.limitNodes = if (limitMoveDuration > 0) Constants.NODELIMIT_HIGH else Constants.NODELIMIT_STANDARD
+                searchOptions.limitMoveDuration = limitMoveDuration
                 searchOptions.limitThreads = ParameterDataService.get(ParamLimitThreads::class.java).threads
             } else {
-                searchOptions.limitDepth = 10
-                searchOptions.limitNodes = 500000000
-                searchOptions.limitMoveDuration = 0
+                searchOptions.limitDepth = strengthSetting.pDepth
+                searchOptions.limitNodes = Constants.NODELIMIT_STANDARD
+                searchOptions.limitMoveDuration = strengthSetting.pTimeLimitms
                 searchOptions.limitThreads = if (Runtime.getRuntime().availableProcessors() > 1) Runtime.getRuntime().availableProcessors() - 1 else 1
             }
 
@@ -768,20 +775,11 @@ class MainActivity : AppCompatActivity(), TilePanel.OnTilePanelInteractionListen
 
             val searchOptions = SearchOptions()
             searchOptions.randomiseFirstMove = false
-            searchOptions.limitSkillLevel = 20
-
-            val limitAdvancedEnabled = ParameterDataService.get(ParamLimitAdvanced::class.java).enabled
-            if (limitAdvancedEnabled) {
-                searchOptions.limitDepth = ParameterDataService.get(ParamLimitDepth::class.java).depth
-                searchOptions.limitNodes = ParameterDataService.get(ParamLimitNodes::class.java).nodes
-                searchOptions.limitMoveDuration = ParameterDataService.get(ParamLimitMoveDuration::class.java).moveDurationMS
-                searchOptions.limitThreads = ParameterDataService.get(ParamLimitThreads::class.java).threads
-            } else {
-                searchOptions.limitDepth = 10
-                searchOptions.limitNodes = 500000000
-                searchOptions.limitMoveDuration = 0
-                searchOptions.limitThreads = if (Runtime.getRuntime().availableProcessors() > 1) Runtime.getRuntime().availableProcessors() - 1 else 1
-            }
+            searchOptions.limitSkillLevel = Constants.strengthList[Constants.strengthList.lastIndex].pSkillLevel
+            searchOptions.limitDepth = Constants.strengthList[Constants.strengthList.lastIndex].pDepth
+            searchOptions.limitNodes = Constants.NODELIMIT_STANDARD
+            searchOptions.limitMoveDuration = Constants.strengthList[Constants.strengthList.lastIndex].pTimeLimitms
+            searchOptions.limitThreads = if (Runtime.getRuntime().availableProcessors() > 1) Runtime.getRuntime().availableProcessors() - 1 else 1
 
             val topMove = withContext(Dispatchers.IO) { hintBoard.searchStart(searchOptions) }
 
@@ -906,7 +904,7 @@ class MainActivity : AppCompatActivity(), TilePanel.OnTilePanelInteractionListen
         }
 
 
-       binding.animationPanelLayout.runAnimation(binding.boardPanelLayout, pAnimationList, binding.boardPanelLayout.framePadding)
+       binding.animationPanelLayout.runAnimation(binding.boardPanelLayout, pAnimationList)
 
 
         if (pLockPanel) {
@@ -1064,12 +1062,12 @@ class MainActivity : AppCompatActivity(), TilePanel.OnTilePanelInteractionListen
         {
             val limitSkillLevel = ParameterDataService.get(ParamLimitSkillLevel::class.java)
             val nextSkillLevel = limitSkillLevel.level + 1
-            if (nextSkillLevel in 0..Constants.skillLevelList.lastIndex)
+            if (nextSkillLevel in 0..Constants.strengthList.lastIndex)
             {
                 limitSkillLevel.level = nextSkillLevel
                 ParameterDataService.set(limitSkillLevel)
                 refreshEngineSettingsLevelIndicator()
-                showBoardMessageDialog("Level Increase", "Congratulations, you have now progressed to the next level. The engine playing strength is now set to ${Constants.skillLevelList[nextSkillLevel]}.",R.drawable.ic_goldstar)
+                showBoardMessageDialog("Level Increase", "Congratulations, you have now progressed to the next level. The engine playing strength is now set to ${Constants.strengthList[nextSkillLevel].pLabel}.",R.drawable.ic_goldstar)
 
             }
 
@@ -1182,22 +1180,61 @@ class MainActivity : AppCompatActivity(), TilePanel.OnTilePanelInteractionListen
     /**
      * Draws the board
      */
-    private fun drawBoard(pShowCoordinates: Boolean){
+    private fun drawBoard(){
+        val mainFrameWidth = binding.mainFrame.width
+        val mainFrameHeight = binding.mainFrame.height
+        val isPortrait: Boolean = mainFrameWidth < mainFrameHeight
 
-        // Make room for coordinates if enabled
-        val approxBoardMarginPixels: Int = if (pShowCoordinates) 18f.spToPx() else 0
+
+
+        val isCoordinatesEnabled = ParameterDataService.get(ParamBoardCoord::class.java).enabled
+        val isNavigationEnabled = ParameterDataService.get(ParamNavigator::class.java).enabled
+        val isClockEnabled = ParameterDataService.get(ParamClock::class.java).enabled
+
+        // Calculate padding
+        val coordMargin: Int = if (isCoordinatesEnabled) 18f.spToPx() else 0
+
+        val navVerticalMargin: Int = if (isNavigationEnabled && isPortrait) resources.getDimension(R.dimen.navButtonWidth).toInt() else 0
+        val navHorizontalMargin: Int = if (isNavigationEnabled && !isPortrait) resources.getDimension(R.dimen.navButtonWidth).toInt() else 0
+
+        val fabVerticalMargin: Int = if (isPortrait) 56f.dpToPx() + resources.getDimension(R.dimen.fabMargin).toInt() else 0
+        val fabHorizontalMargin: Int = if (!isPortrait) 56f.dpToPx() + resources.getDimension(R.dimen.fabMargin).toInt() else 0
+
+        val clockVerticalMargin: Int = if (isClockEnabled && isPortrait) resources.getDimension(R.dimen.clockButtonWidth).toInt() else 0
+        val clockHorizontalMargin: Int = if (isClockEnabled && !isPortrait) resources.getDimension(R.dimen.clockButtonWidth).toInt() else 0
+
+        // Calculate margins and board dimensions
+        val verticalMargin = coordMargin + navVerticalMargin + fabVerticalMargin + clockVerticalMargin
+        val horizontalMargin = coordMargin + navHorizontalMargin + fabHorizontalMargin + clockHorizontalMargin
+        val boardHeight = mainFrameHeight - verticalMargin
+        val boardWidth = mainFrameWidth - horizontalMargin
+
+        // Calculate the tile size
+        val tileSize = if (boardHeight < boardWidth) boardHeight / 8 else boardWidth / 8
+
+        // Layout parameters for board and animation panel
+        val lp = CoordinatorLayout.LayoutParams(tileSize * 8, tileSize * 8)
+        lp.setMargins(coordMargin,0,0,0)
 
         // Draws the board
-        binding.boardPanelLayout.drawTiles(binding.mainFrame.width, binding.mainFrame.height, approxBoardMarginPixels)
+        binding.boardPanelLayout.layoutParams = lp
+        binding.boardPanelLayout.drawTiles(tileSize)
 
         // Draws the coordinates if enabled
-        if(pShowCoordinates) {
+        if(isCoordinatesEnabled) {
             binding.coordPanelLayout.show(true)
-            binding.coordPanelLayout.draw(binding.boardPanelLayout.frameSize, binding.boardPanelLayout.frameSize, binding.boardPanelLayout.tileSize,0)
+            binding.coordPanelLayout.draw(tileSize, coordMargin)
         }
         else {
             binding.coordPanelLayout.show(false)
         }
+
+        // Set up the Animation panel
+        binding.animationPanelLayout.layoutParams = lp
+
+        // Set up the total board boundary view including the coordinates panel if enabled
+        val totalBoardLP = CoordinatorLayout.LayoutParams(tileSize * 8 + coordMargin, tileSize * 8 + coordMargin)
+        binding.totalBoardBoundaryView.layoutParams = totalBoardLP
 
         // Refresh shake animation
         binding.boardPanelLayout.shakeRefresh()
@@ -1213,7 +1250,7 @@ class MainActivity : AppCompatActivity(), TilePanel.OnTilePanelInteractionListen
     fun rotateBoard(pRotation: Int) {
         binding.boardPanelLayout.rotate(pRotation)
         binding.animationPanelLayout.rotate(pRotation)
-        binding.coordPanelLayout.draw(binding.boardPanelLayout.frameSize, binding.boardPanelLayout.frameSize, binding.boardPanelLayout.tileSize, pRotation)
+        binding.coordPanelLayout.setCoordLabels(pRotation)
     }
 
 
@@ -1778,8 +1815,8 @@ class MainActivity : AppCompatActivity(), TilePanel.OnTilePanelInteractionListen
         val computerPlayerEnabled = ParameterDataService.get(ParamComputerPlayer::class.java).enabled
         if (computerPlayerEnabled) {
             val skillLevel = ParameterDataService.get(ParamLimitSkillLevel::class.java).level
-            if (skillLevel in 0..Constants.skillLevelList.lastIndex) {
-                binding.levelIndicatorText.text = "${(Constants.skillLevelList[skillLevel])}"
+            if (skillLevel in 0..Constants.strengthList.lastIndex) {
+                binding.levelIndicatorText.text = "${(Constants.strengthList[skillLevel].pLabel)}"
             }
             else {
                 binding.levelIndicatorText.text = ""

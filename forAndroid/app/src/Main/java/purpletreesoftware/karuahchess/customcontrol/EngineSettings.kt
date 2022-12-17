@@ -34,6 +34,7 @@ import androidx.fragment.app.DialogFragment
 import purpletreesoftware.karuahchess.MainActivity
 import purpletreesoftware.karuahchess.common.Constants
 import purpletreesoftware.karuahchess.common.InputFilterRange
+import purpletreesoftware.karuahchess.common.Strength
 import purpletreesoftware.karuahchess.databinding.FragmentEnginesettingsBinding
 import purpletreesoftware.karuahchess.model.parameter.ParameterDataService
 import purpletreesoftware.karuahchess.model.parameterobj.*
@@ -97,17 +98,17 @@ class EngineSettings : DialogFragment() {
 
 
         // Set skill level spinner
-        val adapter: ArrayAdapter<String> = ArrayAdapter<String>(
+        val adapter: ArrayAdapter<Strength> = ArrayAdapter<Strength>(
             activity as Context,
             android.R.layout.simple_spinner_item,
-            Constants.skillLevelList
+            Constants.strengthList
         )
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         binding.skillLevelSpinner.adapter = adapter
 
         // Set the spinner position
         val skillLevel = ParameterDataService.get(ParamLimitSkillLevel::class.java).level
-        if (skillLevel in 0..Constants.skillLevelList.lastIndex) {
+        if (skillLevel in 0..Constants.strengthList.lastIndex) {
             binding.skillLevelSpinner.setSelection(skillLevel)
         }
 
@@ -119,24 +120,6 @@ class EngineSettings : DialogFragment() {
         val limitDepth = ParameterDataService.get(ParamLimitDepth::class.java).depth.toFloat()
         if (limitDepth in binding.depthLimitSlider.valueFrom .. binding.depthLimitSlider.valueTo) {
             binding.depthLimitSlider.value = limitDepth
-        }
-
-        binding.nodeLimitValueEditText.error = null
-        binding.nodeLimitValueEditText.filters = arrayOf<InputFilter>(
-            InputFilterRange(0, 2000000000),
-            InputFilter.LengthFilter(10))
-        binding.nodeLimitValueEditText.doAfterTextChanged { text ->
-            val inputNumber: Int = text.toString().toIntOrNull() ?: 0
-            if (inputNumber < 10 || inputNumber > 2000000000) {
-                val maxStr = NumberFormat.getInstance().format(2000000000)
-                binding.nodeLimitValueEditText.error = "Value should be between 10 and $maxStr."
-            }
-        }
-
-        val nodes = ParameterDataService.get(ParamLimitNodes::class.java).nodes
-        // Leave blank if zero
-        if (nodes in 1..2000000000) {
-            binding.nodeLimitValueEditText.setText(nodes.toString())
         }
 
         binding.moveDurationLimitValueEditText.error = null
@@ -236,14 +219,6 @@ class EngineSettings : DialogFragment() {
             ParameterDataService.set(limitDepth)
         }
 
-        val limitNodes = ParameterDataService.get(ParamLimitNodes::class.java)
-        var limitNodesValue: Int = binding.nodeLimitValueEditText.text.toString().toIntOrNull() ?: 0
-        if (limitNodesValue < 10 || limitNodesValue > 2000000000) limitNodesValue = 10 // Ensure within limits
-        if (limitNodes.nodes != limitNodesValue) {
-            limitNodes.nodes = limitNodesValue
-            ParameterDataService.set(limitNodes)
-        }
-
         val limitMoveDuration = ParameterDataService.get(ParamLimitMoveDuration::class.java)
         val limitMoveDurationValue: Int = binding.moveDurationLimitValueEditText.text.toString().toIntOrNull() ?: 0
         if (limitMoveDuration.moveDurationMS != limitMoveDurationValue) {
@@ -296,9 +271,6 @@ class EngineSettings : DialogFragment() {
         binding.depthLimitSlider.alpha = advancedOpacity
         binding.depthLimitText.isEnabled = advanced
         binding.depthLimitValueText.isEnabled = advanced
-        binding.nodeLimitValueEditText.isEnabled = advanced
-        binding.nodeLimitText.isEnabled = advanced
-        binding.nodeLimitValueEditText.isEnabled = advanced
         binding.moveDurationLimitValueEditText.isEnabled = advanced
         binding.moveDurationLimitText.isEnabled = advanced
         binding.moveDurationLimitValueEditText.isEnabled = advanced
@@ -320,8 +292,6 @@ class EngineSettings : DialogFragment() {
         binding.skillLevelSpinner.setSelection(ParamLimitSkillLevel().level)
         binding.computerAdvancedSettingsCheckBox.isChecked = ParamLimitAdvanced().enabled
         binding.depthLimitSlider.value = ParamLimitDepth().depth.toFloat()
-        binding.nodeLimitValueEditText.setText(if (ParamLimitNodes().nodes > 0)  ParamLimitNodes().nodes.toString() else "")
-        binding.nodeLimitValueEditText.error = null
         binding.moveDurationLimitValueEditText.setText(if (ParamLimitMoveDuration().moveDurationMS > 0) ParamLimitMoveDuration().moveDurationMS.toString() else "")
         binding.moveDurationLimitValueEditText.error = null
         binding.threadsLimitSlider.value = ParamLimitThreads().threads.toFloat()

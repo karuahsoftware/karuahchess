@@ -18,42 +18,42 @@
 -->
 
 <FrameLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        xmlns:tools="http://schemas.android.com/tools"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        tools:context=".MainActivity"
-        android:orientation="vertical">
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".MainActivity"
+    android:orientation="vertical">
 
     <com.google.android.material.appbar.AppBarLayout
-            android:id="@+id/appBarTop"
-            android:layout_height="?android:attr/actionBarSize"
-            android:layout_width="match_parent"
-            >
+        android:id="@+id/appBarTop"
+        android:layout_height="?android:attr/actionBarSize"
+        android:layout_width="match_parent"
+        >
 
         <com.google.android.material.appbar.MaterialToolbar
-                android:id="@+id/toolbarTop"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:layout_scrollFlags="noScroll"
-                app:titleTextColor="@color/colorWhite"
-                style="@style/MainToolbar"
+            android:id="@+id/toolbarTop"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_scrollFlags="noScroll"
+            app:titleTextColor="@color/colorWhite"
+            style="@style/MainToolbar"
             >
 
             <ImageView
-               android:id="@+id/indicatorImageView"
-               android:layout_width="24dp"
-               android:layout_height="24dp"
-               android:adjustViewBounds="true"
-               android:background="@drawable/indicatorwhite"
-               android:contentDescription="Indicator"
-               android:layout_gravity="center_vertical|start"
-               android:text=""
-               android:layout_marginTop="0dp"
-               android:layout_marginBottom="0dp"
-               android:layout_marginStart="4dp"
-               android:layout_marginEnd="4dp"
+                android:id="@+id/indicatorImageView"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:adjustViewBounds="true"
+                android:background="@drawable/indicatorwhite"
+                android:contentDescription="Indicator"
+                android:layout_gravity="center_vertical|start"
+                android:text=""
+                android:layout_marginTop="0dp"
+                android:layout_marginBottom="0dp"
+                android:layout_marginStart="4dp"
+                android:layout_marginEnd="4dp"
                 />
 
             <TextView
@@ -85,38 +85,45 @@
         >
 
         <purpletreesoftware.karuahchess.customcontrol.TilePanel
-                android:id="@+id/boardPanelLayout"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="top|start"
+            android:id="@+id/boardPanelLayout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="top|start"
             >
         </purpletreesoftware.karuahchess.customcontrol.TilePanel>
 
         <purpletreesoftware.karuahchess.customcontrol.TileAnimation
-                android:id="@+id/animationPanelLayout"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="top|start"
+            android:id="@+id/animationPanelLayout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="top|start"
             >
         </purpletreesoftware.karuahchess.customcontrol.TileAnimation>
 
         <purpletreesoftware.karuahchess.customcontrol.CoordPanel
-                android:id="@+id/coordPanelLayout"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="top|start"
-                android:padding="0dp"
+            android:id="@+id/coordPanelLayout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="top|start"
+            android:padding="0dp"
             >
         </purpletreesoftware.karuahchess.customcontrol.CoordPanel>
+
+        <View
+            android:id="@+id/totalBoardBoundaryView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="top|start"
+            />
 
         <LinearLayout
             android:id="@+id/adjacentControlLayout"
             android:orientation="horizontal"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:layout_anchor="@id/boardPanelLayout"
+            app:layout_anchor="@id/coordPanelLayout"
             app:layout_anchorGravity="start|bottom"
-            android:layout_gravity="start|bottom">
+            >
 
             <purpletreesoftware.karuahchess.customcontrol.MoveNavigator
                 android:id="@+id/navigatorLayout"
@@ -137,11 +144,11 @@
         </LinearLayout>
 
         <LinearLayout
-                android:id="@+id/floatingActionButtonLayout"
-                android:orientation="horizontal"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="bottom|end">
+            android:id="@+id/floatingActionButtonLayout"
+            android:orientation="horizontal"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|end">
 
             <com.google.android.material.floatingactionbutton.FloatingActionButton
                 android:id="@+id/newAction"
@@ -156,15 +163,15 @@
 
 
             <com.google.android.material.floatingactionbutton.FloatingActionButton
-                    android:id="@+id/showLastMoveAction"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    app:fabSize="@integer/fabSize"
-                    android:src="@drawable/ic_viewlast"
-                    android:layout_margin="@dimen/fabMargin"
-                    android:elevation="8dp"
-                    app:maxImageSize="@dimen/fabMaxImageSize"
-            />
+                android:id="@+id/showLastMoveAction"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:fabSize="@integer/fabSize"
+                android:src="@drawable/ic_viewlast"
+                android:layout_margin="@dimen/fabMargin"
+                android:elevation="8dp"
+                app:maxImageSize="@dimen/fabMaxImageSize"
+                />
 
 
             <com.google.android.material.floatingactionbutton.FloatingActionButton

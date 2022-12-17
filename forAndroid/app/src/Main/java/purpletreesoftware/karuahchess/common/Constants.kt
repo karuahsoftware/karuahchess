@@ -47,6 +47,9 @@ class Constants {
         const val WHITEPIECE = 1
         const val BLACKPIECE = -1
 
+        // Node Limits
+        const val NODELIMIT_STANDARD = 2000000
+        const val NODELIMIT_HIGH = 100000000
 
         val FileDict = mapOf<String, IntArray>(
             "a" to intArrayOf( 0, 8, 16, 24, 32, 40, 48, 56 ),
@@ -93,29 +96,29 @@ class Constants {
             "1" to intArrayOf( 56, 57, 58, 59, 60, 61, 62, 63)
         )
 
-
-        val skillLevelList = arrayListOf(
-            "Beginner",
-            "Level 2",
-            "Level 3",
-            "Level 4",
-            "Level 5",
-            "Level 6",
-            "Level 7",
-            "Level 8",
-            "Level 9",
-            "Level 10",
-            "Level 11",
-            "Level 12",
-            "Level 13",
-            "Level 14",
-            "Level 15",
-            "Level 16",
-            "Level 17",
-            "Level 18",
-            "Level 19",
-            "Level 20",
-            "Level 21")
+        // Skill level
+        val strengthList = arrayListOf(
+            Strength("Beginner", -9, 5, 80),
+            Strength("Level 2", -5 ,5, 100),
+            Strength("Level 3", -1, 5, 200),
+            Strength("Level 4", 1, 5, 300),
+            Strength("Level 5", 2, 5, 400),
+            Strength("Level 6", 3, 5, 500),
+            Strength("Level 7", 5, 5, 600),
+            Strength("Level 8", 7, 5, 700),
+            Strength("Level 9", 8, 5, 1000),
+            Strength("Level 10", 9, 6, 2000),
+            Strength("Level 11", 10, 6, 2000),
+            Strength("Level 12", 11, 7, 2000),
+            Strength("Level 13", 12, 7, 2000),
+            Strength("Level 14", 13, 8, 2000),
+            Strength("Level 15", 14, 9, 4000),
+            Strength("Level 16", 15, 10, 8000),
+            Strength("Level 17", 16, 13, 10000),
+            Strength("Level 18", 17, 15, 10000),
+            Strength("Level 19", 18, 18, 10000),
+            Strength("Level 20", 19, 20, 10000),
+            Strength("Level 21",  20, 22, 10000));
 
         // Board square colour
         val darkSquareColourList = arrayListOf(

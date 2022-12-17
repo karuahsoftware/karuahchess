@@ -169,41 +169,12 @@
             app:labelBehavior="gone"
             />
 
-        <TextView android:id="@+id/nodeLimitText"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Node limit"
-            style="@style/TextAppearance.MaterialComponents.Body1"
-            app:layout_constraintTop_toBottomOf="@id/depthLimitValueText"
-            app:layout_constraintEnd_toStartOf="@id/firstColumnBarrier"
-            app:layout_constraintStart_toStartOf="@id/advancedSettingsGuideline"
-            app:layout_constraintHorizontal_bias="1.0"
-            android:paddingTop="15dp"
-            />
-
-
-        <EditText android:id="@+id/nodeLimitValueEditText"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            style="@style/TextAppearance.MaterialComponents.Body1"
-            app:layout_constraintTop_toBottomOf="@id/depthLimitValueText"
-            app:layout_constraintStart_toEndOf="@id/firstColumnBarrier"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0"
-            android:digits="0123456789"
-            android:inputType="number"
-            android:importantForAutofill="no"
-            android:minWidth="150dp"
-            android:layout_marginStart="5dp"
-            android:tooltipText="Valid values are 10 to 2,000,000,000"
-            />
-
         <TextView android:id="@+id/moveDurationLimitText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Move time limit (ms)"
             style="@style/TextAppearance.MaterialComponents.Body1"
-            app:layout_constraintTop_toBottomOf="@id/nodeLimitText"
+            app:layout_constraintTop_toBottomOf="@id/depthLimitValueText"
             app:layout_constraintEnd_toStartOf="@id/firstColumnBarrier"
             app:layout_constraintStart_toStartOf="@id/advancedSettingsGuideline"
             app:layout_constraintHorizontal_bias="1.0"
@@ -214,7 +185,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             style="@style/TextAppearance.MaterialComponents.Body1"
-            app:layout_constraintTop_toBottomOf="@id/nodeLimitText"
+            app:layout_constraintTop_toBottomOf="@id/depthLimitValueText"
             app:layout_constraintStart_toEndOf="@id/firstColumnBarrier"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0"
@@ -276,7 +247,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:barrierDirection="end"
-            app:constraint_referenced_ids="depthLimitText,depthLimitValueText,nodeLimitText,moveDurationLimitText,threadsLimitText,threadsLimitValueText" />
+            app:constraint_referenced_ids="depthLimitText,depthLimitValueText,moveDurationLimitText,threadsLimitText,threadsLimitValueText" />
 
 
         <androidx.constraintlayout.widget.Barrier

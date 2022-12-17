@@ -101,9 +101,9 @@ class CoordPanel: ConstraintLayout {
     }
 
     /**
-     * Set coordinate labels
+     * Set coordinate labels based on board rotation
      */
-    private fun setCoordLabels(pRotation: Int) {
+    fun setCoordLabels(pRotation: Int) {
 
         for (index in 0..7) {
             if (pRotation == 0) {
@@ -154,7 +154,7 @@ class CoordPanel: ConstraintLayout {
     /**
      * Draw layout.
      */
-    fun draw(pPanelWidth:Int, pPanelHeight:Int, pTileSize: Int, pRotation: Int) {
+    fun draw(pTileSize: Int, pMargin: Int) {
 
         // Only run this function if board is visible
         if (this.visibility != View.VISIBLE) return
@@ -167,10 +167,10 @@ class CoordPanel: ConstraintLayout {
         coordLayout.removeAllViews()
 
         // Set layout size
-        this.layoutParams = CoordinatorLayout.LayoutParams(pPanelWidth, pPanelHeight)
+        val lp = CoordinatorLayout.LayoutParams(pTileSize * 8 + pMargin, pTileSize * 8 + pMargin)
+        this.layoutParams = lp
 
         // Connect up the layout
-        setCoordLabels(pRotation)
         val coordListX = getCoordList(AxisEnum.X)
         val coordListY = getCoordList(AxisEnum.Y)
 

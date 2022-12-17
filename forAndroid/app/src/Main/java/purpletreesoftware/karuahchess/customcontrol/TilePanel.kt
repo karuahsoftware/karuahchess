@@ -33,6 +33,7 @@ import android.graphics.drawable.Drawable
 import android.view.DragEvent
 import android.view.HapticFeedbackConstants
 import android.view.LayoutInflater
+import androidx.coordinatorlayout.widget.CoordinatorLayout
 import purpletreesoftware.karuahchess.R
 import purpletreesoftware.karuahchess.R.color
 import purpletreesoftware.karuahchess.common.Constants
@@ -100,17 +101,6 @@ class TilePanel: ConstraintLayout {
 
     // Size of a single board tile
     var tileSize: Int = 0
-        private set
-
-    // Size of the board (basically tiles * 8)
-    var boardSize: Int = 0
-        private set
-
-    // Size of the frame (basically boardSize plus margins)
-    var frameSize: Int = 0
-        private set
-
-    var framePadding: Int = 0
         private set
 
     constructor(context: Context) : super(context) {
@@ -350,28 +340,16 @@ class TilePanel: ConstraintLayout {
     /**
      * Draw tiles on layout. Dimensions are the available area that the board sits on
      */
-    fun drawTiles(pPanelWidth:Int, pPanelHeight:Int, pApproximateBoardMargin: Int) {
+    fun drawTiles(pTileSize: Int) {
+        tileSize = pTileSize
 
         // Set up tile list
         val cset = ConstraintSet()
 
-        binding.boardLayout.removeAllViews()
-
-        // Caclulate sizes
-        if (pPanelHeight < pPanelWidth) {
-            tileSize =  (pPanelHeight - pApproximateBoardMargin) / 8
-            boardSize = tileSize * 8
-            frameSize = pPanelHeight
-            framePadding = frameSize - boardSize
-        } else {
-            tileSize = (pPanelWidth - pApproximateBoardMargin) / 8
-            boardSize = tileSize * 8
-            frameSize = pPanelWidth
-            framePadding = frameSize - boardSize
-        }
+        this.removeAllViews()
 
         for(tile in _tileList) {
-            binding.boardLayout.addView(tile, tile.index)
+            this.addView(tile, tile.index)
 
             // Set constraints
             cset.constrainWidth(tile.id, tileSize)
@@ -390,7 +368,8 @@ class TilePanel: ConstraintLayout {
 
         }
 
-        cset.applyTo(binding.boardLayout)
+        cset.applyTo(this)
+
 
     }
 
@@ -417,11 +396,7 @@ class TilePanel: ConstraintLayout {
             tile.piece.rotation = -pRotation.toFloat()
         }
 
-        // Set padding as pixels
-        if(pRotation == 0) this.setPadding(framePadding,0,0,framePadding)
-        else if(pRotation == 90) this.setPadding(0,0,framePadding,framePadding)
-        else if(pRotation == 180) this.setPadding(0,framePadding,framePadding,0)
-        else if(pRotation == 270) this.setPadding(framePadding,framePadding,0,0)
+
 
     }
 
@@ -575,7 +550,7 @@ class TilePanel: ConstraintLayout {
 
         val border = GradientDrawable()
         border.setStroke(1, pDarkSqColour) //black border with full opacity
-        binding.boardLayout.foreground = border
+        this.foreground = border
 
     }
 

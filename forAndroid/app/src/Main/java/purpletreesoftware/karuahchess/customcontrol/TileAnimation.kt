@@ -54,17 +54,10 @@ class TileAnimation: ConstraintLayout {
     /**
      * Runs an animation sequence
      */
-    suspend fun runAnimation(pTilePanel: TilePanel, pAnimationList: ArrayList<TileAnimationInstruction>, pPanelMargin: Int)
+    suspend fun runAnimation(pTilePanel: TilePanel, pAnimationList: ArrayList<TileAnimationInstruction>)
     {
             // Only let one animation set run at a time
             animationThrottle.acquire()
-
-            // Set frame size to match board size
-            val frameSize = pTilePanel.boardSize
-
-            val params = CoordinatorLayout.LayoutParams(frameSize, frameSize)
-            params.setMargins(pPanelMargin, 0, 0, 0)
-            this.layoutParams = params
 
             // Set up animation
             this.removeAllViews()
