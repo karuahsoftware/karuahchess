@@ -21,8 +21,8 @@ using KaruahChess.Model;
 using KaruahChess.Model.ParameterObjects;
 using System;
 using System.Collections.Generic;
-using Windows.UI.Xaml;
-using Windows.UI.Xaml.Controls;
+using Microsoft.UI.Xaml;
+using Microsoft.UI.Xaml.Controls;
 
 
 namespace KaruahChess.CustomControl

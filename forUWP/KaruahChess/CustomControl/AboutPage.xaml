@@ -47,35 +47,35 @@
                 <StackPanel Orientation="Vertical">
                     <StackPanel Orientation="Horizontal">
                         <TextBlock x:Name="PageIcon" FontFamily="Segoe MDL2 Assets" FontSize="{x:Bind StyleTemplate.IconFontSize}" Text="&#xE825;" VerticalAlignment="Center"/>
-                        <TextBlock  TextWrapping="WrapWholeWords" FontSize="{x:Bind StyleTemplate.FontSize}" FontWeight="Bold" VerticalAlignment="Center"> 
+                        <TextBlock  TextWrapping="WrapWholeWords" FontWeight="Bold" VerticalAlignment="Center"> 
                         About Karuah Chess
                         </TextBlock>
                     </StackPanel>
                     
                     <StackPanel Orientation="Vertical">
-                        <TextBlock x:Name="VersionText" TextWrapping="WrapWholeWords" FontSize="{x:Bind StyleTemplate.FontSize}" Margin="0,0,0,10"/>
+                        <TextBlock x:Name="VersionText" TextWrapping="WrapWholeWords" Margin="0,0,0,10"/>
 
-                        <TextBlock  TextWrapping="WrapWholeWords" FontSize="{x:Bind StyleTemplate.FontSize}" Margin="0,0,0,10"> 
+                        <TextBlock  TextWrapping="WrapWholeWords" Margin="0,0,0,10"> 
                             Karuah Chess is a chess playing program.<LineBreak/>Copyright © 2020 Karuah Software<LineBreak/>You can visit us at <Hyperlink NavigateUri="https://www.facebook.com/karuahchess" >https://www.facebook.com/karuahchess</Hyperlink>.
                         </TextBlock>
 
-                        <TextBlock  TextWrapping="WrapWholeWords" FontSize="{x:Bind StyleTemplate.FontSize}" Margin="0,0,0,10"> 
+                        <TextBlock  TextWrapping="WrapWholeWords" Margin="0,0,0,10"> 
                             Karuah Chess uses StockFish 15. You can find out more about StockFish at <Hyperlink NavigateUri="https://stockfishchess.org" >https://stockfishchess.org</Hyperlink>.
                         </TextBlock>
 
-                        <TextBlock  TextWrapping="WrapWholeWords" FontSize="{x:Bind StyleTemplate.FontSize}" Margin="0,0,0,10"> 
+                        <TextBlock  TextWrapping="WrapWholeWords" Margin="0,0,0,10"> 
                             The full source code for Karuah Chess is available at <Hyperlink NavigateUri="https://github.com/karuahsoftware/karuahchess" >https://github.com/karuahsoftware/karuahchess</Hyperlink>.
                         </TextBlock>
 
-                        <TextBlock  TextWrapping="WrapWholeWords" FontSize="{x:Bind StyleTemplate.FontSize}" FontWeight="Bold" Margin="0,0,0,0"> 
+                        <TextBlock  TextWrapping="WrapWholeWords" FontWeight="Bold" Margin="0,0,0,0"> 
                             Karuah Chess is distributed under the GNU General Public License Version 3 (GPLv3).
                         </TextBlock>
 
-                        <TextBlock  TextWrapping="WrapWholeWords" FontSize="{x:Bind StyleTemplate.FontSize}" Margin="0,0,0,0"> 
+                        <TextBlock  TextWrapping="WrapWholeWords" Margin="0,0,0,0"> 
                             Karuah Chess is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
                         </TextBlock>
 
-                        <TextBlock  TextWrapping="WrapWholeWords" FontSize="{x:Bind StyleTemplate.FontSize}" Margin="0,0,0,10"> 
+                        <TextBlock  TextWrapping="WrapWholeWords" Margin="0,0,0,10"> 
                             Karuah Chess is distributed in the hope that it will be useful,but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for full details at <Hyperlink NavigateUri="https://www.gnu.org/licenses/gpl-3.0.txt" >https://www.gnu.org/licenses/gpl-3.0.txt</Hyperlink>.
                         </TextBlock>
                     </StackPanel>
@@ -83,7 +83,7 @@
                 </StackPanel>
             </ScrollViewer>
 
-            <Button  x:Name="btnCloseButton" Grid.Row="1" Grid.Column="0"  Content="Close" Width="80"  VerticalAlignment="Top" Click="btnCloseButton_Click" FontSize="{x:Bind StyleTemplate.FontSize}" Style="{StaticResource ButtonStyle}"/>
+            <Button  x:Name="btnCloseButton" Grid.Row="1" Grid.Column="0"  Content="Close" Width="80"  VerticalAlignment="Top" Click="btnCloseButton_Click" Style="{StaticResource ButtonStyle}"/>
         </Grid>
     </Popup>
 </UserControl>

@@ -17,8 +17,8 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
 using System;
-using Windows.UI.Xaml;
-using Windows.UI.Xaml.Controls;
+using Microsoft.UI.Xaml;
+using Microsoft.UI.Xaml.Controls;
 using System.Collections.Generic;
 using KaruahChess.Common;
 using KaruahChess.Model.ParameterObjects;
@@ -33,9 +33,8 @@ namespace KaruahChess.CustomControl
         public CustomStyleTemplate StyleTemplate { get; set; }
 
         private ViewModel.BoardViewModel _boardVM;
-        private readonly List<string> skillLevelList = Constants.skillLevelList;
-
-        private readonly string nodeLimitToolTip = "Valid values are 10 to " + 2000000000.ToString("N0") + ".";
+        private readonly List<Strength> strengthList = Constants.strengthList;
+                
         private readonly string moveDurationLimitToolTip = "Valid values are 1 to " + 600000.ToString("N0") + ". Leave blank for no limit.";
 
 
@@ -82,19 +81,16 @@ namespace KaruahChess.CustomControl
             ComputerPlayerCheckBox.IsChecked = _boardVM.ComputerPlayerEnabled;
             ComputerMoveFirstCheckBox.IsChecked = _boardVM.ComputerMoveFirstEnabled;
             RandomiseFirstMoveCheckBox.IsChecked = _boardVM.RandomiseFirstMoveEnabled;
-            ComputerSkillLevelCombo.SelectedIndex = Math.Clamp(_boardVM.LimitSkillLevel, 0, Constants.skillLevelList.Count - 1);
+            ComputerSkillLevelCombo.SelectedIndex = Math.Clamp(_boardVM.LimitSkillLevel, 0, Constants.strengthList.Count - 1);
             LevelAutoCheckBox.IsChecked = _boardVM.LevelAutoEnabled;
             ComputerAdvancedSettingsCheckBox.IsChecked = _boardVM.LimitAdvancedEnabled;
-            DepthLimitSlider.Value = Math.Clamp(_boardVM.limitDepth, DepthLimitSlider.Minimum, DepthLimitSlider.Maximum);
-            NodeLimitTextBox.Text = _boardVM.limitNodes.ToString();
+            DepthLimitSlider.Value = Math.Clamp(_boardVM.limitDepth, DepthLimitSlider.Minimum, DepthLimitSlider.Maximum);            
             MoveDurationLimitTextBox.Text = _boardVM.limitMoveDuration == 0 ? "" : _boardVM.limitMoveDuration.ToString();
             ThreadsSlider.Value = Math.Clamp(_boardVM.limitThreads, ThreadsSlider.Minimum, ThreadsSlider.Maximum);
 
             SetControlState();
 
             // Clear validation errors
-            NodeLimitErrorText.Text = "";
-            NodeLimitErrorText.Visibility = Visibility.Collapsed;
             MoveDurationLimitErrorText.Text = "";
             MoveDurationLimitErrorText.Visibility = Visibility.Collapsed;
 
@@ -153,11 +149,10 @@ namespace KaruahChess.CustomControl
             ComputerPlayerCheckBox.IsChecked = new ParamComputerPlayer().Enabled;
             ComputerMoveFirstCheckBox.IsChecked = new ParamComputerMoveFirst().Enabled;
             RandomiseFirstMoveCheckBox.IsChecked = new ParamRandomiseFirstMove().Enabled;
-            ComputerSkillLevelCombo.SelectedIndex = Math.Clamp(new ParamLimitSkillLevel().level, 0, Constants.skillLevelList.Count - 1);
+            ComputerSkillLevelCombo.SelectedIndex = Math.Clamp(new ParamLimitSkillLevel().level, 0, Constants.strengthList.Count - 1);
             LevelAutoCheckBox.IsChecked = new ParamLevelAuto().Enabled;
             ComputerAdvancedSettingsCheckBox.IsChecked = new ParamLimitAdvanced().Enabled;
-            DepthLimitSlider.Value = new ParamLimitDepth().depth;
-            NodeLimitTextBox.Text = new ParamLimitNodes().nodes.ToString();
+            DepthLimitSlider.Value = new ParamLimitDepth().depth;            
 
             var defaultMoveDuration = new ParamLimitMoveDuration().moveDurationMS;
             MoveDurationLimitTextBox.Text = defaultMoveDuration == 0 ? "" : defaultMoveDuration.ToString();
@@ -209,11 +204,7 @@ namespace KaruahChess.CustomControl
             
             _boardVM.LimitAdvancedEnabled = ComputerAdvancedSettingsCheckBox.IsChecked == true;
             _boardVM.limitDepth = (int)DepthLimitSlider.Value;
-                        
-             Int32.TryParse(NodeLimitTextBox.Text, out int limitNodes);
-            if (limitNodes < 10 || limitNodes > 2000000000) limitNodes = 10;
-            _boardVM.limitNodes = limitNodes;
-
+            
             Int32.TryParse(MoveDurationLimitTextBox.Text, out int limitMoveDuration);
             if (limitMoveDuration < 0 || limitMoveDuration > 600000) limitMoveDuration = 0;
             _boardVM.limitMoveDuration = limitMoveDuration;
@@ -260,10 +251,7 @@ namespace KaruahChess.CustomControl
             // Advanced Settings
             DepthLimitSlider.IsEnabled = advanced;
             DepthLimitText.Opacity = advancedOpacity;
-            DepthLimitValueText.Opacity = advancedOpacity;
-            NodeLimitTextBox.IsEnabled = advanced;
-            NodeLimitText.Opacity = advancedOpacity;
-            NodeLimitErrorText.Opacity = advancedOpacity;
+            DepthLimitValueText.Opacity = advancedOpacity;            
             MoveDurationLimitTextBox.IsEnabled = advanced;
             MoveDurationLimitText.Opacity = advancedOpacity;
             MoveDurationLimitErrorText.Opacity = advancedOpacity;
@@ -278,32 +266,7 @@ namespace KaruahChess.CustomControl
         {
             return pValue > 0 ? pValue.ToString("N0") : "off";
         }
-
-        
-        // Before changing event, filter out invalid characters
-        private void NodeLimitTextBox_OnBeforeTextChanging(TextBox sender, TextBoxBeforeTextChangingEventArgs args)
-        {
-            args.Cancel = System.Text.RegularExpressions.Regex.IsMatch(args.NewText, "[^0-9]");
-            
-        }
-
-        // Display validation error
-        private void NodeLimitTextBox_TextChanged(object sender, TextChangedEventArgs e)
-        {
-            var tBox = sender as TextBox;
-            Int32.TryParse(tBox.Text, out int nodeLimit);
-
-            if (nodeLimit < 10 || nodeLimit > 2000000000)
-            {                
-                NodeLimitErrorText.Text = "Valid values are 10 to " + 2000000000.ToString("N0") + ".";
-                NodeLimitErrorText.Visibility = Visibility.Visible;
-            }
-            else
-            {
-                NodeLimitErrorText.Text = "";
-                NodeLimitErrorText.Visibility = Visibility.Collapsed;
-            }
-        }
+               
 
         // Before changing event, filter out invalid characters
         private void MoveDurationLimitTextBox_OnBeforeTextChanging(TextBox sender, TextBoxBeforeTextChangingEventArgs args)

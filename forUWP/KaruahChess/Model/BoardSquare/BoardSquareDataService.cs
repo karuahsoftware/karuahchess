@@ -109,7 +109,7 @@ namespace KaruahChess.Model
                             // Change is not immediately visible to the user                        
                             if (!_hiddenSquares.Contains(sqIndex))
                             {
-                                 tile.SetVisibility(Windows.UI.Xaml.Visibility.Collapsed);
+                                 tile.SetVisibility(Microsoft.UI.Xaml.Visibility.Collapsed);
                                 _hiddenSquares.Add(sqIndex);
                             }
                         }
@@ -156,7 +156,7 @@ namespace KaruahChess.Model
                 // Hide square
                 if (!_hiddenSquares.Contains(pBoardSquareIndex))
                 {
-                    tile.SetVisibility(Windows.UI.Xaml.Visibility.Collapsed);
+                    tile.SetVisibility(Microsoft.UI.Xaml.Visibility.Collapsed);
                     _hiddenSquares.Add(pBoardSquareIndex);
                 }
 
@@ -171,7 +171,7 @@ namespace KaruahChess.Model
             foreach (var sqIndex in _hiddenSquares)
             {
                 var tile = BoardTiles[sqIndex];
-                tile.SetVisibility(Windows.UI.Xaml.Visibility.Visible);
+                tile.SetVisibility(Microsoft.UI.Xaml.Visibility.Visible);
             }
 
             _hiddenSquares.Clear();

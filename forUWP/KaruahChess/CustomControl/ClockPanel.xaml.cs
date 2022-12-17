@@ -17,8 +17,8 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
 using System;
-using Windows.UI.Xaml;
-using Windows.UI.Xaml.Controls;
+using Microsoft.UI.Xaml;
+using Microsoft.UI.Xaml.Controls;
 using KaruahChess.Common;
 
 namespace KaruahChess.CustomControl
@@ -35,11 +35,7 @@ namespace KaruahChess.CustomControl
 
         public ClockPanel()
         {
-            this.InitializeComponent();
-            
-            // Set default style template            
-            StyleTemplate = (ClockStyleTemplate)ClockStyleDefaultResourceDictionary["ClockStyleTemplateDefaultObject"];
-            
+            this.InitializeComponent();                        
         }
 
         /// <summary>
@@ -52,11 +48,7 @@ namespace KaruahChess.CustomControl
         /// </summary>
         public Clock BlackClock { get; private set; } = new Clock();
 
-        /// <summary>
-        /// A class containing styling info for the control
-        /// </summary>
-        public ClockStyleTemplate StyleTemplate { get; set; }
-        
+                
         /// <summary>
         /// Sets the board view model
         /// </summary>        

@@ -5,6 +5,7 @@
     xmlns:local="using:KaruahChess.CustomControl"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:common="using:KaruahChess.Common"
     mc:Ignorable="d"
     d:DesignHeight="300"
     d:DesignWidth="400"
@@ -47,7 +48,7 @@
 
             <StackPanel Orientation="Horizontal" Grid.Row="0" Grid.Column="0">
                 <TextBlock x:Name="PageIcon" FontFamily="Segoe MDL2 Assets" FontSize="{x:Bind StyleTemplate.IconFontSize}" Text="&#xE115;" VerticalAlignment="Center" Margin="0,0,5,0"/>
-                <TextBlock  TextWrapping="WrapWholeWords" FontSize="{x:Bind StyleTemplate.FontSize}" FontWeight="Bold" VerticalAlignment="Center"> 
+                <TextBlock  TextWrapping="WrapWholeWords" FontWeight="Bold" VerticalAlignment="Center"> 
                         Engine Settings
                 </TextBlock>
             </StackPanel>
@@ -60,7 +61,13 @@
                     <CheckBox x:Name="LevelAutoCheckBox" Content="Increase strength after win" Style="{StaticResource CheckBoxStyle}" />
                     <StackPanel Orientation="Horizontal" Margin="0,10,0,0">
                         <TextBlock x:Name="ComputerSkillLevelTitleText" Text="Strength" Style="{StaticResource TextBlockStyle}"/>
-                        <ComboBox x:Name="ComputerSkillLevelCombo" Margin="3,0,0,0" FontSize="{x:Bind StyleTemplate.FontSize}" ItemsSource="{x:Bind skillLevelList}"/>
+                        <ComboBox x:Name="ComputerSkillLevelCombo" Margin="3,0,0,0" ItemsSource="{x:Bind strengthList}">
+                            <ComboBox.ItemTemplate>
+                                <DataTemplate x:DataType="common:Strength">
+                                    <TextBlock Text="{x:Bind Label, Mode=OneTime}"/>
+                                </DataTemplate>
+                            </ComboBox.ItemTemplate>
+                        </ComboBox>
                     </StackPanel>
                     
                     <CheckBox x:Name="ComputerAdvancedSettingsCheckBox" Margin="0,20,0,0" Content="Advanced search settings" Style="{StaticResource CheckBoxStyle}" Click="ComputerAdvancedSettingsCheckBox_Click"/>
@@ -74,8 +81,7 @@
                         <Grid.RowDefinitions>
                             <RowDefinition Height="Auto" MinHeight="60"/>
                             <RowDefinition Height="Auto" MinHeight="60"/>
-                            <RowDefinition Height="Auto" MinHeight="60"/>
-                            <RowDefinition Height="Auto" MinHeight="60"/>
+                            <RowDefinition Height="Auto" MinHeight="60"/>                            
                         </Grid.RowDefinitions>
 
                         <StackPanel Orientation="Vertical" Grid.Row="0" Grid.Column="0" HorizontalAlignment="Right">
@@ -84,26 +90,19 @@
                         </StackPanel>
                         <Slider x:Name="DepthLimitSlider" Grid.Row="0" Grid.Column="1" HorizontalAlignment="Stretch" Margin="3,0,15,0" Minimum="0" Maximum="35" TickFrequency="5" TickPlacement="BottomRight" StepFrequency="1" SnapsTo="StepValues" IsThumbToolTipEnabled="False"/>
       
-                        <TextBlock x:Name="NodeLimitText" Grid.Row="1" Grid.Column="0" HorizontalAlignment="Right">Node limit</TextBlock>
-
-                        <StackPanel Orientation="Vertical" Grid.Row="1" Grid.Column="1" HorizontalAlignment="Stretch" VerticalAlignment="Top">
-                            <TextBox x:Name="NodeLimitTextBox" MaxLength="10" HorizontalAlignment="Stretch" VerticalAlignment="Top" TextChanged="NodeLimitTextBox_TextChanged" Margin="3,0,15,0" BeforeTextChanging="NodeLimitTextBox_OnBeforeTextChanging" Height="35" AcceptsReturn="False" TextWrapping="NoWrap" Style="{StaticResource TextBoxStyle}" ToolTipService.ToolTip="{x:Bind nodeLimitToolTip, Mode=OneTime}"/>
-                            <TextBlock x:Name="NodeLimitErrorText" TextWrapping="WrapWholeWords" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="3,0,0,10" Foreground="Red" Style="{StaticResource TextBlockStyle}" Visibility="Collapsed"/>
-                        </StackPanel>
-
-                        <TextBlock x:Name="MoveDurationLimitText" Grid.Row="2" Grid.Column="0" HorizontalAlignment="Right" VerticalAlignment="Top" TextWrapping="WrapWholeWords">Move time limit (ms)</TextBlock>
+                        <TextBlock x:Name="MoveDurationLimitText" Grid.Row="1" Grid.Column="0" HorizontalAlignment="Right" VerticalAlignment="Top" TextWrapping="WrapWholeWords">Move time limit (ms)</TextBlock>
                         
-                        <StackPanel Orientation="Vertical" Grid.Row="2" Grid.Column="1" HorizontalAlignment="Stretch" VerticalAlignment="Top">
-                            <TextBox x:Name="MoveDurationLimitTextBox" MaxLength="6" HorizontalAlignment="Stretch" VerticalAlignment="Top" TextChanged="MoveDurationLimitTextBox_TextChanged" Margin="3,0,15,0" BeforeTextChanging="MoveDurationLimitTextBox_OnBeforeTextChanging" MinWidth="80" Height="35" AcceptsReturn="False" TextWrapping="NoWrap" Style="{StaticResource TextBoxStyle}" ToolTipService.ToolTip="{x:Bind moveDurationLimitToolTip, Mode=OneTime}"/>
+                        <StackPanel Orientation="Vertical" Grid.Row="1" Grid.Column="1" HorizontalAlignment="Stretch" VerticalAlignment="Top">
+                            <TextBox x:Name="MoveDurationLimitTextBox" MaxLength="6" HorizontalAlignment="Stretch" VerticalAlignment="Top" TextChanged="MoveDurationLimitTextBox_TextChanged" Margin="3,0,15,0" BeforeTextChanging="MoveDurationLimitTextBox_OnBeforeTextChanging" MinWidth="80" Height="35" AcceptsReturn="False" TextWrapping="NoWrap" ToolTipService.ToolTip="{x:Bind moveDurationLimitToolTip, Mode=OneTime}"/>
                             <TextBlock x:Name="MoveDurationLimitErrorText" TextWrapping="WrapWholeWords" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="3,0,0,10" Foreground="Red" Style="{StaticResource TextBlockStyle}" Visibility="Collapsed"/>
                         </StackPanel>
 
 
-                        <StackPanel Orientation="Vertical" Grid.Row="3" Grid.Column="0" HorizontalAlignment="Right">
+                        <StackPanel Orientation="Vertical" Grid.Row="2" Grid.Column="0" HorizontalAlignment="Right">
                             <TextBlock x:Name="ThreadsText" HorizontalAlignment="Right" >CPU threads</TextBlock>
                             <TextBlock x:Name="ThreadsValueText" HorizontalAlignment="Right" Margin="0,0,10,0" Text="{x:Bind getValueZeroOff(ThreadsSlider.Value), Mode=OneWay}" />
                         </StackPanel>
-                        <Slider x:Name="ThreadsSlider" Grid.Row="3" Grid.Column="1" HorizontalAlignment="Stretch" Margin="3,0,15,0" Minimum="1" Maximum="15" TickFrequency="1" TickPlacement="BottomRight" StepFrequency="1"  SnapsTo="StepValues" IsThumbToolTipEnabled="False"/>
+                        <Slider x:Name="ThreadsSlider" Grid.Row="2" Grid.Column="1" HorizontalAlignment="Stretch" Margin="3,0,15,0" Minimum="1" Maximum="15" TickFrequency="1" TickPlacement="BottomRight" StepFrequency="1"  SnapsTo="StepValues" IsThumbToolTipEnabled="False"/>
                         
                     </Grid>
 
@@ -112,9 +111,9 @@
 
             
             <VariableSizedWrapGrid Margin="0,20,0,0" Orientation="Horizontal"  Grid.Row="2" Grid.Column="0">
-                <Button x:Name="btnCloseButton" Content="Close"  Click="Close_Click" FontSize="{x:Bind StyleTemplate.FontSize}" Style="{StaticResource ButtonStyle}" Width="135"/>
-                <Button x:Name="btnStopSearchButton" Content="Stop search" Click="StopSearch_Click" FontSize="{x:Bind StyleTemplate.FontSize}" Style="{StaticResource ButtonStyle}"  Width="135"/>
-                <Button x:Name="btnDefaultButton" Content="Reset to default" Click="ResetToDefault_Click" FontSize="{x:Bind StyleTemplate.FontSize}" Style="{StaticResource ButtonStyle}" Width="135"/>
+                <Button x:Name="btnCloseButton" Content="Close"  Click="Close_Click" Style="{StaticResource ButtonStyle}" Width="135"/>
+                <Button x:Name="btnStopSearchButton" Content="Stop search" Click="StopSearch_Click" Style="{StaticResource ButtonStyle}"  Width="135"/>
+                <Button x:Name="btnDefaultButton" Content="Reset to default" Click="ResetToDefault_Click" Style="{StaticResource ButtonStyle}" Width="135"/>
             </VariableSizedWrapGrid>
             
 

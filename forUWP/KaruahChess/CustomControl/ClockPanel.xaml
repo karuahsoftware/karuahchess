@@ -17,10 +17,10 @@
     </UserControl.Resources>
 
     <StackPanel Orientation="{x:Bind ClockOrientation, Mode=OneWay}" VerticalAlignment="Center" HorizontalAlignment="Left">
-        <TextBlock x:Name="WhiteTimerText" Grid.Column="0" Margin="0,5,5,0" FontSize="{x:Bind StyleTemplate.FontSize}" FontFamily="Consolas" FontStyle="Normal" />
-        <Button x:Name="ClockStartPauseButton" Style="{StaticResource ButtonClockStyle}" Content="&#xE916;" FontFamily="Segoe MDL2 Assets" Click="ClockStartPauseButton_Click" />
-        <TextBlock x:Name="BlackTimerText" Grid.Column="1" Margin="5,5,5,0" FontSize="{x:Bind StyleTemplate.FontSize}" FontFamily="Consolas" FontStyle="Normal"/>
-        <Button x:Name="ClockEditButton" Style="{StaticResource ButtonClockStyle}" Content="&#xECC8;" FontFamily="Segoe MDL2 Assets" Click="ClockEditButton_Click" />
+        <TextBlock x:Name="WhiteTimerText" Grid.Column="0" Margin="0,5,5,0" FontFamily="Consolas" FontStyle="Normal" Opacity="0.8" />
+        <Button x:Name="ClockStartPauseButton" Style="{StaticResource ButtonClockStyle}" Content="&#xE916;" FontFamily="Segoe MDL2 Assets" Click="ClockStartPauseButton_Click" Opacity="0.8"/>
+        <TextBlock x:Name="BlackTimerText" Grid.Column="1" Margin="5,5,5,0" FontFamily="Consolas" FontStyle="Normal" Opacity="0.8"/>
+        <Button x:Name="ClockEditButton" Style="{StaticResource ButtonClockStyle}" Content="&#xECC8;" FontFamily="Segoe MDL2 Assets" Click="ClockEditButton_Click" Opacity="0.8"/>
         
     </StackPanel>
 </UserControl>

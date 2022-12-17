@@ -22,9 +22,9 @@ using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Linq;
 using Windows.Foundation;
-using Windows.UI.Xaml;
-using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Input;
+using Microsoft.UI.Xaml;
+using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Input;
 
 namespace PurpleTreeSoftware.Panel
 {
@@ -33,8 +33,8 @@ namespace PurpleTreeSoftware.Panel
     {
         // variables
         INotifyCollectionChanged _notifyTiles;
-       
-        
+        public bool dragInProgress = false;
+
 
         /// <summary>
         /// The tiles to display
@@ -316,9 +316,7 @@ namespace PurpleTreeSoftware.Panel
         {
 
             foreach (Tile currentTile in pTiles)
-            {
-                // Set font size
-                currentTile.FontSize = this.FontSize;
+            {                
 
                 // Pass through the tile style template if one has not been set on the tile
                 if (currentTile.StyleTemplate == null)
@@ -408,7 +406,7 @@ namespace PurpleTreeSoftware.Panel
         /// <returns></returns>
         public Point GetTileCoordinates(int pTileId)
         {
-            Point coord;
+            Point coord = new Point(0,0);
             foreach(Tile tile in Tiles) {
                 if (pTileId == tile.Id) coord = tile.Coordinates();
             }

@@ -17,12 +17,12 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
 using System;
-using Windows.UI;
-using Windows.UI.Xaml;
-using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Media;
-using Windows.UI.Xaml.Media.Animation;
-using Windows.UI.Xaml.Media.Imaging;
+using Microsoft.UI;
+using Microsoft.UI.Xaml;
+using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Media;
+using Microsoft.UI.Xaml.Media.Animation;
+using Microsoft.UI.Xaml.Media.Imaging;
 
 
 
@@ -71,7 +71,7 @@ namespace KaruahChess.Pieces
 
             if (pBrushColor != null) {
                 PieceEllipse.StrokeThickness = 2;
-                PieceEllipse.Stroke = new SolidColorBrush(Color.FromArgb(255, 255, 255, 255));
+                PieceEllipse.Stroke = new SolidColorBrush(Windows.UI.Color.FromArgb(255, 255, 255, 255));
                 if (pApplyFill) PieceEllipse.Fill = pBrushColor;
                 else { PieceEllipse.Fill = null; }
                 
@@ -111,7 +111,7 @@ namespace KaruahChess.Pieces
             if (pBrushColor != null)
             {
                 PieceEllipseUnderAttack.StrokeThickness = 2;
-                PieceEllipseUnderAttack.Stroke = new SolidColorBrush(Color.FromArgb(255, 255, 255, 255));
+                PieceEllipseUnderAttack.Stroke = new SolidColorBrush(Windows.UI.Color.FromArgb(255, 255, 255, 255));
                 PieceEllipseUnderAttack.Fill = pBrushColor;
             }
 

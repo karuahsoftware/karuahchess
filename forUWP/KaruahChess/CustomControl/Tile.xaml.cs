@@ -21,10 +21,10 @@ using KaruahChess.Pieces;
 using System;
 using Windows.ApplicationModel.DataTransfer;
 using Windows.Foundation;
-using Windows.UI.Xaml;
-using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Media;
-using Windows.UI.Xaml.Media.Imaging;
+using Microsoft.UI.Xaml;
+using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Media;
+using Microsoft.UI.Xaml.Media.Imaging;
 
 namespace PurpleTreeSoftware.Panel
 {
@@ -121,7 +121,7 @@ namespace PurpleTreeSoftware.Panel
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void tileMain_PointerEntered(object sender, Windows.UI.Xaml.Input.PointerRoutedEventArgs e)
+        private void tileMain_PointerEntered(object sender, Microsoft.UI.Xaml.Input.PointerRoutedEventArgs e)
         {
             VisualStateManager.GoToState(this, TileHover.Name, false);
         }
@@ -131,7 +131,7 @@ namespace PurpleTreeSoftware.Panel
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void tileMain_PointerExited(object sender, Windows.UI.Xaml.Input.PointerRoutedEventArgs e)
+        private void tileMain_PointerExited(object sender, Microsoft.UI.Xaml.Input.PointerRoutedEventArgs e)
         {           
             VisualStateManager.GoToState(this, TileNormal.Name, false);      
            
@@ -143,7 +143,7 @@ namespace PurpleTreeSoftware.Panel
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void tileMain_PointerPressed(object sender, Windows.UI.Xaml.Input.PointerRoutedEventArgs e)
+        private void tileMain_PointerPressed(object sender, Microsoft.UI.Xaml.Input.PointerRoutedEventArgs e)
         {
             VisualStateManager.GoToState(this, TilePressed.Name, false);
 
@@ -155,7 +155,7 @@ namespace PurpleTreeSoftware.Panel
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void tileMain_PointerReleased(object sender, Windows.UI.Xaml.Input.PointerRoutedEventArgs e)
+        private void tileMain_PointerReleased(object sender, Microsoft.UI.Xaml.Input.PointerRoutedEventArgs e)
         {
             VisualStateManager.GoToState(this, TileNormal.Name, false);
             
@@ -198,6 +198,7 @@ namespace PurpleTreeSoftware.Panel
         /// <param name="args"></param>
         private void tileMain_DragStarting(UIElement sender, DragStartingEventArgs args)
         {
+            _parentPanel.dragInProgress = true;
             args.Data.Properties.Add("tileId", Id);
 
             if (_pieceCtrl.ImageData != null) {
@@ -222,6 +223,7 @@ namespace PurpleTreeSoftware.Panel
         private void tileMain_DropCompleted(UIElement sender, DropCompletedEventArgs args)
         {
             SetVisibility(Visibility.Visible);
+            _parentPanel.dragInProgress = false;
         }
 
 

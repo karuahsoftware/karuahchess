@@ -19,7 +19,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 using System;
 using System.Collections.Generic;
 using Windows.UI;
-using Windows.UI.Xaml.Media;
+using Microsoft.UI.Xaml.Media;
 
 namespace KaruahChess.Common
 {
@@ -46,29 +46,33 @@ namespace KaruahChess.Common
         public const int WHITEPIECE = 1;
         public const int BLACKPIECE = -1;
 
+        // Node Limits
+        public const int NODELIMIT_STANDARD = 2000000;
+        public const int NODELIMIT_HIGH = 100000000;
+
         // Skill level       
-        public static List<string> skillLevelList = new List<string> {
-            "Beginner",
-            "Level 2",
-            "Level 3",
-            "Level 4",
-            "Level 5",
-            "Level 6",
-            "Level 7",
-            "Level 8",
-            "Level 9",
-            "Level 10",
-            "Level 11",
-            "Level 12",
-            "Level 13",
-            "Level 14",
-            "Level 15",
-            "Level 16",
-            "Level 17",
-            "Level 18",
-            "Level 19",
-            "Level 20",
-            "Level 21"};
+        public static List<Strength> strengthList = new List<Strength> {
+            new Strength("Beginner", -9, 5, 80),
+            new Strength("Level 2", -5 ,5, 100),
+            new Strength("Level 3", -1, 5, 200),
+            new Strength("Level 4", 1, 5, 300),
+            new Strength("Level 5", 2, 5, 400),
+            new Strength("Level 6", 3, 5, 500),
+            new Strength("Level 7", 5, 5, 600),
+            new Strength("Level 8", 7, 5, 700),
+            new Strength("Level 9", 8, 5, 1000),
+            new Strength("Level 10", 9, 6, 2000),
+            new Strength("Level 11", 10, 6, 2000),
+            new Strength("Level 12", 11, 7, 2000),
+            new Strength("Level 13", 12, 7, 2000),
+            new Strength("Level 14", 13, 8, 2000),
+            new Strength("Level 15", 14, 9, 4000),
+            new Strength("Level 16", 15, 10, 8000),
+            new Strength("Level 17", 16, 13, 10000),
+            new Strength("Level 18", 17, 15, 10000),
+            new Strength("Level 19", 18, 18, 10000),
+            new Strength("Level 20", 19, 20, 10000),
+            new Strength("Level 21",  20, 22, 10000)};
 
         
         // Colours in the format alpha, red, green, blue

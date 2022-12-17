@@ -6,10 +6,6 @@
 
     <!-- Default Chess Clock Style -->
     
-    
-    <local:ClockStyleTemplate x:Key="ClockStyleTemplateDefaultObject" >        
-        <local:ClockStyleTemplate.FontSize>14</local:ClockStyleTemplate.FontSize>        
-    </local:ClockStyleTemplate>
 
     <Style x:Key="ButtonClockStyle" TargetType="Button">
         <Setter Property="BorderThickness" Value="1"/>

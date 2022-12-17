@@ -46,40 +46,40 @@
 
             <StackPanel Orientation="Horizontal" Grid.Row="0" Grid.Column="0">
                 <TextBlock x:Name="PageIcon" FontFamily="Segoe MDL2 Assets" FontSize="{x:Bind StyleTemplate.IconFontSize}" Text="&#xE916;" VerticalAlignment="Center" Margin="0,0,5,0"/>
-                <TextBlock  TextWrapping="WrapWholeWords" FontSize="{x:Bind StyleTemplate.FontSize}" FontWeight="Bold" VerticalAlignment="Center"> 
+                <TextBlock  TextWrapping="WrapWholeWords" FontWeight="Bold" VerticalAlignment="Center"> 
                         Clock (HH:MM:SS)
                 </TextBlock>
             </StackPanel>
 
             <ScrollViewer x:Name="MainTextScrollViewer"  VerticalScrollBarVisibility="Visible" Grid.Row="1" Grid.Column="0" Style="{StaticResource InfoScrollViewer}" BorderThickness="0">
                 <StackPanel Orientation="Vertical">
-                    <TextBlock x:Name="WhiteLimitTitleText" HorizontalAlignment="Left" FontSize="{x:Bind StyleTemplate.FontSize}">White remaining</TextBlock>
+                    <TextBlock x:Name="WhiteLimitTitleText" HorizontalAlignment="Left">White remaining</TextBlock>
 
                     <StackPanel Orientation="Horizontal">
-                        <ComboBox x:Name="WhiteTimeHourCombo" Margin="3,0,0,0" FontSize="{x:Bind StyleTemplate.FontSize}" ItemsSource="{x:Bind clockHourLabel}"/>
-                        <ComboBox x:Name="WhiteTimeMinuteCombo" Margin="3,0,0,0" FontSize="{x:Bind StyleTemplate.FontSize}" ItemsSource="{x:Bind clockMinSecLabel}"/>
-                        <ComboBox x:Name="WhiteTimeSecondCombo" Margin="3,0,0,0" FontSize="{x:Bind StyleTemplate.FontSize}" ItemsSource="{x:Bind clockMinSecLabel}"/>
+                        <ComboBox x:Name="WhiteTimeHourCombo" Margin="3,0,0,0" ItemsSource="{x:Bind clockHourLabel}"/>
+                        <ComboBox x:Name="WhiteTimeMinuteCombo" Margin="3,0,0,0" ItemsSource="{x:Bind clockMinSecLabel}"/>
+                        <ComboBox x:Name="WhiteTimeSecondCombo" Margin="3,0,0,0" ItemsSource="{x:Bind clockMinSecLabel}"/>
                     </StackPanel>
 
-                    <TextBlock x:Name="BlackLimitTitleText" Margin="0,10,0,0" HorizontalAlignment="Left" FontSize="{x:Bind StyleTemplate.FontSize}">Black remaining</TextBlock>
+                    <TextBlock x:Name="BlackLimitTitleText" Margin="0,10,0,0" HorizontalAlignment="Left">Black remaining</TextBlock>
 
                     <StackPanel Orientation="Horizontal">
-                        <ComboBox x:Name="BlackTimeHourCombo" Margin="3,0,0,0" FontSize="{x:Bind StyleTemplate.FontSize}" ItemsSource="{x:Bind clockHourLabel}"/>
-                        <ComboBox x:Name="BlackTimeMinuteCombo" Margin="3,0,0,0" FontSize="{x:Bind StyleTemplate.FontSize}" ItemsSource="{x:Bind clockMinSecLabel}"/>
-                        <ComboBox x:Name="BlackTimeSecondCombo" Margin="3,0,0,0" FontSize="{x:Bind StyleTemplate.FontSize}" ItemsSource="{x:Bind clockMinSecLabel}"/>
+                        <ComboBox x:Name="BlackTimeHourCombo" Margin="3,0,0,0" ItemsSource="{x:Bind clockHourLabel}"/>
+                        <ComboBox x:Name="BlackTimeMinuteCombo" Margin="3,0,0,0" ItemsSource="{x:Bind clockMinSecLabel}"/>
+                        <ComboBox x:Name="BlackTimeSecondCombo" Margin="3,0,0,0" ItemsSource="{x:Bind clockMinSecLabel}"/>
                     </StackPanel>
 
-                    <TextBlock x:Name="ResetTitleText" Margin="0,15,0,0" HorizontalAlignment="Left" FontSize="{x:Bind StyleTemplate.FontSize}">Reset clocks</TextBlock>
+                    <TextBlock x:Name="ResetTitleText" Margin="0,15,0,0" HorizontalAlignment="Left">Reset clocks</TextBlock>
                     <StackPanel Orientation="Horizontal">
-                        <ComboBox x:Name="ResetCombo" Margin="3,0,0,0" MinWidth="95" FontSize="{x:Bind StyleTemplate.FontSize}" ItemsSource="{x:Bind clockResetLabel}"/>
-                        <Button x:Name="btnReset" Margin="3,0,0,0" Width="85" Content="Reset"  Click="BtnReset_Click" FontSize="{x:Bind StyleTemplate.FontSize}" Style="{StaticResource ButtonStyle}" />
+                        <ComboBox x:Name="ResetCombo" Margin="3,0,0,0" MinWidth="95" ItemsSource="{x:Bind clockResetLabel}"/>
+                        <Button x:Name="btnReset" Margin="3,0,0,0" Width="85" Content="Reset"  Click="BtnReset_Click" Style="{StaticResource ButtonStyle}" />
                     </StackPanel>
                 </StackPanel>
             </ScrollViewer>
 
             
             <VariableSizedWrapGrid Margin="0,20,0,0" Orientation="Horizontal"  Grid.Row="2" Grid.Column="0">
-                <Button x:Name="btnCloseButton" Content="Close"  Click="Close_Click" FontSize="{x:Bind StyleTemplate.FontSize}" Style="{StaticResource ButtonStyle}" Width="135"/>               
+                <Button x:Name="btnCloseButton" Content="Close"  Click="Close_Click" Style="{StaticResource ButtonStyle}" Width="135"/>               
             </VariableSizedWrapGrid>
             
 

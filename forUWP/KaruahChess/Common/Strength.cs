@@ -17,25 +17,22 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
 using System;
-using System.Runtime.Serialization;
 
-namespace KaruahChess.Model.ParameterObjects
+namespace KaruahChess.Common
 {
-    [DataContract]
-    public class ParamLimitNodes
+    public struct Strength
     {
-   
+        public String Label;
+        public int SkillLevel;
+        public int Depth;
+        public int TimeLimitms;
 
-        [DataMember]
-        public int nodes { get; set; }
-
-       
-
-        public ParamLimitNodes()
+        internal Strength(String pLabel, int pSkillLevel, int pDepth, int pTimeLimitms)
         {
-            // Set default value
-            nodes = 1000000;
-            
+            Label = pLabel;
+            SkillLevel = pSkillLevel;
+            Depth = pDepth;
+            TimeLimitms = pTimeLimitms;
         }
     }
 }

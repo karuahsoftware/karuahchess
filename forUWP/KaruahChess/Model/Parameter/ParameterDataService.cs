@@ -139,11 +139,7 @@ namespace KaruahChess.Model
                 else if (param.Name == typeof(ParamLimitMoveDuration).Name)
                 {
                     _parameters.Add(param.Name, param.Value.Deserialize<ParamLimitMoveDuration>());
-                }
-                else if (param.Name == typeof(ParamLimitNodes).Name)
-                {
-                    _parameters.Add(param.Name, param.Value.Deserialize<ParamLimitNodes>());
-                }
+                }               
                 else if (param.Name == typeof(ParamLimitThreads).Name)
                 {
                     _parameters.Add(param.Name, param.Value.Deserialize<ParamLimitThreads>());

@@ -16,30 +16,31 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-using System;
-using Windows.UI.Xaml.Controls;
+using Microsoft.UI.Xaml;
 using KaruahChess.ViewModel;
 
 
 namespace KaruahChess
 {
     /// <summary>
-    /// Main page
+    /// An empty window that can be used on its own or navigated to within a Frame.
     /// </summary>
-    public sealed partial class MainPage : Page
+    public sealed partial class MainWindow : Window
     {
-        public MainPage()
+        
+        public MainWindow()
         {
-            BoardVM = new BoardViewModel();
-            
+            BoardVM = new BoardViewModel(this);
+
             this.InitializeComponent();
-            
+
+
             // Set Control reference                                 
             BoardVM.SetBoardTextMessageControl(BoardTextMessage);
-            BoardVM.SetBoardTilePanelControl(BoardTilePanel);            
-            BoardVM.SetPieceAnimationControl(PieceAnimationControl);            
-            BoardVM.SetAboutPageControl(AboutPageControl);                        
-            BoardVM.SetCoordinatesControl(CoordinatesControl);            
+            BoardVM.SetBoardTilePanelControl(BoardTilePanel);
+            BoardVM.SetPieceAnimationControl(PieceAnimationControl);
+            BoardVM.SetAboutPageControl(AboutPageControl);
+            BoardVM.SetCoordinatesControl(CoordinatesControl);
             BoardVM.SetVoiceHelpControl(VoiceHelpControl);
 
             ChessClockControl.SetBoardVM(BoardVM);
@@ -50,7 +51,7 @@ namespace KaruahChess
 
             PieceEditToolControl.SetBoardVM(BoardVM);
             BoardVM.SetPieceTypeSelectControl(PieceEditToolControl);
-            
+
             EngineSettingsControl.SetBoardVM(BoardVM);
             BoardVM.SetEngineSettingsControl(EngineSettingsControl);
 
@@ -59,10 +60,10 @@ namespace KaruahChess
 
             SoundSettingsControl.SetBoardVM(BoardVM);
             BoardVM.SetSoundSettingsControl(SoundSettingsControl);
-                       
+
             ImportPGNControl.SetBoardVM(BoardVM);
             BoardVM.SetImportPGNControl(ImportPGNControl);
-                        
+
             BoardVM.SetExportControl(ExportControl);
 
             MoveNavigatorControl.SetBoardVM(BoardVM);
@@ -71,13 +72,13 @@ namespace KaruahChess
             LevelIndicatorControl.SetBoardVM(BoardVM);
             BoardVM.SetLevelIndicatorControl(LevelIndicatorControl);
 
+            
             BoardVM.PostInit();
+            
         }
 
 
         //Propeties          
         public BoardViewModel BoardVM { get; set; }
-
-       
     }
 }

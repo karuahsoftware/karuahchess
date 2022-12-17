@@ -18,11 +18,13 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 using System;
 using KaruahChess.Pieces;
-using Windows.UI.Xaml.Media.Imaging;
+using Microsoft.UI.Xaml.Media.Imaging;
 using KaruahChess.Model;
 using KaruahChessEngine;
 using KaruahChess.Common;
 using System.Collections.Generic;
+
+
 
 namespace KaruahChess.Rules
 {

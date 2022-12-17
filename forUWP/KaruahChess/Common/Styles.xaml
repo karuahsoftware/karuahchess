@@ -5,37 +5,13 @@
     xmlns:customcontrol="using:KaruahChess.CustomControl"    
     xmlns:piece="using:KaruahChess.Pieces">
 
-    <!-- Styles -->
-    <x:Double x:Key="MenuWidth">303</x:Double>
-    <x:Double x:Key="DefaultWidth">294</x:Double>
-    <x:Double x:Key="DefaultHalfWidth">144</x:Double>
-    <x:Double x:Key="DefaultFontSize">14</x:Double>
-    <x:Double x:Key="DefaultFontSizeHeader">24</x:Double>
-    <x:Double x:Key="DefaultFontSizeIcon">30</x:Double>
-    <x:Double x:Key="DefaultButtonWidth">90</x:Double>
-    <x:Double x:Key="DefaultHeight">42</x:Double>
-    <x:Double x:Key="DefaultTileWidth">140</x:Double>
-    <x:Double x:Key="DefaultSmallWidth">50</x:Double>
-
+        
+    <!-- Styles -->    
     <Style x:Key="ButtonStyle" TargetType="Button">
         <Setter Property="BorderThickness" Value="1"/>
         <Setter Property="Margin" Value="1" />
-        <Setter Property="Height" Value="32" />
     </Style>
-
-    <Style x:Key="ButtonCommandStyle" TargetType="Button">
-        <Setter Property="BorderThickness" Value="1"/>
-        <Setter Property="Margin" Value="1" />
-        <Setter Property="Height" Value="32" />
-        <Setter Property="Background" Value="{ThemeResource SystemControlBackgroundChromeMediumBrush}" />
-        <Setter Property="FontSize" Value="{StaticResource DefaultFontSize}" />
-    </Style>
-
-    <Style x:Key="ButtonCommandLeftStyle" TargetType="Button">
-        <Setter Property="BorderThickness" Value="1"/>
-        <Setter Property="Margin" Value="3,0,0,0" />
-        <Setter Property="Background" Value="{ThemeResource SystemControlBackgroundChromeMediumBrush}" />
-    </Style>
+ 
 
     <Style x:Key="ButtonNavScrollLeftStyle" TargetType="RepeatButton">
         <Setter Property="BorderThickness" Value="1"/>
@@ -62,26 +38,21 @@
     </Style>
 
     <Style x:Key="TextBlockStyle" TargetType="TextBlock">
-        <Setter Property="FontSize" Value="{StaticResource DefaultFontSize}" />
         <Setter Property="HorizontalAlignment" Value="Left" />
         <Setter Property="VerticalAlignment" Value="Top" />
         <Setter Property="Margin" Value="3" />
         <Setter Property="Padding" Value="0" />
     </Style>
 
-    <Style x:Key="TextBoxStyle" TargetType="TextBox">
-        <Setter Property="FontSize" Value="{StaticResource DefaultFontSize}" />
-    </Style>
-
-
+    
     <Style x:Key="TilePanelStyle" TargetType="tilepanel:TilePanel">
-        <Setter Property="BorderBrush" Value="BurlyWood" />
-        <Setter Property="BorderThickness" Value="2" />
+        <Setter Property="BorderBrush" Value="#649964" />
+        <Setter Property="BorderThickness" Value="1" />
     </Style>
 
 
     <Style x:Key="CheckBoxStyle" TargetType="CheckBox">
-        <Setter Property="FontSize" Value="{StaticResource DefaultFontSize}" />
+        
     </Style>
 
     <!-- Tile Panel Style -->
@@ -112,9 +83,6 @@
         <tilepanel:TileStyleTemplate.Height>100</tilepanel:TileStyleTemplate.Height>
         <tilepanel:TileStyleTemplate.Margin>0</tilepanel:TileStyleTemplate.Margin>
         <tilepanel:TileStyleTemplate.Padding>0</tilepanel:TileStyleTemplate.Padding>
-        <tilepanel:TileStyleTemplate.FontSize>
-            <StaticResource ResourceKey="DefaultFontSize" />
-        </tilepanel:TileStyleTemplate.FontSize>
     </tilepanel:TileStyleTemplate>
 
     <tilepanel:TileStyleTemplate x:Key="WhiteTileStyleTemplateObject" >
@@ -137,9 +105,6 @@
         <tilepanel:TileStyleTemplate.Height>100</tilepanel:TileStyleTemplate.Height>
         <tilepanel:TileStyleTemplate.Margin>0</tilepanel:TileStyleTemplate.Margin>
         <tilepanel:TileStyleTemplate.Padding>0</tilepanel:TileStyleTemplate.Padding>
-        <tilepanel:TileStyleTemplate.FontSize>
-            <StaticResource ResourceKey="DefaultFontSize" />
-        </tilepanel:TileStyleTemplate.FontSize>
     </tilepanel:TileStyleTemplate>
 
     <!-- Piece Style -->
@@ -173,7 +138,6 @@
         <customcontrol:TextMessageStyleTemplate.Height>NaN</customcontrol:TextMessageStyleTemplate.Height>
         <customcontrol:TextMessageStyleTemplate.Margin>0</customcontrol:TextMessageStyleTemplate.Margin>
         <customcontrol:TextMessageStyleTemplate.Padding>10</customcontrol:TextMessageStyleTemplate.Padding>
-        <customcontrol:TextMessageStyleTemplate.FontSize>14</customcontrol:TextMessageStyleTemplate.FontSize>
         <customcontrol:TextMessageStyleTemplate.IconFontSize>30</customcontrol:TextMessageStyleTemplate.IconFontSize>
     </customcontrol:TextMessageStyleTemplate>
 
@@ -205,7 +169,6 @@
         <customcontrol:CustomStyleTemplate.Height>NaN</customcontrol:CustomStyleTemplate.Height>
         <customcontrol:CustomStyleTemplate.Margin>0</customcontrol:CustomStyleTemplate.Margin>
         <customcontrol:CustomStyleTemplate.Padding>5</customcontrol:CustomStyleTemplate.Padding>
-        <customcontrol:CustomStyleTemplate.FontSize>14</customcontrol:CustomStyleTemplate.FontSize>
         <customcontrol:CustomStyleTemplate.IconFontSize>30</customcontrol:CustomStyleTemplate.IconFontSize>
     </customcontrol:CustomStyleTemplate>
 
@@ -224,7 +187,6 @@
         <customcontrol:CustomStyleTemplate.Height>NaN</customcontrol:CustomStyleTemplate.Height>
         <customcontrol:CustomStyleTemplate.Margin>0</customcontrol:CustomStyleTemplate.Margin>
         <customcontrol:CustomStyleTemplate.Padding>5</customcontrol:CustomStyleTemplate.Padding>
-        <customcontrol:CustomStyleTemplate.FontSize>14</customcontrol:CustomStyleTemplate.FontSize>
         <customcontrol:CustomStyleTemplate.IconFontSize>30</customcontrol:CustomStyleTemplate.IconFontSize>
     </customcontrol:CustomStyleTemplate>
     
@@ -243,7 +205,6 @@
         <customcontrol:CustomStyleTemplate.Height>NaN</customcontrol:CustomStyleTemplate.Height>
         <customcontrol:CustomStyleTemplate.Margin>0</customcontrol:CustomStyleTemplate.Margin>
         <customcontrol:CustomStyleTemplate.Padding>10</customcontrol:CustomStyleTemplate.Padding>
-        <customcontrol:CustomStyleTemplate.FontSize>14</customcontrol:CustomStyleTemplate.FontSize>
         <customcontrol:CustomStyleTemplate.IconFontSize>30</customcontrol:CustomStyleTemplate.IconFontSize>
     </customcontrol:CustomStyleTemplate>
 
@@ -262,27 +223,26 @@
         <customcontrol:CustomStyleTemplate.Height>NaN</customcontrol:CustomStyleTemplate.Height>
         <customcontrol:CustomStyleTemplate.Margin>0</customcontrol:CustomStyleTemplate.Margin>
         <customcontrol:CustomStyleTemplate.Padding>5</customcontrol:CustomStyleTemplate.Padding>
-        <customcontrol:CustomStyleTemplate.FontSize>14</customcontrol:CustomStyleTemplate.FontSize>
         <customcontrol:CustomStyleTemplate.IconFontSize>30</customcontrol:CustomStyleTemplate.IconFontSize>
     </customcontrol:CustomStyleTemplate>
 
     <customcontrol:CustomStyleTemplate x:Key="PieceTypeSelectControlStyleTemplateObject"  >
         <customcontrol:CustomStyleTemplate.Background>
-            <StaticResource ResourceKey="CustomControlBackgroundHighBrush" />
+            <StaticResource ResourceKey="CustomControlBackgroundNormalBrush" />
         </customcontrol:CustomStyleTemplate.Background>
         <customcontrol:CustomStyleTemplate.BorderBrush>
-            <StaticResource ResourceKey="CustomControlBorderHighBrush" />
+            <StaticResource ResourceKey="CustomControlBorderBrush" />
         </customcontrol:CustomStyleTemplate.BorderBrush>
         <customcontrol:CustomStyleTemplate.BorderThickness>1</customcontrol:CustomStyleTemplate.BorderThickness>
-        <customcontrol:CustomStyleTemplate.CornerRadius>0</customcontrol:CustomStyleTemplate.CornerRadius>
+        <customcontrol:CustomStyleTemplate.CornerRadius>4</customcontrol:CustomStyleTemplate.CornerRadius>
         <customcontrol:CustomStyleTemplate.MinWidth>100</customcontrol:CustomStyleTemplate.MinWidth>
         <customcontrol:CustomStyleTemplate.MinHeight>20</customcontrol:CustomStyleTemplate.MinHeight>
         <customcontrol:CustomStyleTemplate.Width>NaN</customcontrol:CustomStyleTemplate.Width>
         <customcontrol:CustomStyleTemplate.Height>NaN</customcontrol:CustomStyleTemplate.Height>
         <customcontrol:CustomStyleTemplate.Margin>0</customcontrol:CustomStyleTemplate.Margin>
         <customcontrol:CustomStyleTemplate.Padding>0</customcontrol:CustomStyleTemplate.Padding>
-        <customcontrol:CustomStyleTemplate.FontSize>14</customcontrol:CustomStyleTemplate.FontSize>
         <customcontrol:CustomStyleTemplate.IconFontSize>30</customcontrol:CustomStyleTemplate.IconFontSize>
+     
     </customcontrol:CustomStyleTemplate>
    
     <customcontrol:CustomStyleTemplate x:Key="EngineSettingsControlStyleTemplateObject"  >
@@ -300,7 +260,6 @@
         <customcontrol:CustomStyleTemplate.Height>NaN</customcontrol:CustomStyleTemplate.Height>
         <customcontrol:CustomStyleTemplate.Margin>0</customcontrol:CustomStyleTemplate.Margin>
         <customcontrol:CustomStyleTemplate.Padding>5</customcontrol:CustomStyleTemplate.Padding>
-        <customcontrol:CustomStyleTemplate.FontSize>14</customcontrol:CustomStyleTemplate.FontSize>
         <customcontrol:CustomStyleTemplate.IconFontSize>30</customcontrol:CustomStyleTemplate.IconFontSize>
     </customcontrol:CustomStyleTemplate>
 
@@ -319,7 +278,6 @@
         <customcontrol:CustomStyleTemplate.Height>NaN</customcontrol:CustomStyleTemplate.Height>
         <customcontrol:CustomStyleTemplate.Margin>0</customcontrol:CustomStyleTemplate.Margin>
         <customcontrol:CustomStyleTemplate.Padding>5</customcontrol:CustomStyleTemplate.Padding>
-        <customcontrol:CustomStyleTemplate.FontSize>14</customcontrol:CustomStyleTemplate.FontSize>
         <customcontrol:CustomStyleTemplate.IconFontSize>30</customcontrol:CustomStyleTemplate.IconFontSize>
     </customcontrol:CustomStyleTemplate>
 
@@ -338,7 +296,6 @@
         <customcontrol:CustomStyleTemplate.Height>NaN</customcontrol:CustomStyleTemplate.Height>
         <customcontrol:CustomStyleTemplate.Margin>0</customcontrol:CustomStyleTemplate.Margin>
         <customcontrol:CustomStyleTemplate.Padding>5</customcontrol:CustomStyleTemplate.Padding>
-        <customcontrol:CustomStyleTemplate.FontSize>14</customcontrol:CustomStyleTemplate.FontSize>
         <customcontrol:CustomStyleTemplate.IconFontSize>30</customcontrol:CustomStyleTemplate.IconFontSize>
     </customcontrol:CustomStyleTemplate>
 
@@ -357,12 +314,11 @@
         <customcontrol:CustomStyleTemplate.Height>NaN</customcontrol:CustomStyleTemplate.Height>
         <customcontrol:CustomStyleTemplate.Margin>0</customcontrol:CustomStyleTemplate.Margin>
         <customcontrol:CustomStyleTemplate.Padding>5</customcontrol:CustomStyleTemplate.Padding>
-        <customcontrol:CustomStyleTemplate.FontSize>14</customcontrol:CustomStyleTemplate.FontSize>
         <customcontrol:CustomStyleTemplate.IconFontSize>30</customcontrol:CustomStyleTemplate.IconFontSize>
     </customcontrol:CustomStyleTemplate>
 
     <customcontrol:CustomStyleTemplate x:Key="LevelIndicatorStyleTemplateObject"  >        
-        <customcontrol:CustomStyleTemplate.FontSize>14</customcontrol:CustomStyleTemplate.FontSize>        
+               
     </customcontrol:CustomStyleTemplate>
     
 </ResourceDictionary>

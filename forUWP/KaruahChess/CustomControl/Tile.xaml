@@ -49,8 +49,7 @@
         </VisualStateManager.VisualStateGroups>
 
         <StackPanel x:Name="tileStack"  IsHitTestVisible="False" />
-
-
+        
 
     </local:CanvasCustom>
     

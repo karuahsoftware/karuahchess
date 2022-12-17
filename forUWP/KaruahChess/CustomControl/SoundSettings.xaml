@@ -47,7 +47,7 @@
 
             <StackPanel Orientation="Horizontal" Grid.Row="0" Grid.Column="0">
                 <TextBlock x:Name="PageIcon" FontFamily="Segoe MDL2 Assets" FontSize="{x:Bind StyleTemplate.IconFontSize}" Text="&#xE8D6;" VerticalAlignment="Center" Margin="0,0,5,0"/>
-                <TextBlock  TextWrapping="WrapWholeWords" FontSize="{x:Bind StyleTemplate.FontSize}" FontWeight="Bold" VerticalAlignment="Center"> 
+                <TextBlock  TextWrapping="WrapWholeWords" FontWeight="Bold" VerticalAlignment="Center"> 
                         Sound
                 </TextBlock>
             </StackPanel>
@@ -61,7 +61,7 @@
 
             
             <VariableSizedWrapGrid Orientation="Horizontal" ItemWidth="137" Grid.Row="2" Grid.Column="0">
-                <Button x:Name="btnCloseButton" Content="Close" Width="80" Click="Close_Click" FontSize="{x:Bind StyleTemplate.FontSize}" Style="{StaticResource ButtonStyle}" />
+                <Button x:Name="btnCloseButton" Content="Close" Width="80" Click="Close_Click" Style="{StaticResource ButtonStyle}" />
             </VariableSizedWrapGrid>
             
 

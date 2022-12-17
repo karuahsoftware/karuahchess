@@ -19,8 +19,8 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 using System;
 using System.Xml.Serialization;
 using System.IO;
-using Windows.UI.Xaml;
 using System.Collections.Generic;
+using Microsoft.UI.Xaml;
 
 namespace KaruahChess.Common
 {

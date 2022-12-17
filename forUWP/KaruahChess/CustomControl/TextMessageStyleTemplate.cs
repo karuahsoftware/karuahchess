@@ -18,8 +18,8 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 
 using System;
-using Windows.UI.Xaml;
-using Windows.UI.Xaml.Media;
+using Microsoft.UI.Xaml;
+using Microsoft.UI.Xaml.Media;
 
 namespace KaruahChess.CustomControl
 {
@@ -213,22 +213,7 @@ namespace KaruahChess.CustomControl
             DependencyProperty.Register("BorderBrush", typeof(Brush), typeof(TextMessageStyleTemplate), new PropertyMetadata(null));
 
 
-        /// <summary>
-        /// Font size of the message text
-        /// </summary>
-        public double FontSize
-        {
-            get { return (double)GetValue(FontSizeProperty); }
-            set { SetValue(FontSizeProperty, value); }
-        }
-
-        // Using a DependencyProperty as the backing store for FontSize.  
-        public static readonly DependencyProperty FontSizeProperty =
-            DependencyProperty.Register("FontSize", typeof(double), typeof(TextMessageStyleTemplate), new PropertyMetadata((double)11));
-
-
-
-
+        
         /// <summary>
         /// Font size of the message icon
         /// </summary>

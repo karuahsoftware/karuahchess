@@ -18,7 +18,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 using System;
 using System.Collections.Generic;
-using Windows.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Controls;
 
 
 namespace KaruahChess.CustomControl
@@ -70,11 +70,11 @@ namespace KaruahChess.CustomControl
         {
             if (pEnabled)
             {
-                this.Visibility = Windows.UI.Xaml.Visibility.Visible;
+                this.Visibility = Microsoft.UI.Xaml.Visibility.Visible;
             }
             else
             {
-                this.Visibility = Windows.UI.Xaml.Visibility.Collapsed;
+                this.Visibility = Microsoft.UI.Xaml.Visibility.Collapsed;
             }
         }
 
@@ -89,7 +89,7 @@ namespace KaruahChess.CustomControl
         {
 
             // Only run this function if board is visible
-            if (this.Visibility != Windows.UI.Xaml.Visibility.Visible) return;
+            if (this.Visibility != Microsoft.UI.Xaml.Visibility.Visible) return;
 
             // Set layout width and height
             this.Width = pWidth;
@@ -147,7 +147,7 @@ namespace KaruahChess.CustomControl
         public void SetCoordLabels(int pRotation)
         {
             // Only run this function if board is visible
-            if (this.Visibility != Windows.UI.Xaml.Visibility.Visible) return;
+            if (this.Visibility != Microsoft.UI.Xaml.Visibility.Visible) return;
 
 
             for (int index = 0; index <= 7; index ++)

@@ -27,6 +27,7 @@ using System.Text.RegularExpressions;
 using Windows.UI.Core;
 using KaruahChess.Common;
 using KaruahChessEngine;
+using Microsoft.UI.Dispatching;
 
 namespace KaruahChess.Voice
 {
@@ -39,12 +40,12 @@ namespace KaruahChess.Voice
 
         public SpeechRecognizerState State { get; private set; }
 
-        private Func<List<int>, String, Task> MoveFunctionA { get; set; }
-        private Func<bool, Task> HelpFunction { get; set; }
+        private Action<List<int>, String> MoveFunctionA { get; set; }
+        private Action<bool> HelpFunction { get; set; }
 
-        private Func<List<string>, String, Task> MoveFunctionB { get; set; }
+        private Action<List<string>, String> MoveFunctionB { get; set; }
 
-        private Func<List<char>, String, Task> PieceFindFunction { get; set; }
+        private Action<List<char>, String> PieceFindFunction { get; set; }
 
         public static HashSet<String> SupportedLanguages { get; private set; } = new HashSet<string> { "en-AU", "en-CA", "en-GB", "en-IN", "en-NZ", "en-US" };
 
@@ -52,6 +53,8 @@ namespace KaruahChess.Voice
 
 
         private KaruahChessEngineClass _tempBoard = new KaruahChessEngineClass();
+
+        private DispatcherQueue mainDispatcherQueue = DispatcherQueue.GetForCurrentThread();
 
         /// <summary>
         /// Check Microphone permissions
@@ -82,7 +85,7 @@ namespace KaruahChess.Voice
         /// </summary>
         /// <param name="pLanguage"></param>
         /// <returns></returns>
-        public async Task Initialise(Language pLanguage, Func<List<int>, String, Task> pMoveFunctionA, Func<List<string>, String, Task> pMoveFunctionB, Func<List<char>, String, Task> pPieceFunction, Func<bool, Task> pHelpFunction)
+        public async Task Initialise(Language pLanguage, Action<List<int>, String> pMoveFunctionA, Action<List<string>, String> pMoveFunctionB, Action<List<char>, String> pPieceFunction, Action<bool> pHelpFunction)
         {
             // Stop first incase object already exists
             Stop();
@@ -142,43 +145,52 @@ namespace KaruahChess.Voice
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="args"></param>
-        private async void ContinuousRecognitionSession_ResultGenerated(SpeechContinuousRecognitionSession sender, SpeechContinuousRecognitionResultGeneratedEventArgs args)
+        private void ContinuousRecognitionSession_ResultGenerated(SpeechContinuousRecognitionSession sender, SpeechContinuousRecognitionResultGeneratedEventArgs args)
         {
             if ((Ignore == 0) && (args.Result.Confidence == SpeechRecognitionConfidence.Medium || args.Result.Confidence == SpeechRecognitionConfidence.High))
             {                
                 var text = args.Result.Text;
-
-                // Marshall back to UI thread
-                await Windows.ApplicationModel.Core.CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => { 
-
-                    var moveset = GetMoveSetFromText(text);
-                    if (moveset.Count > 0)
+                                
+                var moveset = GetMoveSetFromText(text);
+                if (moveset.Count > 0)
+                {
+                    mainDispatcherQueue.TryEnqueue(() =>
                     {
                         MoveFunctionA(moveset, text);
-                        return;
-                    }
+                    });
+                    return;
+                }
 
-                    var fenList = GetFENFromText(text);
-                    if (fenList.Count > 0)
+                var fenList = GetFENFromText(text);
+                if (fenList.Count > 0)
+                {
+                    mainDispatcherQueue.TryEnqueue(() =>
                     {
                         PieceFindFunction(fenList, text);
-                        return;
-                    }
+                    });
+                    return;
+                }
                 
-                    var moveCommandB = GetMoveCommandBFromText(text);
-                    if (moveCommandB.Count == 3)
+                var moveCommandB = GetMoveCommandBFromText(text);
+                if (moveCommandB.Count == 3)
+                {
+                    mainDispatcherQueue.TryEnqueue(() =>
                     {
                         MoveFunctionB(moveCommandB, text);
-                        return;
-                    }
+                    });
+                    return;
+                }
                 
-                    if (text == "Help")
+                if (text == "Help")
+                {
+                    mainDispatcherQueue.TryEnqueue(() =>
                     {
                         HelpFunction(true);
-                        return;
-                    }
+                    });
+                    return;
+                }
 
-                });
+               
             }
         }
 

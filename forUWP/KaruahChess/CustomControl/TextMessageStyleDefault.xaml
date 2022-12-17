@@ -18,8 +18,7 @@
         <local:TextMessageStyleTemplate.Width>NaN</local:TextMessageStyleTemplate.Width>
         <local:TextMessageStyleTemplate.Height>NaN</local:TextMessageStyleTemplate.Height>
         <local:TextMessageStyleTemplate.Margin>50</local:TextMessageStyleTemplate.Margin>
-        <local:TextMessageStyleTemplate.Padding>10</local:TextMessageStyleTemplate.Padding>
-        <local:TextMessageStyleTemplate.FontSize>14</local:TextMessageStyleTemplate.FontSize>
+        <local:TextMessageStyleTemplate.Padding>10</local:TextMessageStyleTemplate.Padding>       
         <local:TextMessageStyleTemplate.IconFontSize>30</local:TextMessageStyleTemplate.IconFontSize>
     </local:TextMessageStyleTemplate>
 

@@ -19,9 +19,10 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 using System;
 using System.Collections.Generic;
 using Windows.Foundation;
-using Windows.UI.Xaml;
-using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Controls.Primitives;
+using Microsoft.UI.Xaml;
+using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Controls.Primitives;
+using Microsoft.UI.Dispatching;
 
 namespace KaruahChess.CustomControl
 {
@@ -34,7 +35,8 @@ namespace KaruahChess.CustomControl
 
         private ViewModel.BoardViewModel _boardVM;
         public NavToggleButton _selectedButton;
-
+        private DispatcherQueue mainDispatcherQueue = DispatcherQueue.GetForCurrentThread();
+        
         /// <summary>
         /// Constructor
         /// </summary>
@@ -138,8 +140,8 @@ namespace KaruahChess.CustomControl
                 TimeSpan period = TimeSpan.FromMilliseconds(100);
                 Windows.System.Threading.ThreadPoolTimer.CreateTimer(async (source) =>
                 {
-                    await Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () =>
-                    {
+                    mainDispatcherQueue.TryEnqueue (() =>
+                    { 
                         var transform = _selectedButton.TransformToVisual(navigatorStack);
                         var position = transform.TransformPoint(new Point(0, 0));
                         var Success = navigatorScoll.ChangeView(position.X, null, null, true);
@@ -210,7 +212,7 @@ namespace KaruahChess.CustomControl
             navigatorScoll.ChangeView(newOffset, null, null);
         }
 
-        private void NavGrid_PointerEntered(object sender, Windows.UI.Xaml.Input.PointerRoutedEventArgs e)
+        private void NavGrid_PointerEntered(object sender, Microsoft.UI.Xaml.Input.PointerRoutedEventArgs e)
         {
             if (navigatorScoll.ScrollableWidth > 0)
             {
@@ -219,7 +221,7 @@ namespace KaruahChess.CustomControl
             }
         }
 
-        private void NavGrid_PointerExited(object sender, Windows.UI.Xaml.Input.PointerRoutedEventArgs e)
+        private void NavGrid_PointerExited(object sender, Microsoft.UI.Xaml.Input.PointerRoutedEventArgs e)
         {
             LeftScrollBtn.Opacity = 0.31;
             RightScrollBtn.Opacity = 0.31;

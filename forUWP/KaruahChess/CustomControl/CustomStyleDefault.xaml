@@ -19,7 +19,6 @@
         <local:CustomStyleTemplate.Height>NaN</local:CustomStyleTemplate.Height>
         <local:CustomStyleTemplate.Margin>0</local:CustomStyleTemplate.Margin>
         <local:CustomStyleTemplate.Padding>5</local:CustomStyleTemplate.Padding>
-        <local:CustomStyleTemplate.FontSize>14</local:CustomStyleTemplate.FontSize>
         <local:CustomStyleTemplate.IconFontSize>30</local:CustomStyleTemplate.IconFontSize>
         <local:CustomStyleTemplate.Opacity>1</local:CustomStyleTemplate.Opacity>
     </local:CustomStyleTemplate>

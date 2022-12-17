@@ -99,7 +99,7 @@ namespace Stockfish {
                     level = double(skill_level);
             }
             bool enabled() const { return level < 20.0; }
-            bool time_to_pick(Depth depth) const { return depth == 1 + int(level); }
+            bool time_to_pick(Depth depth) const { return depth == 1 + std::max(int(level),0); }
             Move pick_best(size_t multiPV);
 
             double level;

@@ -23,8 +23,7 @@
         <local:TileStyleTemplate.Width>NaN</local:TileStyleTemplate.Width>
         <local:TileStyleTemplate.Height>NaN</local:TileStyleTemplate.Height>
         <local:TileStyleTemplate.Margin>3</local:TileStyleTemplate.Margin>
-        <local:TileStyleTemplate.Padding>3</local:TileStyleTemplate.Padding>
-        <local:TileStyleTemplate.FontSize>20</local:TileStyleTemplate.FontSize>
+        <local:TileStyleTemplate.Padding>3</local:TileStyleTemplate.Padding>        
     </local:TileStyleTemplate>
 
 </ResourceDictionary>

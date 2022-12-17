@@ -48,13 +48,13 @@
 
                     <StackPanel Orientation="Horizontal">
                         <TextBlock x:Name="PageIcon" FontFamily="Segoe MDL2 Assets" FontSize="{x:Bind StyleTemplate.IconFontSize}" Text="&#xE720;" VerticalAlignment="Center"/>
-                        <TextBlock  TextWrapping="WrapWholeWords" FontSize="{x:Bind StyleTemplate.FontSize}" FontWeight="Bold" VerticalAlignment="Center"> 
+                        <TextBlock  TextWrapping="WrapWholeWords" FontWeight="Bold" VerticalAlignment="Center"> 
                             Voice Command Help
                         </TextBlock>
                     </StackPanel>
 
 
-                    <TextBlock x:Name="VoiceCommandHelpText" TextWrapping="WrapWholeWords" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" FontSize="{x:Bind StyleTemplate.FontSize}">                
+                    <TextBlock x:Name="VoiceCommandHelpText" TextWrapping="WrapWholeWords" VerticalAlignment="Stretch" HorizontalAlignment="Stretch">                
                     Voice commands can be used if your operating system language is set to English. <LineBreak/>
                     <LineBreak/>
                                 
@@ -98,7 +98,7 @@
             
                 </StackPanel>
             </ScrollViewer>
-            <Button  x:Name="btnCloseButton" Grid.Row="1" Grid.Column="0" Content="Close" Width="80"  VerticalAlignment="Top" Click="Close_Click" FontSize="{x:Bind StyleTemplate.FontSize}" Style="{StaticResource ButtonStyle}"/>                
+            <Button  x:Name="btnCloseButton" Grid.Row="1" Grid.Column="0" Content="Close" Width="80"  VerticalAlignment="Top" Click="Close_Click" Style="{StaticResource ButtonStyle}"/>                
             
             
             

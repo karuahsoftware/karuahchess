@@ -20,12 +20,14 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 using System;
 using System.Collections.Generic;
 using Windows.Foundation;
-using Windows.UI.Xaml;
-using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Media;
+using Microsoft.UI.Xaml;
+using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Media;
 using KaruahChess.Common;
 using KaruahChess.Model;
 using KaruahChessEngine;
+using Microsoft.UI;
+using Windows.UI;
 
 namespace KaruahChess.CustomControl
 {
@@ -203,7 +205,8 @@ namespace KaruahChess.CustomControl
                 Padding = new Thickness(0),
                 Content = "\uE75C",
                 FontFamily = new FontFamily("Segoe MDL2 Assets"),
-                FontSize = _fontSize,
+                FontSize = _fontSize,               
+                Background = new SolidColorBrush(Color.FromArgb(50, 251, 251, 251)),
                 Tag = ' ' 
             };
 
@@ -218,6 +221,7 @@ namespace KaruahChess.CustomControl
                 Content = "\uE76C",
                 FontFamily = new FontFamily("Segoe MDL2 Assets"),
                 FontSize = _fontSize,
+                Background = new SolidColorBrush(Color.FromArgb(50, 251, 251, 251)),
                 Tag = ' '
             };
             sqArrowButton.Click += EditPieceArrow_Click;
@@ -248,7 +252,9 @@ namespace KaruahChess.CustomControl
                     {
                         Source = Pieces.Piece.GetImage(fen, _buttonSize, _buttonSize),
                         VerticalAlignment = VerticalAlignment.Center
-                    }
+                    },
+                    Background = new SolidColorBrush(Color.FromArgb(50, 251, 251, 251))
+
                 };
                 pieceButton.Tag = fen;
 

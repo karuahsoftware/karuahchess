@@ -22,7 +22,7 @@
 
 
     <Border x:Name="LevelIndicatorPanel" VerticalAlignment="Center">
-        <TextBlock FontSize="{x:Bind StyleTemplate.FontSize}" Text="{x:Bind getLevelText(_boardVM.LimitSkillLevel, _boardVM.ComputerPlayerEnabled), Mode=OneWay}" Margin="3,0,0,0" VerticalAlignment="Center" />
+        <TextBlock FontStyle="Normal" Opacity="0.8" Text="{x:Bind getLevelText(_boardVM.LimitSkillLevel, _boardVM.ComputerPlayerEnabled), Mode=OneWay}" Margin="3,0,0,0" VerticalAlignment="Center" />
     </Border>
 
 

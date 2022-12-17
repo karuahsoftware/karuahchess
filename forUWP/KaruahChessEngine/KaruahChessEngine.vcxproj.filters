@@ -12,12 +12,13 @@
   <ItemGroup>
     <ClCompile Include="pch.cpp" />
     <ClCompile Include="$(GeneratedFilesDir)module.g.cpp" />
-    <ClCompile Include="BitBoard.cpp" />
+    <ClCompile Include="bitboard.cpp" />
+    <ClCompile Include="Engine.cpp" />
     <ClCompile Include="helper.cpp" />
+    <ClCompile Include="KaruahChessEngineClass.cpp" />
     <ClCompile Include="MoveRules.cpp" />
     <ClCompile Include="PiecePattern.cpp" />
-    <ClCompile Include="Search.cpp" />
-    <ClCompile Include="Engine.cpp" />
+    <ClCompile Include="search.cpp" />
     <ClCompile Include="SFbitbase.cpp" />
     <ClCompile Include="SFbitboard.cpp" />
     <ClCompile Include="SFendgame.cpp" />
@@ -38,12 +39,13 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h" />
-    <ClInclude Include="BitBoard.h" />
+    <ClInclude Include="bitboard.h" />
+    <ClInclude Include="engine.h" />
     <ClInclude Include="helper.h" />
+    <ClInclude Include="KaruahChessEngineClass.h" />
     <ClInclude Include="MoveRules.h" />
     <ClInclude Include="PiecePattern.h" />
-    <ClInclude Include="Search.h" />
-    <ClInclude Include="Engine.h" />
+    <ClInclude Include="search.h" />
     <ClInclude Include="SFbitboard.h" />
     <ClInclude Include="SFendgame.h" />
     <ClInclude Include="SFevaluate.h" />
@@ -62,14 +64,14 @@
     <ClInclude Include="SFuci.h" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="KaruahChessEngine.def" />
-    <None Include="KaruahChessEngine_TemporaryKey.pfx" />
-    <None Include="packages.config" />
+    <Midl Include="KaruahChessEngineClass.idl" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="KaruahChessEngine.def" />
+    <None Include="packages.config" />
     <None Include="PropertySheet.props" />
   </ItemGroup>
   <ItemGroup>
-    <Midl Include="KaruahChessEngineClass.idl" />
+    <Natvis Include="$(MSBuildThisFileDirectory)..\..\natvis\wil.natvis" />
   </ItemGroup>
 </Project>

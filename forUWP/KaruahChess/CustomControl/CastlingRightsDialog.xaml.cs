@@ -17,7 +17,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
 using System;
-using Windows.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Controls;
 using KaruahChess.Pieces;
 using KaruahChess.Model;
 using KaruahChessEngine;
