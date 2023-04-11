@@ -16,7 +16,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-#include "PiecePattern.h"
+#include "piecepattern.h"
 #include "helper.h"
 #include <cstdint>
 
@@ -64,11 +64,14 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 				uint64_t rowMaskA = helper::RowMask[pIndex];
 				uint64_t rowMaskB = helper::RowMask[pIndex] << 8;
 				uint64_t sqBinary = helper::BITMASK >> pIndex;
-				uint64_t sqEnpassantBinary = helper::BITMASK >> pEnpassantIndex;
-
-				if (((sqBinary >> 1) & rowMaskA) == sqEnpassantBinary) enPassantPath = (sqBinary << 7) & rowMaskB;
-				if (((sqBinary << 1) & rowMaskA) == sqEnpassantBinary) enPassantPath = enPassantPath | ((sqBinary << 9) & rowMaskB);
-
+                
+                uint64_t sqEnpassantBinary = 0;
+                if (pEnpassantIndex > -1) {
+                    sqEnpassantBinary = helper::BITMASK >> pEnpassantIndex;
+                    if (((sqBinary >> 1) & rowMaskA) == sqEnpassantBinary) enPassantPath = (sqBinary << 7) & rowMaskB;
+                    if (((sqBinary << 1) & rowMaskA) == sqEnpassantBinary) enPassantPath = enPassantPath | ((sqBinary << 9) & rowMaskB);
+                }
+                
 				return enPassantPath;
 			}
 			else {
@@ -76,11 +79,13 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 				uint64_t rowMaskA = helper::RowMask[pIndex];
 				uint64_t rowMaskB = helper::RowMask[pIndex] >> 8;
 				uint64_t sqBinary = helper::BITMASK >> pIndex;
-				uint64_t sqEnpassantBinary = helper::BITMASK >> pEnpassantIndex;
-
-				if (((sqBinary >> 1) & rowMaskA) == sqEnpassantBinary) enPassantPath = (sqBinary >> 9) & rowMaskB;
-				if (((sqBinary << 1) & rowMaskA) == sqEnpassantBinary) enPassantPath = enPassantPath | ((sqBinary >> 7) & rowMaskB);
-
+                
+                uint64_t sqEnpassantBinary = 0;
+                if (pEnpassantIndex > -1) {
+                    sqEnpassantBinary = helper::BITMASK >> pEnpassantIndex;
+                    if (((sqBinary >> 1) & rowMaskA) == sqEnpassantBinary) enPassantPath = (sqBinary >> 9) & rowMaskB;
+                    if (((sqBinary << 1) & rowMaskA) == sqEnpassantBinary) enPassantPath = enPassantPath | ((sqBinary >> 7) & rowMaskB);
+                }
 				return enPassantPath;
 			}
 		}

@@ -1,17 +1,17 @@
 {
   "images" : [
     {
-      "filename" : "WhiteQueen1.png",
+      "filename" : "whitequeen.png",
       "idiom" : "universal",
       "scale" : "1x"
     },
     {
-      "filename" : "WhiteQueen2.png",
+      "filename" : "whitequeen 1.png",
       "idiom" : "universal",
       "scale" : "2x"
     },
     {
-      "filename" : "WhiteQueen3.png",
+      "filename" : "whitequeen 2.png",
       "idiom" : "universal",
       "scale" : "3x"
     }

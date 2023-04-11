@@ -392,7 +392,7 @@ import AVFoundation
             }
             else {
                 if topMove.error > 0 {
-                    showMessage(pTextFull: "Invalid board configuration. \(topMove.errorMessage).", pTextShort: "", pDurationms: Constants.TOAST_LONG)
+                    showMessage(pTextFull: topMove.errorMessage, pTextShort: "", pDurationms: Constants.TOAST_LONG)
                 }
             }
             
@@ -447,7 +447,7 @@ import AVFoundation
             }
             else {
                 if topMove.error > 0 {
-                    showMessage(pTextFull: "Invalid board configuration. \(topMove.errorMessage).", pTextShort: "", pDurationms: Constants.TOAST_LONG)
+                    showMessage(pTextFull: topMove.errorMessage, pTextShort: "", pDurationms: Constants.TOAST_LONG)
                 }
             }
             

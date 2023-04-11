@@ -1,17 +1,17 @@
 {
   "images" : [
     {
-      "filename" : "BlackKing1.png",
+      "filename" : "blackking.png",
       "idiom" : "universal",
       "scale" : "1x"
     },
     {
-      "filename" : "BlackKing2.png",
+      "filename" : "blackking 1.png",
       "idiom" : "universal",
       "scale" : "2x"
     },
     {
-      "filename" : "BlackKing3.png",
+      "filename" : "blackking 2.png",
       "idiom" : "universal",
       "scale" : "3x"
     }

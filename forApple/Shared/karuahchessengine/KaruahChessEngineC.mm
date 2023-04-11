@@ -18,11 +18,12 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 #import <Foundation/Foundation.h>
 #import "KaruahChessEngineC.h"
-#import "cpp/Engine.h"
-#import "cpp/BitBoard.h"
-#import "cpp/Search.h"
-#import "cpp/MoveRules.h"
+#import "cpp/engine.h"
+#import "cpp/bitboard.h"
+#import "cpp/search.h"
+#import "cpp/moverules.h"
 #import "cpp/helper.h"
+#import "cpp/sf_evaluate.h"
 
 #if TARGET_OS_IPHONE
     #import <UIKit/UIKit.h>
@@ -43,7 +44,24 @@ using namespace helper;
 // Constructor
 - (id) init {
     if (self = [super init]) {
+        const char* nnueFileName = "nn-ad9b42354671";
+        
         Engine::init();
+        
+        if (Stockfish::Eval::currentEvalFileName != nnueFileName) {
+            NSString *nnueFilePath = [[NSBundle mainBundle] pathForResource:[NSString stringWithUTF8String:nnueFileName] ofType:@"nnue"];
+            
+            NSData *nnueNSData = [NSData dataWithContentsOfFile:nnueFilePath];
+            if (nnueNSData != nil) {
+                char *nnueData = (char *)[nnueNSData bytes];
+                long nnDataSize =  (long)[nnueNSData length];
+                
+                Engine::init(nnueFileName, nnueData, nnDataSize);
+            } else {
+                Engine::engineErr.add(helper::NNUE_FILE_OPEN_ERROR);
+            }
+        }
+        
     }
     return self;
 }

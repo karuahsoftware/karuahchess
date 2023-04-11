@@ -1,17 +1,17 @@
 {
   "images" : [
     {
-      "filename" : "WhiteKnight1.png",
+      "filename" : "whiteknight.png",
       "idiom" : "universal",
       "scale" : "1x"
     },
     {
-      "filename" : "WhiteKnight2.png",
+      "filename" : "whiteknight 1.png",
       "idiom" : "universal",
       "scale" : "2x"
     },
     {
-      "filename" : "WhiteKnight3.png",
+      "filename" : "whiteknight 2.png",
       "idiom" : "universal",
       "scale" : "3x"
     }

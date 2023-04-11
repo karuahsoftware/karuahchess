@@ -1,17 +1,17 @@
 {
   "images" : [
     {
-      "filename" : "WhiteKing1.png",
+      "filename" : "whiteking.png",
       "idiom" : "universal",
       "scale" : "1x"
     },
     {
-      "filename" : "WhiteKing2.png",
+      "filename" : "whiteking 1.png",
       "idiom" : "universal",
       "scale" : "2x"
     },
     {
-      "filename" : "WhiteKing3.png",
+      "filename" : "whiteking 2.png",
       "idiom" : "universal",
       "scale" : "3x"
     }

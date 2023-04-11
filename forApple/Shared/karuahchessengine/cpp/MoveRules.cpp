@@ -16,9 +16,9 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-#include "MoveRules.h"
+#include "moverules.h"
 #include "helper.h"
-#include "BitBoard.h"
+#include "bitboard.h"
 #include <vector>
 
 
@@ -35,7 +35,7 @@ namespace MoveRules {
 		// Get original values before move
 		int origFromSpin = pBoard.GetSpin(pFromIndex);
 		int origToSpin = pBoard.GetSpin(pToIndex);
-
+		
 		// Check that from and to indexes fall within the valid range
 		if (!(pFromIndex >= 0 && pFromIndex <= 63 && pToIndex >= 0 && pToIndex <= 63)) return false;
 
@@ -282,7 +282,7 @@ namespace MoveRules {
 				posScanTo = helper::BitScanForward(potentialScanTo);
 				potentialScanTo ^= 1uLL << posScanTo;
 				toIndex = (63 - posScanTo);
-
+								
 				bool success = Move(fromIndex, toIndex, pBoard, helper::PawnPromotionEnum::Queen, false, true);
 				if (success)
 				{

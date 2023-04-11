@@ -20,7 +20,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #import <Foundation/Foundation.h>
 
 #ifdef __cplusplus
-#include "cpp/BitBoard.h"
+#include "cpp/bitboard.h"
 #endif
 
 

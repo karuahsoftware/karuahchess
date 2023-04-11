@@ -76,6 +76,60 @@
 		3A96EDBF2945DEC0008A05DF /* Strength.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A96EDBE2945DEC0008A05DF /* Strength.swift */; };
 		3A96EDC02945DEC0008A05DF /* Strength.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A96EDBE2945DEC0008A05DF /* Strength.swift */; };
 		3AA5A1DB25D4EF6A00CD2121 /* Menu.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AA5A1DA25D4EF6A00CD2121 /* Menu.swift */; };
+		3AC12A7C2966A38A005B4D03 /* sf_ucioption.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3AC12A7B2966A38A005B4D03 /* sf_ucioption.cpp */; };
+		3AC12A7D2966A38A005B4D03 /* sf_ucioption.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3AC12A7B2966A38A005B4D03 /* sf_ucioption.cpp */; };
+		3AC12A9E2966A3AC005B4D03 /* sf_pawns.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3AC12A7E2966A3AA005B4D03 /* sf_pawns.cpp */; };
+		3AC12A9F2966A3AC005B4D03 /* sf_pawns.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3AC12A7E2966A3AA005B4D03 /* sf_pawns.cpp */; };
+		3AC12AA02966A3AC005B4D03 /* sf_bitbase.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3AC12A842966A3AB005B4D03 /* sf_bitbase.cpp */; };
+		3AC12AA12966A3AC005B4D03 /* sf_bitbase.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3AC12A842966A3AB005B4D03 /* sf_bitbase.cpp */; };
+		3AC12AA22966A3AC005B4D03 /* sf_endgame.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3AC12A852966A3AB005B4D03 /* sf_endgame.cpp */; };
+		3AC12AA32966A3AC005B4D03 /* sf_endgame.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3AC12A852966A3AB005B4D03 /* sf_endgame.cpp */; };
+		3AC12AA42966A3AC005B4D03 /* sf_uci.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3AC12A862966A3AB005B4D03 /* sf_uci.cpp */; };
+		3AC12AA52966A3AC005B4D03 /* sf_uci.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3AC12A862966A3AB005B4D03 /* sf_uci.cpp */; };
+		3AC12AA62966A3AC005B4D03 /* sf_bitboard.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3AC12A8C2966A3AB005B4D03 /* sf_bitboard.cpp */; };
+		3AC12AA72966A3AC005B4D03 /* sf_bitboard.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3AC12A8C2966A3AB005B4D03 /* sf_bitboard.cpp */; };
+		3AC12AA82966A3AC005B4D03 /* sf_position.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3AC12A8F2966A3AB005B4D03 /* sf_position.cpp */; };
+		3AC12AA92966A3AC005B4D03 /* sf_position.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3AC12A8F2966A3AB005B4D03 /* sf_position.cpp */; };
+		3AC12AAA2966A3AC005B4D03 /* sf_tt.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3AC12A912966A3AB005B4D03 /* sf_tt.cpp */; };
+		3AC12AAB2966A3AC005B4D03 /* sf_tt.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3AC12A912966A3AB005B4D03 /* sf_tt.cpp */; };
+		3AC12AAC2966A3AC005B4D03 /* sf_psqt.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3AC12A942966A3AB005B4D03 /* sf_psqt.cpp */; };
+		3AC12AAD2966A3AC005B4D03 /* sf_psqt.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3AC12A942966A3AB005B4D03 /* sf_psqt.cpp */; };
+		3AC12AAE2966A3AC005B4D03 /* sf_thread.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3AC12A952966A3AB005B4D03 /* sf_thread.cpp */; };
+		3AC12AAF2966A3AC005B4D03 /* sf_thread.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3AC12A952966A3AB005B4D03 /* sf_thread.cpp */; };
+		3AC12AB02966A3AC005B4D03 /* sf_evaluate.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3AC12A972966A3AB005B4D03 /* sf_evaluate.cpp */; };
+		3AC12AB12966A3AC005B4D03 /* sf_evaluate.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3AC12A972966A3AB005B4D03 /* sf_evaluate.cpp */; };
+		3AC12AB22966A3AC005B4D03 /* sf_movepick.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3AC12A982966A3AB005B4D03 /* sf_movepick.cpp */; };
+		3AC12AB32966A3AC005B4D03 /* sf_movepick.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3AC12A982966A3AB005B4D03 /* sf_movepick.cpp */; };
+		3AC12AB42966A3AC005B4D03 /* sf_movegen.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3AC12A992966A3AB005B4D03 /* sf_movegen.cpp */; };
+		3AC12AB52966A3AC005B4D03 /* sf_movegen.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3AC12A992966A3AB005B4D03 /* sf_movegen.cpp */; };
+		3AC12AB62966A3AC005B4D03 /* sf_search.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3AC12A9A2966A3AB005B4D03 /* sf_search.cpp */; };
+		3AC12AB72966A3AC005B4D03 /* sf_search.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3AC12A9A2966A3AB005B4D03 /* sf_search.cpp */; };
+		3AC12AB82966A3AC005B4D03 /* sf_material.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3AC12A9B2966A3AB005B4D03 /* sf_material.cpp */; };
+		3AC12AB92966A3AC005B4D03 /* sf_material.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3AC12A9B2966A3AB005B4D03 /* sf_material.cpp */; };
+		3AC12ABA2966A3AC005B4D03 /* sf_timeman.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3AC12A9C2966A3AB005B4D03 /* sf_timeman.cpp */; };
+		3AC12ABB2966A3AC005B4D03 /* sf_timeman.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3AC12A9C2966A3AB005B4D03 /* sf_timeman.cpp */; };
+		3AC12ABC2966A3AC005B4D03 /* sf_misc.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3AC12A9D2966A3AC005B4D03 /* sf_misc.cpp */; };
+		3AC12ABD2966A3AC005B4D03 /* sf_misc.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3AC12A9D2966A3AC005B4D03 /* sf_misc.cpp */; };
+		3AC12AC02966A3BE005B4D03 /* search.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3AC12ABE2966A3BE005B4D03 /* search.cpp */; };
+		3AC12AC12966A3BE005B4D03 /* search.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3AC12ABE2966A3BE005B4D03 /* search.cpp */; };
+		3AC12AC42966A3CE005B4D03 /* piecepattern.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3AC12AC22966A3CE005B4D03 /* piecepattern.cpp */; };
+		3AC12AC52966A3CE005B4D03 /* piecepattern.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3AC12AC22966A3CE005B4D03 /* piecepattern.cpp */; };
+		3AC12AD52966A3E0005B4D03 /* evaluate_nnue.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3AC12AC72966A3DF005B4D03 /* evaluate_nnue.cpp */; };
+		3AC12AD62966A3E0005B4D03 /* evaluate_nnue.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3AC12AC72966A3DF005B4D03 /* evaluate_nnue.cpp */; };
+		3AC12AD72966A3E0005B4D03 /* half_ka_v2_hm.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3AC12AD02966A3DF005B4D03 /* half_ka_v2_hm.cpp */; };
+		3AC12AD82966A3E0005B4D03 /* half_ka_v2_hm.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3AC12AD02966A3DF005B4D03 /* half_ka_v2_hm.cpp */; };
+		3AC12ADB2966A3FA005B4D03 /* moverules.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3AC12AD92966A3FA005B4D03 /* moverules.cpp */; };
+		3AC12ADC2966A3FA005B4D03 /* moverules.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3AC12AD92966A3FA005B4D03 /* moverules.cpp */; };
+		3AC12AE32966A413005B4D03 /* bitboard.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3AC12ADF2966A413005B4D03 /* bitboard.cpp */; };
+		3AC12AE42966A413005B4D03 /* bitboard.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3AC12ADF2966A413005B4D03 /* bitboard.cpp */; };
+		3AC12AE52966A413005B4D03 /* engine.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3AC12AE02966A413005B4D03 /* engine.cpp */; };
+		3AC12AE62966A413005B4D03 /* engine.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3AC12AE02966A413005B4D03 /* engine.cpp */; };
+		3AC12AE72966A413005B4D03 /* helper.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3AC12AE12966A413005B4D03 /* helper.cpp */; };
+		3AC12AE82966A413005B4D03 /* helper.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3AC12AE12966A413005B4D03 /* helper.cpp */; };
+		3AC12AEB2966A94A005B4D03 /* nn-ad9b42354671.nnue in Resources */ = {isa = PBXBuildFile; fileRef = 3AC12AE92966A94A005B4D03 /* nn-ad9b42354671.nnue */; };
+		3AC12AEC2966A94A005B4D03 /* nn-ad9b42354671.nnue in Resources */ = {isa = PBXBuildFile; fileRef = 3AC12AE92966A94A005B4D03 /* nn-ad9b42354671.nnue */; };
+		3AC12AED2966A94A005B4D03 /* nn-ad9b42354671-Info.txt in Resources */ = {isa = PBXBuildFile; fileRef = 3AC12AEA2966A94A005B4D03 /* nn-ad9b42354671-Info.txt */; };
+		3AC12AEE2966A94A005B4D03 /* nn-ad9b42354671-Info.txt in Resources */ = {isa = PBXBuildFile; fileRef = 3AC12AEA2966A94A005B4D03 /* nn-ad9b42354671-Info.txt */; };
 		3AC1DD2525D22D7F0054F636 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AC1DD2425D22D7F0054F636 /* AppDelegate.swift */; };
 		3AC2C8EF25E65C30004E1744 /* GameRecordParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AC2C8EE25E65C30004E1744 /* GameRecordParser.swift */; };
 		3AC2C8F025E65C30004E1744 /* GameRecordParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AC2C8EE25E65C30004E1744 /* GameRecordParser.swift */; };
@@ -104,52 +158,6 @@
 		3AF792BD25B6F5E400A86A35 /* KaruahChessEngineC.mm in Sources */ = {isa = PBXBuildFile; fileRef = 3AF7928425B6F5E400A86A35 /* KaruahChessEngineC.mm */; };
 		3AF792BE25B6F5E400A86A35 /* SearchResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AF7928525B6F5E400A86A35 /* SearchResult.swift */; };
 		3AF792BF25B6F5E400A86A35 /* SearchResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AF7928525B6F5E400A86A35 /* SearchResult.swift */; };
-		3AF792C425B6F5E400A86A35 /* MoveRules.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3AF7928B25B6F5E400A86A35 /* MoveRules.cpp */; };
-		3AF792C525B6F5E400A86A35 /* MoveRules.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3AF7928B25B6F5E400A86A35 /* MoveRules.cpp */; };
-		3AF792C625B6F5E400A86A35 /* SFmovegen.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3AF7929025B6F5E400A86A35 /* SFmovegen.cpp */; };
-		3AF792C725B6F5E400A86A35 /* SFmovegen.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3AF7929025B6F5E400A86A35 /* SFmovegen.cpp */; };
-		3AF792C825B6F5E400A86A35 /* SFendgame.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3AF7929625B6F5E400A86A35 /* SFendgame.cpp */; };
-		3AF792C925B6F5E400A86A35 /* SFendgame.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3AF7929625B6F5E400A86A35 /* SFendgame.cpp */; };
-		3AF792CA25B6F5E400A86A35 /* BitBoard.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3AF7929725B6F5E400A86A35 /* BitBoard.cpp */; };
-		3AF792CB25B6F5E400A86A35 /* BitBoard.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3AF7929725B6F5E400A86A35 /* BitBoard.cpp */; };
-		3AF792CC25B6F5E400A86A35 /* SFmovepick.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3AF7929825B6F5E400A86A35 /* SFmovepick.cpp */; };
-		3AF792CD25B6F5E400A86A35 /* SFmovepick.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3AF7929825B6F5E400A86A35 /* SFmovepick.cpp */; };
-		3AF792CE25B6F5E400A86A35 /* SFbitbase.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3AF7929B25B6F5E400A86A35 /* SFbitbase.cpp */; };
-		3AF792CF25B6F5E400A86A35 /* SFbitbase.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3AF7929B25B6F5E400A86A35 /* SFbitbase.cpp */; };
-		3AF792D025B6F5E400A86A35 /* SFthread.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3AF7929D25B6F5E400A86A35 /* SFthread.cpp */; };
-		3AF792D125B6F5E400A86A35 /* SFthread.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3AF7929D25B6F5E400A86A35 /* SFthread.cpp */; };
-		3AF792D225B6F5E400A86A35 /* helper.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3AF792A025B6F5E400A86A35 /* helper.cpp */; };
-		3AF792D325B6F5E400A86A35 /* helper.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3AF792A025B6F5E400A86A35 /* helper.cpp */; };
-		3AF792D425B6F5E400A86A35 /* SFbitboard.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3AF792A125B6F5E400A86A35 /* SFbitboard.cpp */; };
-		3AF792D525B6F5E400A86A35 /* SFbitboard.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3AF792A125B6F5E400A86A35 /* SFbitboard.cpp */; };
-		3AF792D625B6F5E400A86A35 /* SFmisc.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3AF792A425B6F5E400A86A35 /* SFmisc.cpp */; };
-		3AF792D725B6F5E400A86A35 /* SFmisc.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3AF792A425B6F5E400A86A35 /* SFmisc.cpp */; };
-		3AF792D825B6F5E400A86A35 /* SFucioption.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3AF792A525B6F5E400A86A35 /* SFucioption.cpp */; };
-		3AF792D925B6F5E400A86A35 /* SFucioption.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3AF792A525B6F5E400A86A35 /* SFucioption.cpp */; };
-		3AF792DA25B6F5E400A86A35 /* SFuci.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3AF792A625B6F5E400A86A35 /* SFuci.cpp */; };
-		3AF792DB25B6F5E400A86A35 /* SFuci.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3AF792A625B6F5E400A86A35 /* SFuci.cpp */; };
-		3AF792DC25B6F5E400A86A35 /* Search.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3AF792A925B6F5E400A86A35 /* Search.cpp */; };
-		3AF792DD25B6F5E400A86A35 /* Search.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3AF792A925B6F5E400A86A35 /* Search.cpp */; };
-		3AF792DE25B6F5E400A86A35 /* SFpawns.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3AF792AA25B6F5E400A86A35 /* SFpawns.cpp */; };
-		3AF792DF25B6F5E400A86A35 /* SFpawns.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3AF792AA25B6F5E400A86A35 /* SFpawns.cpp */; };
-		3AF792E025B6F5E400A86A35 /* SFevaluate.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3AF792AC25B6F5E400A86A35 /* SFevaluate.cpp */; };
-		3AF792E125B6F5E400A86A35 /* SFevaluate.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3AF792AC25B6F5E400A86A35 /* SFevaluate.cpp */; };
-		3AF792E225B6F5E400A86A35 /* SFtt.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3AF792AD25B6F5E400A86A35 /* SFtt.cpp */; };
-		3AF792E325B6F5E400A86A35 /* SFtt.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3AF792AD25B6F5E400A86A35 /* SFtt.cpp */; };
-		3AF792E425B6F5E400A86A35 /* Engine.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3AF792AE25B6F5E400A86A35 /* Engine.cpp */; };
-		3AF792E525B6F5E400A86A35 /* Engine.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3AF792AE25B6F5E400A86A35 /* Engine.cpp */; };
-		3AF792E625B6F5E400A86A35 /* PiecePattern.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3AF792AF25B6F5E400A86A35 /* PiecePattern.cpp */; };
-		3AF792E725B6F5E400A86A35 /* PiecePattern.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3AF792AF25B6F5E400A86A35 /* PiecePattern.cpp */; };
-		3AF792E825B6F5E400A86A35 /* SFposition.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3AF792B125B6F5E400A86A35 /* SFposition.cpp */; };
-		3AF792E925B6F5E400A86A35 /* SFposition.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3AF792B125B6F5E400A86A35 /* SFposition.cpp */; };
-		3AF792EA25B6F5E400A86A35 /* SFtimeman.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3AF792B225B6F5E400A86A35 /* SFtimeman.cpp */; };
-		3AF792EB25B6F5E400A86A35 /* SFtimeman.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3AF792B225B6F5E400A86A35 /* SFtimeman.cpp */; };
-		3AF792EC25B6F5E400A86A35 /* SFpsqt.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3AF792B325B6F5E400A86A35 /* SFpsqt.cpp */; };
-		3AF792ED25B6F5E400A86A35 /* SFpsqt.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3AF792B325B6F5E400A86A35 /* SFpsqt.cpp */; };
-		3AF792EE25B6F5E400A86A35 /* SFsearch.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3AF792B525B6F5E400A86A35 /* SFsearch.cpp */; };
-		3AF792EF25B6F5E400A86A35 /* SFsearch.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3AF792B525B6F5E400A86A35 /* SFsearch.cpp */; };
-		3AF792F025B6F5E400A86A35 /* SFmaterial.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3AF792B825B6F5E400A86A35 /* SFmaterial.cpp */; };
-		3AF792F125B6F5E400A86A35 /* SFmaterial.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3AF792B825B6F5E400A86A35 /* SFmaterial.cpp */; };
 		3AF792F225B6F5E400A86A35 /* MoveResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AF792B925B6F5E400A86A35 /* MoveResult.swift */; };
 		3AF792F325B6F5E400A86A35 /* MoveResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AF792B925B6F5E400A86A35 /* MoveResult.swift */; };
 		3AF792F425B6F5E400A86A35 /* SearchOptions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AF792BB25B6F5E400A86A35 /* SearchOptions.swift */; };
@@ -300,6 +308,65 @@
 		3A8061B5288BFADD00F7729C /* HintActor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HintActor.swift; sourceTree = "<group>"; };
 		3A96EDBE2945DEC0008A05DF /* Strength.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Strength.swift; sourceTree = "<group>"; };
 		3AA5A1DA25D4EF6A00CD2121 /* Menu.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Menu.swift; sourceTree = "<group>"; };
+		3AC12A7B2966A38A005B4D03 /* sf_ucioption.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = sf_ucioption.cpp; sourceTree = "<group>"; };
+		3AC12A7E2966A3AA005B4D03 /* sf_pawns.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = sf_pawns.cpp; sourceTree = "<group>"; };
+		3AC12A7F2966A3AA005B4D03 /* sf_psqt.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = sf_psqt.h; sourceTree = "<group>"; };
+		3AC12A802966A3AA005B4D03 /* sf_movegen.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = sf_movegen.h; sourceTree = "<group>"; };
+		3AC12A812966A3AA005B4D03 /* sf_thread.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = sf_thread.h; sourceTree = "<group>"; };
+		3AC12A822966A3AB005B4D03 /* sf_movepick.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = sf_movepick.h; sourceTree = "<group>"; };
+		3AC12A832966A3AB005B4D03 /* sf_timeman.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = sf_timeman.h; sourceTree = "<group>"; };
+		3AC12A842966A3AB005B4D03 /* sf_bitbase.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = sf_bitbase.cpp; sourceTree = "<group>"; };
+		3AC12A852966A3AB005B4D03 /* sf_endgame.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = sf_endgame.cpp; sourceTree = "<group>"; };
+		3AC12A862966A3AB005B4D03 /* sf_uci.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = sf_uci.cpp; sourceTree = "<group>"; };
+		3AC12A872966A3AB005B4D03 /* sf_material.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = sf_material.h; sourceTree = "<group>"; };
+		3AC12A882966A3AB005B4D03 /* sf_evaluate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = sf_evaluate.h; sourceTree = "<group>"; };
+		3AC12A892966A3AB005B4D03 /* sf_position.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = sf_position.h; sourceTree = "<group>"; };
+		3AC12A8A2966A3AB005B4D03 /* sf_misc.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = sf_misc.h; sourceTree = "<group>"; };
+		3AC12A8B2966A3AB005B4D03 /* sf_endgame.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = sf_endgame.h; sourceTree = "<group>"; };
+		3AC12A8C2966A3AB005B4D03 /* sf_bitboard.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = sf_bitboard.cpp; sourceTree = "<group>"; };
+		3AC12A8D2966A3AB005B4D03 /* sf_types.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = sf_types.h; sourceTree = "<group>"; };
+		3AC12A8E2966A3AB005B4D03 /* sf_pawns.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = sf_pawns.h; sourceTree = "<group>"; };
+		3AC12A8F2966A3AB005B4D03 /* sf_position.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = sf_position.cpp; sourceTree = "<group>"; };
+		3AC12A902966A3AB005B4D03 /* sf_tt.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = sf_tt.h; sourceTree = "<group>"; };
+		3AC12A912966A3AB005B4D03 /* sf_tt.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = sf_tt.cpp; sourceTree = "<group>"; };
+		3AC12A922966A3AB005B4D03 /* sf_uci.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = sf_uci.h; sourceTree = "<group>"; };
+		3AC12A932966A3AB005B4D03 /* sf_search.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = sf_search.h; sourceTree = "<group>"; };
+		3AC12A942966A3AB005B4D03 /* sf_psqt.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = sf_psqt.cpp; sourceTree = "<group>"; };
+		3AC12A952966A3AB005B4D03 /* sf_thread.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = sf_thread.cpp; sourceTree = "<group>"; };
+		3AC12A962966A3AB005B4D03 /* sf_bitboard.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = sf_bitboard.h; sourceTree = "<group>"; };
+		3AC12A972966A3AB005B4D03 /* sf_evaluate.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = sf_evaluate.cpp; sourceTree = "<group>"; };
+		3AC12A982966A3AB005B4D03 /* sf_movepick.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = sf_movepick.cpp; sourceTree = "<group>"; };
+		3AC12A992966A3AB005B4D03 /* sf_movegen.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = sf_movegen.cpp; sourceTree = "<group>"; };
+		3AC12A9A2966A3AB005B4D03 /* sf_search.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = sf_search.cpp; sourceTree = "<group>"; };
+		3AC12A9B2966A3AB005B4D03 /* sf_material.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = sf_material.cpp; sourceTree = "<group>"; };
+		3AC12A9C2966A3AB005B4D03 /* sf_timeman.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = sf_timeman.cpp; sourceTree = "<group>"; };
+		3AC12A9D2966A3AC005B4D03 /* sf_misc.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = sf_misc.cpp; sourceTree = "<group>"; };
+		3AC12ABE2966A3BE005B4D03 /* search.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = search.cpp; sourceTree = "<group>"; };
+		3AC12ABF2966A3BE005B4D03 /* search.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = search.h; sourceTree = "<group>"; };
+		3AC12AC22966A3CE005B4D03 /* piecepattern.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = piecepattern.cpp; sourceTree = "<group>"; };
+		3AC12AC32966A3CE005B4D03 /* piecepattern.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = piecepattern.h; sourceTree = "<group>"; };
+		3AC12AC72966A3DF005B4D03 /* evaluate_nnue.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = evaluate_nnue.cpp; sourceTree = "<group>"; };
+		3AC12AC92966A3DF005B4D03 /* affine_transform.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = affine_transform.h; sourceTree = "<group>"; };
+		3AC12ACA2966A3DF005B4D03 /* sqr_clipped_relu.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = sqr_clipped_relu.h; sourceTree = "<group>"; };
+		3AC12ACB2966A3DF005B4D03 /* clipped_relu.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = clipped_relu.h; sourceTree = "<group>"; };
+		3AC12ACC2966A3DF005B4D03 /* simd.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = simd.h; sourceTree = "<group>"; };
+		3AC12ACD2966A3DF005B4D03 /* nnue_common.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = nnue_common.h; sourceTree = "<group>"; };
+		3AC12ACE2966A3DF005B4D03 /* nnue_feature_transformer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = nnue_feature_transformer.h; sourceTree = "<group>"; };
+		3AC12AD02966A3DF005B4D03 /* half_ka_v2_hm.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = half_ka_v2_hm.cpp; sourceTree = "<group>"; };
+		3AC12AD12966A3DF005B4D03 /* half_ka_v2_hm.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = half_ka_v2_hm.h; sourceTree = "<group>"; };
+		3AC12AD22966A3DF005B4D03 /* evaluate_nnue.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = evaluate_nnue.h; sourceTree = "<group>"; };
+		3AC12AD32966A3DF005B4D03 /* nnue_accumulator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = nnue_accumulator.h; sourceTree = "<group>"; };
+		3AC12AD42966A3DF005B4D03 /* nnue_architecture.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = nnue_architecture.h; sourceTree = "<group>"; };
+		3AC12AD92966A3FA005B4D03 /* moverules.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = moverules.cpp; sourceTree = "<group>"; };
+		3AC12ADA2966A3FA005B4D03 /* moverules.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = moverules.h; sourceTree = "<group>"; };
+		3AC12ADD2966A413005B4D03 /* bitboard.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = bitboard.h; sourceTree = "<group>"; };
+		3AC12ADE2966A413005B4D03 /* helper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = helper.h; sourceTree = "<group>"; };
+		3AC12ADF2966A413005B4D03 /* bitboard.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = bitboard.cpp; sourceTree = "<group>"; };
+		3AC12AE02966A413005B4D03 /* engine.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = engine.cpp; sourceTree = "<group>"; };
+		3AC12AE12966A413005B4D03 /* helper.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = helper.cpp; sourceTree = "<group>"; };
+		3AC12AE22966A413005B4D03 /* engine.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = engine.h; sourceTree = "<group>"; };
+		3AC12AE92966A94A005B4D03 /* nn-ad9b42354671.nnue */ = {isa = PBXFileReference; lastKnownFileType = file; path = "nn-ad9b42354671.nnue"; sourceTree = "<group>"; };
+		3AC12AEA2966A94A005B4D03 /* nn-ad9b42354671-Info.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "nn-ad9b42354671-Info.txt"; sourceTree = "<group>"; };
 		3AC1DD2425D22D7F0054F636 /* AppDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		3AC2C8EE25E65C30004E1744 /* GameRecordParser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameRecordParser.swift; sourceTree = "<group>"; };
 		3AD871FA262DA80700828A87 /* NavigatorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigatorView.swift; sourceTree = "<group>"; };
@@ -321,51 +388,6 @@
 		3AF7928425B6F5E400A86A35 /* KaruahChessEngineC.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = KaruahChessEngineC.mm; sourceTree = "<group>"; };
 		3AF7928525B6F5E400A86A35 /* SearchResult.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SearchResult.swift; sourceTree = "<group>"; };
 		3AF7928625B6F5E400A86A35 /* karuahchess-Bridging-Header.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "karuahchess-Bridging-Header.h"; sourceTree = "<group>"; };
-		3AF7928A25B6F5E400A86A35 /* SFpawns.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SFpawns.h; sourceTree = "<group>"; };
-		3AF7928B25B6F5E400A86A35 /* MoveRules.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = MoveRules.cpp; sourceTree = "<group>"; };
-		3AF7928C25B6F5E400A86A35 /* helper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = helper.h; sourceTree = "<group>"; };
-		3AF7928D25B6F5E400A86A35 /* SFmisc.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SFmisc.h; sourceTree = "<group>"; };
-		3AF7928E25B6F5E400A86A35 /* MoveRules.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MoveRules.h; sourceTree = "<group>"; };
-		3AF7928F25B6F5E400A86A35 /* PiecePattern.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PiecePattern.h; sourceTree = "<group>"; };
-		3AF7929025B6F5E400A86A35 /* SFmovegen.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SFmovegen.cpp; sourceTree = "<group>"; };
-		3AF7929125B6F5E400A86A35 /* Engine.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Engine.h; sourceTree = "<group>"; };
-		3AF7929325B6F5E400A86A35 /* SFmaterial.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SFmaterial.h; sourceTree = "<group>"; };
-		3AF7929425B6F5E400A86A35 /* SFthread.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SFthread.h; sourceTree = "<group>"; };
-		3AF7929525B6F5E400A86A35 /* SFbitboard.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SFbitboard.h; sourceTree = "<group>"; };
-		3AF7929625B6F5E400A86A35 /* SFendgame.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SFendgame.cpp; sourceTree = "<group>"; };
-		3AF7929725B6F5E400A86A35 /* BitBoard.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = BitBoard.cpp; sourceTree = "<group>"; };
-		3AF7929825B6F5E400A86A35 /* SFmovepick.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SFmovepick.cpp; sourceTree = "<group>"; };
-		3AF7929925B6F5E400A86A35 /* SFpsqt.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SFpsqt.h; sourceTree = "<group>"; };
-		3AF7929B25B6F5E400A86A35 /* SFbitbase.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SFbitbase.cpp; sourceTree = "<group>"; };
-		3AF7929C25B6F5E400A86A35 /* SFtypes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SFtypes.h; sourceTree = "<group>"; };
-		3AF7929D25B6F5E400A86A35 /* SFthread.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SFthread.cpp; sourceTree = "<group>"; };
-		3AF7929E25B6F5E400A86A35 /* SFuci.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SFuci.h; sourceTree = "<group>"; };
-		3AF7929F25B6F5E400A86A35 /* SFsearch.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SFsearch.h; sourceTree = "<group>"; };
-		3AF792A025B6F5E400A86A35 /* helper.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = helper.cpp; sourceTree = "<group>"; };
-		3AF792A125B6F5E400A86A35 /* SFbitboard.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SFbitboard.cpp; sourceTree = "<group>"; };
-		3AF792A225B6F5E400A86A35 /* BitBoard.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BitBoard.h; sourceTree = "<group>"; };
-		3AF792A325B6F5E400A86A35 /* SFendgame.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SFendgame.h; sourceTree = "<group>"; };
-		3AF792A425B6F5E400A86A35 /* SFmisc.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SFmisc.cpp; sourceTree = "<group>"; };
-		3AF792A525B6F5E400A86A35 /* SFucioption.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SFucioption.cpp; sourceTree = "<group>"; };
-		3AF792A625B6F5E400A86A35 /* SFuci.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SFuci.cpp; sourceTree = "<group>"; };
-		3AF792A725B6F5E400A86A35 /* SFevaluate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SFevaluate.h; sourceTree = "<group>"; };
-		3AF792A825B6F5E400A86A35 /* SFtimeman.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SFtimeman.h; sourceTree = "<group>"; };
-		3AF792A925B6F5E400A86A35 /* Search.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Search.cpp; sourceTree = "<group>"; };
-		3AF792AA25B6F5E400A86A35 /* SFpawns.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SFpawns.cpp; sourceTree = "<group>"; };
-		3AF792AB25B6F5E400A86A35 /* SFposition.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SFposition.h; sourceTree = "<group>"; };
-		3AF792AC25B6F5E400A86A35 /* SFevaluate.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SFevaluate.cpp; sourceTree = "<group>"; };
-		3AF792AD25B6F5E400A86A35 /* SFtt.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SFtt.cpp; sourceTree = "<group>"; };
-		3AF792AE25B6F5E400A86A35 /* Engine.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Engine.cpp; sourceTree = "<group>"; };
-		3AF792AF25B6F5E400A86A35 /* PiecePattern.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PiecePattern.cpp; sourceTree = "<group>"; };
-		3AF792B025B6F5E400A86A35 /* SFtt.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SFtt.h; sourceTree = "<group>"; };
-		3AF792B125B6F5E400A86A35 /* SFposition.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SFposition.cpp; sourceTree = "<group>"; };
-		3AF792B225B6F5E400A86A35 /* SFtimeman.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SFtimeman.cpp; sourceTree = "<group>"; };
-		3AF792B325B6F5E400A86A35 /* SFpsqt.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SFpsqt.cpp; sourceTree = "<group>"; };
-		3AF792B425B6F5E400A86A35 /* Search.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Search.h; sourceTree = "<group>"; };
-		3AF792B525B6F5E400A86A35 /* SFsearch.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SFsearch.cpp; sourceTree = "<group>"; };
-		3AF792B625B6F5E400A86A35 /* SFmovepick.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SFmovepick.h; sourceTree = "<group>"; };
-		3AF792B725B6F5E400A86A35 /* SFmovegen.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SFmovegen.h; sourceTree = "<group>"; };
-		3AF792B825B6F5E400A86A35 /* SFmaterial.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SFmaterial.cpp; sourceTree = "<group>"; };
 		3AF792B925B6F5E400A86A35 /* MoveResult.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MoveResult.swift; sourceTree = "<group>"; };
 		3AF792BA25B6F5E400A86A35 /* KaruahChessEngineC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KaruahChessEngineC.h; sourceTree = "<group>"; };
 		3AF792BB25B6F5E400A86A35 /* SearchOptions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SearchOptions.swift; sourceTree = "<group>"; };
@@ -491,9 +513,46 @@
 			path = Compression;
 			sourceTree = "<group>";
 		};
+		3AC12AC62966A3DF005B4D03 /* nnue */ = {
+			isa = PBXGroup;
+			children = (
+				3AC12AC72966A3DF005B4D03 /* evaluate_nnue.cpp */,
+				3AC12AC82966A3DF005B4D03 /* layers */,
+				3AC12ACD2966A3DF005B4D03 /* nnue_common.h */,
+				3AC12ACE2966A3DF005B4D03 /* nnue_feature_transformer.h */,
+				3AC12ACF2966A3DF005B4D03 /* features */,
+				3AC12AD22966A3DF005B4D03 /* evaluate_nnue.h */,
+				3AC12AD32966A3DF005B4D03 /* nnue_accumulator.h */,
+				3AC12AD42966A3DF005B4D03 /* nnue_architecture.h */,
+			);
+			path = nnue;
+			sourceTree = "<group>";
+		};
+		3AC12AC82966A3DF005B4D03 /* layers */ = {
+			isa = PBXGroup;
+			children = (
+				3AC12AC92966A3DF005B4D03 /* affine_transform.h */,
+				3AC12ACA2966A3DF005B4D03 /* sqr_clipped_relu.h */,
+				3AC12ACB2966A3DF005B4D03 /* clipped_relu.h */,
+				3AC12ACC2966A3DF005B4D03 /* simd.h */,
+			);
+			path = layers;
+			sourceTree = "<group>";
+		};
+		3AC12ACF2966A3DF005B4D03 /* features */ = {
+			isa = PBXGroup;
+			children = (
+				3AC12AD02966A3DF005B4D03 /* half_ka_v2_hm.cpp */,
+				3AC12AD12966A3DF005B4D03 /* half_ka_v2_hm.h */,
+			);
+			path = features;
+			sourceTree = "<group>";
+		};
 		3AE2A57C2760BCAD0003D6AB /* Media */ = {
 			isa = PBXGroup;
 			children = (
+				3AC12AEA2966A94A005B4D03 /* nn-ad9b42354671-Info.txt */,
+				3AC12AE92966A94A005B4D03 /* nn-ad9b42354671.nnue */,
 				3AE2A57D2760BE260003D6AB /* piecesound.wav */,
 			);
 			path = Media;
@@ -580,51 +639,52 @@
 		3AF7928725B6F5E400A86A35 /* cpp */ = {
 			isa = PBXGroup;
 			children = (
-				3AF7929725B6F5E400A86A35 /* BitBoard.cpp */,
-				3AF792A225B6F5E400A86A35 /* BitBoard.h */,
-				3AF792AE25B6F5E400A86A35 /* Engine.cpp */,
-				3AF7929125B6F5E400A86A35 /* Engine.h */,
-				3AF792A025B6F5E400A86A35 /* helper.cpp */,
-				3AF7928C25B6F5E400A86A35 /* helper.h */,
-				3AF7928B25B6F5E400A86A35 /* MoveRules.cpp */,
-				3AF7928E25B6F5E400A86A35 /* MoveRules.h */,
-				3AF792AF25B6F5E400A86A35 /* PiecePattern.cpp */,
-				3AF7928F25B6F5E400A86A35 /* PiecePattern.h */,
-				3AF792A925B6F5E400A86A35 /* Search.cpp */,
-				3AF792B425B6F5E400A86A35 /* Search.h */,
-				3AF7929B25B6F5E400A86A35 /* SFbitbase.cpp */,
-				3AF792A125B6F5E400A86A35 /* SFbitboard.cpp */,
-				3AF7929525B6F5E400A86A35 /* SFbitboard.h */,
-				3AF7929625B6F5E400A86A35 /* SFendgame.cpp */,
-				3AF792A325B6F5E400A86A35 /* SFendgame.h */,
-				3AF792AC25B6F5E400A86A35 /* SFevaluate.cpp */,
-				3AF792A725B6F5E400A86A35 /* SFevaluate.h */,
-				3AF792B825B6F5E400A86A35 /* SFmaterial.cpp */,
-				3AF7929325B6F5E400A86A35 /* SFmaterial.h */,
-				3AF792A425B6F5E400A86A35 /* SFmisc.cpp */,
-				3AF7928D25B6F5E400A86A35 /* SFmisc.h */,
-				3AF7929025B6F5E400A86A35 /* SFmovegen.cpp */,
-				3AF792B725B6F5E400A86A35 /* SFmovegen.h */,
-				3AF7929825B6F5E400A86A35 /* SFmovepick.cpp */,
-				3AF792B625B6F5E400A86A35 /* SFmovepick.h */,
-				3AF792AA25B6F5E400A86A35 /* SFpawns.cpp */,
-				3AF7928A25B6F5E400A86A35 /* SFpawns.h */,
-				3AF792B125B6F5E400A86A35 /* SFposition.cpp */,
-				3AF792AB25B6F5E400A86A35 /* SFposition.h */,
-				3AF792B325B6F5E400A86A35 /* SFpsqt.cpp */,
-				3AF7929925B6F5E400A86A35 /* SFpsqt.h */,
-				3AF792B525B6F5E400A86A35 /* SFsearch.cpp */,
-				3AF7929F25B6F5E400A86A35 /* SFsearch.h */,
-				3AF7929D25B6F5E400A86A35 /* SFthread.cpp */,
-				3AF7929425B6F5E400A86A35 /* SFthread.h */,
-				3AF792B225B6F5E400A86A35 /* SFtimeman.cpp */,
-				3AF792A825B6F5E400A86A35 /* SFtimeman.h */,
-				3AF792AD25B6F5E400A86A35 /* SFtt.cpp */,
-				3AF792B025B6F5E400A86A35 /* SFtt.h */,
-				3AF7929C25B6F5E400A86A35 /* SFtypes.h */,
-				3AF792A625B6F5E400A86A35 /* SFuci.cpp */,
-				3AF7929E25B6F5E400A86A35 /* SFuci.h */,
-				3AF792A525B6F5E400A86A35 /* SFucioption.cpp */,
+				3AC12ADF2966A413005B4D03 /* bitboard.cpp */,
+				3AC12ADD2966A413005B4D03 /* bitboard.h */,
+				3AC12AE02966A413005B4D03 /* engine.cpp */,
+				3AC12AE22966A413005B4D03 /* engine.h */,
+				3AC12AE12966A413005B4D03 /* helper.cpp */,
+				3AC12ADE2966A413005B4D03 /* helper.h */,
+				3AC12AD92966A3FA005B4D03 /* moverules.cpp */,
+				3AC12ADA2966A3FA005B4D03 /* moverules.h */,
+				3AC12AC62966A3DF005B4D03 /* nnue */,
+				3AC12AC22966A3CE005B4D03 /* piecepattern.cpp */,
+				3AC12AC32966A3CE005B4D03 /* piecepattern.h */,
+				3AC12ABE2966A3BE005B4D03 /* search.cpp */,
+				3AC12ABF2966A3BE005B4D03 /* search.h */,
+				3AC12A842966A3AB005B4D03 /* sf_bitbase.cpp */,
+				3AC12A8C2966A3AB005B4D03 /* sf_bitboard.cpp */,
+				3AC12A962966A3AB005B4D03 /* sf_bitboard.h */,
+				3AC12A852966A3AB005B4D03 /* sf_endgame.cpp */,
+				3AC12A8B2966A3AB005B4D03 /* sf_endgame.h */,
+				3AC12A972966A3AB005B4D03 /* sf_evaluate.cpp */,
+				3AC12A882966A3AB005B4D03 /* sf_evaluate.h */,
+				3AC12A9B2966A3AB005B4D03 /* sf_material.cpp */,
+				3AC12A872966A3AB005B4D03 /* sf_material.h */,
+				3AC12A9D2966A3AC005B4D03 /* sf_misc.cpp */,
+				3AC12A8A2966A3AB005B4D03 /* sf_misc.h */,
+				3AC12A992966A3AB005B4D03 /* sf_movegen.cpp */,
+				3AC12A802966A3AA005B4D03 /* sf_movegen.h */,
+				3AC12A982966A3AB005B4D03 /* sf_movepick.cpp */,
+				3AC12A822966A3AB005B4D03 /* sf_movepick.h */,
+				3AC12A7E2966A3AA005B4D03 /* sf_pawns.cpp */,
+				3AC12A8E2966A3AB005B4D03 /* sf_pawns.h */,
+				3AC12A8F2966A3AB005B4D03 /* sf_position.cpp */,
+				3AC12A892966A3AB005B4D03 /* sf_position.h */,
+				3AC12A942966A3AB005B4D03 /* sf_psqt.cpp */,
+				3AC12A7F2966A3AA005B4D03 /* sf_psqt.h */,
+				3AC12A9A2966A3AB005B4D03 /* sf_search.cpp */,
+				3AC12A932966A3AB005B4D03 /* sf_search.h */,
+				3AC12A952966A3AB005B4D03 /* sf_thread.cpp */,
+				3AC12A812966A3AA005B4D03 /* sf_thread.h */,
+				3AC12A9C2966A3AB005B4D03 /* sf_timeman.cpp */,
+				3AC12A832966A3AB005B4D03 /* sf_timeman.h */,
+				3AC12A912966A3AB005B4D03 /* sf_tt.cpp */,
+				3AC12A902966A3AB005B4D03 /* sf_tt.h */,
+				3AC12A8D2966A3AB005B4D03 /* sf_types.h */,
+				3AC12A862966A3AB005B4D03 /* sf_uci.cpp */,
+				3AC12A922966A3AB005B4D03 /* sf_uci.h */,
+				3AC12A7B2966A38A005B4D03 /* sf_ucioption.cpp */,
 			);
 			path = cpp;
 			sourceTree = "<group>";
@@ -863,7 +923,9 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				3AC12AED2966A94A005B4D03 /* nn-ad9b42354671-Info.txt in Resources */,
 				3AF7927325B6F1B100A86A35 /* Assets.xcassets in Resources */,
+				3AC12AEB2966A94A005B4D03 /* nn-ad9b42354671.nnue in Resources */,
 				3AE2A57E2760BE260003D6AB /* piecesound.wav in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -872,7 +934,9 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				3AC12AEE2966A94A005B4D03 /* nn-ad9b42354671-Info.txt in Resources */,
 				3AF7927425B6F1B100A86A35 /* Assets.xcassets in Resources */,
+				3AC12AEC2966A94A005B4D03 /* nn-ad9b42354671.nnue in Resources */,
 				3AE2A57F2760BE260003D6AB /* piecesound.wav in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -884,67 +948,70 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				3AC12AC02966A3BE005B4D03 /* search.cpp in Sources */,
 				3A0C4E8325FE2531003B9111 /* GameRecord.swift in Sources */,
 				3AF7934325B6F65A00A86A35 /* KaruahChessDB.swift in Sources */,
 				3AF792F425B6F5E400A86A35 /* SearchOptions.swift in Sources */,
 				3AF793A125B6F65A00A86A35 /* ActivityIndicatorViewModel.swift in Sources */,
 				3AF7937125B6F65A00A86A35 /* GameRecordDataService.swift in Sources */,
+				3AC12AA02966A3AC005B4D03 /* sf_bitbase.cpp in Sources */,
 				3AD871FB262DA80700828A87 /* NavigatorView.swift in Sources */,
-				3AF792CC25B6F5E400A86A35 /* SFmovepick.cpp in Sources */,
 				3AF7936325B6F65A00A86A35 /* Device.swift in Sources */,
 				3AF49247275E18D2006BC8F1 /* ParamSoundEffect.swift in Sources */,
-				3AF792DC25B6F5E400A86A35 /* Search.cpp in Sources */,
 				3A159E0626D1002B001100CC /* ParamLimitAdvanced.swift in Sources */,
+				3AC12AB62966A3AC005B4D03 /* sf_search.cpp in Sources */,
 				3AF7935325B6F65A00A86A35 /* AboutView.swift in Sources */,
-				3AF792CA25B6F5E400A86A35 /* BitBoard.cpp in Sources */,
 				3A159E1526D10496001100CC /* ParamRandomiseFirstMove.swift in Sources */,
 				3AF7937525B6F65A00A86A35 /* GameRecordArray.swift in Sources */,
 				3AF7938F25B6F65A00A86A35 /* ParamRotateBoard.swift in Sources */,
 				3AF7938325B6F65A00A86A35 /* ParamNavigator.swift in Sources */,
+				3AC12AC42966A3CE005B4D03 /* piecepattern.cpp in Sources */,
 				3A6EEC6625D65504005B637F /* EngineSettings.swift in Sources */,
+				3AC12AB42966A3AC005B4D03 /* sf_movegen.cpp in Sources */,
 				3AF7936525B6F65A00A86A35 /* PieceEditToolView.swift in Sources */,
+				3AC12AAE2966A3AC005B4D03 /* sf_thread.cpp in Sources */,
 				3AF7938725B6F65A00A86A35 /* ParamLimitSkillLevel.swift in Sources */,
 				3AF792F225B6F5E400A86A35 /* MoveResult.swift in Sources */,
 				3ADCAB36262EF82B00962FEE /* NavigatorViewModel.swift in Sources */,
-				3AF792E025B6F5E400A86A35 /* SFevaluate.cpp in Sources */,
-				3AF792EA25B6F5E400A86A35 /* SFtimeman.cpp in Sources */,
+				3AC12AB82966A3AC005B4D03 /* sf_material.cpp in Sources */,
+				3AC12AB22966A3AC005B4D03 /* sf_movepick.cpp in Sources */,
+				3AC12AD72966A3E0005B4D03 /* half_ka_v2_hm.cpp in Sources */,
 				3A7816FC27708D4800DCE7E6 /* SoundSettings.swift in Sources */,
+				3AC12ABC2966A3AC005B4D03 /* sf_misc.cpp in Sources */,
 				3A4A71A5264AA02F00F68478 /* PawnPromotionViewModel.swift in Sources */,
 				3AF7937B25B6F65A00A86A35 /* ParamMoveHighlight.swift in Sources */,
 				3AF7937F25B6F65A00A86A35 /* ParamComputerMoveFirst.swift in Sources */,
-				3AF792C825B6F5E400A86A35 /* SFendgame.cpp in Sources */,
 				3A422D9127771A4B00327D4B /* CompressionC.mm in Sources */,
-				3AF792D825B6F5E400A86A35 /* SFucioption.cpp in Sources */,
 				3AF792FD25B6F63800A86A35 /* Constants.swift in Sources */,
+				3AC12AAC2966A3AC005B4D03 /* sf_psqt.cpp in Sources */,
 				3A159E0C26D100E9001100CC /* ParamLimitMoveDuration.swift in Sources */,
+				3AC12AA62966A3AC005B4D03 /* sf_bitboard.cpp in Sources */,
 				3AF793A525B6F65A00A86A35 /* DirectionIndicatorViewModel.swift in Sources */,
 				3AF58D5F25FA32CE008AAAD1 /* ImportDB.swift in Sources */,
-				3AF792E225B6F5E400A86A35 /* SFtt.cpp in Sources */,
 				3AC2C8EF25E65C30004E1744 /* GameRecordParser.swift in Sources */,
 				3AF7936925B6F65A00A86A35 /* ActivityIndicatorView.swift in Sources */,
 				3A3A004B25CF6F8100252B36 /* ContentView.swift in Sources */,
 				3A3F6766288AB7600069FD3A /* BoardSettings.swift in Sources */,
+				3AC12AE32966A413005B4D03 /* bitboard.cpp in Sources */,
 				3AF7934D25B6F65A00A86A35 /* TileFrameBoardPreference.swift in Sources */,
 				3AF7939D25B6F65A00A86A35 /* MenuSettingsViewModel.swift in Sources */,
+				3AC12A9E2966A3AC005B4D03 /* sf_pawns.cpp in Sources */,
 				3AF792BC25B6F5E400A86A35 /* KaruahChessEngineC.mm in Sources */,
-				3AF792D425B6F5E400A86A35 /* SFbitboard.cpp in Sources */,
 				3AF7936125B6F65A00A86A35 /* BoardMessageAlertView.swift in Sources */,
 				3A09023A288CF75800CB965B /* HintViewModel.swift in Sources */,
 				3A226877276D71BE0082F8DB /* TileAnimationMoveFadeModifier.swift in Sources */,
+				3AC12AA42966A3AC005B4D03 /* sf_uci.cpp in Sources */,
 				3A159E0926D10091001100CC /* ParamLimitDepth.swift in Sources */,
 				3AF7935125B6F65A00A86A35 /* TilePanelView.swift in Sources */,
 				3AF7936F25B6F65A00A86A35 /* BoardSquareDataService.swift in Sources */,
+				3AC12AB02966A3AC005B4D03 /* sf_evaluate.cpp in Sources */,
 				3A2785F3288A34AA001F4FE6 /* BoardSettingsViewModel.swift in Sources */,
 				3AF792BE25B6F5E400A86A35 /* SearchResult.swift in Sources */,
-				3AF792E425B6F5E400A86A35 /* Engine.cpp in Sources */,
 				3AF7938D25B6F65A00A86A35 /* ParamVoiceCommand.swift in Sources */,
 				3A35C938288BB9BF00DE83F7 /* LevelIndicatorView.swift in Sources */,
 				3AF7937325B6F65A00A86A35 /* GameRecordDataServiceProtocol.swift in Sources */,
 				3AF7935925B6F65A00A86A35 /* TileShakeEffect.swift in Sources */,
-				3AF792E625B6F5E400A86A35 /* PiecePattern.cpp in Sources */,
-				3AF792E825B6F5E400A86A35 /* SFposition.cpp in Sources */,
 				3A3A004525CF6F4F00252B36 /* SceneDelegate.swift in Sources */,
-				3AF792DE25B6F5E400A86A35 /* SFpawns.cpp in Sources */,
 				3AF7934525B6F65A00A86A35 /* TileFadeOutModifier.swift in Sources */,
 				3A2930532772B4EB00F34565 /* SearchActor.swift in Sources */,
 				3AF7939325B6F65A00A86A35 /* Move.swift in Sources */,
@@ -953,24 +1020,25 @@
 				3A4A71A2264A9FA000F68478 /* PawnPromotionView.swift in Sources */,
 				3A159E0326D0FFF1001100CC /* ParamLevelAuto.swift in Sources */,
 				3AF7939B25B6F65A00A86A35 /* TileAnimationViewModel.swift in Sources */,
+				3AC12AA22966A3AC005B4D03 /* sf_endgame.cpp in Sources */,
 				3AF7935F25B6F65A00A86A35 /* TileAnimationTakeModifier.swift in Sources */,
-				3AF792DA25B6F5E400A86A35 /* SFuci.cpp in Sources */,
 				3A159E1226D1018D001100CC /* ParamLimitThreads.swift in Sources */,
 				3AF7930325B6F63800A86A35 /* AdaptiveStack.swift in Sources */,
 				3A4A6DE4261B28EA00BB2199 /* CastlingRightsViewModel.swift in Sources */,
 				3AF793A725B6F65A00A86A35 /* BoardMessageAlertViewModel.swift in Sources */,
+				3AC12A7C2966A38A005B4D03 /* sf_ucioption.cpp in Sources */,
 				3AF7938125B6F65A00A86A35 /* ParamSoundRead.swift in Sources */,
 				3AF7935725B6F65A00A86A35 /* FloatingActionView.swift in Sources */,
 				3AF4923E275E0FBA006BC8F1 /* ParamColourDarkSquares.swift in Sources */,
 				3AF7935525B6F65A00A86A35 /* ToastView.swift in Sources */,
+				3AC12ABA2966A3AC005B4D03 /* sf_timeman.cpp in Sources */,
 				3AF4923B275E0C03006BC8F1 /* ColourARGB.swift in Sources */,
 				3A4A8467261FDB2E00F4CA19 /* TileFrameMainPreference.swift in Sources */,
 				3A04D29125E502FA00FB2B58 /* ExportDB.swift in Sources */,
 				3AF7939925B6F65A00A86A35 /* PieceEditToolViewModel.swift in Sources */,
-				3AF792EC25B6F5E400A86A35 /* SFpsqt.cpp in Sources */,
-				3AF792F025B6F5E400A86A35 /* SFmaterial.cpp in Sources */,
 				3AF7938925B6F65A00A86A35 /* ParamBoardCoord.swift in Sources */,
 				3AF7939125B6F65A00A86A35 /* ParameterDataServiceProtocol.swift in Sources */,
+				3AC12ADB2966A3FA005B4D03 /* moverules.cpp in Sources */,
 				3A25B9212772FE03007AF2E1 /* ExportFileDocument.swift in Sources */,
 				3AF7936725B6F65A00A86A35 /* TileAnimationView.swift in Sources */,
 				3AF7936B25B6F65A00A86A35 /* MenuView.swift in Sources */,
@@ -978,29 +1046,27 @@
 				3AF7934725B6F65A00A86A35 /* TileAnimationInstruction.swift in Sources */,
 				3A96EDBF2945DEC0008A05DF /* Strength.swift in Sources */,
 				3A639ACC262AF38F00E4C29F /* TilePanelViewModel.swift in Sources */,
+				3AC12AE52966A413005B4D03 /* engine.cpp in Sources */,
+				3AC12AD52966A3E0005B4D03 /* evaluate_nnue.cpp in Sources */,
 				3A05E3E325D911BE004E223F /* BoardButtonStyle.swift in Sources */,
-				3AF792CE25B6F5E400A86A35 /* SFbitbase.cpp in Sources */,
-				3AF792EE25B6F5E400A86A35 /* SFsearch.cpp in Sources */,
+				3AC12AA82966A3AC005B4D03 /* sf_position.cpp in Sources */,
 				3AF793A325B6F65A00A86A35 /* TileViewModel.swift in Sources */,
 				3AF7937D25B6F65A00A86A35 /* ParamProtocol.swift in Sources */,
 				3AF7937925B6F65A00A86A35 /* ParameterDataService.swift in Sources */,
+				3AC12AE72966A413005B4D03 /* helper.cpp in Sources */,
 				3A8061B6288BFADD00F7729C /* HintActor.swift in Sources */,
 				3AF7939725B6F65A00A86A35 /* EngineSettingsViewModel.swift in Sources */,
-				3AF792D225B6F5E400A86A35 /* helper.cpp in Sources */,
-				3AF792D625B6F5E400A86A35 /* SFmisc.cpp in Sources */,
 				3AF792FF25B6F63800A86A35 /* Extensions.swift in Sources */,
 				3AF7939F25B6F65A00A86A35 /* BoardViewModel.swift in Sources */,
 				3A3A004125CF6F3500252B36 /* AppDelegate.swift in Sources */,
 				3AF49244275E1787006BC8F1 /* SoundSettingsViewModel.swift in Sources */,
-				3AF792C425B6F5E400A86A35 /* MoveRules.cpp in Sources */,
 				3A4A6DE7261B28F900BB2199 /* CastlingRightsView.swift in Sources */,
-				3AF792C625B6F5E400A86A35 /* SFmovegen.cpp in Sources */,
 				3AF7934925B6F65A00A86A35 /* TileFallEffect.swift in Sources */,
 				3AF7938B25B6F65A00A86A35 /* ParamArrangeBoard.swift in Sources */,
 				3AF7938525B6F65A00A86A35 /* ParamComputerPlayer.swift in Sources */,
 				3AF7934F25B6F65A00A86A35 /* TileView.swift in Sources */,
+				3AC12AAA2966A3AC005B4D03 /* sf_tt.cpp in Sources */,
 				3AF7937725B6F65A00A86A35 /* Parameter.swift in Sources */,
-				3AF792D025B6F5E400A86A35 /* SFthread.cpp in Sources */,
 				3AF7935D25B6F65A00A86A35 /* TileAnimationMoveModifier.swift in Sources */,
 				3AF7936D25B6F65A00A86A35 /* TileAnimationPutModifier.swift in Sources */,
 				3AF7939525B6F65A00A86A35 /* BoardAnimation.swift in Sources */,
@@ -1011,18 +1077,20 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				3AC12AB32966A3AC005B4D03 /* sf_movepick.cpp in Sources */,
 				3AF7934425B6F65A00A86A35 /* KaruahChessDB.swift in Sources */,
+				3AC12ABD2966A3AC005B4D03 /* sf_misc.cpp in Sources */,
 				3AF792F525B6F5E400A86A35 /* SearchOptions.swift in Sources */,
 				3A182C7D25D136E400C7A31F /* ContentView.swift in Sources */,
 				3AF793A225B6F65A00A86A35 /* ActivityIndicatorViewModel.swift in Sources */,
 				3AF7937225B6F65A00A86A35 /* GameRecordDataService.swift in Sources */,
-				3AF792CD25B6F5E400A86A35 /* SFmovepick.cpp in Sources */,
 				3A8061B7288BFADD00F7729C /* HintActor.swift in Sources */,
+				3AC12ADC2966A3FA005B4D03 /* moverules.cpp in Sources */,
 				3AF7936425B6F65A00A86A35 /* Device.swift in Sources */,
-				3AF792DD25B6F5E400A86A35 /* Search.cpp in Sources */,
-				3AF792CB25B6F5E400A86A35 /* BitBoard.cpp in Sources */,
+				3AC12AA72966A3AC005B4D03 /* sf_bitboard.cpp in Sources */,
 				3AF7937625B6F65A00A86A35 /* GameRecordArray.swift in Sources */,
 				3AF7939025B6F65A00A86A35 /* ParamRotateBoard.swift in Sources */,
+				3AC12AAF2966A3AC005B4D03 /* sf_thread.cpp in Sources */,
 				3A159E0A26D10091001100CC /* ParamLimitDepth.swift in Sources */,
 				3A014AB625D7E12B00D7A466 /* BoardMessageAlertView.swift in Sources */,
 				3A6EEC5E25D64871005B637F /* MenuSheet.swift in Sources */,
@@ -1030,89 +1098,87 @@
 				3AF7938825B6F65A00A86A35 /* ParamLimitSkillLevel.swift in Sources */,
 				3AF792F325B6F5E400A86A35 /* MoveResult.swift in Sources */,
 				3AF4923C275E0C03006BC8F1 /* ColourARGB.swift in Sources */,
-				3AF792E125B6F5E400A86A35 /* SFevaluate.cpp in Sources */,
-				3AF792EB25B6F5E400A86A35 /* SFtimeman.cpp in Sources */,
 				3AF7937C25B6F65A00A86A35 /* ParamMoveHighlight.swift in Sources */,
+				3AC12AC12966A3BE005B4D03 /* search.cpp in Sources */,
 				3AF7938025B6F65A00A86A35 /* ParamComputerMoveFirst.swift in Sources */,
 				3A159E1326D1018D001100CC /* ParamLimitThreads.swift in Sources */,
-				3AF792C925B6F5E400A86A35 /* SFendgame.cpp in Sources */,
-				3AF792D925B6F5E400A86A35 /* SFucioption.cpp in Sources */,
 				3AF792FE25B6F63800A86A35 /* Constants.swift in Sources */,
 				3AF49242275E16EE006BC8F1 /* SoundSettings.swift in Sources */,
 				3AF793A625B6F65A00A86A35 /* DirectionIndicatorViewModel.swift in Sources */,
-				3AF792E325B6F5E400A86A35 /* SFtt.cpp in Sources */,
 				3ADCAB37262EF82B00962FEE /* NavigatorViewModel.swift in Sources */,
 				3A04D29225E502FA00FB2B58 /* ExportDB.swift in Sources */,
 				3AF7936A25B6F65A00A86A35 /* ActivityIndicatorView.swift in Sources */,
 				3A4A71A3264A9FA000F68478 /* PawnPromotionView.swift in Sources */,
 				3AF49245275E1787006BC8F1 /* SoundSettingsViewModel.swift in Sources */,
+				3AC12AB12966A3AC005B4D03 /* sf_evaluate.cpp in Sources */,
+				3AC12AA12966A3AC005B4D03 /* sf_bitbase.cpp in Sources */,
 				3A159E0426D0FFF1001100CC /* ParamLevelAuto.swift in Sources */,
 				3AF7934E25B6F65A00A86A35 /* TileFrameBoardPreference.swift in Sources */,
 				3AF7939E25B6F65A00A86A35 /* MenuSettingsViewModel.swift in Sources */,
 				3A09023B288CF75800CB965B /* HintViewModel.swift in Sources */,
 				3AF792BD25B6F5E400A86A35 /* KaruahChessEngineC.mm in Sources */,
+				3AC12AD82966A3E0005B4D03 /* half_ka_v2_hm.cpp in Sources */,
+				3AC12AAD2966A3AC005B4D03 /* sf_psqt.cpp in Sources */,
+				3AC12AD62966A3E0005B4D03 /* evaluate_nnue.cpp in Sources */,
 				3A159E0726D1002B001100CC /* ParamLimitAdvanced.swift in Sources */,
 				3A2785F0288A33F8001F4FE6 /* BoardSettings.swift in Sources */,
 				3A4A71A6264AA02F00F68478 /* PawnPromotionViewModel.swift in Sources */,
-				3AF792D525B6F5E400A86A35 /* SFbitboard.cpp in Sources */,
 				3A96EDC02945DEC0008A05DF /* Strength.swift in Sources */,
 				3AA5A1DB25D4EF6A00CD2121 /* Menu.swift in Sources */,
+				3AC12AB92966A3AC005B4D03 /* sf_material.cpp in Sources */,
+				3AC12AC52966A3CE005B4D03 /* piecepattern.cpp in Sources */,
 				3AF7935225B6F65A00A86A35 /* TilePanelView.swift in Sources */,
+				3AC12AB72966A3AC005B4D03 /* sf_search.cpp in Sources */,
 				3A226878276D71BE0082F8DB /* TileAnimationMoveFadeModifier.swift in Sources */,
 				3A05E3E625D919EB004E223F /* PieceEditToolView.swift in Sources */,
 				3A4A8468261FDB2E00F4CA19 /* TileFrameMainPreference.swift in Sources */,
 				3AD871FC262DA80700828A87 /* NavigatorView.swift in Sources */,
+				3AC12A9F2966A3AC005B4D03 /* sf_pawns.cpp in Sources */,
 				3AF7937025B6F65A00A86A35 /* BoardSquareDataService.swift in Sources */,
 				3AF792BF25B6F5E400A86A35 /* SearchResult.swift in Sources */,
 				3AC2C8F025E65C30004E1744 /* GameRecordParser.swift in Sources */,
-				3AF792E525B6F5E400A86A35 /* Engine.cpp in Sources */,
 				3AF49248275E18D2006BC8F1 /* ParamSoundEffect.swift in Sources */,
+				3AC12A7D2966A38A005B4D03 /* sf_ucioption.cpp in Sources */,
 				3AF7938E25B6F65A00A86A35 /* ParamVoiceCommand.swift in Sources */,
 				3AF7937425B6F65A00A86A35 /* GameRecordDataServiceProtocol.swift in Sources */,
 				3A0C4E8425FE2531003B9111 /* GameRecord.swift in Sources */,
 				3A2930542772B4EB00F34565 /* SearchActor.swift in Sources */,
 				3AF7935A25B6F65A00A86A35 /* TileShakeEffect.swift in Sources */,
-				3AF792E725B6F5E400A86A35 /* PiecePattern.cpp in Sources */,
-				3AF792E925B6F5E400A86A35 /* SFposition.cpp in Sources */,
-				3AF792DF25B6F5E400A86A35 /* SFpawns.cpp in Sources */,
 				3AF7934625B6F65A00A86A35 /* TileFadeOutModifier.swift in Sources */,
 				3AF7939425B6F65A00A86A35 /* Move.swift in Sources */,
 				3AF7935C25B6F65A00A86A35 /* DirectionIndicatorView.swift in Sources */,
 				3AF7939C25B6F65A00A86A35 /* TileAnimationViewModel.swift in Sources */,
 				3AF7936025B6F65A00A86A35 /* TileAnimationTakeModifier.swift in Sources */,
-				3AF792DB25B6F5E400A86A35 /* SFuci.cpp in Sources */,
 				3A4A6DDF261B265F00BB2199 /* CastlingRightsView.swift in Sources */,
 				3ADFD8DD25D8DAF800D6EB6E /* AboutView.swift in Sources */,
 				3AF793A825B6F65A00A86A35 /* BoardMessageAlertViewModel.swift in Sources */,
 				3AF7938225B6F65A00A86A35 /* ParamSoundRead.swift in Sources */,
 				3AF7935625B6F65A00A86A35 /* ToastView.swift in Sources */,
 				3AF7939A25B6F65A00A86A35 /* PieceEditToolViewModel.swift in Sources */,
-				3AF792ED25B6F5E400A86A35 /* SFpsqt.cpp in Sources */,
-				3AF792F125B6F5E400A86A35 /* SFmaterial.cpp in Sources */,
 				3AF7938A25B6F65A00A86A35 /* ParamBoardCoord.swift in Sources */,
+				3AC12AE42966A413005B4D03 /* bitboard.cpp in Sources */,
 				3AF7939225B6F65A00A86A35 /* ParameterDataServiceProtocol.swift in Sources */,
 				3AF58D6025FA32CE008AAAD1 /* ImportDB.swift in Sources */,
 				3AF7936825B6F65A00A86A35 /* TileAnimationView.swift in Sources */,
 				3AF7934825B6F65A00A86A35 /* TileAnimationInstruction.swift in Sources */,
-				3AF792CF25B6F5E400A86A35 /* SFbitbase.cpp in Sources */,
 				3A11245425D6237D004D24E8 /* EngineSettings.swift in Sources */,
 				3A25B9222772FE03007AF2E1 /* ExportFileDocument.swift in Sources */,
 				3A35C939288BB9BF00DE83F7 /* LevelIndicatorView.swift in Sources */,
-				3AF792EF25B6F5E400A86A35 /* SFsearch.cpp in Sources */,
+				3AC12ABB2966A3AC005B4D03 /* sf_timeman.cpp in Sources */,
 				3AF793A425B6F65A00A86A35 /* TileViewModel.swift in Sources */,
 				3AF7937E25B6F65A00A86A35 /* ParamProtocol.swift in Sources */,
 				3AF7937A25B6F65A00A86A35 /* ParameterDataService.swift in Sources */,
+				3AC12AA92966A3AC005B4D03 /* sf_position.cpp in Sources */,
 				3AF7939825B6F65A00A86A35 /* EngineSettingsViewModel.swift in Sources */,
-				3AF792D325B6F5E400A86A35 /* helper.cpp in Sources */,
+				3AC12AB52966A3AC005B4D03 /* sf_movegen.cpp in Sources */,
 				3A8061B4288BF5A100F7729C /* ParamHint.swift in Sources */,
-				3AF792D725B6F5E400A86A35 /* SFmisc.cpp in Sources */,
+				3AC12AE82966A413005B4D03 /* helper.cpp in Sources */,
+				3AC12AE62966A413005B4D03 /* engine.cpp in Sources */,
 				3A159E0D26D100E9001100CC /* ParamLimitMoveDuration.swift in Sources */,
 				3AF7930025B6F63800A86A35 /* Extensions.swift in Sources */,
 				3AF793A025B6F65A00A86A35 /* BoardViewModel.swift in Sources */,
-				3AF792C525B6F5E400A86A35 /* MoveRules.cpp in Sources */,
 				3A422D9227771A4B00327D4B /* CompressionC.mm in Sources */,
 				3A159E1626D10496001100CC /* ParamRandomiseFirstMove.swift in Sources */,
-				3AF792C725B6F5E400A86A35 /* SFmovegen.cpp in Sources */,
 				3A639ACD262AF38F00E4C29F /* TilePanelViewModel.swift in Sources */,
 				3ADFD8EB25D8F7A200D6EB6E /* BoardButtonStyle.swift in Sources */,
 				3A2785F2288A3470001F4FE6 /* BoardSettingsViewModel.swift in Sources */,
@@ -1120,10 +1186,12 @@
 				3AF7934A25B6F65A00A86A35 /* TileFallEffect.swift in Sources */,
 				3AF7938C25B6F65A00A86A35 /* ParamArrangeBoard.swift in Sources */,
 				3AF7938625B6F65A00A86A35 /* ParamComputerPlayer.swift in Sources */,
+				3AC12AAB2966A3AC005B4D03 /* sf_tt.cpp in Sources */,
+				3AC12AA52966A3AC005B4D03 /* sf_uci.cpp in Sources */,
 				3AF7935025B6F65A00A86A35 /* TileView.swift in Sources */,
 				3AF7937825B6F65A00A86A35 /* Parameter.swift in Sources */,
+				3AC12AA32966A3AC005B4D03 /* sf_endgame.cpp in Sources */,
 				3AF4923F275E0FBA006BC8F1 /* ParamColourDarkSquares.swift in Sources */,
-				3AF792D125B6F5E400A86A35 /* SFthread.cpp in Sources */,
 				3AF7935E25B6F65A00A86A35 /* TileAnimationMoveModifier.swift in Sources */,
 				3A014AA925D7BA9500D7A466 /* TitlebarAccessoryView.swift in Sources */,
 				3A3C7EB125D25D70002AFB5A /* MainWindowController.swift in Sources */,
@@ -1192,6 +1260,7 @@
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
+				OTHER_LDFLAGS = "";
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 			};
@@ -1258,7 +1327,7 @@
 				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
 				CODE_SIGN_ENTITLEMENTS = "Karuah Chess.entitlements";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 12;
+				CURRENT_PROJECT_VERSION = 16;
 				DEVELOPMENT_TEAM = JQA45NT8J5;
 				ENABLE_PREVIEWS = YES;
 				GCC_PREPROCESSOR_DEFINITIONS_NOT_USED_IN_PRECOMPS = USE_POPCNT;
@@ -1268,7 +1337,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.12;
+				MARKETING_VERSION = 1.16;
 				PRODUCT_BUNDLE_IDENTIFIER = karuahsoftware.karuahchess;
 				PRODUCT_NAME = "Karuah Chess";
 				SCAN_ALL_SOURCE_FILES_FOR_INCLUDES = NO;
@@ -1289,7 +1358,7 @@
 				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
 				CODE_SIGN_ENTITLEMENTS = "Karuah Chess.entitlements";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 12;
+				CURRENT_PROJECT_VERSION = 16;
 				DEVELOPMENT_TEAM = JQA45NT8J5;
 				ENABLE_PREVIEWS = YES;
 				GCC_PREPROCESSOR_DEFINITIONS_NOT_USED_IN_PRECOMPS = (
@@ -1302,7 +1371,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.12;
+				MARKETING_VERSION = 1.16;
 				PRODUCT_BUNDLE_IDENTIFIER = karuahsoftware.karuahchess;
 				PRODUCT_NAME = "Karuah Chess";
 				SCAN_ALL_SOURCE_FILES_FOR_INCLUDES = NO;
@@ -1320,11 +1389,11 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				CLANG_CXX_LANGUAGE_STANDARD = "gnu++17";
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
 				CODE_SIGN_ENTITLEMENTS = macOS/macOS.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 12;
+				CURRENT_PROJECT_VERSION = 16;
 				DEVELOPMENT_TEAM = JQA45NT8J5;
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
@@ -1335,7 +1404,8 @@
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 12.0;
-				MARKETING_VERSION = 1.12;
+				MARKETING_VERSION = 1.16;
+				OTHER_LDFLAGS = "";
 				PRODUCT_BUNDLE_IDENTIFIER = karuahsoftware.karuahchess;
 				PRODUCT_NAME = "Karuah Chess";
 				SDKROOT = macosx;
@@ -1350,11 +1420,11 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				CLANG_CXX_LANGUAGE_STANDARD = "gnu++17";
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
 				CODE_SIGN_ENTITLEMENTS = macOS/macOS.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 12;
+				CURRENT_PROJECT_VERSION = 16;
 				DEVELOPMENT_TEAM = JQA45NT8J5;
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
@@ -1368,7 +1438,7 @@
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 12.0;
-				MARKETING_VERSION = 1.12;
+				MARKETING_VERSION = 1.16;
 				PRODUCT_BUNDLE_IDENTIFIER = karuahsoftware.karuahchess;
 				PRODUCT_NAME = "Karuah Chess";
 				SDKROOT = macosx;

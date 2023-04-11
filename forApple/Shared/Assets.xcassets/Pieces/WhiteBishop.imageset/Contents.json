@@ -1,17 +1,17 @@
 {
   "images" : [
     {
-      "filename" : "WhiteBishop1.png",
+      "filename" : "whitebishop.png",
       "idiom" : "universal",
       "scale" : "1x"
     },
     {
-      "filename" : "WhiteBishop2.png",
+      "filename" : "whitebishop 1.png",
       "idiom" : "universal",
       "scale" : "2x"
     },
     {
-      "filename" : "WhiteBishop3.png",
+      "filename" : "whitebishop 2.png",
       "idiom" : "universal",
       "scale" : "3x"
     }

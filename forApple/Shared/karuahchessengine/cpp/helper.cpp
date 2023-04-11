@@ -17,8 +17,8 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
 #include "helper.h"
-#include "PiecePattern.h"
-#include "BitBoard.h"
+#include "piecepattern.h"
+#include "bitboard.h"
 #include <cstdint>
 #include <algorithm>
 #include <string>
@@ -27,6 +27,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #include <vector>
 #include <sstream>
 #include <bitset>
+#include <filesystem>
 
 
 #if defined(_MSC_VER)
@@ -34,11 +35,11 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #endif
 
 
-
-
 namespace helper {
 
 	bool Initialised = false;
+
+
     uint64_t RowMask[64] { 0 };
     uint64_t NorthRay[64] { 0 };
 	uint64_t SouthRay[64] { 0 };
@@ -367,7 +368,7 @@ namespace helper {
 		uint64_t nextSqSW = sqBinary;
 		uint64_t nextSqSE = sqBinary;
 
-		int offsetIndex = 0;
+		int offsetIndex = 8;
 
 		int offsetA = 9;
 		int offsetB = 7;
@@ -376,7 +377,7 @@ namespace helper {
 
 		do
 		{
-			offsetIndex += 8;
+			
 			uint64_t northRowMask = RowMask[pIndex] << offsetIndex;
 			uint64_t southRowMask = RowMask[pIndex] >> offsetIndex;
 			uint64_t currentRowMask = RowMask[pIndex];
@@ -399,6 +400,8 @@ namespace helper {
 			pRays[5] = pRays[5] | nextSqNE;
 			pRays[6] = pRays[6] | nextSqSW;
 			pRays[7] = pRays[7] | nextSqSE;
+            
+            offsetIndex += 8;
 
 		} while ((nextSqN != 0 || nextSqS != 0 || nextSqE != 0 || nextSqW != 0 || nextSqNW != 0 || nextSqNE != 0 || nextSqSW != 0 || nextSqSE != 0) && (offsetIndex < 64));
 

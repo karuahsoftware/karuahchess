@@ -18,7 +18,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 #pragma once
 #include "helper.h"
-#include "BitBoard.h"
+#include "bitboard.h"
 
 
 	namespace MoveRules {
@@ -30,3 +30,4 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 		extern int FindFromIndex(BitBoard& pBoard, const int pToIndex, const int pSpin, const std::vector<int> pValidFromIndexes);
 		extern bool IsPawnPromotion(const int pFromIndex, const int pToIndex, BitBoard& pBoard);
 	}
+

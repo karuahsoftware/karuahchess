@@ -35,7 +35,9 @@ class PawnPromotionViewModel: ObservableObject {
         colour = pColour
         
         // Ensure nothing is higlighted
-        self.visible = true
+        DispatchQueue.main.async {
+            self.visible = true
+        }
         
         // Switch to a background thread
         let waitTask = Task.detached(priority: .background) { [self] in
@@ -52,7 +54,10 @@ class PawnPromotionViewModel: ObservableObject {
     /// Close the view
     
    func close() async {
-       visible = false
+    
+       DispatchQueue.main.async {
+           self.visible = false
+       }
        let waitTask = Task.detached(priority: .userInitiated) { [self] in
             while waitCount < 0 {
                 waitCount += 1
@@ -62,7 +67,7 @@ class PawnPromotionViewModel: ObservableObject {
        
        _ = await waitTask.result
        
-    }
+   }
     
     // Cancel without selecting a piece
     func cancel() async {
