@@ -24,7 +24,6 @@ using System.Collections.Generic;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 
-
 namespace KaruahChess.CustomControl
 {
     public sealed partial class ClockSettings : UserControl
@@ -224,7 +223,10 @@ namespace KaruahChess.CustomControl
 
             // Update the clock if first move
             _boardVM.InitialiseClockFirstMove(whiteSecondsRemaining, blackSecondsRemaining);
-    
+
+
+            
+
         }
       
         /// <summary>
@@ -262,6 +264,8 @@ namespace KaruahChess.CustomControl
 
                 WhiteTimeSecondCombo.SelectedIndex = resetTimeSpan.Seconds;
                 BlackTimeSecondCombo.SelectedIndex = resetTimeSpan.Seconds;
+
+                
             }
         }
 }

@@ -145,8 +145,7 @@ namespace KaruahChess.CustomControl
                     _boardVM.NavigateMaxRecord();
                 }
             }
-
-        
+                        
         }
 
         /// <summary>
@@ -414,7 +413,7 @@ namespace KaruahChess.CustomControl
                         // multiple operations involving cn and tran here
                         using (var command = connection.CreateCommand())
                         {
-                            command.CommandText = @"Delete from GameRecord;";
+                            command.CommandText = $"Delete from {KaruahChessDB.GameRecordTableName};";
                             command.ExecuteNonQuery();
                         }
 
@@ -427,7 +426,7 @@ namespace KaruahChess.CustomControl
 
                             using (var command = connection.CreateCommand())
                             {
-                                command.CommandText = @"INSERT INTO GameRecord (Id, BoardSquareStr, GameStateStr) Values (@Id, @BoardSquareStr, @GameStateStr);";
+                                command.CommandText = $"INSERT INTO {KaruahChessDB.GameRecordTableName} (Id, BoardSquareStr, GameStateStr) Values (@Id, @BoardSquareStr, @GameStateStr);";
                                 command.Parameters.Add(new SqliteParameter("@Id", gr.Id));
                                 command.Parameters.Add(new SqliteParameter("@BoardSquareStr", boardSquareStr));
                                 command.Parameters.Add(new SqliteParameter("@GameStateStr", gameStateStr));

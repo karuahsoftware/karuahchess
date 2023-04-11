@@ -58,7 +58,7 @@ namespace KaruahChess.Model
             var connection = KaruahChessDB.GetDBConnection();
             using (var command = connection.CreateCommand())
             {
-                command.CommandText = @"select * from Parameter";
+                command.CommandText = $"select * from {KaruahChessDB.ParameterTableName}";
                 SqliteDataReader reader = command.ExecuteReader();
 
                 while (reader.Read())
@@ -216,7 +216,7 @@ namespace KaruahChess.Model
                 // Attempt to update record               
                 using (var command = connection.CreateCommand())
                 {
-                    command.CommandText = @"UPDATE Parameter SET Value=@Value where Name=@Name;";
+                    command.CommandText = $"UPDATE {KaruahChessDB.ParameterTableName} SET Value=@Value where Name=@Name;";
                     command.Parameters.Add(new SqliteParameter("@Name", p_parameter.Name));
                     command.Parameters.Add(new SqliteParameter("@Value", p_parameter.Value));
                     result = command.ExecuteNonQuery();
@@ -227,7 +227,7 @@ namespace KaruahChess.Model
                 {
                     using (var command = connection.CreateCommand())
                     {
-                        command.CommandText = @"INSERT INTO Parameter (Name, Value) Values (@Name, @Value);";
+                        command.CommandText = $"INSERT INTO {KaruahChessDB.ParameterTableName} (Name, Value) Values (@Name, @Value);";
                         command.Parameters.Add(new SqliteParameter("@Name", p_parameter.Name));
                         command.Parameters.Add(new SqliteParameter("@Value", p_parameter.Value));
                         result = command.ExecuteNonQuery();

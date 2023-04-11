@@ -1,0 +1,41 @@
+﻿<Window
+    x:Class="KaruahChess.ErrorWindow"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:KaruahChess"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+    xmlns:database="using:KaruahChess.Database"     
+    mc:Ignorable="d">
+
+
+    <Grid x:Name="Root" HorizontalAlignment="Stretch" Padding="10" Background="{ThemeResource ApplicationPageBackgroundThemeBrush}" >
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />            
+        </Grid.RowDefinitions>
+
+        <StackPanel Grid.Row="0" Orientation="Horizontal" VerticalAlignment="Top">
+            <TextBlock FontFamily="Segoe MDL2 Assets" FontSize="18">&#xE7BA;</TextBlock>
+            <TextBlock FontWeight="Bold">Error</TextBlock>
+        </StackPanel>
+
+        <StackPanel Grid.Row="1" Orientation="Vertical" VerticalAlignment="Top" Margin="0,5,0,0">
+            <TextBlock TextWrapping="Wrap">The game is unable to start as a database error occurred.</TextBlock>
+            <TextBlock TextWrapping="Wrap">Close the application and try again.</TextBlock>
+            <TextBlock TextWrapping="Wrap" Margin="0,10,0,0">If that fails, some other things to try;</TextBlock>
+            <TextBlock TextWrapping="Wrap">    &#x2022; Check that the database file is both read and writeable.</TextBlock>
+            <TextBlock TextWrapping="Wrap">    &#x2022; Manually remove or rename the database file. To do this you will need to close this application first. When the application is restarted a new database file should be created.</TextBlock>
+            <TextBlock TextWrapping="Wrap" Margin="0,20,0,0">
+                <Run>The database file </Run>
+                <Run Text="{x:Bind database:KaruahChessDB.dbname, Mode=OneTime}" FontWeight="Bold"></Run>
+                <Run> is located in the application storage folder.</Run>                
+            </TextBlock>            
+            <Button x:Name="OpenDBFolderBtn" Click="OpenDBFolderBtn_Click" Margin="0,5,0,0">Open Storage Folder</Button>            
+        </StackPanel>        
+        
+    </Grid>
+
+</Window>

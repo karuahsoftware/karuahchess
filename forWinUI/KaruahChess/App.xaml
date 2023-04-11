@@ -8,8 +8,8 @@
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
                 <XamlControlsResources xmlns="using:Microsoft.UI.Xaml.Controls" />
-                <ResourceDictionary Source="/Common/Strings.xaml" />
-                <ResourceDictionary Source="/Common/Styles.xaml"/>
+                <ResourceDictionary Source="ms-appx:///Common/Strings.xaml" />
+                <ResourceDictionary Source="ms-appx:///Common/Styles.xaml"/>
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </Application.Resources>

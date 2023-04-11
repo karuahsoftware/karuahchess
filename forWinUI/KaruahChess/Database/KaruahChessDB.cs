@@ -18,33 +18,132 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 using System;
 using System.IO;
+using System.Threading.Tasks;
+using KaruahChess.Model;
 using Microsoft.Data.Sqlite;
-
-
+using Windows.ApplicationModel.Activation;
 
 namespace KaruahChess.Database
 {
     public static class KaruahChessDB
-    {
-        public static readonly string dbname = "KaruahChessV12.sqlite";
+    {        
+        public static readonly string dbname = "KaruahChessV13.sqlite";
         public static readonly string dbpath = Path.Combine(Windows.Storage.ApplicationData.Current.LocalFolder.Path, dbname);
         public static readonly string connectionString = "Filename=" + dbpath + ";";
 
+        public static readonly int DB_OK = 0;
+        public static readonly int ERROR_DB_FILEMISSING = 200;
+        public static readonly int ERROR_DB_READWRITE = 201;
+        public static readonly int ERROR_DB_TABLENOTEXISTS = 202;
+
+        public static int instanceID { get; private set; }
+        public static string ParameterTableName { get; private set; }
+        public static string GameRecordTableName { get; private set; }
+
+        public static int Init(int pInstanceID)
+        {
+            instanceID = pInstanceID;
+
+            if (instanceID > 0) { 
+                ParameterTableName = $"Parameter_{instanceID}";
+                GameRecordTableName = $"GameRecord_{instanceID}";
+            }
+            else
+            {
+                ParameterTableName = "Parameter";
+                GameRecordTableName = "GameRecord";
+            }
+
+
+            int dbStatus = CheckDB();
+
+            if (dbStatus != DB_OK)
+            {
+                if (dbStatus == ERROR_DB_FILEMISSING)
+                {
+                    CreateFileIfNotExists();
+                    CreateTablesIfNotExists();
+                }
+                else if (dbStatus == ERROR_DB_TABLENOTEXISTS)
+                {
+                    CreateTablesIfNotExists();
+                }
+
+                // Recheck DB
+                return CheckDB();
+            }
+            else
+            {
+                return dbStatus;
+            }
+
+            
+        }
 
         /// <summary>
-        /// Creates the database if it does not exist
+        /// Creates the database file if it does not exist
         /// </summary>
         /// <returns></returns>
-        public async static void CreateIfNotExists()
+        private static void CreateFileIfNotExists()
         {
-            await Windows.Storage.ApplicationData.Current.LocalFolder.CreateFileAsync(dbname, Windows.Storage.CreationCollisionOption.OpenIfExists);
-            Execute(@"CREATE TABLE IF NOT EXISTS Parameter (Name STRING PRIMARY KEY NOT NULL, Value BLOB NOT NULL);");
-            Execute(@"CREATE TABLE IF NOT EXISTS GameRecord (Id INTEGER PRIMARY KEY NOT NULL, BoardSquareStr STRING NOT NULL, GameStateStr STRING NOT NULL);");
+            var dbFileTask = Task.Run(async () => await Windows.Storage.ApplicationData.Current.LocalFolder.CreateFileAsync(dbname, Windows.Storage.CreationCollisionOption.OpenIfExists));
+            dbFileTask.Wait();
+        }
 
+        /// <summary>
+        /// Creates the database file if it does not exist
+        /// </summary>
+        /// <returns></returns>
+        private static void CreateTablesIfNotExists()
+        {
+            ExecuteNonQuery($"CREATE TABLE IF NOT EXISTS {ParameterTableName} (Name TEXT PRIMARY KEY NOT NULL, Value BLOB NOT NULL);");
+            ExecuteNonQuery($"CREATE TABLE IF NOT EXISTS {GameRecordTableName} (Id INTEGER PRIMARY KEY NOT NULL, BoardSquareStr TEXT NOT NULL, GameStateStr TEXT NOT NULL);");
         }
 
 
+        /// <summary>
+        /// Check that the DB exists and is operational
+        /// </summary>        
+        private static int CheckDB()
+        {
+            var dbFileTask = Task.Run(async () => await Windows.Storage.ApplicationData.Current.LocalFolder.TryGetItemAsync(dbname));
+            
+            dbFileTask.Wait();
+            if (dbFileTask.Result != null)
+            {
+                // Check if all tables exist
+                int tableCount = ExecuteScalarInt($"select count(name) from sqlite_schema where type='table' and (name='{GameRecordTableName}' or name = '{ParameterTableName}');");
+                if (tableCount != 2)
+                {
+                    return ERROR_DB_TABLENOTEXISTS;
+                }
 
+                // Read and write test
+                try
+                {
+                    // Read test
+                    ExecuteNonQuery($"select Id from {GameRecordTableName} limit 1;");
+                    ExecuteNonQuery($"select Name from {ParameterTableName} limit 1;");
+
+                    // Write test
+                    ExecuteNonQuery("pragma user_version = 0;"); 
+                }
+                catch (Exception ex)
+                {
+                    return ERROR_DB_READWRITE;
+
+                }
+
+                return DB_OK;
+            }
+            else
+            {
+                return ERROR_DB_FILEMISSING;
+            }
+            
+        }
+
+        
         /// <summary>
         /// Gets a database connection 
         /// </summary>
@@ -64,15 +163,49 @@ namespace KaruahChess.Database
         /// Execute SQL helper
         /// </summary>
         /// <param name="pQuery"></param>
-        private static void Execute(string pQuery)
+        private static void ExecuteNonQuery(string pQuery)
         {
-            var connection = GetDBConnection();
+            using var connection = GetDBConnection();            
             using (var command = connection.CreateCommand())
             {
-                command.CommandText = pQuery;                
-                command.ExecuteNonQuery();
+                command.CommandText = pQuery;
+
+                try
+                {
+                    command.ExecuteNonQuery();
+                }
+                finally
+                {
+                    connection.Close();
+                }
             }
-            connection.Close();
+        }
+
+
+        /// <summary>
+        /// Execute SQL helper
+        /// </summary>
+        /// <param name="pQuery"></param>
+        private static int ExecuteScalarInt(string pQuery)
+        {
+            int rtnValue = 0;
+            using var connection = GetDBConnection();
+            using (var command = connection.CreateCommand())
+            {
+                command.CommandText = pQuery;
+
+                try
+                {                    
+                    rtnValue =  Convert.ToInt32(command.ExecuteScalar());
+                }
+                finally
+                {
+                    connection.Close();
+                }
+            }
+
+
+            return rtnValue;
         }
     }
 }

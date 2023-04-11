@@ -57,7 +57,7 @@ namespace KaruahChess.Database
                  
                                 using (var command = connection.CreateCommand())
                                 {
-                                    command.CommandText = @"Delete from GameRecord;";
+                                    command.CommandText = $"Delete from {KaruahChessDB.GameRecordTableName};";
                                     command.ExecuteNonQuery();
                                 }
 
@@ -65,7 +65,7 @@ namespace KaruahChess.Database
                                 {
                                     using (var command = connection.CreateCommand())
                                     {
-                                        command.CommandText = @"INSERT INTO GameRecord (Id, BoardSquareStr, GameStateStr) Values (@Id, @BoardSquareStr, @GameStateStr);";
+                                        command.CommandText = $"INSERT INTO {KaruahChessDB.GameRecordTableName} (Id, BoardSquareStr, GameStateStr) Values (@Id, @BoardSquareStr, @GameStateStr);";
                                         command.Parameters.Add(new SqliteParameter("@Id", gr.Element("Id").Value));
                                         command.Parameters.Add(new SqliteParameter("@BoardSquareStr", gr.Element("BoardSquareStr").Value));
                                         command.Parameters.Add(new SqliteParameter("@GameStateStr", gr.Element("GameStateStr").Value));                                        

@@ -12,6 +12,8 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="ErrorWindow.xaml" />
+    <None Remove="Media\nn-ad9b42354671.nnue" />
     <None Remove="Media\orientation.png" />
     <None Remove="Media\piecesound.wav" />
     <None Remove="Pieces\images\blackbishop.png" />
@@ -34,6 +36,7 @@
     <None Remove="Voice\Grammar-en-US.xml" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Media\nn-ad9b42354671.nnue" />
     <Content Include="Media\orientation.png" />
     <Content Include="Media\piecesound.wav" />
     <Content Include="Pieces\images\blackbishop.png" />
@@ -57,10 +60,10 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.Data.Sqlite" Version="7.0.0" />
-    <PackageReference Include="Microsoft.Windows.CsWinRT" Version="2.0.1" />
-    <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.2.221116.1" />
-    <PackageReference Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.22621.755" />
+    <PackageReference Include="Microsoft.Data.Sqlite" Version="7.0.4" />
+    <PackageReference Include="Microsoft.Windows.CsWinRT" Version="2.0.2" />
+    <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.2.230313.1" />
+    <PackageReference Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.22621.756" />
     <Manifest Include="$(ApplicationManifest)" />
   </ItemGroup>
 
@@ -68,5 +71,11 @@
     <ProjectReference Include="..\KaruahChessEngineProjection\KaruahChessEngineProjection.csproj">
       <Private>True</Private>
     </ProjectReference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Page Update="ErrorWindow.xaml">
+      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+    </Page>
   </ItemGroup>
 </Project>

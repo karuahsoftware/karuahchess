@@ -21,6 +21,7 @@ using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using KaruahChessEngine;
 using KaruahChess.Model;
+using KaruahChess.Common;
 
 namespace KaruahChess.CustomControl
 {

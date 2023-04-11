@@ -1,0 +1,9 @@
+Title: nn-ad9b42354671.nnue
+Description: The file nn-ad9b42354671.nnue is a trained neural network file.
+Source: https://tests.stockfishchess.org/nns
+Description: The file nn-ad9b42354671.nnue is distributed under a CC0 license (https://creativecommons.org/share-your-work/public-domain/cc0/).
+
+
+
+
+ 

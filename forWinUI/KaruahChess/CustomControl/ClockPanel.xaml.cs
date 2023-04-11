@@ -320,6 +320,7 @@ namespace KaruahChess.CustomControl
             {
                 PauseClock();
             }
+            
         }
 
         /// <summary>
@@ -328,6 +329,7 @@ namespace KaruahChess.CustomControl
         private void ClockEditButton_Click(object sender, RoutedEventArgs e)
         {
             boardVM.ShowClockSettingsDialog();
+            
         }
 
         

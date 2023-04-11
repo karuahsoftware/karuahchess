@@ -103,8 +103,7 @@ namespace KaruahChessEngine
 
 		// Search operations
 		SearchResult SearchStart(const SearchOptions pSearchOptions);
-		
-		
+				
 
 	}
 	

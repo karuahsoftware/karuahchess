@@ -12,7 +12,7 @@
     <UserControl.Resources>
         <ResourceDictionary x:Name="TilesStyleDefaultResourceDictionary">
             <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="TileStyleDefault.xaml"/>
+                <ResourceDictionary Source="ms-appx:///CustomControl/TileStyleDefault.xaml"/>
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </UserControl.Resources>

@@ -50,6 +50,8 @@ using Windows.Media.Playback;
 using Microsoft.UI.Dispatching;
 using Windows.Storage.Pickers.Provider;
 
+
+
 namespace KaruahChess.ViewModel
 {
     public class BoardViewModel : BaseViewModel
@@ -86,6 +88,7 @@ namespace KaruahChess.ViewModel
         
         private MainWindow mainWindowRef;
         private DispatcherQueue mainDispatcherQueue = DispatcherQueue.GetForCurrentThread();
+        private bool postInitComplete = false;
 
         public Coordinates coordinatesControl;
         public ClockPanel chessClockControl;
@@ -480,6 +483,8 @@ namespace KaruahChess.ViewModel
                     EndPieceAnimation();
                     RaisePropertyChanged(nameof(ArrangeBoardEnabled));
                     if (value == false && _pieceEditToolControl != null) _pieceEditToolControl.Close();
+
+                                        
                 }
             }
         }
@@ -504,6 +509,7 @@ namespace KaruahChess.ViewModel
                     ParameterDataService.instance.Set<ParamBoardCoord>(_boardCoordEnabled);
                     ResizeBoard();
                     RaisePropertyChanged(nameof(BoardCoordEnabled));
+                                        
                 }
             }
         }
@@ -529,6 +535,7 @@ namespace KaruahChess.ViewModel
                     ParameterDataService.instance.Set<ParamNavigator>(_navigatorEnabled);
                     ResizeBoard();
                     RaisePropertyChanged(nameof(NavigatorEnabled));
+                                        
                 }
             }
         }
@@ -553,7 +560,7 @@ namespace KaruahChess.ViewModel
                     _moveHighlightEnabled.Enabled = value;
                     ParameterDataService.instance.Set<ParamMoveHighlight>(_moveHighlightEnabled);
                     RaisePropertyChanged(nameof(MoveHighlightEnabled));
-
+                                        
                 }
             }
         }
@@ -588,6 +595,7 @@ namespace KaruahChess.ViewModel
 
                     RaisePropertyChanged(nameof(ClockEnabled));
 
+                    
                 }
             }
         }
@@ -611,7 +619,7 @@ namespace KaruahChess.ViewModel
                     _rotateBoardValue.Value = value;
                     ParameterDataService.instance.Set<ParamRotateBoard>(_rotateBoardValue);                   
                     RaisePropertyChanged(nameof(RotateBoardValue));
-
+                                       
                 }
             }
         }
@@ -635,7 +643,7 @@ namespace KaruahChess.ViewModel
                     _soundReadEnabled.Enabled = value;
                     ParameterDataService.instance.Set<ParamSoundRead>(_soundReadEnabled);
                     RaisePropertyChanged(nameof(SoundReadEnabled));
-
+                                       
                 }
             }
         }
@@ -687,7 +695,7 @@ namespace KaruahChess.ViewModel
                    
                     ParameterDataService.instance.Set<ParamColourDarkSquares>(_colourDarkSquares);
                     RaisePropertyChanged(nameof(ColourDarkSquaresARGB));
-
+                                        
                 }
             }
         }
@@ -808,7 +816,7 @@ namespace KaruahChess.ViewModel
             // Set the window size changed event
             mainWindowRef = pMainWindow;
             mainWindowRef.SizeChanged += OnWindowSizeChanged;
-           
+
         }
 
 
@@ -823,10 +831,7 @@ namespace KaruahChess.ViewModel
             
             // Navigate game to latest record
             NavigateMaxRecord();
-
-            // Set initial board size   
-            ResizeBoard();
-
+                        
             // Apply board colour
             ApplyBoardColour();
 
@@ -843,8 +848,12 @@ namespace KaruahChess.ViewModel
 
             // Set board shake state
             BoardSquare.Shake(ArrangeBoardEnabled);
-                        
-                        
+
+            // Set the complete flag
+            postInitComplete = true;
+
+            // Set initial board size when postInit is completed   
+            ResizeBoard();
         }
 
 
@@ -1020,8 +1029,7 @@ namespace KaruahChess.ViewModel
         /// <param name="e"></param>
         public void btnLastMove_Click(object sender, RoutedEventArgs e)
         {            
-            HighlightLastMove();
-            
+            HighlightLastMove();            
         }
 
      
@@ -1061,6 +1069,7 @@ namespace KaruahChess.ViewModel
             }
 
             LockPanel = false;
+            
         }
 
                 
@@ -1089,6 +1098,7 @@ namespace KaruahChess.ViewModel
             UpdateBoardIndicators(record);
 
             CheckChessClock();
+            
         }
 
         
@@ -1103,7 +1113,7 @@ namespace KaruahChess.ViewModel
             StopSearchJob();
 
             CheckChessClock();
-           
+            
 
         }
 
@@ -1188,7 +1198,7 @@ namespace KaruahChess.ViewModel
             {
                 ShowBoardMessage("Error", ex.Message, TextMessage.TypeEnum.Error, TextMessage.AnimationEnum.FadeOut);                                
             }
-
+                                   
         }
 
         /// <summary>
@@ -1239,7 +1249,7 @@ namespace KaruahChess.ViewModel
             {
                 ShowBoardMessage("Error", ex.Message, TextMessage.TypeEnum.Error, TextMessage.AnimationEnum.FadeOut);
             }
-
+                       
         }
 
         /// <summary>
@@ -1259,6 +1269,7 @@ namespace KaruahChess.ViewModel
             };
 
             await showContentDialog(dialog);
+                       
         }
 
         /// <summary>
@@ -1272,6 +1283,7 @@ namespace KaruahChess.ViewModel
                 _aboutPageControl.Show();
                 PositionBoardMessage();                                
             }
+                        
         }
 
         
@@ -1290,7 +1302,7 @@ namespace KaruahChess.ViewModel
                 PositionBoardMessage();
 
             }
-
+            
         }
 
         /// <summary>
@@ -1310,6 +1322,7 @@ namespace KaruahChess.ViewModel
                 PositionBoardMessage();
 
             }
+                       
 
         }
 
@@ -1405,7 +1418,7 @@ namespace KaruahChess.ViewModel
         /// </summary>
         public void btnEngineSettings_Click(object sender, RoutedEventArgs e)
         {
-            showEngineSettingsDialog();
+            showEngineSettingsDialog();           
         }
 
         /// <summary>
@@ -1429,6 +1442,7 @@ namespace KaruahChess.ViewModel
             {
                 _soundSettingsControl.Show();
             }
+                        
         }
 
         /// <summary>
@@ -1440,6 +1454,7 @@ namespace KaruahChess.ViewModel
             {
                 _boardSettingsControl.Show();
             }
+                       
         }
 
         /// <summary>
@@ -1451,6 +1466,7 @@ namespace KaruahChess.ViewModel
             {
                 _clockSettingsControl.Show();
             }
+            
         }
 
         /// <summary>
@@ -1755,6 +1771,11 @@ namespace KaruahChess.ViewModel
 
                 var moveTask = Task.Run(() => GameRecordDataService.instance.CurrentGame.SearchStart(options), token);
                 SearchResult topMove = await moveTask;
+
+                if (moveTask.IsFaulted)
+                {
+                    helper.LogException(moveTask.Exception);
+                }
                  
                 if((!topMove.cancelled) && (topMove.error == 0)) { 
                     MoveResult mResult = GameRecordDataService.instance.CurrentGame.Move(topMove.moveFromIndex, topMove.moveToIndex, topMove.promotionPieceType, true, true);
@@ -1801,11 +1822,11 @@ namespace KaruahChess.ViewModel
                         }
 
                     }
-                    else if (!mResult.success)
+                    else 
                     {
                         if (topMove.moveFromIndex > -1 && topMove.moveToIndex > -1)
                         {                            
-                            ShowBoardMessage("", "Engine attempted an invalid move.", TextMessage.TypeEnum.Error, TextMessage.AnimationEnum.Fixed);                            
+                            ShowBoardMessage("", "Engine attempted an invalid move.", TextMessage.TypeEnum.Error, TextMessage.AnimationEnum.Fixed);   
                         }
                         else
                         {                            
@@ -1818,8 +1839,10 @@ namespace KaruahChess.ViewModel
                 {
                     if (topMove.error > 0)
                     {
-                        ShowBoardMessage("", "Invalid board configuration. " + topMove.errorMessage + "." , TextMessage.TypeEnum.Error, TextMessage.AnimationEnum.Fixed);
+                        ShowBoardMessage("", topMove.errorMessage + "." , TextMessage.TypeEnum.Error, TextMessage.AnimationEnum.Fixed);
+                        helper.LogError(topMove.error);
                     }
+                    
                 }
 
                 // Clear the cancellation token source
@@ -1868,7 +1891,11 @@ namespace KaruahChess.ViewModel
                 token.Register(() => hintBoard.CancelSearch());
                 var moveTask = Task.Run(() => hintBoard.SearchStart(searchOptions), token);
                 SearchResult topMove = await moveTask;
-
+                
+                if (moveTask.IsFaulted)
+                {
+                    helper.LogException(moveTask.Exception);
+                }
 
                 if ((!topMove.cancelled) && (topMove.error == 0))
                 {
@@ -1890,8 +1917,10 @@ namespace KaruahChess.ViewModel
                 {
                     if (topMove.error > 0)
                     {
-                        ShowBoardMessage("", "Invalid board configuration. " + topMove.errorMessage, TextMessage.TypeEnum.Info, TextMessage.AnimationEnum.FadeOut);
+                        ShowBoardMessage("", topMove.errorMessage + ".", TextMessage.TypeEnum.Error, TextMessage.AnimationEnum.Fixed);
+                        helper.LogError(topMove.error);
                     }
+                    
                 }
 
                 ComputerHintProcessing = false;
@@ -1985,6 +2014,8 @@ namespace KaruahChess.ViewModel
                 ShowBoardMessage("", "Tap the board to start the game", TextMessage.TypeEnum.Info, TextMessage.AnimationEnum.FadeOut);                
                 
             }
+
+            
 
         }
 
@@ -2296,6 +2327,10 @@ namespace KaruahChess.ViewModel
         /// </summary>
         private void ResizeBoard()
         {
+            // Exit if post init not completed
+            if (!postInitComplete) return;
+
+            // End any animations
             EndPieceAnimation();
 
             // Get functionality status
@@ -2822,6 +2857,7 @@ namespace KaruahChess.ViewModel
                     ShowBoardMessage("Error", ex.Message, TextMessage.TypeEnum.Error, TextMessage.AnimationEnum.FadeOut);
                 }
             }
+                        
         }
 
 
@@ -2838,6 +2874,7 @@ namespace KaruahChess.ViewModel
             {
                 _voiceRecogniser.Stop();
             }
+                        
         }
 
 
@@ -3382,6 +3419,9 @@ namespace KaruahChess.ViewModel
         {
             return pBusyMove || pBusyHint;
         }
+
+
+        
 
     }
 

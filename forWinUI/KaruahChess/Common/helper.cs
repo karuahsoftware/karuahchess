@@ -54,6 +54,7 @@ namespace KaruahChess.Common
             {
                 var xmlStream = new MemoryStream(xmlByte);
                 var serializer = new XmlSerializer(typeof(T));
+                
                 return (T)serializer.Deserialize(xmlStream);
             }
             else
@@ -75,6 +76,8 @@ namespace KaruahChess.Common
 
             return rd;
         }
+
+        
 
         /// <summary>
         /// Returns the not of a bool
@@ -191,6 +194,19 @@ namespace KaruahChess.Common
             return BitScanMagicTable[((ulong)((long)pNum & -(long)pNum) * BitScanMagic) >> 58];
         }
 
-        
+
+        /// <summary>
+        /// Logs exception messages
+        /// </summary>
+        public static void LogException(AggregateException ex)
+        {
+            
+        }
+
+
+        public static void LogError(int errorID)
+        {
+            
+        }
     }
 }

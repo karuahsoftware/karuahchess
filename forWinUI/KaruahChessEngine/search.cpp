@@ -16,18 +16,19 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-#include "Search.h"
-#include "MoveRules.h"
-#include "BitBoard.h"
-#include "PiecePattern.h"
+#include "search.h"
+#include "moverules.h"
+#include "bitboard.h"
+#include "piecepattern.h"
 #include "helper.h"
-#include "Engine.h"
-#include "SFposition.h"
-#include "SFthread.h"
-#include "SFuci.h"
+#include "engine.h"
+#include "sf_position.h"
+#include "sf_thread.h"
+#include "sf_uci.h"
 #include <chrono>
 #include <time.h>
 #include <random>
+
 
 
 namespace Search {
@@ -35,33 +36,57 @@ namespace Search {
     using namespace helper;
 
     bool _cancel = false;
+    
+    
+
+    /// <summary>
+    /// Sets an option in stock fish if the option is different from the current option
+    /// </summary>
+    void setOption(std::string name, int value) {
+        
+        if (Stockfish::Options.count(name)) {
+            double currentValue = Stockfish::Options[name];
+            double newValue = (double)value;
+            
+            if (currentValue != newValue) {
+                Stockfish::Options[name] = std::to_string(value);
+            }
+
+        }
+
+    }
+
 
     /// <summary>
     /// Gets top move for a given board
     /// </summary>
     void GetBestMove(BitBoard& pBoard, SearchOptions pSearchOptions, SearchTreeNode& pBestMove, SearchStatistics& pStatistics)
     {
+        
         _cancel = false;
-
+        
         pStatistics.StartTime = std::chrono::steady_clock::now();
 
         // Don't perform a search if the engine can't cope with the board configuration
         int searchError = pBoard.VerifyBoardConfiguration();
-
+        
+        // Check for engine errors.
+        if (Engine::engineErr.errorList.size() > 0) {
+            searchError = Engine::engineErr.errorList[0]; // Get the first error.
+        }
         
         if (searchError == 0) {
-            // Set engine threads
-            Engine::setThreads(pSearchOptions.limitThreads);
-
+          
+            setOption("Threads", pSearchOptions.limitThreads);
+                     
             // Set options
             if (pSearchOptions.limitSkillLevel >= -10 && pSearchOptions.limitSkillLevel < 20) {
-                // Set engine strength
-                Stockfish::Options["Skill Level"] << Stockfish::UCI::Option(pSearchOptions.limitSkillLevel, -10, 20);               
-                
+                // Set engine strength             
+                setOption("Skill Level", pSearchOptions.limitSkillLevel);
             }
             else {
                 // Set engine to max
-                Stockfish::Options["Skill Level"] << Stockfish::UCI::Option(20, -10, 20);
+                setOption("Skill Level", 20);
             }
 
             // Get the board position
@@ -81,9 +106,8 @@ namespace Search {
             limits.depth = pSearchOptions.limitDepth;
             limits.nodes = pSearchOptions.limitNodes;
             limits.movetime = pSearchOptions.limitMoveDuration;
+                        
             
-            
-
             Stockfish::Threads.start_thinking(pos, states, limits, false);
             Stockfish::Threads.main()->wait_for_search_finished();
             Stockfish::Search::RootMoves rootMoves = mainThread->rootMoves;

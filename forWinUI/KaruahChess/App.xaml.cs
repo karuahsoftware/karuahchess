@@ -18,6 +18,9 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 using Microsoft.UI.Xaml;
 using KaruahChess.Database;
+using KaruahChess.Common;
+using System.IO.MemoryMappedFiles;
+using System.Collections.Generic;
 
 namespace KaruahChess
 {
@@ -27,6 +30,8 @@ namespace KaruahChess
     public partial class App : Application
     {
         private Window mainWindowRef;
+        private int dbStatus;
+        MemoryMappedFile instancemmf;
 
         /// <summary>
         /// Initializes the singleton application object.  This is the first line of authored code
@@ -35,10 +40,20 @@ namespace KaruahChess
         public App()
         {
             this.InitializeComponent();
+                        
 
-           
-            // Create database if it does not exist            
-            KaruahChessDB.CreateIfNotExists();
+            // Track instances created in a memory mapped file
+            instancemmf = MemoryMappedFile.CreateOrOpen("karuahchessinstance",4);           
+            MemoryMappedViewAccessor instanceAccessor = instancemmf.CreateViewAccessor();
+            int instanceID = instanceAccessor.ReadInt32(0);
+            int nextID = instanceID + 1;
+            instanceAccessor.Write(0, nextID);
+
+            
+            // Create database if it does not exist and check it is operational            
+            dbStatus = KaruahChessDB.Init(instanceID);
+                                    
+
         }
 
         /// <summary>
@@ -48,9 +63,24 @@ namespace KaruahChess
         /// <param name="args">Details about the launch request and process.</param>
         protected override void OnLaunched(Microsoft.UI.Xaml.LaunchActivatedEventArgs args)
         {
-            mainWindowRef = new MainWindow();           
-            mainWindowRef.Title = (string)Application.Current.Resources["ApplicationTitle"];
+            if (dbStatus == KaruahChessDB.DB_OK)
+            {
+                mainWindowRef = new MainWindow();
+            }
+            else
+            {
+                helper.LogError(dbStatus);
+                mainWindowRef = new ErrorWindow();
+            }
 
+            if (KaruahChessDB.instanceID > 0)
+            {
+                mainWindowRef.Title = $"{Application.Current.Resources["ApplicationTitle"]} - {KaruahChessDB.instanceID}";
+            }
+            else
+            {
+                mainWindowRef.Title = $"{Application.Current.Resources["ApplicationTitle"]}";
+            }
 
             mainWindowRef.Activate();
 

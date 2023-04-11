@@ -22,6 +22,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Data.Sqlite;
 using KaruahChessEngine;
+using KaruahChess.Common;
 
 namespace KaruahChess.Model
 {
@@ -69,33 +70,36 @@ namespace KaruahChess.Model
             // Clear records from memory
             _gameRecordDict.Clear();
 
-            // Load game records in to memory
+            // Load game records in to memory            
             var connection = KaruahChessDB.GetDBConnection();            
             using (var command = connection.CreateCommand())
             {
-                command.CommandText = @"select * from GameRecord order by id";
+                command.CommandText = $"select * from {KaruahChessDB.GameRecordTableName} order by id";
                 SqliteDataReader reader = command.ExecuteReader();
 
-                while (reader.Read())
-                {                    
-                    int Id = Convert.ToInt32(reader["Id"]);
-                    String boardSquareStr = Convert.ToString(reader["BoardSquareStr"]);
-                    String gameStateStr = Convert.ToString(reader["GameStateStr"]);
-                    board.SetBoard(boardSquareStr);
-                    board.SetState(gameStateStr);
-                    
-                    GameRecordArray recArray = new GameRecordArray();
-                    recArray.Id = Id;                    
-                    board.GetBoardArray(recArray.BoardArray);                    
-                    board.GetStateArray(recArray.StateArray);                    
-                    _gameRecordDict.Add(Id, recArray);
-                }
+               
+                    while (reader.Read())
+                    {
+                        int Id = Convert.ToInt32(reader["Id"]);
+                        String boardSquareStr = Convert.ToString(reader["BoardSquareStr"]);
+                        String gameStateStr = Convert.ToString(reader["GameStateStr"]);
+                        board.SetBoard(boardSquareStr);
+                        board.SetState(gameStateStr);
+
+                        GameRecordArray recArray = new GameRecordArray();
+                        recArray.Id = Id;
+                        board.GetBoardArray(recArray.BoardArray);
+                        board.GetStateArray(recArray.StateArray);
+                        _gameRecordDict.Add(Id, recArray);
+                    }
+                
 
             }
 
             connection.Close();
-            
 
+            
+      
             // If no records were loaded then create a default record
             if (_gameRecordDict.Count == 0)
             {
@@ -185,7 +189,7 @@ namespace KaruahChess.Model
                 var connection = KaruahChessDB.GetDBConnection();                
                     using (var command = connection.CreateCommand())
                     {
-                        command.CommandText = @"INSERT INTO GameRecord (Id, BoardSquareStr, GameStateStr) Values (@Id, @BoardSquareStr, @GameStateStr);";                    
+                        command.CommandText = $"INSERT INTO {KaruahChessDB.GameRecordTableName} (Id, BoardSquareStr, GameStateStr) Values (@Id, @BoardSquareStr, @GameStateStr);";                    
                         command.Parameters.Add(new SqliteParameter("@Id", nextId));
                         command.Parameters.Add(new SqliteParameter("@BoardSquareStr", boardSquareStr));
                         command.Parameters.Add(new SqliteParameter("@GameStateStr", gameStateStr));                    
@@ -222,7 +226,7 @@ namespace KaruahChess.Model
                 var connection = KaruahChessDB.GetDBConnection();
                 using (var command = connection.CreateCommand())
                 {
-                    command.CommandText = @"Update GameRecord set BoardSquareStr=@BoardSquareStr, GameStateStr=@GameStateStr where id=@Id;";
+                    command.CommandText = $"Update {KaruahChessDB.GameRecordTableName} set BoardSquareStr=@BoardSquareStr, GameStateStr=@GameStateStr where id=@Id;";
                     command.Parameters.Add(new SqliteParameter("@Id", pGameRecordArray.Id));
                     command.Parameters.Add(new SqliteParameter("@BoardSquareStr", boardSquareStr));
                     command.Parameters.Add(new SqliteParameter("@GameStateStr", gameStateStr));
@@ -254,7 +258,7 @@ namespace KaruahChess.Model
            using (var connection = KaruahChessDB.GetDBConnection()) {   
                 using (var command = connection.CreateCommand())
                 {
-                    command.CommandText = @"Delete from GameRecord;";                    
+                    command.CommandText = $"Delete from {KaruahChessDB.GameRecordTableName};";                    
                     command.ExecuteNonQuery();
                     transactionId++;
                 }
@@ -282,7 +286,7 @@ namespace KaruahChess.Model
                 // Remove from database                
                 using (var command = connection.CreateCommand())
                 {
-                    command.CommandText = @"Delete from GameRecord where id >= @Id;";
+                    command.CommandText = $"Delete from {KaruahChessDB.GameRecordTableName} where id >= @Id;";
                     command.Parameters.Add(new SqliteParameter("Id", pId));                    
                     command.ExecuteNonQuery();
                     transactionId++;
@@ -371,7 +375,7 @@ namespace KaruahChess.Model
                 // Remove from database                
                 using (var command = connection.CreateCommand())
                 {
-                    command.CommandText = @"select max(Id) from GameRecord;";                    
+                    command.CommandText = $"select max(Id) from {KaruahChessDB.GameRecordTableName};";                    
                     Object result = command.ExecuteScalar();
                     if (result != null && result != DBNull.Value) maxId = Convert.ToInt32(result);
 
@@ -405,7 +409,7 @@ namespace KaruahChess.Model
             var connection = KaruahChessDB.GetDBConnection();
             using (var command = connection.CreateCommand())
             {
-                command.CommandText = @"select id from GameRecord order by id";
+                command.CommandText = $"select id from {KaruahChessDB.GameRecordTableName} order by id";
                 SqliteDataReader reader = command.ExecuteReader();
 
                 while (reader.Read())

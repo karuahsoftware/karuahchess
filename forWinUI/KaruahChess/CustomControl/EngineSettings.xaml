@@ -14,8 +14,8 @@
     <UserControl.Resources>
         <ResourceDictionary x:Name="CustomStyleDefaultResourceDictionary">
             <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="/CustomControl/CustomStyleDefault.xaml"/>
-                <ResourceDictionary Source="/Common/Styles.xaml"/>
+                <ResourceDictionary Source="ms-appx:///CustomControl/CustomStyleDefault.xaml"/>
+                <ResourceDictionary Source="ms-appx:///Common/Styles.xaml"/>
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </UserControl.Resources>

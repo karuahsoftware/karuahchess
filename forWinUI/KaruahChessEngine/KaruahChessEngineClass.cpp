@@ -15,27 +15,73 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
-
+#include <winrt/Windows.Storage.h>
+#include <winrt/Windows.Storage.Streams.h>
+#include <winrt/Windows.Foundation.h>
+#include <ppltasks.h>
 #include "pch.h"
 #include "KaruahChessEngineClass.h"
 #include "KaruahChessEngineClass.g.cpp"
-#include "BitBoard.h"
-#include "Search.h"
-#include "MoveRules.h"
-#include "Engine.h"
+#include "bitboard.h"
+#include "search.h"
+#include "moveRules.h"
+#include "engine.h"
 #include "helper.h"
+#include "sf_evaluate.h"
 
 
 namespace winrt::KaruahChessEngine::implementation
 {		
 		
 	using namespace helper;
-
+	using namespace std;
+	using namespace winrt::Windows;
+		
+	
 	/// <summary>
 	/// Constructor
 	/// </summary>	
 	KaruahChessEngineClass::KaruahChessEngineClass() {
+		
+		// Initialise the main components of the engine without the NNUE
 		Engine::init();
+						
+		// Initialise with the NNUE file.
+		Concurrency::create_task([this] {
+			LoadNNUE().get();
+			}).get();
+			
+		
+	}
+
+	/// <summary>
+	/// Initialise with the NNUE file. 
+	/// Only do this if the file has not been previously loaded, or the name has changed.
+	/// </summary>	
+	IAsyncAction KaruahChessEngineClass::LoadNNUE()
+	{
+		const char* nnueFileName = "nn-ad9b42354671.nnue";
+		if (Stockfish::Eval::currentEvalFileName != nnueFileName) {
+			string nnueFilePath = "ms-appx:///Media/" + std::string(nnueFileName);
+			Foundation::Uri nnUri(winrt::to_hstring(nnueFilePath));
+
+			
+			try {
+				const Storage::StorageFile nnueFile = co_await Storage::StorageFile::GetFileFromApplicationUriAsync(nnUri);
+				const Storage::Streams::IBuffer nnueBuffer = co_await Storage::FileIO::ReadBufferAsync(nnueFile);
+
+				char* nnueData = (char*)nnueBuffer.data();
+				long nnBufferSize = nnueBuffer.Length();
+
+				Engine::init(nnueFileName, nnueData, nnBufferSize);
+				
+			}
+			catch (winrt::hresult_error const& ex) {
+				Engine::engineErr.add(helper::NNUE_FILE_OPEN_ERROR);
+			}
+			
+		}
+
 	}
 
 
@@ -413,7 +459,6 @@ namespace winrt::KaruahChessEngine::implementation
 		result.errorMessage = winrt::to_hstring(helper::SearchErrorMessage.at(bestMove.error).c_str());
 		return result;
 	}
-
 
 
 }

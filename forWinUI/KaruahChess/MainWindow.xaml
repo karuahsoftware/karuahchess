@@ -116,6 +116,7 @@
 
         <customcontrol:TextMessage x:Name="BannerTextMessage" Grid.Row="0" IsHitTestVisible="False" HorizontalAlignment="Stretch" VerticalAlignment="Center" />
 
+        
     </Grid>
 
 </Window>

@@ -62,7 +62,7 @@ namespace KaruahChess.Database
                                                                         
                         using (var command = connection.CreateCommand())
                         {
-                            command.CommandText = @"select * from GameRecord order by id";
+                            command.CommandText = $"select * from {KaruahChessDB.GameRecordTableName} order by id";
                             SqliteDataReader reader = command.ExecuteReader();
 
                             while (reader.Read())

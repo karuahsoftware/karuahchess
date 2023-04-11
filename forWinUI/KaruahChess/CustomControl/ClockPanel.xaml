@@ -11,7 +11,7 @@
     <UserControl.Resources>
         <ResourceDictionary x:Name="ClockStyleDefaultResourceDictionary">
             <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="ClockStyleDefault.xaml"/>
+                <ResourceDictionary Source="ms-appx:///CustomControl/ClockStyleDefault.xaml"/>
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </UserControl.Resources>

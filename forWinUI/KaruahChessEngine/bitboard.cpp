@@ -16,9 +16,9 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-#include "BitBoard.h"
+#include "bitboard.h"
 #include "helper.h"
-#include "PiecePattern.h"
+#include "piecepattern.h"
 #include <cstdint>
 #include <string>
 #include <vector>
@@ -556,6 +556,8 @@ void BitBoard::SetSpin(const int pSqIndex, const int pSpin)
 /// <param name="pIndex"></param>
 int BitBoard::GetSpin(const int pIndex)
 {
+	if (pIndex < 0) return 0;
+
 	uint64_t sqMask = helper::BITMASK >> pIndex;
 
 

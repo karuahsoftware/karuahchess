@@ -21,15 +21,16 @@ using KaruahChess.ViewModel;
 
 
 namespace KaruahChess
-{
-    /// <summary>
-    /// An empty window that can be used on its own or navigated to within a Frame.
-    /// </summary>
+{    
     public sealed partial class MainWindow : Window
     {
         
         public MainWindow()
         {
+            
+
+            
+            // Initialise the Board view model
             BoardVM = new BoardViewModel(this);
 
             this.InitializeComponent();
@@ -72,13 +73,15 @@ namespace KaruahChess
             LevelIndicatorControl.SetBoardVM(BoardVM);
             BoardVM.SetLevelIndicatorControl(LevelIndicatorControl);
 
-            
             BoardVM.PostInit();
-            
+
         }
 
 
         //Propeties          
         public BoardViewModel BoardVM { get; set; }
+
+       
+
     }
 }

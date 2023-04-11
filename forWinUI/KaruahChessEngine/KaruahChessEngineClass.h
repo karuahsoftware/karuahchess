@@ -17,12 +17,14 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
 #pragma once
-#include "BitBoard.h"
+#include <winrt/Windows.Foundation.h>
+#include "bitboard.h"
 #include "KaruahChessEngineClass.g.h"
 
 
 namespace winrt::KaruahChessEngine::implementation
 {	    
+	using namespace winrt::Windows::Foundation;
 
 	struct KaruahChessEngineClass : KaruahChessEngineClassT<KaruahChessEngineClass>
 	{	
@@ -30,6 +32,9 @@ namespace winrt::KaruahChessEngine::implementation
 		BitBoard SearchBoard;
 
 		KaruahChessEngineClass();
+
+		// Helper functions
+		IAsyncAction LoadNNUE();
 
 		// Bitboard operations
 		winrt::hstring GetBoard();
@@ -79,7 +84,7 @@ namespace winrt::KaruahChessEngine::implementation
 
 		SearchResult SearchStart(const SearchOptions pSearchOptions);
 
-
+		
 		
 	};
 }

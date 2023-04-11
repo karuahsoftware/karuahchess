@@ -24,6 +24,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 namespace helper {
 
+
 	// enums
 	enum class RayTypeEnum : int { HorizontalVertical = 0, Diagonal = 1 };
 	enum class MoveTypeEnum : int { None = 0, Normal = 1, EnPassant = 2, Castle = 3, Promotion = 4 };
@@ -104,7 +105,14 @@ namespace helper {
 	constexpr int WHITEPIECE = 1;
 	constexpr int BLACKPIECE = -1;
 
-
+	// Errors
+	constexpr int NNUE_ERROR = 101;
+	constexpr int NNUE_MEMORY_ALLOCATION_ERROR = 102;
+	constexpr int NNUE_FILE_OPEN_ERROR = 103;
+	constexpr int TRANSPOSITIONTABLE_ERROR = 104;
+	constexpr int FREELARGEPAGEMEMORY_ERROR = 105;
+	
+	// Arrays
 	extern uint64_t RowMask[64];
 	extern uint64_t NorthRay[64];
 	extern uint64_t SouthRay[64];
@@ -416,9 +424,16 @@ namespace helper {
 			{20, "White Queen side castling availability is not correctly set"},
 			{21, "Black King side castling availability is not correctly set"},
 			{22, "Black Queen side castling availability is not correctly set"},
-
+			{NNUE_ERROR, "Unable to load NNUE data"},
+			{NNUE_MEMORY_ALLOCATION_ERROR, "Unable to allocate enought memory for the NNUE file"},
+			{NNUE_FILE_OPEN_ERROR, "Unable to open the NNUE file"},
+			{TRANSPOSITIONTABLE_ERROR, "Failed to allocate transposition table"},
+			{FREELARGEPAGEMEMORY_ERROR, "Failed to free large page memory"}
+			
+			
 	};
 
+	
 }
 
 

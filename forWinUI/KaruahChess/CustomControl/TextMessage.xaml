@@ -13,7 +13,7 @@
     <UserControl.Resources>
         <ResourceDictionary x:Name="TextMessageStyleDefaultResourceDictionary">
             <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="TextMessageStyleDefault.xaml"/>
+                <ResourceDictionary Source="ms-appx:///CustomControl/TextMessageStyleDefault.xaml"/>
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </UserControl.Resources>
