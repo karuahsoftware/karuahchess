@@ -18,6 +18,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 package purpletreesoftware.karuahchess.common
 
+
 class Helper {
 
     @ExperimentalUnsignedTypes
@@ -40,6 +41,12 @@ class Helper {
          */
         fun bitScanForward(pNum: ULong): Int {
             return bitScanMagicTable[((pNum.toLong() and -pNum.toLong()).toULong() * bitScanMagic shr 58).toInt()]
+        }
+
+
+
+        fun LogError(errorID: Int) {
+
         }
 
     }

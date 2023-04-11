@@ -16,9 +16,9 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-#include "MoveRules.h"
-#include "Helper.h"
-#include "BitBoard.h"
+#include "moverules.h"
+#include "helper.h"
+#include "bitboard.h"
 #include <vector>
 
 
@@ -28,14 +28,14 @@ namespace MoveRules {
 	/// <summary>
 	/// Moves a piece
 	/// </summary>
-	bool Move(const int pFromIndex, const int pToIndex, BitBoard& pBoard, const Helper::PawnPromotionEnum pPawnPromotionPiece, const bool pValidateEnabled, const bool pCommit)
+	bool Move(const int pFromIndex, const int pToIndex, BitBoard& pBoard, const helper::PawnPromotionEnum pPawnPromotionPiece, const bool pValidateEnabled, const bool pCommit)
 	{
 		bool success = true;
 
 		// Get original values before move
 		int origFromSpin = pBoard.GetSpin(pFromIndex);
 		int origToSpin = pBoard.GetSpin(pToIndex);
-
+		
 		// Check that from and to indexes fall within the valid range
 		if (!(pFromIndex >= 0 && pFromIndex <= 63 && pToIndex >= 0 && pToIndex <= 63)) return false;
 
@@ -46,7 +46,7 @@ namespace MoveRules {
 
 			// Check turn is valid
 			int Turn = pBoard.StateActiveColour;
-			if ((Turn == Helper::WHITEPIECE && origFromSpin < 0) || (Turn == Helper::BLACKPIECE && origFromSpin > 0))
+			if ((Turn == helper::WHITEPIECE && origFromSpin < 0) || (Turn == helper::BLACKPIECE && origFromSpin > 0))
 			{
 				pBoard.ReturnMessage = "Wrong side attempted to move.";
 				return false;
@@ -54,17 +54,17 @@ namespace MoveRules {
 
 
 			// Validate from move
-			if ((pBoard.GetOccupied(pBoard.StateActiveColour) & Helper::BITMASK >> pFromIndex) == 0)
+			if ((pBoard.GetOccupied(pBoard.StateActiveColour) & helper::BITMASK >> pFromIndex) == 0)
 			{
-				pBoard.ReturnMessage = "Move from " + Helper::BoardCoordinateDict.at(pFromIndex) + " to " + Helper::BoardCoordinateDict.at(pToIndex) + " is not valid";
+				pBoard.ReturnMessage = "Move from " + helper::BoardCoordinateDict.at(pFromIndex) + " to " + helper::BoardCoordinateDict.at(pToIndex) + " is not valid";
 				return false;
 			}
 
 			// Validate to move
 			uint64_t attackPath = pBoard.GetPotentialMove(pFromIndex);
-			if (((Helper::BITMASK >> pToIndex) & attackPath) == 0)
+			if (((helper::BITMASK >> pToIndex) & attackPath) == 0)
 			{
-				pBoard.ReturnMessage = "Move from " + Helper::BoardCoordinateDict.at(pFromIndex) + " to " + Helper::BoardCoordinateDict.at(pToIndex) + " is not valid";
+				pBoard.ReturnMessage = "Move from " + helper::BoardCoordinateDict.at(pFromIndex) + " to " + helper::BoardCoordinateDict.at(pToIndex) + " is not valid";
 				return false;
 			}
 
@@ -78,12 +78,12 @@ namespace MoveRules {
 
 
 		// Check for pawn promotion
-		if (origFromSpin == Helper::WHITE_PAWN_SPIN && pToIndex >= 0 && pToIndex <= 7)
+		if (origFromSpin == helper::WHITE_PAWN_SPIN && pToIndex >= 0 && pToIndex <= 7)
 		{
 			int pawnPromotion = (int)pPawnPromotionPiece * pBoard.StateActiveColour;
 			pBoard.Update(pToIndex, pawnPromotion);
 		}
-		else if (origFromSpin == Helper::BLACK_PAWN_SPIN && pToIndex >= 56 && pToIndex <= 63)
+		else if (origFromSpin == helper::BLACK_PAWN_SPIN && pToIndex >= 56 && pToIndex <= 63)
 		{
 			int pawnPromotion = (int)pPawnPromotionPiece * pBoard.StateActiveColour;
 			pBoard.Update(pToIndex, pawnPromotion);
@@ -101,7 +101,7 @@ namespace MoveRules {
 		int origEnpassantSpin = pBoard.GetSpin(pBoard.StateEnpassantIndex);
 
 		// Detect enpassant
-		if ((origFromSpin == Helper::WHITE_PAWN_SPIN && (pToIndex + 8) == pBoard.StateEnpassantIndex) || (origFromSpin == Helper::BLACK_PAWN_SPIN && (pToIndex - 8) == pBoard.StateEnpassantIndex))
+		if ((origFromSpin == helper::WHITE_PAWN_SPIN && (pToIndex + 8) == pBoard.StateEnpassantIndex) || (origFromSpin == helper::BLACK_PAWN_SPIN && (pToIndex - 8) == pBoard.StateEnpassantIndex))
 		{
 			// Do Enpassant take
 			pBoard.Update(pBoard.StateEnpassantIndex, 0);
@@ -110,10 +110,10 @@ namespace MoveRules {
 
 
 		// Castle the rook
-		if ((origFromSpin == Helper::WHITE_KING_SPIN && pFromIndex == 60) || (origFromSpin == Helper::BLACK_KING_SPIN && pFromIndex == 4))
+		if ((origFromSpin == helper::WHITE_KING_SPIN && pFromIndex == 60) || (origFromSpin == helper::BLACK_KING_SPIN && pFromIndex == 4))
 		{
-			rookFromSqIndex = Helper::CastleIndex[pToIndex][0];
-			rookToSqIndex = Helper::CastleIndex[pToIndex][1];
+			rookFromSqIndex = helper::CastleIndex[pToIndex][0];
+			rookToSqIndex = helper::CastleIndex[pToIndex][1];
 
 			if (rookFromSqIndex > -1 && rookToSqIndex > -1)
 			{
@@ -163,7 +163,7 @@ namespace MoveRules {
 
 			// Update EnPassant potential
 			int distance = pFromIndex - pToIndex;
-			if ((distance == 16 || distance == -16) && (origFromSpin == Helper::WHITE_PAWN_SPIN || origFromSpin == Helper::BLACK_PAWN_SPIN))
+			if ((distance == 16 || distance == -16) && (origFromSpin == helper::WHITE_PAWN_SPIN || origFromSpin == helper::BLACK_PAWN_SPIN))
 			{
 				pBoard.InvalidateAttackPath();
 				pBoard.StateEnpassantIndex = pToIndex;
@@ -174,13 +174,13 @@ namespace MoveRules {
 			}
 
 			// Increment the full move count after blacks move
-			if (pBoard.StateActiveColour == Helper::BLACKPIECE)
+			if (pBoard.StateActiveColour == helper::BLACKPIECE)
 			{
 				pBoard.StateFullMoveCount += 1;
 			}
 
 			// Increment half move count if no piece was captured or a pawn was not advanced. Used for fity move rule.
-			if (origToSpin != 0 || origFromSpin == Helper::WHITE_PAWN_SPIN || origFromSpin == Helper::BLACK_PAWN_SPIN)
+			if (origToSpin != 0 || origFromSpin == helper::WHITE_PAWN_SPIN || origFromSpin == helper::BLACK_PAWN_SPIN)
 			{
 				pBoard.StateHalfMoveCount = 0;
 			}
@@ -194,12 +194,12 @@ namespace MoveRules {
 
 
 			// Update castling availability
-			if (origFromSpin == Helper::WHITE_ROOK_SPIN && pFromIndex == 63) pBoard.StateCastlingAvailability = pBoard.StateCastlingAvailability & 0b111101;
-			else if (origFromSpin == Helper::WHITE_ROOK_SPIN && pFromIndex == 56) pBoard.StateCastlingAvailability = pBoard.StateCastlingAvailability & 0b111110;
-			else if (origFromSpin == Helper::BLACK_ROOK_SPIN && pFromIndex == 7) pBoard.StateCastlingAvailability = pBoard.StateCastlingAvailability & 0b110111;
-			else if (origFromSpin == Helper::BLACK_ROOK_SPIN && pFromIndex == 0) pBoard.StateCastlingAvailability = pBoard.StateCastlingAvailability & 0b111011;
-			else if (origFromSpin == Helper::WHITE_KING_SPIN) pBoard.StateCastlingAvailability = pBoard.StateCastlingAvailability & 0b111100;
-			else if (origFromSpin == Helper::BLACK_KING_SPIN) pBoard.StateCastlingAvailability = pBoard.StateCastlingAvailability & 0b110011;
+			if (origFromSpin == helper::WHITE_ROOK_SPIN && pFromIndex == 63) pBoard.StateCastlingAvailability = pBoard.StateCastlingAvailability & 0b111101;
+			else if (origFromSpin == helper::WHITE_ROOK_SPIN && pFromIndex == 56) pBoard.StateCastlingAvailability = pBoard.StateCastlingAvailability & 0b111110;
+			else if (origFromSpin == helper::BLACK_ROOK_SPIN && pFromIndex == 7) pBoard.StateCastlingAvailability = pBoard.StateCastlingAvailability & 0b110111;
+			else if (origFromSpin == helper::BLACK_ROOK_SPIN && pFromIndex == 0) pBoard.StateCastlingAvailability = pBoard.StateCastlingAvailability & 0b111011;
+			else if (origFromSpin == helper::WHITE_KING_SPIN) pBoard.StateCastlingAvailability = pBoard.StateCastlingAvailability & 0b111100;
+			else if (origFromSpin == helper::BLACK_KING_SPIN) pBoard.StateCastlingAvailability = pBoard.StateCastlingAvailability & 0b110011;
 			else if (pToIndex == 63) pBoard.StateCastlingAvailability = pBoard.StateCastlingAvailability & 0b111101;
 			else if (pToIndex == 56) pBoard.StateCastlingAvailability = pBoard.StateCastlingAvailability & 0b111110;
 			else if (pToIndex == 7) pBoard.StateCastlingAvailability = pBoard.StateCastlingAvailability & 0b110111;
@@ -207,8 +207,8 @@ namespace MoveRules {
 
 
 			// Update has castled flag
-			if (castle && origFromSpin == Helper::BLACK_KING_SPIN) pBoard.StateCastlingAvailability = pBoard.StateCastlingAvailability | 0b100000;
-			else if (castle && origFromSpin == Helper::WHITE_KING_SPIN) pBoard.StateCastlingAvailability = pBoard.StateCastlingAvailability | 0b010000;
+			if (castle && origFromSpin == helper::BLACK_KING_SPIN) pBoard.StateCastlingAvailability = pBoard.StateCastlingAvailability | 0b100000;
+			else if (castle && origFromSpin == helper::WHITE_KING_SPIN) pBoard.StateCastlingAvailability = pBoard.StateCastlingAvailability | 0b010000;
 
 
 
@@ -272,18 +272,18 @@ namespace MoveRules {
 		uint64_t occupiedScanFrom = pBoard.GetOccupied(pBoard.StateActiveColour);
 		while (occupiedScanFrom > 0)
 		{
-			posScanFrom = Helper::BitScanForward(occupiedScanFrom);
+			posScanFrom = helper::BitScanForward(occupiedScanFrom);
 			occupiedScanFrom ^= 1uLL << posScanFrom;
 			fromIndex = (63 - posScanFrom);
 
 			potentialScanTo = pBoard.GetPotentialMove(fromIndex);
 			while (potentialScanTo > 0)
 			{
-				posScanTo = Helper::BitScanForward(potentialScanTo);
+				posScanTo = helper::BitScanForward(potentialScanTo);
 				potentialScanTo ^= 1uLL << posScanTo;
 				toIndex = (63 - posScanTo);
-
-				bool success = Move(fromIndex, toIndex, pBoard, Helper::PawnPromotionEnum::Queen, false, true);
+								
+				bool success = Move(fromIndex, toIndex, pBoard, helper::PawnPromotionEnum::Queen, false, true);
 				if (success)
 				{
 					int previousTurn = -pBoard.StateActiveColour;
@@ -343,18 +343,18 @@ namespace MoveRules {
 		uint64_t occupiedScanFrom = pBoard.GetOccupied(pBoard.StateActiveColour);
 		while (occupiedScanFrom > 0)
 		{
-			posScanFrom = Helper::BitScanForward(occupiedScanFrom);
+			posScanFrom = helper::BitScanForward(occupiedScanFrom);
 			occupiedScanFrom ^= 1uLL << posScanFrom;
 			fromIndex = (63 - posScanFrom);
 
 			potentialScanTo = pBoard.GetPotentialMove(fromIndex);
 			while (potentialScanTo > 0)
 			{
-				posScanTo = Helper::BitScanForward(potentialScanTo);
+				posScanTo = helper::BitScanForward(potentialScanTo);
 				potentialScanTo ^= 1uLL << posScanTo;
 				toIndex = (63 - posScanTo);
 
-				bool success = Move(fromIndex, toIndex, pBoard, Helper::PawnPromotionEnum::Queen, false, true);
+				bool success = Move(fromIndex, toIndex, pBoard, helper::PawnPromotionEnum::Queen, false, true);
 				if (success)
 				{
 					// Reject the move if the king is still in check
@@ -400,7 +400,7 @@ namespace MoveRules {
 
 		// Check that the square being moved contains a piece
 		if (origFromSpin == 0) {
-			pBoard.ReturnMessage = Helper::BoardCoordinateDict.at(pFromIndex) + " does not contain a piece to move";
+			pBoard.ReturnMessage = helper::BoardCoordinateDict.at(pFromIndex) + " does not contain a piece to move";
 			status = false;
 			return status;
 		}
@@ -410,8 +410,8 @@ namespace MoveRules {
 		pBoard.Update(pToIndex, origFromSpin);
 
 		// Check that the king still exists
-		int whiteKingIndex = pBoard.KingIndex<Helper::WHITEPIECE>();
-		int blackKingIndex = pBoard.KingIndex<Helper::BLACKPIECE>();
+		int whiteKingIndex = pBoard.KingIndex<helper::WHITEPIECE>();
+		int blackKingIndex = pBoard.KingIndex<helper::BLACKPIECE>();
 
 
 		// Check if the king is still on the board
@@ -427,12 +427,12 @@ namespace MoveRules {
 		}
 
 		// Update castling availability
-		if (origFromSpin == Helper::WHITE_ROOK_SPIN && pFromIndex == 63) pBoard.StateCastlingAvailability = pBoard.StateCastlingAvailability & 0b111101;
-		else if (origFromSpin == Helper::WHITE_ROOK_SPIN && pFromIndex == 56) pBoard.StateCastlingAvailability = pBoard.StateCastlingAvailability & 0b111110;
-		else if (origFromSpin == Helper::BLACK_ROOK_SPIN && pFromIndex == 7) pBoard.StateCastlingAvailability = pBoard.StateCastlingAvailability & 0b110111;
-		else if (origFromSpin == Helper::BLACK_ROOK_SPIN && pFromIndex == 0) pBoard.StateCastlingAvailability = pBoard.StateCastlingAvailability & 0b111011;
-		else if (origFromSpin == Helper::WHITE_KING_SPIN) pBoard.StateCastlingAvailability = pBoard.StateCastlingAvailability & 0b111100;
-		else if (origFromSpin == Helper::BLACK_KING_SPIN) pBoard.StateCastlingAvailability = pBoard.StateCastlingAvailability & 0b110011;
+		if (origFromSpin == helper::WHITE_ROOK_SPIN && pFromIndex == 63) pBoard.StateCastlingAvailability = pBoard.StateCastlingAvailability & 0b111101;
+		else if (origFromSpin == helper::WHITE_ROOK_SPIN && pFromIndex == 56) pBoard.StateCastlingAvailability = pBoard.StateCastlingAvailability & 0b111110;
+		else if (origFromSpin == helper::BLACK_ROOK_SPIN && pFromIndex == 7) pBoard.StateCastlingAvailability = pBoard.StateCastlingAvailability & 0b110111;
+		else if (origFromSpin == helper::BLACK_ROOK_SPIN && pFromIndex == 0) pBoard.StateCastlingAvailability = pBoard.StateCastlingAvailability & 0b111011;
+		else if (origFromSpin == helper::WHITE_KING_SPIN) pBoard.StateCastlingAvailability = pBoard.StateCastlingAvailability & 0b111100;
+		else if (origFromSpin == helper::BLACK_KING_SPIN) pBoard.StateCastlingAvailability = pBoard.StateCastlingAvailability & 0b110011;
 		else if (pToIndex == 63) pBoard.StateCastlingAvailability = pBoard.StateCastlingAvailability & 0b111101;
 		else if (pToIndex == 56) pBoard.StateCastlingAvailability = pBoard.StateCastlingAvailability & 0b111110;
 		else if (pToIndex == 7) pBoard.StateCastlingAvailability = pBoard.StateCastlingAvailability & 0b110111;
@@ -452,7 +452,7 @@ namespace MoveRules {
 		int origToSpin = pBoard.GetSpin(pToIndex);
 
 		// Add the piece
-		int spin = Helper::GetSpinFromChar(pFen);
+		int spin = helper::GetSpinFromChar(pFen);
 
 		// Exit if there is no change
 		if (origToSpin == spin) {
@@ -464,8 +464,8 @@ namespace MoveRules {
 		pBoard.Update(pToIndex, spin);
 
 		// Check that the king still exists
-		int whiteKingIndex = pBoard.KingIndex<Helper::WHITEPIECE>();
-		int blackKingIndex = pBoard.KingIndex<Helper::BLACKPIECE>();
+		int whiteKingIndex = pBoard.KingIndex<helper::WHITEPIECE>();
+		int blackKingIndex = pBoard.KingIndex<helper::BLACKPIECE>();
 
 
 		// Check if the king is still on the board
@@ -501,15 +501,15 @@ namespace MoveRules {
 
 		for (int fromIndex = 0; fromIndex < 64; fromIndex++)
 		{
-			if (((Helper::BITMASK >> fromIndex) & occupied) > 0)
+			if (((helper::BITMASK >> fromIndex) & occupied) > 0)
 			{
 				uint64_t potSq = pBoard.GetPotentialMove(fromIndex);
 				for (int j = 0; j < 64; j++)
 				{
-					if (((Helper::BITMASK >> j) & potSq) > 0 && j == pToIndex)
+					if (((helper::BITMASK >> j) & potSq) > 0 && j == pToIndex)
 					{
 						// Test the move before adding
-						if (Move(fromIndex, pToIndex, pBoard, Helper::PawnPromotionEnum::Queen, true, false))
+						if (Move(fromIndex, pToIndex, pBoard, helper::PawnPromotionEnum::Queen, true, false))
 						{
 							possibleList.push_back(fromIndex);
 							break;
@@ -561,11 +561,11 @@ namespace MoveRules {
 	{
 		int origFromSpin = pBoard.GetSpin(pFromIndex);
 		// Check for pawn promotion
-		if ((origFromSpin == Helper::WHITE_PAWN_SPIN && pToIndex >= 0 && pToIndex <= 7) ||
-			(origFromSpin == Helper::BLACK_PAWN_SPIN && pToIndex >= 56 && pToIndex <= 63))
+		if ((origFromSpin == helper::WHITE_PAWN_SPIN && pToIndex >= 0 && pToIndex <= 7) ||
+			(origFromSpin == helper::BLACK_PAWN_SPIN && pToIndex >= 56 && pToIndex <= 63))
 		{
 			// test the move but don't commit it
-			return Move(pFromIndex, pToIndex, pBoard, Helper::PawnPromotionEnum::Queen, true, false);
+			return Move(pFromIndex, pToIndex, pBoard, helper::PawnPromotionEnum::Queen, true, false);
 		}
 
 		return false;

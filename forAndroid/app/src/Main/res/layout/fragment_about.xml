@@ -79,6 +79,17 @@
                 style="@style/TextAppearance.MaterialComponents.Body1"
                 />
 
+            <TextView android:id="@+id/otherTextC"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                android:layout_marginTop="0dp"
+                android:text="@string/other_infoC"
+                android:autoLink="web"
+                style="@style/TextAppearance.MaterialComponents.Body1"
+                />
+
             <TextView android:id="@+id/licenseTitle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

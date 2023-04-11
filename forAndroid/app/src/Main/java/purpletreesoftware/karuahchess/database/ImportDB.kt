@@ -33,7 +33,7 @@ class ImportDB {
 
     enum class ImportTypeEnum { GameXML }
 
-    fun import(pFile: InputStream, pImportType: ImportTypeEnum, pContext: Context): Long {
+    fun import(pFile: InputStream, pImportType: ImportTypeEnum, pContext: Context, pActivityID: Int): Long {
 
         var result = 0L
 
@@ -88,7 +88,9 @@ class ImportDB {
             // Insert records in to database
             if (gameRecList.count() > 0) {
                 val db = DatabaseHelper.getInstance(pContext).writableDatabase
-                db.delete("GameRecord", null, null)
+                val table = TableName(pActivityID)
+
+                db.delete("${table.GameRecord}", null, null)
 
                 for(gameRecord in gameRecList) {
                     val contentValues = ContentValues()
@@ -96,11 +98,11 @@ class ImportDB {
                     contentValues.put("BoardSquareStr", gameRecord.boardSquareStr)
                     contentValues.put("GameStateStr", gameRecord.gameStateStr)
 
-                    result += db.insert("GameRecord", null, contentValues)
+                    result += db.insert("${table.GameRecord}", null, contentValues)
 
                 }
 
-                GameRecordDataService.load()
+                GameRecordDataService.getInstance(pActivityID).load()
             }
 
         }

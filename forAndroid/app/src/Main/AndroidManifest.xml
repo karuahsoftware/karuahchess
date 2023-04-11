@@ -12,17 +12,28 @@
             android:roundIcon="@mipmap/ic_launcher_round"
             android:supportsRtl="true"
             android:theme="@style/AppTheme"
-            tools:ignore="GoogleAppIndexingWarning">
+            tools:ignore="GoogleAppIndexingWarning"
+            android:name="purpletreesoftware.karuahchess.common.App"
+            android:resizeableActivity="true">
         <activity
-                android:name=".MainActivity"
-                android:exported="true"
-                >
+                android:name=".MainActivity0"
+                android:label="Karuah Chess"
+                android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
-
+        <activity
+            android:name=".MainActivity1"
+            android:label="Karuah Chess +"
+            android:exported="false">
+        </activity>
+        <activity
+            android:name=".ErrorActivity"
+            android:label="Karuah Chess"
+            android:exported="false">
+        </activity>
 
         <provider
                 android:name="androidx.core.content.FileProvider"

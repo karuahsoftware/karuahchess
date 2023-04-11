@@ -19,7 +19,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 package purpletreesoftware.karuahchess.rules
 
 import purpletreesoftware.karuahchess.common.Constants
-import purpletreesoftware.karuahchess.engine.KaruahChessEngineC
+import purpletreesoftware.karuahchess.engine.KaruahChessEngine
 import purpletreesoftware.karuahchess.customcontrol.TilePanel
 
 
@@ -43,7 +43,7 @@ class Move {
     /**
      * Add a square to the move
      */
-    fun Add(pBoardSquareIndex:Int, pBoard: KaruahChessEngineC, pHighlight: HighlightEnum): Boolean
+    fun Add(pBoardSquareIndex:Int, pBoard: KaruahChessEngine, pHighlight: HighlightEnum): Boolean
     {
         var complete = false
 

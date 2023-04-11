@@ -16,52 +16,77 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-#include "Search.h"
-#include "MoveRules.h"
-#include "BitBoard.h"
-#include "PiecePattern.h"
-#include "Helper.h"
-#include "Engine.h"
-#include "SFposition.h"
-#include "SFthread.h"
-#include "SFuci.h"
+#include "search.h"
+#include "moverules.h"
+#include "bitboard.h"
+#include "piecepattern.h"
+#include "helper.h"
+#include "engine.h"
+#include "sf_position.h"
+#include "sf_thread.h"
+#include "sf_uci.h"
 #include <chrono>
 #include <time.h>
 #include <random>
 
 
+
 namespace Search {
 
-    using namespace Helper;
+    using namespace helper;
 
     bool _cancel = false;
+    
+    
+
+    /// <summary>
+    /// Sets an option in stock fish if the option is different from the current option
+    /// </summary>
+    void setOption(std::string name, int value) {
+        
+        if (Stockfish::Options.count(name)) {
+            double currentValue = Stockfish::Options[name];
+            double newValue = (double)value;
+            
+            if (currentValue != newValue) {
+                Stockfish::Options[name] = std::to_string(value);
+            }
+
+        }
+
+    }
+
 
     /// <summary>
     /// Gets top move for a given board
     /// </summary>
     void GetBestMove(BitBoard& pBoard, SearchOptions pSearchOptions, SearchTreeNode& pBestMove, SearchStatistics& pStatistics)
     {
+        
         _cancel = false;
-
+        
         pStatistics.StartTime = std::chrono::steady_clock::now();
 
         // Don't perform a search if the engine can't cope with the board configuration
         int searchError = pBoard.VerifyBoardConfiguration();
-
-
+        
+        // Check for engine errors.
+        if (Engine::engineErr.errorList.size() > 0) {
+            searchError = Engine::engineErr.errorList[0]; // Get the first error.
+        }
+        
         if (searchError == 0) {
-            // Set engine threads
-            Engine::setThreads(pSearchOptions.limitThreads);
-
+          
+            setOption("Threads", pSearchOptions.limitThreads);
+                     
             // Set options
             if (pSearchOptions.limitSkillLevel >= -10 && pSearchOptions.limitSkillLevel < 20) {
-                // Set engine strength
-                Stockfish::Options["Skill Level"] << Stockfish::UCI::Option(pSearchOptions.limitSkillLevel, -10, 20);
-
+                // Set engine strength             
+                setOption("Skill Level", pSearchOptions.limitSkillLevel);
             }
             else {
                 // Set engine to max
-                Stockfish::Options["Skill Level"] << Stockfish::UCI::Option(20, -10, 20);
+                setOption("Skill Level", 20);
             }
 
             // Get the board position
@@ -76,14 +101,13 @@ namespace Search {
             // Do the search
             Stockfish::Search::LimitsType limits;
             limits.startTime = Stockfish::now();
-
+          
             // Set the limits from the GUI
             limits.depth = pSearchOptions.limitDepth;
             limits.nodes = pSearchOptions.limitNodes;
             limits.movetime = pSearchOptions.limitMoveDuration;
-
-
-
+                        
+            
             Stockfish::Threads.start_thinking(pos, states, limits, false);
             Stockfish::Threads.main()->wait_for_search_finished();
             Stockfish::Search::RootMoves rootMoves = mainThread->rootMoves;
@@ -101,8 +125,8 @@ namespace Search {
 
             // Mirror the result as the karuah chess board is a mirror of
             // the sf board
-            const int fromIndex = Helper::mirrorRank(Stockfish::from_sq(m));
-            const int toIndex = Helper::mirrorRank(Stockfish::to_sq(m));
+            const int fromIndex = helper::mirrorRank(Stockfish::from_sq(m));
+            const int toIndex = helper::mirrorRank(Stockfish::to_sq(m));
 
             if (m == Stockfish::MOVE_NONE || m == Stockfish::MOVE_NULL) {
                 // No move found
@@ -138,6 +162,7 @@ namespace Search {
         pStatistics.EndTime = std::chrono::steady_clock::now();
         pStatistics.DurationMS = std::chrono::duration_cast<std::chrono::milliseconds>(pStatistics.EndTime - pStatistics.StartTime);
         pBestMove.cancelled = _cancel;
+
 
     }
 

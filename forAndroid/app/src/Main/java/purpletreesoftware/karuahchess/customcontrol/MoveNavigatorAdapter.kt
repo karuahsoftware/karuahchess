@@ -22,7 +22,6 @@ import android.content.res.ColorStateList
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
-import androidx.recyclerview.widget.RecyclerView
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
@@ -63,10 +62,10 @@ class MoveNavigatorAdapter(private val pMoveNav: MoveNavigator, private val pGam
             recButton.setOnClickListener {
                 if (navId > -1) {
                     GlobalScope.launch(Dispatchers.Main) {
-                        val activity = recButton.context as MainActivity
+                        val mainActivity = recButton.context as MainActivity
                         val distance = navId - selectedId
                         val animate: Boolean = distance == 1 || distance == -1
-                        activity.navigateGameRecord(navId, animate, false, false)
+                        mainActivity.navigateGameRecord(navId, animate, false, false)
                     }
                 }
             }
@@ -87,26 +86,26 @@ class MoveNavigatorAdapter(private val pMoveNav: MoveNavigator, private val pGam
          * Set the button style based on the selected ID
          */
         private fun setButtonStyle() {
-            val activity = recButton.context as MainActivity
+            val mainActivity = recButton.context as MainActivity
             if (selectedId == navId) {
                 recButton.backgroundTintList = ColorStateList.valueOf(
                     ContextCompat.getColor(
-                        activity,
+                        mainActivity,
                         R.color.colorButtonSelected
                     )
                 )
-                recButton.setTextColor(ContextCompat.getColor(activity, R.color.colorButtonDefaultText))
+                recButton.setTextColor(ContextCompat.getColor(mainActivity, R.color.colorButtonDefaultText))
                 recButton.alpha = 1.0f
             } else {
                 recButton.backgroundTintList = ColorStateList.valueOf(
                     ContextCompat.getColor(
-                        activity,
+                        mainActivity,
                         R.color.colorButtonDefault
                     )
                 )
                 recButton.setTextColor(
                     ContextCompat.getColor(
-                        activity,
+                        mainActivity,
                         R.color.colorButtonDefaultTextFade
                     )
                 )

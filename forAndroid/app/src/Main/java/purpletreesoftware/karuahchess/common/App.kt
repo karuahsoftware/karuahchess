@@ -19,7 +19,6 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 package purpletreesoftware.karuahchess.common
 
 import android.app.Application
-import android.content.Context
 
 class App: Application() {
     override fun onCreate() {
@@ -31,7 +30,7 @@ class App: Application() {
 
     companion object {
 
-        var appContext: Context? = null
+        lateinit var appContext: App
             private set
 
     }

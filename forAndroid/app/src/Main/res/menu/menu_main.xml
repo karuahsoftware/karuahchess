@@ -101,10 +101,22 @@
                       app:showAsAction="never" />
         </group>
         <group android:id="@+id/grp5">
+                <item android:id="@+id/action_activitySecondWindowOpen"
+                    android:title="2nd Window"
+                    android:checkable="false"
+                    android:orderInCategory="116"
+                    app:showAsAction="never" />
+                <item android:id="@+id/action_activitySecondWindowExit"
+                    android:title="Close Window"
+                    android:checkable="false"
+                    android:orderInCategory="117"
+                    app:showAsAction="never" />
+        </group>
+        <group android:id="@+id/grp6">
                 <item android:id="@+id/action_about"
                 android:title="About"
                 android:checkable="false"
-                android:orderInCategory="116"
+                android:orderInCategory="118"
                 app:showAsAction="never" />
         </group>
 

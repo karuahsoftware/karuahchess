@@ -26,20 +26,23 @@ import android.view.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import purpletreesoftware.karuahchess.MainActivity
+import purpletreesoftware.karuahchess.common.App
 import purpletreesoftware.karuahchess.common.Constants
 import purpletreesoftware.karuahchess.database.DatabaseHelper
+import purpletreesoftware.karuahchess.database.TableName
 import purpletreesoftware.karuahchess.databinding.FragmentImportpgnBinding
-import purpletreesoftware.karuahchess.engine.KaruahChessEngineC
+import purpletreesoftware.karuahchess.engine.KaruahChessEngine
 import purpletreesoftware.karuahchess.engine.MoveResult
 import purpletreesoftware.karuahchess.model.gamerecord.GameRecordArray
 import purpletreesoftware.karuahchess.model.gamerecord.GameRecordDataService
 
 
 @ExperimentalUnsignedTypes
-class ImportPGN : DialogFragment() {
+class ImportPGN(pActivityID: Int) : DialogFragment() {
     private var _binding: FragmentImportpgnBinding? = null
     private val binding get() = _binding!!
-    private val _board = KaruahChessEngineC()
+    private val _board = KaruahChessEngine(App.appContext, pActivityID)
+    private val activityID = pActivityID
 
     override fun onStart() {
         super.onStart()
@@ -105,10 +108,10 @@ class ImportPGN : DialogFragment() {
         val pgnGame = pgnGameFilterB
         val success = processGame(pgnGame)
         if (success) {
-            val mainactivity = activity as MainActivity
-            mainactivity.uiScope.launch(Dispatchers.Main) {
-                mainactivity.binding.clockLayout.setClock(0, 0)
-                mainactivity.navigateMaxRecord()
+            val mainActivity = activity as MainActivity
+            mainActivity.uiScope.launch(Dispatchers.Main) {
+                mainActivity.binding.clockLayout.setClock(0, 0)
+                mainActivity.navigateMaxRecord()
                 dismiss()
             }
         }
@@ -199,7 +202,7 @@ class ImportPGN : DialogFragment() {
     /**
      * Moves a piece according to the PGN value
      */
-    private fun movePGN(pPGNValue: String, pBoard: KaruahChessEngineC, pCommit: Boolean): MoveResult
+    private fun movePGN(pPGNValue: String, pBoard: KaruahChessEngine, pCommit: Boolean): MoveResult
     {
         if (Regex("^[a-h][1-8]([=][QRBN])?[\\+]?[#]?$").matches(pPGNValue))
         {
@@ -344,8 +347,9 @@ class ImportPGN : DialogFragment() {
         // Insert records in to database
         if (pGameRecordList.count() > 0) {
 
+            val table = TableName(activityID)
             val db = DatabaseHelper.getInstance(context).writableDatabase
-            db.delete("GameRecord", null, null)
+            db.delete("${table.GameRecord}", null, null)
 
             for(gameRecord in pGameRecordList) {
                 _board.setBoardArray(gameRecord.boardArray)
@@ -357,14 +361,15 @@ class ImportPGN : DialogFragment() {
                 contentValues.put("BoardSquareStr", boardSquareStr)
                 contentValues.put("GameStateStr", gameStateStr)
 
-                db.insert("GameRecord", null, contentValues)
+                db.insert("${table.GameRecord}", null, contentValues)
 
             }
 
-            GameRecordDataService.load()
-            val mainactivity = activity as MainActivity
-            mainactivity.uiScope.launch(Dispatchers.Main) {
-                mainactivity.navigateMaxRecord()
+            GameRecordDataService.getInstance(activityID).load()
+
+            val mainActivity = activity as MainActivity
+            mainActivity.uiScope.launch(Dispatchers.Main) {
+                mainActivity.navigateMaxRecord()
             }
         }
 
@@ -374,8 +379,8 @@ class ImportPGN : DialogFragment() {
 
 
     companion object {
-        fun newInstance(): ImportPGN {
-            val frag = ImportPGN()
+        fun newInstance(pActivityID: Int): ImportPGN {
+            val frag = ImportPGN(pActivityID)
             val args = Bundle()
             frag.arguments = args
             return frag

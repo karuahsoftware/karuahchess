@@ -20,9 +20,15 @@
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile
 
+-keepclasseswithmembers class purpletreesoftware.karuahchess.engine.KaruahChessEngine {
+    native <methods>;
+ }
 -keepclasseswithmembers class purpletreesoftware.karuahchess.engine.KaruahChessEngineC {
     native <methods>;
  }
+ -keepclasseswithmembers class purpletreesoftware.karuahchess.engine.KaruahChessEngineC1 {
+     native <methods>;
+  }
 -keepclasseswithmembers class purpletreesoftware.karuahchess.engine.MoveResult { *; }
 -keepclasseswithmembers class purpletreesoftware.karuahchess.engine.SearchResult { *; }
 -keepclasseswithmembers class purpletreesoftware.karuahchess.engine.SearchOptions { *; }

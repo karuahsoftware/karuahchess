@@ -18,6 +18,8 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 package purpletreesoftware.karuahchess.model.gamerecord
 
+import purpletreesoftware.karuahchess.database.TableName
+
 
 @ExperimentalUnsignedTypes
 interface IGameRecordDataService {

@@ -19,13 +19,48 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 package purpletreesoftware.karuahchess.database
 
 import android.content.Context
+import android.database.DatabaseUtils
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
+import android.text.style.TabStopSpan
 
 class DatabaseHelper private constructor(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null, DATABASE_VERSION) {
 
+    private val dbContext: Context
+
+    init {
+        dbContext = context
+    }
+
+
+    fun initDB(pActivityID: Int): Int {
+
+        val cachedDBStatus = DBStatusCache.get(pActivityID)
+
+        if (cachedDBStatus == null) {
+            val db: SQLiteDatabase = this.writableDatabase
+
+            var dbStatus = CheckDB(db, pActivityID)
+
+            if (dbStatus != DB_OK) {
+                if (dbStatus == ERROR_DB_TABLENOTEXISTS) {
+                    createTablesIfNotExists(db, pActivityID)
+                }
+
+                // Recheck status
+                dbStatus = CheckDB(db, pActivityID)
+            }
+            DBStatusCache.put(pActivityID, dbStatus)
+            return dbStatus
+        }
+        else {
+            return cachedDBStatus
+        }
+    }
+
+
     override fun onCreate(pDatabase: SQLiteDatabase) {
-        createTables(pDatabase)
+        createTablesIfNotExists(pDatabase, 0)
     }
 
     override fun onUpgrade(db: SQLiteDatabase, oldVersion: Int, newVersion: Int) {
@@ -36,28 +71,84 @@ class DatabaseHelper private constructor(context: Context) : SQLiteOpenHelper(co
     /**
      * Creates all the database tables
      */
-    private fun createTables(pDatabase: SQLiteDatabase) {
+    private fun createTablesIfNotExists(pDatabase: SQLiteDatabase, pActivityID: Int) {
 
-        pDatabase.execSQL("CREATE TABLE Parameter(Name TEXT PRIMARY KEY NOT NULL, Value BLOB NOT NULL);")
-        pDatabase.execSQL("CREATE TABLE GameRecord (Id INTEGER PRIMARY KEY NOT NULL, BoardSquareStr TEXT NOT NULL, GameStateStr TEXT NOT NULL);")
+        val table = TableName(pActivityID)
+        pDatabase.execSQL("CREATE TABLE IF NOT EXISTS ${table.Parameter} (Name TEXT PRIMARY KEY NOT NULL, Value BLOB NOT NULL)")
+        pDatabase.execSQL("CREATE TABLE IF NOT EXISTS ${table.GameRecord} (Id INTEGER PRIMARY KEY NOT NULL, BoardSquareStr TEXT NOT NULL, GameStateStr TEXT NOT NULL)")
 
     }
 
 
+    /**
+    * Check the DB is correct and operational
+    */
+    private fun CheckDB(pDatabase: SQLiteDatabase, pActivityID: Int): Int
+    {
+
+        val table = TableName(pActivityID)
+        // Check if all tables exist
+        val tableCount: Int = DatabaseUtils.longForQuery(pDatabase, "select count(name) from sqlite_master where type='table' and (name='${table.GameRecord}' or name = '${table.Parameter}');",null).toInt()
+
+        if (tableCount != 2)
+        {
+            return ERROR_DB_TABLENOTEXISTS
+        }
+
+        // Read and write test
+        try
+        {
+            // Read test
+            pDatabase.rawQuery("select Id from ${table.GameRecord} limit 1",null).use { dbCursor ->
+                while (dbCursor.moveToNext()) {
+                    dbCursor.getInt(0)
+                }
+            }
+
+            pDatabase.rawQuery("select Name from ${table.Parameter} limit 1", null).use { dbCursor ->
+                while (dbCursor.moveToNext()) {
+                    dbCursor.getInt(0)
+                }
+            }
+
+
+            // Write test
+            pDatabase.execSQL("pragma user_version = 0")
+        }
+        catch (ex: Exception)
+        {
+            return ERROR_DB_READWRITE;
+
+        }
+
+        return DB_OK;
+
+
+    }
+
 
     companion object {
 
-        private const val DATABASE_NAME : String = "KaruahChessV10.sqlite"
+        private const val DATABASE_NAME : String = "KaruahChessV11.sqlite"
         private const val DATABASE_VERSION : Int = 1
-        private var Instance: DatabaseHelper? = null
+        private var instance: DatabaseHelper? = null
+        val DB_OK: Int = 0
+        val ERROR_DB_FILEMISSING: Int = 200
+        val ERROR_DB_READWRITE: Int = 201
+        val ERROR_DB_TABLENOTEXISTS: Int = 202
+        private val DBStatusCache = mutableMapOf<Int, Int>()
+
 
         fun getInstance(context: Context?): DatabaseHelper {
-            if (Instance == null && context != null) {
-                Instance = DatabaseHelper(context.applicationContext)
+            if (instance == null && context != null) {
+                instance = DatabaseHelper(context.applicationContext)
             }
 
-            return Instance!!
+            return instance!!
         }
+
+
+
     }
 
 }

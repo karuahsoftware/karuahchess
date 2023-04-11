@@ -42,7 +42,7 @@ class ClockPanel : LinearLayout {
     private val clockRunnable: Runnable
     val whiteClock: Clock = Clock()
     val blackClock: Clock = Clock()
-    private val activity = context as MainActivity
+    private val mainActivity = context as MainActivity
     private var clockIsTicking: Boolean = false
     private var whiteHistoricalSeconds: Long = 0
     private var blackHistoricalSeconds: Long = 0
@@ -75,7 +75,7 @@ class ClockPanel : LinearLayout {
         // Pause clock button
         binding.clockStartPauseButton.setOnClickListener {
             if (isPaused()) {
-                activity.checkChessClock()
+                mainActivity.checkChessClock()
             }
             else {
                 pauseClock()
@@ -84,7 +84,7 @@ class ClockPanel : LinearLayout {
 
         // Edit button
         binding.clockEditButton.setOnClickListener {
-            activity.showClockSettingsDialog()
+            mainActivity.showClockSettingsDialog()
         }
 
     }
@@ -266,14 +266,14 @@ class ClockPanel : LinearLayout {
      */
     private fun checkTimeExpired() {
         if (whiteClock.remainingNano() == 0L && blackClock.remainingNano() > 0L) {
-            activity.uiScope.launch(Dispatchers.Main) {
-                activity.timeExpired(Constants.WHITEPIECE)
+            mainActivity.uiScope.launch(Dispatchers.Main) {
+                mainActivity.timeExpired(Constants.WHITEPIECE)
             }
             pauseClock()
         }
         else if (whiteClock.remainingNano() > 0L && blackClock.remainingNano() == 0L){
-            activity.uiScope.launch(Dispatchers.Main) {
-                activity.timeExpired(Constants.BLACKPIECE)
+            mainActivity.uiScope.launch(Dispatchers.Main) {
+                mainActivity.timeExpired(Constants.BLACKPIECE)
             }
             pauseClock()
         }

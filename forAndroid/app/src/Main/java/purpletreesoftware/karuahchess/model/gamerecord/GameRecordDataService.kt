@@ -19,325 +19,347 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 package purpletreesoftware.karuahchess.model.gamerecord
 
 import android.content.ContentValues
+import android.content.Context
 import purpletreesoftware.karuahchess.common.App
 import purpletreesoftware.karuahchess.database.DatabaseHelper
-import purpletreesoftware.karuahchess.engine.KaruahChessEngineC
+import purpletreesoftware.karuahchess.database.TableName
+import purpletreesoftware.karuahchess.engine.KaruahChessEngine
 import java.util.*
 import kotlin.collections.ArrayList
 
 
 @ExperimentalUnsignedTypes
-class GameRecordDataService {
-    companion object : IGameRecordDataService {
-        private var gameRecordDict: HashMap<Int, GameRecordArray>
+class GameRecordDataService(pActivityID: Int): IGameRecordDataService{
 
-        var currentGame: KaruahChessEngineC private set
-        private var tempBoardA: KaruahChessEngineC
-        private var tempBoardB: KaruahChessEngineC
-        private var tempBoardC: KaruahChessEngineC
+    private val gameRecordDict: HashMap<Int, GameRecordArray>
 
-        init {
-            gameRecordDict = HashMap()
-            currentGame = KaruahChessEngineC()
-            tempBoardA = KaruahChessEngineC()
-            tempBoardB = KaruahChessEngineC()
-            tempBoardC = KaruahChessEngineC()
+    val currentGame: KaruahChessEngine
+    private val tempBoardA: KaruahChessEngine
+    private val tempBoardB: KaruahChessEngine
+    private val tempBoardC: KaruahChessEngine
+    private val activityID: Int
+    private val table: TableName
 
-            load()
+    init {
+        activityID = pActivityID
+        table = TableName(activityID)
+        gameRecordDict = HashMap()
+        currentGame = KaruahChessEngine(App.appContext, activityID)
+        tempBoardA = KaruahChessEngine(App.appContext, activityID)
+        tempBoardB = KaruahChessEngine(App.appContext, activityID)
+        tempBoardC = KaruahChessEngine(App.appContext, activityID)
+
+        load()
+    }
+
+    /**
+     * Load game records
+     */
+    override fun load()
+    {
+        val board = KaruahChessEngine(App.appContext, activityID)
+
+        // Clear records from memory
+        gameRecordDict.clear()
+
+        // Load game records in to memory
+        val db = DatabaseHelper.getInstance(App.appContext).readableDatabase
+        db.rawQuery("select * from ${table.GameRecord} order by id", null).use { dbCursor ->
+            while (dbCursor.moveToNext()) {
+                val id = dbCursor.getInt(dbCursor.getColumnIndex("Id"))
+                val boardSquareStr = dbCursor.getString(dbCursor.getColumnIndex("BoardSquareStr"))
+                val gameStateStr = dbCursor.getString(dbCursor.getColumnIndex("GameStateStr"))
+                board.setBoard(boardSquareStr)
+                board.setState(gameStateStr)
+
+                val recArray = GameRecordArray()
+                recArray.id = id
+                recArray.boardArray = board.getBoardArray()
+                recArray.stateArray = board.getStateArray()
+                gameRecordDict.put(id, recArray)
+            }
         }
 
-        /**
-         * Loads game records
-         */
-        override fun load()
+        // If no records were loaded then create a default record
+        if (gameRecordDict.count() == 0)
         {
-            val board = KaruahChessEngineC()
-
-            // Clear records from memory
-            gameRecordDict.clear()
-
-            // Load game records in to memory
-            val db = DatabaseHelper.getInstance(App.appContext).readableDatabase
-            db.rawQuery("select * from GameRecord order by id", null).use { dbCursor ->
-                while (dbCursor.moveToNext()) {
-                    val id = dbCursor.getInt(dbCursor.getColumnIndex("Id"))
-                    val boardSquareStr = dbCursor.getString(dbCursor.getColumnIndex("BoardSquareStr"))
-                    val gameStateStr = dbCursor.getString(dbCursor.getColumnIndex("GameStateStr"))
-                    board.setBoard(boardSquareStr)
-                    board.setState(gameStateStr)
-
-                    val recArray = GameRecordArray()
-                    recArray.id = id
-                    recArray.boardArray = board.getBoardArray()
-                    recArray.stateArray = board.getStateArray()
-                    gameRecordDict.put(id, recArray)
-                }
-            }
-
-            // If no records were loaded then create a default record
-            if (gameRecordDict.count() == 0)
-            {
-                reset(0,0)
-            }
-
-            // Set current game to latest bitboard
-            val latestRecord = get()
-            if(latestRecord != null) {
-                currentGame.setBoardArray(latestRecord.boardArray)
-                currentGame.setStateArray(latestRecord.stateArray)
-            }
-
+            reset(0,0)
         }
 
-        /**
-         * Gets the current game as an array
-         */
-        override fun getCurrentGame(): GameRecordArray {
-            val recArray = GameRecordArray()
-            recArray.id = -1
-            recArray.boardArray = currentGame.getBoardArray()
-            recArray.stateArray = currentGame.getStateArray()
-            return recArray
+        // Set current game to latest bitboard
+        val latestRecord = get()
+        if(latestRecord != null) {
+            currentGame.setBoardArray(latestRecord.boardArray)
+            currentGame.setStateArray(latestRecord.stateArray)
         }
 
+    }
 
-        /**
-         * Gets a record set by Id
-         */
-        override fun get(pId: Int): GameRecordArray? {
-            if (gameRecordDict.containsKey(pId)) {
-                val rec = gameRecordDict[pId]
-                return rec
-            }
+    /**
+     * Gets the current game as an array
+     */
+    override fun getCurrentGame(): GameRecordArray {
+        val recArray = GameRecordArray()
+        recArray.id = -1
+        recArray.boardArray = currentGame.getBoardArray()
+        recArray.stateArray = currentGame.getStateArray()
+        return recArray
+    }
 
-            return null
+
+    /**
+     * Gets a record set by Id
+     */
+    override fun get(pId: Int): GameRecordArray? {
+        if (gameRecordDict.containsKey(pId)) {
+            val rec = gameRecordDict[pId]
+            return rec
         }
 
-
-        /**
-         * Gets the latest game record
-         */
-        override fun get(): GameRecordArray? {
-            val latestId = getMaxId()
-            return get(latestId)
-        }
-
-        /**
-         * Record the current state of the game as a record
-         */
-        override fun recordGameState(pWhiteClockOffset: Int, pBlackClockOffset: Int): Long
-        {
-            var result = 0L
-
-            // Set the clocks
-            currentGame.setStateWhiteClockOffset(pWhiteClockOffset)
-            currentGame.setStateBlackClockOffset(pBlackClockOffset)
-
-            // create game record
-            val nextId = getMaxId() + 1
-            val boardSquareStr = currentGame.getBoard()
-            val gameStateStr = currentGame.getState()
-
-            val gameRecordArray = GameRecordArray()
-            gameRecordArray.id = nextId
-            gameRecordArray.boardArray = currentGame.getBoardArray()
-            gameRecordArray.stateArray = currentGame.getStateArray()
-
-            if (!gameRecordDict.containsKey(gameRecordArray.id)) {
-
-                // Add record to dictionary
-                gameRecordDict.put(gameRecordArray.id, gameRecordArray)
-
-                // Add record to database
-                val db = DatabaseHelper.getInstance(App.appContext).writableDatabase
-                val contentValues = ContentValues()
-                contentValues.put("Id", nextId)
-                contentValues.put("BoardSquareStr", boardSquareStr)
-                contentValues.put("GameStateStr", gameStateStr)
-
-                result = db.insert("GameRecord", null, contentValues)
-
-            }
-
-            return result
-        }
-
-        /**
-         * Updates a board record
-         */
-        override fun updateGameState(pGameRecordArray: GameRecordArray): Int
-        {
-            var result = 0
-
-            if (gameRecordDict.containsKey(pGameRecordArray.id))
-            {
-                tempBoardC.setBoardArray(pGameRecordArray.boardArray)
-                tempBoardC.setStateArray(pGameRecordArray.stateArray)
-                val boardSquareStr: String = tempBoardC.getBoard()
-                val gameStateStr: String = tempBoardC.getState()
-
-                // Add record to dictionary
-                gameRecordDict[pGameRecordArray.id] = pGameRecordArray
-
-                // Add record to database
-                val db = DatabaseHelper.getInstance(App.appContext).writableDatabase
-                val contentValues = ContentValues()
-                contentValues.put("Id", pGameRecordArray.id)
-                contentValues.put("BoardSquareStr", boardSquareStr)
-                contentValues.put("GameStateStr", gameStateStr)
-                result = db.update("GameRecord", contentValues, "Id=?", arrayOf(pGameRecordArray.id.toString()))
+        return null
+    }
 
 
-                // Update the current game if updating max record
-                val maxId = getMaxId()
-                if (pGameRecordArray.id == maxId)
-                {
-                    currentGame.setBoardArray(pGameRecordArray.boardArray);
-                    currentGame.setStateArray(pGameRecordArray.stateArray);
-                }
-            }
+    /**
+     * Gets the latest game record
+     */
+    override fun get(): GameRecordArray? {
+        val latestId = getMaxId()
+        return get(latestId)
+    }
 
-            return result
-        }
+    /**
+     * Record the current state of the game as a record
+     */
+    override fun recordGameState(pWhiteClockOffset: Int, pBlackClockOffset: Int): Long
+    {
+        var result = 0L
 
+        // Set the clocks
+        currentGame.setStateWhiteClockOffset(pWhiteClockOffset)
+        currentGame.setStateBlackClockOffset(pBlackClockOffset)
 
-        /**
-         * Clears game record
-         */
-        override fun reset(pWhiteClockOffset: Int, pBlackClockOffset: Int) {
+        // create game record
+        val nextId = getMaxId() + 1
+        val boardSquareStr = currentGame.getBoard()
+        val gameStateStr = currentGame.getState()
 
+        val gameRecordArray = GameRecordArray()
+        gameRecordArray.id = nextId
+        gameRecordArray.boardArray = currentGame.getBoardArray()
+        gameRecordArray.stateArray = currentGame.getStateArray()
 
+        if (!gameRecordDict.containsKey(gameRecordArray.id)) {
+
+            // Add record to dictionary
+            gameRecordDict.put(gameRecordArray.id, gameRecordArray)
+
+            // Add record to database
             val db = DatabaseHelper.getInstance(App.appContext).writableDatabase
+            val contentValues = ContentValues()
+            contentValues.put("Id", nextId)
+            contentValues.put("BoardSquareStr", boardSquareStr)
+            contentValues.put("GameStateStr", gameStateStr)
 
-            db.delete("GameRecord", null, null)
+            result = db.insert("${table.GameRecord}", null, contentValues)
 
-            // Clear dictionary
-            gameRecordDict.clear()
-
-            // Reset the current game
-            currentGame.reset()
-
-            // Create record of default setup
-            recordGameState(pWhiteClockOffset, pBlackClockOffset)
         }
 
-        /**
-         * Clear from a given [pId]
-         */
-        private fun clearFrom(pId: Int)
+        return result
+    }
+
+    /**
+     * Updates a board record
+     */
+    override fun updateGameState(pGameRecordArray: GameRecordArray): Int
+    {
+        var result = 0
+
+        if (gameRecordDict.containsKey(pGameRecordArray.id))
         {
+            tempBoardC.setBoardArray(pGameRecordArray.boardArray)
+            tempBoardC.setStateArray(pGameRecordArray.stateArray)
+            val boardSquareStr: String = tempBoardC.getBoard()
+            val gameStateStr: String = tempBoardC.getState()
 
+            // Add record to dictionary
+            gameRecordDict[pGameRecordArray.id] = pGameRecordArray
 
+            // Add record to database
             val db = DatabaseHelper.getInstance(App.appContext).writableDatabase
+            val contentValues = ContentValues()
+            contentValues.put("Id", pGameRecordArray.id)
+            contentValues.put("BoardSquareStr", boardSquareStr)
+            contentValues.put("GameStateStr", gameStateStr)
+            result = db.update("${table.GameRecord}", contentValues, "Id=?", arrayOf(pGameRecordArray.id.toString()))
 
-            db.delete("GameRecord", "Id >= ?", arrayOf(pId.toString()))
 
-
-            // Remove from dictionary
-            for (key in gameRecordDict.keys.toList())
+            // Update the current game if updating max record
+            val maxId = getMaxId()
+            if (pGameRecordArray.id == maxId)
             {
-                if (key >= pId) gameRecordDict.remove(key)
+                currentGame.setBoardArray(pGameRecordArray.boardArray);
+                currentGame.setStateArray(pGameRecordArray.stateArray);
             }
-
         }
 
-
-        /**
-         * Undo last move
-         */
-        override fun undo(): Boolean {
-            val lastMoveId = getMaxId()
-
-            val previousBoard = get(lastMoveId - 1)
-            var returnValue = false
-
-            if (previousBoard != null) {
-                // Remove record from database
-                clearFrom(lastMoveId)
-
-                // Set the current game to a previous board
-                currentGame.setBoardArray(previousBoard.boardArray);
-                currentGame.setStateArray(previousBoard.stateArray);
-
-                // Return true
-                returnValue = true
-            }
-
-            return returnValue
-        }
-
-        /**
-         * Compares two boards and returns sq ids that have changed
-         */
-        override fun getBoardSquareChanges(pBoardA: GameRecordArray?, pBoardB: GameRecordArray?): ULong {
-
-            var mask: ULong = 0b10000000_00000000_00000000_00000000_00000000_00000000_00000000_00000000uL
-            var changedIndexes = 0UL
-
-            //Loop through bit boards and detectchanges
-            if (pBoardA != null && pBoardB != null) {
-                tempBoardA.setBoardArray(pBoardA.boardArray);
-                tempBoardA.setStateArray(pBoardA.stateArray);
-                tempBoardB.setBoardArray(pBoardB.boardArray);
-                tempBoardB.setStateArray(pBoardB.stateArray);
-
-                for (i in 0..63) {
-                    val sqAspin = tempBoardA.getSpin(i)
-                    val sqBspin = tempBoardB.getSpin(i)
-                    if (sqAspin != sqBspin) changedIndexes = changedIndexes or mask
-                    mask = mask shr 1
-                }
-            }
-            return changedIndexes
-        }
+        return result
+    }
 
 
-        /**
-         * Gets last id in the table
-         */
-        override fun getMaxId(): Int
+    /**
+     * Clears game record
+     */
+    override fun reset(pWhiteClockOffset: Int, pBlackClockOffset: Int) {
+
+
+        val db = DatabaseHelper.getInstance(App.appContext).writableDatabase
+
+        db.delete("${table.GameRecord}", null, null)
+
+        // Clear dictionary
+        gameRecordDict.clear()
+
+        // Reset the current game
+        currentGame.reset()
+
+        // Create record of default setup
+        recordGameState(pWhiteClockOffset, pBlackClockOffset)
+    }
+
+    /**
+     * Clear from a given [pId]
+     */
+    private fun clearFrom(pId: Int)
+    {
+
+
+        val db = DatabaseHelper.getInstance(App.appContext).writableDatabase
+
+        db.delete("${table.GameRecord}", "Id >= ?", arrayOf(pId.toString()))
+
+
+        // Remove from dictionary
+        for (key in gameRecordDict.keys.toList())
         {
-            var maxId = 0
-
-            val db = DatabaseHelper.getInstance(App.appContext).readableDatabase
-            db.rawQuery("select max(Id) from GameRecord", null).use { dbCursor ->
-                if (dbCursor.count > 0) {
-                    dbCursor.moveToFirst()
-                    maxId = dbCursor.getInt(0)
-                }
-            }
-
-            return maxId
-
+            if (key >= pId) gameRecordDict.remove(key)
         }
 
+    }
 
-        /**
-         * Get all record Ids as an ArrayList
-         */
-        override fun getAllRecordIDList(): ArrayList<Int>
-        {
 
-            val recordIDList = ArrayList<Int>()
+    /**
+     * Undo last move
+     */
+    override fun undo(): Boolean {
+        val lastMoveId = getMaxId()
 
-            // Get list of Ids from the database
-            val db = DatabaseHelper.getInstance(App.appContext).readableDatabase
-            db.rawQuery("select id from GameRecord order by id", null).use { dbCursor ->
-                while (dbCursor.moveToNext()) {
-                    val Id = dbCursor.getInt(0)
-                    recordIDList.add(Id)
-                }
-            }
+        val previousBoard = get(lastMoveId - 1)
+        var returnValue = false
 
-            return recordIDList
+        if (previousBoard != null) {
+            // Remove record from database
+            clearFrom(lastMoveId)
 
+            // Set the current game to a previous board
+            currentGame.setBoardArray(previousBoard.boardArray);
+            currentGame.setStateArray(previousBoard.stateArray);
+
+            // Return true
+            returnValue = true
         }
 
-        /**
-         * Returns a count of the records in the hashmap
-         */
-        override fun recordCount(): Int {
-            return gameRecordDict.count()
+        return returnValue
+    }
+
+    /**
+     * Compares two boards and returns sq ids that have changed
+     */
+    override fun getBoardSquareChanges(pBoardA: GameRecordArray?, pBoardB: GameRecordArray?): ULong {
+
+        var mask: ULong = 0b10000000_00000000_00000000_00000000_00000000_00000000_00000000_00000000uL
+        var changedIndexes = 0UL
+
+        //Loop through bit boards and detectchanges
+        if (pBoardA != null && pBoardB != null) {
+            tempBoardA.setBoardArray(pBoardA.boardArray);
+            tempBoardA.setStateArray(pBoardA.stateArray);
+            tempBoardB.setBoardArray(pBoardB.boardArray);
+            tempBoardB.setStateArray(pBoardB.stateArray);
+
+            for (i in 0..63) {
+                val sqAspin = tempBoardA.getSpin(i)
+                val sqBspin = tempBoardB.getSpin(i)
+                if (sqAspin != sqBspin) changedIndexes = changedIndexes or mask
+                mask = mask shr 1
+            }
+        }
+        return changedIndexes
+    }
+
+
+    /**
+     * Gets last id in the table
+     */
+    override fun getMaxId(): Int
+    {
+        var maxId = 0
+
+        val db = DatabaseHelper.getInstance(App.appContext).readableDatabase
+        db.rawQuery("select max(Id) from ${table.GameRecord}", null).use { dbCursor ->
+            if (dbCursor.count > 0) {
+                dbCursor.moveToFirst()
+                maxId = dbCursor.getInt(0)
+            }
+        }
+
+        return maxId
+
+    }
+
+
+    /**
+     * Get all record Ids as an ArrayList
+     */
+    override fun getAllRecordIDList(): ArrayList<Int>
+    {
+
+        val recordIDList = ArrayList<Int>()
+
+        // Get list of Ids from the database
+        val db = DatabaseHelper.getInstance(App.appContext).readableDatabase
+        db.rawQuery("select id from ${table.GameRecord} order by id", null).use { dbCursor ->
+            while (dbCursor.moveToNext()) {
+                val Id = dbCursor.getInt(0)
+                recordIDList.add(Id)
+            }
+        }
+
+        return recordIDList
+
+    }
+
+    /**
+     * Returns a count of the records in the hashmap
+     */
+    override fun recordCount(): Int {
+        return gameRecordDict.count()
+    }
+
+
+
+    companion object  {
+        private val instanceMap = mutableMapOf<Int, GameRecordDataService>()
+
+        fun getInstance(pActivityID: Int): GameRecordDataService {
+            val instance: GameRecordDataService = instanceMap.get(pActivityID) ?: run {
+                val newInstance = GameRecordDataService(pActivityID)
+                instanceMap.put(pActivityID, newInstance)
+                newInstance
+            }
+
+            return instance
+
         }
 
     }

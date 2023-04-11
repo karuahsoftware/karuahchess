@@ -31,19 +31,21 @@ import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.ViewModelProvider
 import purpletreesoftware.karuahchess.MainActivity
 import purpletreesoftware.karuahchess.R
+import purpletreesoftware.karuahchess.common.App
 import purpletreesoftware.karuahchess.common.Constants
 import purpletreesoftware.karuahchess.databinding.FragmentCastlingrightsBinding
-import purpletreesoftware.karuahchess.engine.KaruahChessEngineC
+import purpletreesoftware.karuahchess.engine.KaruahChessEngine
 import purpletreesoftware.karuahchess.model.gamerecord.GameRecordArray
 import purpletreesoftware.karuahchess.model.gamerecord.GameRecordDataService
 import purpletreesoftware.karuahchess.viewmodel.CastlingRightsViewModel
 
 @ExperimentalUnsignedTypes
-class CastlingRights() : DialogFragment() {
+class CastlingRights(pActivityID: Int) : DialogFragment() {
     private var _binding: FragmentCastlingrightsBinding? = null
     private val binding get() = _binding!!
-    private val board = KaruahChessEngineC()
+    private val board = KaruahChessEngine(App.appContext, pActivityID)
     private lateinit var castlingRightsVM: CastlingRightsViewModel
+    private val activityID = pActivityID
 
     override fun onStart() {
         super.onStart()
@@ -124,7 +126,7 @@ class CastlingRights() : DialogFragment() {
             updatedRecord.stateArray = board.getStateArray()
 
             val mainActivity = activity as MainActivity
-            GameRecordDataService.updateGameState(updatedRecord)
+            GameRecordDataService.getInstance(activityID).updateGameState(updatedRecord)
             mainActivity.updateBoardIndicators(updatedRecord)
         }
         else {
@@ -161,8 +163,8 @@ class CastlingRights() : DialogFragment() {
     }
 
     companion object {
-        fun newInstance(): CastlingRights {
-            val frag = CastlingRights()
+        fun newInstance(pActivityID: Int): CastlingRights {
+            val frag = CastlingRights(pActivityID)
             val args = Bundle()
             frag.arguments = args
             return frag

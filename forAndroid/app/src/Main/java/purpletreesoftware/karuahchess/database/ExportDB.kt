@@ -32,9 +32,10 @@ class ExportDB {
     /**
      * Exports game to file
      */
-    fun export(pExportType: ExportTypeEnum, pContext: Context): File {
+    fun export(pExportType: ExportTypeEnum, pContext: Context, pActivityID: Int): File {
 
         if (pExportType == ExportTypeEnum.GameXML) {
+            val table = TableName(pActivityID)
 
             //Start Document
             val outputBytes = ByteArrayOutputStream()
@@ -47,7 +48,7 @@ class ExportDB {
 
             // Data
             val db = DatabaseHelper.getInstance(pContext).readableDatabase
-            db.rawQuery("select * from GameRecord order by id", null).use { dbCursor ->
+            db.rawQuery("select * from ${table.GameRecord} order by id", null).use { dbCursor ->
                 while (dbCursor.moveToNext()) {
 
                     xmlDoc.startTag(null, "GameRecord")

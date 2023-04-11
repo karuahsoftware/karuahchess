@@ -34,10 +34,11 @@ import purpletreesoftware.karuahchess.model.parameterobj.*
 
 
 @ExperimentalUnsignedTypes
-class ClockSettings : DialogFragment() {
+class ClockSettings(pActivityID: Int) : DialogFragment() {
 
     private var _binding: FragmentClocksettingsBinding? = null
     private val binding get() = _binding!!
+    private val activityID = pActivityID
 
     override fun onStart() {
         super.onStart()
@@ -146,7 +147,7 @@ class ClockSettings : DialogFragment() {
         defaultResetAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         binding.resetSpinner.adapter = defaultResetAdapter
 
-        val defaultClockIndex: Int = ParameterDataService.get(ParamClockDefault::class.java).index
+        val defaultClockIndex: Int = ParameterDataService.getInstance(mainActivity.getActivityID()).get(ParamClockDefault::class.java).index
         if (defaultClockIndex < Constants.clockResetSeconds.size) { binding.resetSpinner.setSelection(defaultClockIndex) }
         else { binding.resetSpinner.setSelection(0) }
 
@@ -175,10 +176,10 @@ class ClockSettings : DialogFragment() {
         mainActivity.binding.clockLayout.setClock(whiteSecondsRemaining, blackSecondsRemaining)
 
         // Save the default
-        val clockDefaultParam = ParameterDataService.get(ParamClockDefault::class.java)
+        val clockDefaultParam = ParameterDataService.getInstance(activityID).get(ParamClockDefault::class.java)
         if (clockDefaultParam.index != binding.resetSpinner.selectedItemPosition) {
             clockDefaultParam.index = binding.resetSpinner.selectedItemPosition
-            ParameterDataService.set(clockDefaultParam)
+            ParameterDataService.getInstance(activityID).set(clockDefaultParam)
         }
 
         // Update the clock if first move
@@ -223,8 +224,8 @@ class ClockSettings : DialogFragment() {
     }
 
     companion object {
-        fun newInstance(): ClockSettings {
-            val frag = ClockSettings()
+        fun newInstance(pActivityID: Int): ClockSettings {
+            val frag = ClockSettings(pActivityID)
             val args = Bundle()
             frag.arguments = args
             return frag

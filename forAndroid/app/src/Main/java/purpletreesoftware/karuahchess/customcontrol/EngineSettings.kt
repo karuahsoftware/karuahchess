@@ -42,10 +42,11 @@ import java.text.NumberFormat
 
 
 @ExperimentalUnsignedTypes
-class EngineSettings : DialogFragment() {
+class EngineSettings(pActivityID: Int) : DialogFragment() {
 
     private var _binding: FragmentEnginesettingsBinding? = null
     private val binding get() = _binding!!
+    private val activityID = pActivityID
 
     override fun onStart() {
         super.onStart()
@@ -83,17 +84,18 @@ class EngineSettings : DialogFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        val mainActivity = activity as MainActivity
         // Set initial values
-        binding.computerPlayerEnabledCheckBox.isChecked = ParameterDataService.get(ParamComputerPlayer::class.java).enabled
+        binding.computerPlayerEnabledCheckBox.isChecked = ParameterDataService.getInstance(activityID).get(ParamComputerPlayer::class.java).enabled
         binding.computerPlayerEnabledCheckBox.setOnClickListener { setControlState() }
 
-        binding.computerMoveFirstCheckBox.isChecked = ParameterDataService.get(ParamComputerMoveFirst::class.java).enabled
+        binding.computerMoveFirstCheckBox.isChecked = ParameterDataService.getInstance(activityID).get(ParamComputerMoveFirst::class.java).enabled
 
-        binding.randomiseFirstMoveCheckBox.isChecked = ParameterDataService.get(ParamRandomiseFirstMove::class.java).enabled
+        binding.randomiseFirstMoveCheckBox.isChecked = ParameterDataService.getInstance(activityID).get(ParamRandomiseFirstMove::class.java).enabled
 
-        binding.levelAutoCheckBox.isChecked = ParameterDataService.get(ParamLevelAuto::class.java).enabled
+        binding.levelAutoCheckBox.isChecked = ParameterDataService.getInstance(activityID).get(ParamLevelAuto::class.java).enabled
 
-        binding.computerAdvancedSettingsCheckBox.isChecked = ParameterDataService.get(ParamLimitAdvanced::class.java).enabled
+        binding.computerAdvancedSettingsCheckBox.isChecked = ParameterDataService.getInstance(activityID).get(ParamLimitAdvanced::class.java).enabled
         binding.computerAdvancedSettingsCheckBox.setOnClickListener { setControlState() }
 
 
@@ -107,7 +109,7 @@ class EngineSettings : DialogFragment() {
         binding.skillLevelSpinner.adapter = adapter
 
         // Set the spinner position
-        val skillLevel = ParameterDataService.get(ParamLimitSkillLevel::class.java).level
+        val skillLevel = ParameterDataService.getInstance(activityID).get(ParamLimitSkillLevel::class.java).level
         if (skillLevel in 0..Constants.strengthList.lastIndex) {
             binding.skillLevelSpinner.setSelection(skillLevel)
         }
@@ -117,7 +119,7 @@ class EngineSettings : DialogFragment() {
         binding.depthLimitSlider.addOnChangeListener { slider, value, fromUser ->
             binding.depthLimitValueText.text = getValueZeroOff(value.toInt())
         }
-        val limitDepth = ParameterDataService.get(ParamLimitDepth::class.java).depth.toFloat()
+        val limitDepth = ParameterDataService.getInstance(activityID).get(ParamLimitDepth::class.java).depth.toFloat()
         if (limitDepth in binding.depthLimitSlider.valueFrom .. binding.depthLimitSlider.valueTo) {
             binding.depthLimitSlider.value = limitDepth
         }
@@ -134,7 +136,7 @@ class EngineSettings : DialogFragment() {
                 binding.moveDurationLimitValueEditText.error = "Value should be between 0 and $maxStr."
             }
         }
-        val moveDuration = ParameterDataService.get(ParamLimitMoveDuration::class.java).moveDurationMS
+        val moveDuration = ParameterDataService.getInstance(activityID).get(ParamLimitMoveDuration::class.java).moveDurationMS
         // Leave blank if zero
         if(moveDuration in 1..600000) {
             binding.moveDurationLimitValueEditText.setText(moveDuration.toString())
@@ -146,7 +148,7 @@ class EngineSettings : DialogFragment() {
         }
 
         binding.threadsLimitSlider.valueTo = if (Runtime.getRuntime().availableProcessors() > 1) (Runtime.getRuntime().availableProcessors()).toFloat() else 1.toFloat()
-        val threadLimit = ParameterDataService.get(ParamLimitThreads::class.java).threads.toFloat()
+        val threadLimit = ParameterDataService.getInstance(activityID).get(ParamLimitThreads::class.java).threads.toFloat()
         if (threadLimit in binding.threadsLimitSlider.valueFrom .. binding.threadsLimitSlider.valueTo) {
             binding.threadsLimitSlider.value = threadLimit
         }
@@ -177,59 +179,59 @@ class EngineSettings : DialogFragment() {
       */
     private fun save(){
 
-        val computerPlayer = ParameterDataService.get(ParamComputerPlayer::class.java)
+        val computerPlayer = ParameterDataService.getInstance(activityID).get(ParamComputerPlayer::class.java)
         if (computerPlayer.enabled != binding.computerPlayerEnabledCheckBox.isChecked) {
             computerPlayer.enabled = binding.computerPlayerEnabledCheckBox.isChecked
-            ParameterDataService.set(computerPlayer)
+            ParameterDataService.getInstance(activityID).set(computerPlayer)
         }
 
-        val computerMoveFirst = ParameterDataService.get(ParamComputerMoveFirst::class.java)
+        val computerMoveFirst = ParameterDataService.getInstance(activityID).get(ParamComputerMoveFirst::class.java)
         if (computerMoveFirst.enabled != binding.computerMoveFirstCheckBox.isChecked) {
             computerMoveFirst.enabled = binding.computerMoveFirstCheckBox.isChecked
-            ParameterDataService.set(computerMoveFirst)
+            ParameterDataService.getInstance(activityID).set(computerMoveFirst)
         }
 
-        val randomiseFirstMove = ParameterDataService.get(ParamRandomiseFirstMove::class.java)
+        val randomiseFirstMove = ParameterDataService.getInstance(activityID).get(ParamRandomiseFirstMove::class.java)
         if (randomiseFirstMove.enabled != binding.randomiseFirstMoveCheckBox.isChecked) {
             randomiseFirstMove.enabled = binding.randomiseFirstMoveCheckBox.isChecked
-            ParameterDataService.set(randomiseFirstMove)
+            ParameterDataService.getInstance(activityID).set(randomiseFirstMove)
         }
 
-        val levelAuto = ParameterDataService.get(ParamLevelAuto::class.java)
+        val levelAuto = ParameterDataService.getInstance(activityID).get(ParamLevelAuto::class.java)
         if (levelAuto.enabled != binding.levelAutoCheckBox.isChecked) {
             levelAuto.enabled = binding.levelAutoCheckBox.isChecked
-            ParameterDataService.set(levelAuto)
+            ParameterDataService.getInstance(activityID).set(levelAuto)
         }
 
-        val limitSkillLevel = ParameterDataService.get(ParamLimitSkillLevel::class.java)
+        val limitSkillLevel = ParameterDataService.getInstance(activityID).get(ParamLimitSkillLevel::class.java)
         if (limitSkillLevel.level != binding.skillLevelSpinner.selectedItemPosition) {
             limitSkillLevel.level = binding.skillLevelSpinner.selectedItemPosition
-            ParameterDataService.set(limitSkillLevel)
+            ParameterDataService.getInstance(activityID).set(limitSkillLevel)
         }
 
-        val computerAdvancedSettings = ParameterDataService.get(ParamLimitAdvanced::class.java)
+        val computerAdvancedSettings = ParameterDataService.getInstance(activityID).get(ParamLimitAdvanced::class.java)
         if (computerAdvancedSettings.enabled != binding.computerAdvancedSettingsCheckBox.isChecked) {
             computerAdvancedSettings.enabled = binding.computerAdvancedSettingsCheckBox.isChecked
-            ParameterDataService.set(computerAdvancedSettings)
+            ParameterDataService.getInstance(activityID).set(computerAdvancedSettings)
         }
 
-        val limitDepth = ParameterDataService.get(ParamLimitDepth::class.java)
+        val limitDepth = ParameterDataService.getInstance(activityID).get(ParamLimitDepth::class.java)
         if (limitDepth.depth != binding.depthLimitSlider.value.toInt()) {
             limitDepth.depth = binding.depthLimitSlider.value.toInt()
-            ParameterDataService.set(limitDepth)
+            ParameterDataService.getInstance(activityID).set(limitDepth)
         }
 
-        val limitMoveDuration = ParameterDataService.get(ParamLimitMoveDuration::class.java)
+        val limitMoveDuration = ParameterDataService.getInstance(activityID).get(ParamLimitMoveDuration::class.java)
         val limitMoveDurationValue: Int = binding.moveDurationLimitValueEditText.text.toString().toIntOrNull() ?: 0
         if (limitMoveDuration.moveDurationMS != limitMoveDurationValue) {
             limitMoveDuration.moveDurationMS = limitMoveDurationValue
-            ParameterDataService.set(limitMoveDuration)
+            ParameterDataService.getInstance(activityID).set(limitMoveDuration)
         }
 
-        val limitThreads = ParameterDataService.get(ParamLimitThreads::class.java)
+        val limitThreads = ParameterDataService.getInstance(activityID).get(ParamLimitThreads::class.java)
         if (limitThreads.threads != binding.threadsLimitSlider.value.toInt()) {
             limitThreads.threads = binding.threadsLimitSlider.value.toInt()
-            ParameterDataService.set(limitThreads)
+            ParameterDataService.getInstance(activityID).set(limitThreads)
         }
 
         // Refresh data in main activity after save
@@ -308,8 +310,8 @@ class EngineSettings : DialogFragment() {
     }
 
     companion object {
-        fun newInstance(): EngineSettings {
-            val frag = EngineSettings()
+        fun newInstance(pActivityID: Int): EngineSettings {
+            val frag = EngineSettings(pActivityID)
             val args = Bundle()
             frag.arguments = args
             return frag

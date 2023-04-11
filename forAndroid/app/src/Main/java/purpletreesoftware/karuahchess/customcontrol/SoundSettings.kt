@@ -33,10 +33,11 @@ import purpletreesoftware.karuahchess.model.parameterobj.*
 
 
 @ExperimentalUnsignedTypes
-class SoundSettings : DialogFragment() {
+class SoundSettings(pActivityID: Int) : DialogFragment() {
 
     private var _binding: FragmentSoundsettingsBinding? = null
     private val binding get() = _binding!!
+    private val activityID = pActivityID
 
     override fun onStart() {
         super.onStart()
@@ -73,10 +74,9 @@ class SoundSettings : DialogFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
         // Set initial values
-        binding.soundReadCheckBox.isChecked = ParameterDataService.get(ParamSoundRead::class.java).enabled
-        binding.soundEffectCheckBox.isChecked = ParameterDataService.get(ParamSoundEffect::class.java).enabled
+        binding.soundReadCheckBox.isChecked = ParameterDataService.getInstance(activityID).get(ParamSoundRead::class.java).enabled
+        binding.soundEffectCheckBox.isChecked = ParameterDataService.getInstance(activityID).get(ParamSoundEffect::class.java).enabled
 
 
 
@@ -95,25 +95,24 @@ class SoundSettings : DialogFragment() {
      * Saves form values
      */
     private fun save(){
-
-        val soundRead = ParameterDataService.get(ParamSoundRead::class.java)
+        val soundRead = ParameterDataService.getInstance(activityID).get(ParamSoundRead::class.java)
         if (soundRead.enabled != binding.soundReadCheckBox.isChecked) {
             soundRead.enabled = binding.soundReadCheckBox.isChecked
-            ParameterDataService.set(soundRead)
+            ParameterDataService.getInstance(activityID).set(soundRead)
         }
 
-        val soundEffect = ParameterDataService.get(ParamSoundEffect::class.java)
+        val soundEffect = ParameterDataService.getInstance(activityID).get(ParamSoundEffect::class.java)
         if (soundEffect.enabled != binding.soundEffectCheckBox.isChecked) {
             soundEffect.enabled = binding.soundEffectCheckBox.isChecked
-            ParameterDataService.set(soundEffect)
+            ParameterDataService.getInstance(activityID).set(soundEffect)
         }
 
 
     }
 
     companion object {
-        fun newInstance(): SoundSettings {
-            val frag = SoundSettings()
+        fun newInstance(pActivityID: Int): SoundSettings {
+            val frag = SoundSettings(pActivityID)
             val args = Bundle()
             frag.arguments = args
             return frag

@@ -38,11 +38,12 @@ import purpletreesoftware.karuahchess.model.parameterobj.ParamRotateBoard
 
 
 @ExperimentalUnsignedTypes
-class BoardSettings : DialogFragment() {
+class BoardSettings(pActivityID: Int) : DialogFragment() {
 
     private var rotation: Int = 0
     private var _binding: FragmentBoardsettingsBinding? = null
     private val binding get() = _binding!!
+    private val activityID = pActivityID
 
     override fun onStart() {
         super.onStart()
@@ -91,13 +92,13 @@ class BoardSettings : DialogFragment() {
         binding.darksquarecolourspinner.adapter = adapter
 
         // Set the spinner position
-        val boardColourIndex = Constants.darkSquareColourList.indexOf(ParameterDataService.get(ParamColourDarkSquares::class.java).argb())
+        val boardColourIndex = Constants.darkSquareColourList.indexOf(ParameterDataService.getInstance(activityID).get(ParamColourDarkSquares::class.java).argb())
         if (boardColourIndex > -1) {
             binding.darksquarecolourspinner.setSelection(boardColourIndex)
         }
 
         // Set orientation indicator
-        setOrientationIndicator(ParameterDataService.get(ParamRotateBoard::class.java).value)
+        setOrientationIndicator(ParameterDataService.getInstance(activityID).get(ParamRotateBoard::class.java).value)
 
         // Connect button events
         binding.rotateButton.setOnClickListener {
@@ -120,24 +121,24 @@ class BoardSettings : DialogFragment() {
     private fun save(){
         val mainActivity = activity as MainActivity
 
-        val darkSquareColour = ParameterDataService.get(ParamColourDarkSquares::class.java)
+        val darkSquareColour = ParameterDataService.getInstance(activityID).get(ParamColourDarkSquares::class.java)
         val darkSquareColourSelectedItem = binding.darksquarecolourspinner.selectedItem as ColourARGB
         if (darkSquareColour.argb() != darkSquareColourSelectedItem) {
             darkSquareColour.a = darkSquareColourSelectedItem.a
             darkSquareColour.r = darkSquareColourSelectedItem.r
             darkSquareColour.g = darkSquareColourSelectedItem.g
             darkSquareColour.b = darkSquareColourSelectedItem.b
-            ParameterDataService.set(darkSquareColour)
+            ParameterDataService.getInstance(activityID).set(darkSquareColour)
 
             // Apply the new colour to the board
             mainActivity.applyBoardColour()
         }
 
         // Save the rotation parameter
-        val currentRotationParam = ParameterDataService.get(ParamRotateBoard::class.java)
+        val currentRotationParam = ParameterDataService.getInstance(activityID).get(ParamRotateBoard::class.java)
         if (rotation != currentRotationParam.value) {
             currentRotationParam.value = rotation
-            ParameterDataService.set(currentRotationParam)
+            ParameterDataService.getInstance(activityID).set(currentRotationParam)
             mainActivity.rotateBoard(rotation)
         }
     }
@@ -153,8 +154,8 @@ class BoardSettings : DialogFragment() {
     }
 
     companion object {
-        fun newInstance(): BoardSettings {
-            val frag = BoardSettings()
+        fun newInstance(pActivityID: Int): BoardSettings {
+            val frag = BoardSettings(pActivityID)
             val args = Bundle()
             frag.arguments = args
             return frag

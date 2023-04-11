@@ -29,7 +29,6 @@ import androidx.recyclerview.widget.RecyclerView
 import purpletreesoftware.karuahchess.MainActivity
 import purpletreesoftware.karuahchess.databinding.MovenavigatorpanelBinding
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import purpletreesoftware.karuahchess.model.boardsquare.BoardSquareDataService
 
@@ -49,10 +48,13 @@ class MoveNavigator : LinearLayout {
         initialize(context)
     }
 
+    init {
+        //activityID = 0
+    }
 
 
     private fun initialize(context: Context) {
-        val activity = context as MainActivity
+        val mainActivity = context as MainActivity
 
         // Inflate view
         _binding = MovenavigatorpanelBinding.inflate(LayoutInflater.from(context), this, true)
@@ -67,10 +69,10 @@ class MoveNavigator : LinearLayout {
 
         // Set the navigate previous button listener
         binding.leftNavPreviousButton.setOnClickListener {
-            activity.uiScope.launch(Dispatchers.Main) {
-                val prevId = getPreviousRecordId(BoardSquareDataService.gameRecordCurrentValue)
+            mainActivity.uiScope.launch(Dispatchers.Main) {
+                val prevId = getPreviousRecordId(BoardSquareDataService.getInstance(mainActivity.getActivityID()).gameRecordCurrentValue)
                 if (prevId > -1) {
-                    activity.navigateGameRecord(prevId, true, false, true)
+                    mainActivity.navigateGameRecord(prevId, true, false, true)
 
                     // Scroll to current position
                     val gameRecIndex = getRecordIndex(prevId)
@@ -83,11 +85,11 @@ class MoveNavigator : LinearLayout {
 
         // Set the navigate next button listener
         binding.rightNavNextButton.setOnClickListener {
-            activity.uiScope.launch(Dispatchers.Main) {
-                val nextId = getNextRecordId(BoardSquareDataService.gameRecordCurrentValue)
+            mainActivity.uiScope.launch(Dispatchers.Main) {
+                val nextId = getNextRecordId(BoardSquareDataService.getInstance(mainActivity.getActivityID()).gameRecordCurrentValue)
 
                 if (nextId > -1) {
-                    activity.navigateGameRecord(nextId, true, false, true)
+                    mainActivity.navigateGameRecord(nextId, true, false, true)
 
                     // Scroll to current position
                     val gameRecIndex = getRecordIndex(nextId)
@@ -100,11 +102,11 @@ class MoveNavigator : LinearLayout {
 
         // Set the navigate next button listener
         binding.upNavNextButton.setOnClickListener {
-            activity.uiScope.launch(Dispatchers.Main) {
-                val nextId = getNextRecordId(BoardSquareDataService.gameRecordCurrentValue)
+            mainActivity.uiScope.launch(Dispatchers.Main) {
+                val nextId = getNextRecordId(BoardSquareDataService.getInstance(mainActivity.getActivityID()).gameRecordCurrentValue)
 
                 if (nextId > -1) {
-                    activity.navigateGameRecord(nextId, true, false, true)
+                    mainActivity.navigateGameRecord(nextId, true, false, true)
 
                     // Scroll to current position
                     val gameRecIndex = getRecordIndex(nextId)
@@ -117,10 +119,10 @@ class MoveNavigator : LinearLayout {
 
         // Set the navigate previous button listener
         binding.downNavPreviousButton.setOnClickListener {
-            activity.uiScope.launch(Dispatchers.Main) {
-                val prevId = getPreviousRecordId(BoardSquareDataService.gameRecordCurrentValue)
+            mainActivity.uiScope.launch(Dispatchers.Main) {
+                val prevId = getPreviousRecordId(BoardSquareDataService.getInstance(mainActivity.getActivityID()).gameRecordCurrentValue)
                 if (prevId > -1) {
-                    activity.navigateGameRecord(prevId, true, false, true)
+                    mainActivity.navigateGameRecord(prevId, true, false, true)
 
                     // Scroll to current position
                     val gameRecIndex = getRecordIndex(prevId)
@@ -167,8 +169,9 @@ class MoveNavigator : LinearLayout {
      */
     fun scrollToSelected() {
         // Scroll to current position
+        val mainActivity = context as MainActivity
         if (this.visibility == View.VISIBLE) {
-            val gameRecIndex = getRecordIndex(BoardSquareDataService.gameRecordCurrentValue)
+            val gameRecIndex = getRecordIndex(BoardSquareDataService.getInstance(mainActivity.getActivityID()).gameRecordCurrentValue)
             if (gameRecIndex > -1) {
                 binding.moveNavRecyclerView.layoutManager?.scrollToPosition(gameRecIndex)
             }
@@ -218,12 +221,12 @@ class MoveNavigator : LinearLayout {
      */
     private fun setLayout() {
 
-        val activity = context as MainActivity
+        val mainActivity = context as MainActivity
 
         // Set to vertical or horizontal layout depending on screen rotation
         if(this.resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) {
             binding.moveNavRecyclerView.layoutManager = object : androidx.recyclerview.widget.LinearLayoutManager(
-                activity,
+                mainActivity,
                 RecyclerView.VERTICAL,
                 true
             ) {
@@ -244,7 +247,7 @@ class MoveNavigator : LinearLayout {
         }
         else {
             binding.moveNavRecyclerView.layoutManager = object : androidx.recyclerview.widget.LinearLayoutManager(
-                activity,
+                mainActivity,
                 RecyclerView.HORIZONTAL,
                 false
             ){

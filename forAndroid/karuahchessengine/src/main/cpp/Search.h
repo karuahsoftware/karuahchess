@@ -17,8 +17,8 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
 #pragma once
-#include "Helper.h"
-#include "BitBoard.h"
+#include "helper.h"
+#include "bitboard.h"
 #include <cstdint>
 #include <chrono>
 
@@ -49,7 +49,7 @@ namespace Search {
 		int limitMoveDuration = 0;
 		int limitThreads = 1;
 		bool randomiseFirstMove = false;
-
+		
 	};
 
 	// Functions
