@@ -19,9 +19,6 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 using System;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
-using KaruahChess.Common;
-using System.Collections.Generic;
-using KaruahChess.Model.ParameterObjects;
 
 namespace KaruahChess.CustomControl
 {
@@ -68,7 +65,7 @@ namespace KaruahChess.CustomControl
         /// </summary>
         /// <returns></returns>
         public void Show()
-        {
+        {            
             SoundReadCheckBox.IsChecked = _boardVM.SoundReadEnabled;
             SoundEffectCheckBox.IsChecked = _boardVM.SoundEffectEnabled;            
             PagePopup.IsOpen = true;
@@ -82,8 +79,8 @@ namespace KaruahChess.CustomControl
         {
             if (pMaxWidth <= 400)
             {
-                this.SetValue(Canvas.LeftProperty, 10);
-                this.SetValue(Canvas.TopProperty, 10);
+                this.SetValue(Canvas.LeftProperty, 5);
+                this.SetValue(Canvas.TopProperty, 5);
                 this.StyleTemplate.Width = pMaxWidth - 15;
                 this.StyleTemplate.Height = pMaxWidth - 15;
             }
@@ -116,7 +113,7 @@ namespace KaruahChess.CustomControl
         /// Saves form values
         /// </summary>
         private void save()
-        {
+        {            
             _boardVM.SoundReadEnabled = SoundReadCheckBox.IsChecked == true;
             _boardVM.SoundEffectEnabled = SoundEffectCheckBox.IsChecked == true;
             

@@ -113,7 +113,7 @@
             <VariableSizedWrapGrid Margin="0,20,0,0" Orientation="Horizontal"  Grid.Row="2" Grid.Column="0">
                 <Button x:Name="btnCloseButton" Content="Close"  Click="Close_Click" Style="{StaticResource ButtonStyle}" Width="135"/>
                 <Button x:Name="btnStopSearchButton" Content="Stop search" Click="StopSearch_Click" Style="{StaticResource ButtonStyle}"  Width="135"/>
-                <Button x:Name="btnDefaultButton" Content="Reset to default" Click="ResetToDefault_Click" Style="{StaticResource ButtonStyle}" Width="135"/>
+                <Button x:Name="btnDefaultButton" Content="Set to default" Click="ResetToDefault_Click" Style="{StaticResource ButtonStyle}" Width="135"/>
             </VariableSizedWrapGrid>
             
 

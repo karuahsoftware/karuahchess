@@ -54,7 +54,7 @@
 
             <ScrollViewer x:Name="MainTextScrollViewer"  VerticalScrollBarVisibility="Visible" Grid.Row="1" Grid.Column="0" Style="{StaticResource InfoScrollViewer}" BorderThickness="0">
                 <StackPanel Orientation="Vertical">                    
-                    <ComboBox x:Name="DarkSquareCombo" Header="Colour" Width="150" Margin="0,10,0,0" ItemsSource="{x:Bind darkSquareColourList}">
+                    <ComboBox x:Name="DarkSquareCombo" Header="Colour" Width="150" Margin="0,10,0,0" ItemsSource="{x:Bind darkSquareColourList}" SelectionChanged="DarkSquareCombo_SelectionChanged">
                         <ComboBox.ItemTemplate>
                             <DataTemplate x:DataType="common:ColourARGB">
                                 <StackPanel Orientation="Horizontal">
@@ -71,7 +71,9 @@
 
                     <TextBlock x:Name="OrientationTitleText" Margin="0,10,0,0" HorizontalAlignment="Left">Orientation</TextBlock>
                     <StackPanel Orientation="Horizontal">
-                        <Image x:Name="orientationImage" Source="ms-appx:///Media/orientation.png" Width="80" Height="80" VerticalAlignment="Top"/>
+                        <Border x:Name="orientationBorder">
+                            <Image x:Name="orientationImage" Source="ms-appx:///Media/orientation.png" Width="80" Height="80" VerticalAlignment="Top"/>
+                        </Border>
                         <Button x:Name="btnRotate" Margin="5,0,0,0" Content="&#xE7AD;" VerticalAlignment="Top" FontFamily="Segoe MDL2 Assets"  FontSize="{x:Bind StyleTemplate.IconFontSize}" Style="{StaticResource ButtonStyle}" Click="btnRotate_Click" />
                     </StackPanel>
                 </StackPanel>

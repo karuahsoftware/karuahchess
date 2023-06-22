@@ -76,8 +76,8 @@ namespace KaruahChess.CustomControl
         {
             if (pMaxWidth <= 400)
             {
-                this.SetValue(Canvas.LeftProperty, 10);
-                this.SetValue(Canvas.TopProperty, 10);
+                this.SetValue(Canvas.LeftProperty, 5);
+                this.SetValue(Canvas.TopProperty, 5);
                 this.StyleTemplate.Width = pMaxWidth - 15;
                 this.StyleTemplate.Height = pMaxWidth - 15;
             }

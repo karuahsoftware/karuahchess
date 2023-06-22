@@ -56,8 +56,21 @@
                         <TextBlock x:Name="VersionText" TextWrapping="WrapWholeWords" Margin="0,0,0,10"/>
 
                         <TextBlock  TextWrapping="WrapWholeWords" Margin="0,0,0,10"> 
-                            Karuah Chess is a chess playing program.<LineBreak/>Copyright © 2020 Karuah Software<LineBreak/>You can visit us at <Hyperlink NavigateUri="https://www.facebook.com/karuahchess" >https://www.facebook.com/karuahchess</Hyperlink>.
+                            Karuah Chess is a chess playing program.<LineBreak/>Copyright © 2020 Karuah Software
                         </TextBlock>
+                        
+                        <TextBlock  TextWrapping="WrapWholeWords" Margin="0,0,0,0"> 
+                            Find Karuah Chess on;
+                        </TextBlock>
+
+                        <StackPanel Orientation="Horizontal" Margin="0,0,0,10">
+                            <HyperlinkButton NavigateUri="https://www.facebook.com/karuahchess">
+                                <Image Source="ms-appx:///Media/social_logo_f.png" Width="30" Height="30" />
+                            </HyperlinkButton>
+                            <HyperlinkButton NavigateUri="https://twitter.com/karuahsoftware">
+                                <Image Source="ms-appx:///Media/social_logo_t.png" Width="30" Height="30" />
+                            </HyperlinkButton>
+                        </StackPanel>
 
                         <TextBlock  TextWrapping="WrapWholeWords" Margin="0,0,0,10">
                             Karuah Chess uses StockFish 15.1 with neural network version nn-ad9b42354671.nnue.                            

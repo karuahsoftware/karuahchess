@@ -27,15 +27,15 @@ namespace KaruahChess
         
         public MainWindow()
         {
-            
 
             
+
             // Initialise the Board view model
             BoardVM = new BoardViewModel(this);
 
             this.InitializeComponent();
 
-
+            
             // Set Control reference                                 
             BoardVM.SetBoardTextMessageControl(BoardTextMessage);
             BoardVM.SetBoardTilePanelControl(BoardTilePanel);
@@ -58,6 +58,9 @@ namespace KaruahChess
 
             BoardSettingsControl.SetBoardVM(BoardVM);
             BoardVM.SetBoardSettingsControl(BoardSettingsControl);
+
+            PieceSettingsControl.SetBoardVM(BoardVM);
+            BoardVM.SetPieceSettingsControl(PieceSettingsControl);
 
             SoundSettingsControl.SetBoardVM(BoardVM);
             BoardVM.SetSoundSettingsControl(SoundSettingsControl);

@@ -20,7 +20,6 @@ using Microsoft.UI.Xaml;
 using KaruahChess.Database;
 using KaruahChess.Common;
 using System.IO.MemoryMappedFiles;
-using System.Collections.Generic;
 
 namespace KaruahChess
 {
@@ -40,8 +39,8 @@ namespace KaruahChess
         public App()
         {
             this.InitializeComponent();
-                        
 
+            
             // Track instances created in a memory mapped file
             instancemmf = MemoryMappedFile.CreateOrOpen("karuahchessinstance",4);           
             MemoryMappedViewAccessor instanceAccessor = instancemmf.CreateViewAccessor();

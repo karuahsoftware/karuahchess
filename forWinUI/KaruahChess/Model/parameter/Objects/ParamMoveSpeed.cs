@@ -22,20 +22,18 @@ using System.Runtime.Serialization;
 namespace KaruahChess.Model.ParameterObjects
 {
     [DataContract]
-    public class ParamSoundRead
+    public class ParamMoveSpeed
     {
+        
         [DataMember]
-        public bool Enabled { get; set; }
+        public int Speed { get; set; }
 
-        public ParamSoundRead()
+
+        public ParamMoveSpeed()
         {
             // Set default value
-            Enabled = false;
+            Speed = 2;
+            
         }
     }
 }
-
-
-
-
-

@@ -22,7 +22,6 @@ using PurpleTreeSoftware.Panel;
 using KaruahChess.Model;
 using Microsoft.UI.Xaml;
 using Windows.System.Threading;
-using Windows.UI.Core;
 using KaruahChess.Rules;
 using static KaruahChess.Pieces.Piece;
 using KaruahChess.Model.ParameterObjects;
@@ -48,7 +47,6 @@ using static KaruahChess.Rules.Move;
 using Windows.Foundation;
 using Windows.Media.Playback;
 using Microsoft.UI.Dispatching;
-using Windows.Storage.Pickers.Provider;
 
 
 
@@ -73,6 +71,7 @@ namespace KaruahChess.ViewModel
         EngineSettings _engineSettingsControl;
         SoundSettings _soundSettingsControl;
         BoardSettings _boardSettingsControl;
+        PieceSettings _pieceSettingsControl;
         BoardAnimation _boardAnimation;
         PieceEditTool _pieceEditToolControl;
         LevelIndicator _levelIndicatorControl;
@@ -83,7 +82,9 @@ namespace KaruahChess.ViewModel
         KaruahChessEngineClass hintBoard = new KaruahChessEngineClass();
         ContentDialog boardContentDialog = null;
         int boardContentDialogCount = 0;
-        SemaphoreSlim navThrottler = new SemaphoreSlim(initialCount: 1);
+        private SemaphoreSlim navThrottler = new SemaphoreSlim(initialCount: 1);
+        private SemaphoreSlim readTextThrottler = new SemaphoreSlim(1, 1);
+        private SemaphoreSlim pieceMoveSoundThrottler = new SemaphoreSlim(1, 1);
         private bool _userMoveProcessing = false;
         
         private MainWindow mainWindowRef;
@@ -92,6 +93,7 @@ namespace KaruahChess.ViewModel
 
         public Coordinates coordinatesControl;
         public ClockPanel chessClockControl;
+        
         
 
         public enum MoveTypeEnum { None = 0, Normal = 1, EnPassant = 2, Castle = 3, Promotion = 4 }
@@ -700,6 +702,30 @@ namespace KaruahChess.ViewModel
             }
         }
 
+
+        /// <summary>
+        /// Move speed
+        /// </summary>  
+        private ParamMoveSpeed _moveSpeed;
+        public int moveSpeed
+        {
+            get
+            {
+                var paramMoveSpeedObj = ParameterDataService.instance.Get<ParamMoveSpeed>();
+                _moveSpeed = paramMoveSpeedObj;
+                return _moveSpeed.Speed;
+            }
+            set
+            {
+                if (_moveSpeed != null && _moveSpeed.Speed != value)
+                {
+                    _moveSpeed.Speed = value;
+                    ParameterDataService.instance.Set<ParamMoveSpeed>(_moveSpeed);
+                    RaisePropertyChanged(nameof(moveSpeed));
+                }
+            }
+        }
+
         /// <summary>
         /// Lock panel flag
         /// </summary>
@@ -1003,6 +1029,15 @@ namespace KaruahChess.ViewModel
         }
 
         /// <summary>
+        /// Sets the piece settings control
+        /// </summary>        
+        public void SetPieceSettingsControl(PieceSettings pPieceSettingsControl)
+        {
+            _pieceSettingsControl = pPieceSettingsControl;
+
+        }
+
+        /// <summary>
         /// Sets the level indicator control
         /// </summary>
         /// <param name="pLevelIndicatorControl"></param>
@@ -1057,7 +1092,8 @@ namespace KaruahChess.ViewModel
                 LoadChessClock(true, GameRecordDataService.instance.GetCurrentGame());
 
                 // Do rollback animation
-                var moveAnimationList = _boardAnimation.CreateAnimationList(oldBoard, GameRecordDataService.instance.Get(), 1);
+                double duration = Constants.movespeedseconds[Math.Clamp(moveSpeed, 0, Constants.movespeedseconds.Count - 1)];
+                var moveAnimationList = _boardAnimation.CreateAnimationList(oldBoard, GameRecordDataService.instance.Get(), duration);
                 BoardSquareDataService.instance.Update(GameRecordDataService.instance.GetCurrentGame(), false);
                 await StartPieceAnimation(true, moveAnimationList, true);
 
@@ -1446,7 +1482,7 @@ namespace KaruahChess.ViewModel
         }
 
         /// <summary>
-        /// Sound settings button event
+        /// Board settings button event
         /// </summary>
         public void btnBoardSettings_Click(object sender, RoutedEventArgs e)
         {
@@ -1455,6 +1491,18 @@ namespace KaruahChess.ViewModel
                 _boardSettingsControl.Show();
             }
                        
+        }
+
+        /// <summary>
+        /// Piece settings button event
+        /// </summary>
+        public void btnPieceSettings_Click(object sender, RoutedEventArgs e)
+        {
+            if (_pieceSettingsControl != null)
+            {
+                _pieceSettingsControl.Show();
+            }
+
         }
 
         /// <summary>
@@ -1632,26 +1680,17 @@ namespace KaruahChess.ViewModel
                 int gameStatusBeforeMove = GameRecordDataService.instance.CurrentGame.GetStateGameStatus();                    
                 var mResult = GameRecordDataService.instance.CurrentGame.Move(_move.FromIndex, _move.ToIndex, promotionPiece, true, true);                    
                                
-                if (mResult.success)
-                {
+                if (mResult.success) {
                     // Read Text, show message
-                    var soundTasks = new List<Task>();
-                    if (mResult.returnMessage != String.Empty)
-                    {
-                        ShowBoardMessage("", mResult.returnMessage, TextMessage.TypeEnum.Info, TextMessage.AnimationEnum.FadeOut);
-                    }
-                    else
-                    {                        
-                        var ssml = GetBoardSquareSSML(mResult.moveDataStr);
-                        soundTasks.Add(ReadText(ssml));
-                    }
-
+                    var soundTasks = new List<Task>();                    
+                    
                     // Do animation
                     var boardAfterMove = GameRecordDataService.instance.GetCurrentGame();
                     long transId = GameRecordDataService.instance.transactionId;
 
                     if (pAnimate) {
-                        var moveAnimationList = _boardAnimation.CreateAnimationList(boardBeforeMove, boardAfterMove, 2);
+                        double duration = Constants.movespeedseconds[Math.Clamp(moveSpeed, 0, Constants.movespeedseconds.Count - 1)];
+                        var moveAnimationList = _boardAnimation.CreateAnimationList(boardBeforeMove, boardAfterMove, duration);
                         BoardSquareDataService.instance.Update(boardAfterMove, false);
                         await StartPieceAnimation(true, moveAnimationList, true);                       
                     }
@@ -1761,7 +1800,6 @@ namespace KaruahChess.ViewModel
                 }
                 else
                 {
-
                     options.limitDepth = strengthSetting.Depth;
                     options.limitNodes = Constants.NODELIMIT_STANDARD;
                     options.limitMoveDuration = strengthSetting.TimeLimitms;
@@ -1783,17 +1821,11 @@ namespace KaruahChess.ViewModel
 
                         // Read Text, show message
                         var soundTasks = new List<Task>();
-                        var rtnMessage = mResult.returnMessage;
-                        if (rtnMessage != String.Empty) {
-                            ShowBoardMessage("", rtnMessage, TextMessage.TypeEnum.Info, TextMessage.AnimationEnum.FadeOut);                            
-                        }
-                        else {
-                            soundTasks.Add(ReadText(GetBoardSquareSSML(mResult.moveDataStr)));
-                        }
-
+                                                                        
                         // Do animation
                         var boardAfterMove = GameRecordDataService.instance.GetCurrentGame();
-                        var moveAnimationList = _boardAnimation.CreateAnimationList(boardBeforeMove, boardAfterMove, 2);
+                        double duration = Constants.movespeedseconds[Math.Clamp(moveSpeed, 0, Constants.movespeedseconds.Count - 1)];
+                        var moveAnimationList = _boardAnimation.CreateAnimationList(boardBeforeMove, boardAfterMove, duration);
                         BoardSquareDataService.instance.Update(boardAfterMove, true);
 
                         long transId = GameRecordDataService.instance.transactionId;
@@ -2302,7 +2334,7 @@ namespace KaruahChess.ViewModel
         /// <param name="e"></param>
         private void OnWindowSizeChanged(object sender, Microsoft.UI.Xaml.WindowSizeChangedEventArgs e)
         {
-           
+            
             if (!_boardResizeTimerRunning) {
                 // Set flag so only one timer runs at a time
                 _boardResizeTimerRunning = true;
@@ -2317,7 +2349,7 @@ namespace KaruahChess.ViewModel
 
                 },  TimeSpan.FromMilliseconds(600), (x) => { _boardResizeTimerRunning = false; } );
             }
-
+            
             
         }
                 
@@ -2340,18 +2372,12 @@ namespace KaruahChess.ViewModel
 
             
             // Get window bounds
-            var windowWidth = mainWindowRef.Bounds.Width;
-            var windowHeight = mainWindowRef.Bounds.Height;
+            double windowWidth = mainWindowRef.Bounds.Width;
+            double windowHeight = mainWindowRef.Bounds.Height;
 
             // Set root padding
-            var smallestDimension = windowWidth < windowHeight ? windowWidth : windowHeight;
-            if (smallestDimension > 400) {
-                RootPadding = new Thickness(3, 0, 3, 0);
-            }
-            else {
-                RootPadding = new Thickness(0, 0, 0, 0);
-            }
-                        
+            RootPadding = new Thickness(3, 0, 3, 2);
+            
             // Set the board margin taken up by the coordinates                      
             if (coordEnabled) {
                 BoardCoordinateMargin = new Thickness(12, 0, 0, 20);                
@@ -2361,7 +2387,7 @@ namespace KaruahChess.ViewModel
             }
 
             // Get the board border thickness
-            var boardBorderThickness = _boardTilePanelControl.BorderThickness;
+            Thickness boardBorderThickness = _boardTilePanelControl.BorderThickness;
 
             // Note: Default command bar height is 40px in latest uwp update. Previously it was 48px.
             // Calculate area available for board
@@ -2387,10 +2413,11 @@ namespace KaruahChess.ViewModel
             // Calculate tilesize
             double tileSize;
             if (boardWidthAvailable < boardHeightAvailable) {
-                tileSize = boardWidthAvailable / 8;
+                // Casting to int so that the tile size is rounded towards zero
+                tileSize = (double)(int)(boardWidthAvailable / 8);
             }
             else {
-                tileSize = boardHeightAvailable / 8;
+                tileSize = (double)(int)(boardHeightAvailable / 8);
             }
 
             // Set min limit
@@ -2617,6 +2644,11 @@ namespace KaruahChess.ViewModel
                 _boardSettingsControl.SetPosition(BoardWidth);
             }
 
+            if (_pieceSettingsControl != null)
+            {
+                _pieceSettingsControl.SetPosition(BoardWidth);
+            }
+
             if (_clockSettingsControl != null)
             {
                 _clockSettingsControl.SetPosition(BoardWidth);
@@ -2743,12 +2775,14 @@ namespace KaruahChess.ViewModel
                 }
 
                 // Read text
+                await readTextThrottler.WaitAsync();
                 try
                 {
                     
                     using (var speech = new SpeechSynthesizer())
                     {
                         VoiceInformation voiceInfo = SpeechSynthesizer.DefaultVoice;
+                        
 
                         if (voiceInfo != null)
                         {
@@ -2762,11 +2796,12 @@ namespace KaruahChess.ViewModel
                             {
                                 tcs.TrySetResult(true);
                             });
+                                                        
                             _mediaplayerReadText.Source = source;
                             _mediaplayerReadText.MediaEnded += mediaEndedHandler;
                             _mediaplayerReadText.PlaybackSession.Position = new TimeSpan(0, 0, 0);
                             _mediaplayerReadText.Play();
-
+                            
                             // Wait here, but timeout after 2 seconds
                             await Task.WhenAny(tcs.Task, Task.Delay(2000));
 
@@ -2778,6 +2813,10 @@ namespace KaruahChess.ViewModel
                 {
                     SoundReadEnabled = false;
                     ShowBoardMessage("Error", "Speech Synthesizer is unavailable. The read messages out loud option in the sound settings has now been disabled. To use this feature text to speech settings must be enabled on your operating system.", TextMessage.TypeEnum.Error, TextMessage.AnimationEnum.FadeOut);
+                }
+                finally
+                {
+                    readTextThrottler.Release();
                 }
 
 
@@ -3216,8 +3255,9 @@ namespace KaruahChess.ViewModel
                 {
 
                     // Do animation
-                    if (pAnimate) { 
-                        var moveAnimationList = _boardAnimation.CreateAnimationList(oldBoard, updatedBoard, 0.5);
+                    if (pAnimate) {
+                        double duration = Constants.movespeedseconds[Math.Clamp(moveSpeed, 0, Constants.movespeedseconds.Count - 1)];
+                        var moveAnimationList = _boardAnimation.CreateAnimationList(oldBoard, updatedBoard, duration);
                         BoardSquareDataService.instance.Update(updatedBoard, false);
                         GameRecordCurrentValue = pRecId;
                         UpdateBoardIndicators(updatedBoard);
@@ -3359,21 +3399,30 @@ namespace KaruahChess.ViewModel
         {
             if (_mediaplayerPieceMoveSound != null && SoundEffectEnabled)
             {
-                var tcs = new TaskCompletionSource<bool>();
-                
-                var mediaEndedHandler = new TypedEventHandler<MediaPlayer, object>((player, resource) => 
-                { 
-                    tcs.TrySetResult(true); 
-                });
-                
-                _mediaplayerPieceMoveSound.MediaEnded += mediaEndedHandler;
-                _mediaplayerPieceMoveSound.PlaybackSession.Position = new TimeSpan(0, 0, 0);
-                _mediaplayerPieceMoveSound.Play();
-                
-                // Wait here, but timeout after 2 seconds
-                await Task.WhenAny(tcs.Task, Task.Delay(2000));
+                await pieceMoveSoundThrottler.WaitAsync();
 
-                _mediaplayerPieceMoveSound.MediaEnded -= mediaEndedHandler;
+                try
+                {
+                    var tcs = new TaskCompletionSource<bool>();
+
+                    var mediaEndedHandler = new TypedEventHandler<MediaPlayer, object>((player, resource) =>
+                    {
+                        tcs.TrySetResult(true);
+                    });
+
+                    _mediaplayerPieceMoveSound.MediaEnded += mediaEndedHandler;
+                    _mediaplayerPieceMoveSound.PlaybackSession.Position = new TimeSpan(0, 0, 0);
+                    _mediaplayerPieceMoveSound.Play();
+
+                    // Wait here, but timeout after 2 seconds
+                    await Task.WhenAny(tcs.Task, Task.Delay(2000));
+
+                    _mediaplayerPieceMoveSound.MediaEnded -= mediaEndedHandler;
+                }
+                finally
+                {
+                    pieceMoveSoundThrottler.Release();
+                }
             }
         }
 

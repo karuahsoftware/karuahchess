@@ -8,26 +8,24 @@
     xmlns:tile="using:PurpleTreeSoftware.Panel"     
     xmlns:pieces="using:KaruahChess.Pieces"    
     xmlns:customcontrol="using:KaruahChess.CustomControl"      
-    xmlns:common="using:KaruahChess.Common"  
+    xmlns:common="using:KaruahChess.Common"
     mc:Ignorable="d">
 
 
-    <Grid x:Name="Root" HorizontalAlignment="Left" Padding="{x:Bind BoardVM.RootPadding, Mode=OneWay}" Background="{ThemeResource ApplicationPageBackgroundThemeBrush}" Width="{x:Bind BoardVM.BoardWidth, Mode=OneWay}" >
+    <Grid x:Name="Root" HorizontalAlignment="Stretch" Padding="{x:Bind BoardVM.RootPadding, Mode=OneWay}" Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"  >
         <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
             <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
-
-        <CommandBar x:Name="CommandBarA" Grid.Row="2" Margin="0" Padding="0" VerticalAlignment="Bottom" HorizontalAlignment="Stretch" ClosedDisplayMode="Compact"  IsSticky="False" IsOpen="False" OverflowButtonVisibility="Auto" DefaultLabelPosition="Right" FlowDirection="LeftToRight" HorizontalContentAlignment="Left" VerticalContentAlignment="Center" IsDynamicOverflowEnabled="True">
+        
+        <CommandBar x:Name="CommandBarA" Grid.Row="0" Margin="0" Padding="0" VerticalAlignment="Bottom" HorizontalAlignment="Stretch" ClosedDisplayMode="Compact"  IsSticky="False" IsOpen="False" OverflowButtonVisibility="Auto" DefaultLabelPosition="Right" FlowDirection="LeftToRight" HorizontalContentAlignment="Left" VerticalContentAlignment="Center" IsDynamicOverflowEnabled="True">
             <CommandBar.Content>
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Stretch" >
-
-                    <Border x:Name="DirectionIndicator" Grid.Column="0" CornerRadius="0" Width="30" Height="30" Margin="1,0,0,0" Background="{x:Bind BoardVM.DirectionColour, Mode=OneWay}" BorderThickness="1" BorderBrush="{x:Bind BoardVM.BorderColour, Mode=OneWay}" HorizontalAlignment="Right" VerticalAlignment="Stretch" IsHitTestVisible="False" >
+                    <Border x:Name="DirectionIndicator" CornerRadius="0" Width="30" Height="30" Margin="1,0,0,0" Background="{x:Bind BoardVM.DirectionColour, Mode=OneWay}" BorderThickness="1" BorderBrush="{x:Bind BoardVM.BorderColour, Mode=OneWay}" HorizontalAlignment="Right" VerticalAlignment="Stretch" IsHitTestVisible="False" >
                         <ProgressRing x:Name="MoveProgress" IsActive="{x:Bind BoardVM.IsComputerProcessing(BoardVM.ComputerMoveProcessing, BoardVM.ComputerHintProcessing), Mode=OneWay}" Foreground="{x:Bind BoardVM.OpposingColour, Mode=OneWay}" Width="25" Height="25" Margin="0" Padding="0"/>
                     </Border>
                     <customcontrol:LevelIndicator  x:Name="LevelIndicatorControl" VerticalAlignment="Center" Margin="0,0,0,3" Padding="0" StyleTemplate="{StaticResource LevelIndicatorStyleTemplateObject}"/>
-
                 </StackPanel>
             </CommandBar.Content>
 
@@ -48,7 +46,7 @@
                     <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xEA80;"/>
                 </AppBarButton.Icon>
             </AppBarButton>
-
+          
             <CommandBar.SecondaryCommands>
                 <AppBarButton Label="New Game" Click="BoardVM.btnNewGame_Click">
                     <AppBarButton.Icon>
@@ -67,6 +65,7 @@
                 <AppBarToggleButton Icon="Play" Label="Navigator" IsChecked="{x:Bind BoardVM.NavigatorEnabled, Mode=TwoWay}"/>
                 <AppBarSeparator/>
                 <AppBarButton Icon="Placeholder" Label="Board" Click="BoardVM.btnBoardSettings_Click" />
+                <AppBarButton Icon="Contact" Label="Piece" Click="BoardVM.btnPieceSettings_Click" />
                 <AppBarButton Icon="Audio" Label="Sound" Click="BoardVM.btnSoundSettings_Click" />
                 <AppBarToggleButton Icon="Microphone" Label="Voice Commands" ToolTipService.ToolTip="Move pieces with your voice" Checked="BoardVM.btnStartVoiceListen_Checked" Unchecked="BoardVM.btnStartVoiceListen_Unchecked" />
                 <AppBarButton Icon="Message" Label="Voice Help" ToolTipService.ToolTip="Open help page for voice commands."  Click="BoardVM.btnVoiceHelp_Click" />
@@ -91,9 +90,8 @@
             </CommandBar.SecondaryCommands>
 
         </CommandBar>
-
-
-        <Canvas x:Name="BoardCanvas" Grid.Row="0" Canvas.ZIndex="10">
+        
+        <Canvas x:Name="BoardCanvas"  Grid.Row="1" Canvas.ZIndex="10">
             <tile:TilePanel x:Name="BoardTilePanel" Margin="{x:Bind BoardVM.BoardCoordinateMargin, Mode=OneWay}" Padding="0" Depth="8"  Orientation="Vertical" Tiles="{x:Bind BoardVM.BoardTiles, Mode=OneWay}" Lock="{x:Bind BoardVM.LockPanel, Mode=OneWay}" StyleTemplate="{StaticResource BlackTileStyleTemplateObject}" Style="{StaticResource TilePanelStyle}" TileClicked="BoardVM.BoardTilePanel_TileClicked" MoveAction="BoardVM.BoardTilePanel_MoveAction"  RotationZ="{x:Bind BoardVM.RotateBoardValue, Mode=OneWay}" BorderBrush="{x:Bind BoardVM.BorderColour, Mode=OneWay}" />
             <customcontrol:Coordinates x:Name="CoordinatesControl" Margin="0" Padding="0" />
             <pieces:PieceAnimation x:Name="PieceAnimationControl"  Margin="{x:Bind BoardVM.BoardCoordinateMargin, Mode=OneWay}" Padding="0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" NegativeRotationZ="0" />
@@ -106,17 +104,16 @@
             <customcontrol:PieceEditTool x:Name="PieceEditToolControl"  StyleTemplate="{StaticResource PieceTypeSelectControlStyleTemplateObject}" />
             <customcontrol:SoundSettings x:Name="SoundSettingsControl"  StyleTemplate="{StaticResource SoundSettingsControlStyleTemplateObject}"/>
             <customcontrol:BoardSettings x:Name="BoardSettingsControl"  StyleTemplate="{StaticResource BoardSettingsControlStyleTemplateObject}"/>
+            <customcontrol:PieceSettings x:Name="PieceSettingsControl"  StyleTemplate="{StaticResource PieceSettingsControlStyleTemplateObject}"/>
             <customcontrol:ClockSettings x:Name="ClockSettingsControl"  StyleTemplate="{StaticResource ClockSettingsControlStyleTemplateObject}"/>
         </Canvas>
 
-        <StackPanel Orientation="Vertical" Grid.Row="1" Margin="0,1,0,1">
+        <StackPanel Orientation="Vertical" Grid.Row="2" Margin="0,1,0,1">
             <customcontrol:MoveNavigator x:Name="MoveNavigatorControl"   />
             <customcontrol:ClockPanel x:Name="ChessClockControl" ClockOrientation="Horizontal" />
         </StackPanel>
 
-        <customcontrol:TextMessage x:Name="BannerTextMessage" Grid.Row="0" IsHitTestVisible="False" HorizontalAlignment="Stretch" VerticalAlignment="Center" />
-
-        
     </Grid>
 
+    
 </Window>

@@ -69,7 +69,7 @@ namespace KaruahChess.Voice
                 MediaCapture capture = new MediaCapture();
 
                 await capture.InitializeAsync(settings);
-
+                
                 
             }
             catch (UnauthorizedAccessException)

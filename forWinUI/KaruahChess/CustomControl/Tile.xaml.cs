@@ -158,7 +158,6 @@ namespace PurpleTreeSoftware.Panel
         private void tileMain_PointerReleased(object sender, Microsoft.UI.Xaml.Input.PointerRoutedEventArgs e)
         {
             VisualStateManager.GoToState(this, TileNormal.Name, false);
-            
         }
         
         
@@ -198,10 +197,11 @@ namespace PurpleTreeSoftware.Panel
         /// <param name="args"></param>
         private void tileMain_DragStarting(UIElement sender, DragStartingEventArgs args)
         {
-            _parentPanel.dragInProgress = true;
+            
             args.Data.Properties.Add("tileId", Id);
 
             if (_pieceCtrl.ImageData != null) {
+                _parentPanel.dragInProgress = true;
                 BitmapImage pieceImg = new BitmapImage(_pieceCtrl.ImageData.UriSource);
                 pieceImg.DecodePixelWidth = _pieceCtrl.ImageData.DecodePixelWidth;
                 pieceImg.DecodePixelHeight = _pieceCtrl.ImageData.DecodePixelHeight;
@@ -226,7 +226,7 @@ namespace PurpleTreeSoftware.Panel
             _parentPanel.dragInProgress = false;
         }
 
-
+        
         /// <summary>
         /// Sets a reference to the parent tile panel
         /// </summary>

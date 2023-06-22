@@ -19,15 +19,14 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 using System;
 using System.IO;
 using System.Threading.Tasks;
-using KaruahChess.Model;
 using Microsoft.Data.Sqlite;
-using Windows.ApplicationModel.Activation;
+
 
 namespace KaruahChess.Database
 {
     public static class KaruahChessDB
     {        
-        public static readonly string dbname = "KaruahChessV13.sqlite";
+        public static readonly string dbname = "KaruahChessV14.sqlite";
         public static readonly string dbpath = Path.Combine(Windows.Storage.ApplicationData.Current.LocalFolder.Path, dbname);
         public static readonly string connectionString = "Filename=" + dbpath + ";";
 

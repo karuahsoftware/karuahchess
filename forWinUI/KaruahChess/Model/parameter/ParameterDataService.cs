@@ -152,6 +152,10 @@ namespace KaruahChess.Model
                 {
                     _parameters.Add(param.Name, param.Value.Deserialize<ParamColourDarkSquares>());
                 }
+                else if (param.Name == typeof(ParamMoveSpeed).Name)
+                {
+                    _parameters.Add(param.Name, param.Value.Deserialize<ParamMoveSpeed>());
+                }                
             }
 
 

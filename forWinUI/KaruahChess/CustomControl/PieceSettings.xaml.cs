@@ -17,17 +17,13 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
 using System;
-using KaruahChess.Common;
-using System.Collections.Generic;
-using KaruahChess.Model.ParameterObjects;
-using Windows.Foundation;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
-using Microsoft.UI.Xaml.Media;
+
 
 namespace KaruahChess.CustomControl
 {
-    public sealed partial class BoardSettings : UserControl
+    public sealed partial class PieceSettings : UserControl
     {
         /// <summary>
         /// A class containing styling info for the control
@@ -36,14 +32,12 @@ namespace KaruahChess.CustomControl
 
         ViewModel.BoardViewModel _boardVM;
 
-        readonly List<ColourARGB> darkSquareColourList = Constants.darkSquareColourList;
-
-        RotateTransform orientationImageTransform = new RotateTransform();
+        
 
         /// <summary>
         /// Constructor
         /// </summary>
-        public BoardSettings()
+        public PieceSettings()
         {
 
             this.InitializeComponent();
@@ -73,13 +67,9 @@ namespace KaruahChess.CustomControl
         /// <returns></returns>
         public void Show()
         {            
-            DarkSquareCombo.SelectedIndex = Constants.darkSquareColourList.IndexOf(_boardVM.ColourDarkSquaresARGB);
-            orientationBorder.Background = new SolidColorBrush(_boardVM.ColourDarkSquaresARGB.GetColour());
-            
-            orientationImage.RenderTransformOrigin = new Point(0.5, 0.5);
-            orientationImage.RenderTransform = orientationImageTransform;
-            orientationImageTransform.Angle = -_boardVM.RotateBoardValue;
 
+            MoveSpeedSlider.Value = Math.Clamp(_boardVM.moveSpeed, MoveSpeedSlider.Minimum, MoveSpeedSlider.Maximum);
+            
             PagePopup.IsOpen = true;
         }
 
@@ -125,44 +115,12 @@ namespace KaruahChess.CustomControl
         /// Saves form values
         /// </summary>
         private void save()
-        {            
-            ColourARGB darkSquareColour = DarkSquareCombo.SelectedIndex > -1 ? Constants.darkSquareColourList[DarkSquareCombo.SelectedIndex] : new ParamColourDarkSquares().ARGB();
-            _boardVM.ColourDarkSquaresARGB = darkSquareColour;
-
-            // Refresh colour
-            _boardVM.ApplyBoardColour();
-
-            int newRotate = -(int)orientationImageTransform.Angle;
-            _boardVM.RotateBoardValue = newRotate;
-
-            if (_boardVM.coordinatesControl != null)
-            {
-                _boardVM.coordinatesControl.SetCoordLabels(newRotate);
-            }
-
+        {   
+            _boardVM.moveSpeed = (int)MoveSpeedSlider.Value;
+            
         }
 
-        /// <summary>
-        /// Rotation click event
-        /// </summary>        
-        private void btnRotate_Click(object sender, RoutedEventArgs e)
-        {
-            double currentRotate = orientationImageTransform.Angle;
-            double newRotate = (currentRotate + 90);
+        
 
-            if (newRotate > 270 || newRotate < -270)
-            {
-                newRotate = 0;
-            }
-
-            orientationImageTransform.Angle = newRotate;
-        }
-
-        private void DarkSquareCombo_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            // Adjust the background colour of the board orientation preview when the colour selection changes
-            ColourARGB darkSquareColour = DarkSquareCombo.SelectedIndex > -1 ? Constants.darkSquareColourList[DarkSquareCombo.SelectedIndex] : new ParamColourDarkSquares().ARGB();
-            orientationBorder.Background = new SolidColorBrush(darkSquareColour.GetColour());
-        }
     }
 }
