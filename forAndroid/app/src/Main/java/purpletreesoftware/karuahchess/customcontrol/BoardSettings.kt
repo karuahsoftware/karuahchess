@@ -22,11 +22,13 @@ package purpletreesoftware.karuahchess.customcontrol
 import android.app.Dialog
 import android.content.Context
 import android.content.DialogInterface
+import android.graphics.Color
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.Window
+import android.widget.AdapterView
 import androidx.fragment.app.DialogFragment
 import purpletreesoftware.karuahchess.MainActivity
 import purpletreesoftware.karuahchess.common.ColourARGB
@@ -53,7 +55,6 @@ class BoardSettings(pActivityID: Int) : DialogFragment() {
             ViewGroup.LayoutParams.WRAP_CONTENT
         )
     }
-
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         val dialog = super.onCreateDialog(savedInstanceState)
@@ -97,14 +98,34 @@ class BoardSettings(pActivityID: Int) : DialogFragment() {
             binding.darksquarecolourspinner.setSelection(boardColourIndex)
         }
 
+        // Listen for colour selection changes in the spinner
+        binding.darksquarecolourspinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onNothingSelected(parent: AdapterView<*>?) {
+                // Do nothing
+            }
+
+            override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+                val darkSquareColourSelectedItem = binding.darksquarecolourspinner.selectedItem as ColourARGB
+                binding.orientationImage.setBackgroundColor(Color.argb(darkSquareColourSelectedItem.a, darkSquareColourSelectedItem.r, darkSquareColourSelectedItem.g, darkSquareColourSelectedItem.b))
+            }
+
+        }
+
         // Set orientation indicator
         setOrientationIndicator(ParameterDataService.getInstance(activityID).get(ParamRotateBoard::class.java).value)
 
-        // Connect button events
+        // Set orientation colour
+        val darkSquareColourSelectedItem = binding.darksquarecolourspinner.selectedItem as ColourARGB
+        binding.orientationImage.setBackgroundColor(Color.argb(darkSquareColourSelectedItem.a, darkSquareColourSelectedItem.r, darkSquareColourSelectedItem.g, darkSquareColourSelectedItem.b))
+
+        // Orientation button listener
         binding.rotateButton.setOnClickListener {
             val newRotation = if (rotation + 90 >= 360) 0 else rotation + 90
             setOrientationIndicator(newRotation)
         }
+
+
+        // Done button listener
         binding.doneButton.setOnClickListener { dismiss() }
 
 
@@ -141,6 +162,7 @@ class BoardSettings(pActivityID: Int) : DialogFragment() {
             ParameterDataService.getInstance(activityID).set(currentRotationParam)
             mainActivity.rotateBoard(rotation)
         }
+
     }
 
     /**
@@ -149,8 +171,6 @@ class BoardSettings(pActivityID: Int) : DialogFragment() {
     private fun setOrientationIndicator(pRotation: Int) {
         rotation = pRotation
         binding.orientationImage.rotation = pRotation.toFloat()
-
-
     }
 
     companion object {

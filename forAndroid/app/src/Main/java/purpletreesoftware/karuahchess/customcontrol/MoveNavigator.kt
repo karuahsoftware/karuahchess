@@ -39,6 +39,8 @@ class MoveNavigator : LinearLayout {
     private val binding get() = _binding!!
     private var recordList: ArrayList<Int>? = null
     private var moveNavAdapter: MoveNavigatorAdapter? = null
+    private var isPortrait: Boolean = false
+    private var isLandscape: Boolean = false
 
     constructor(context: Context) : super(context) {
         initialize(context)
@@ -46,10 +48,6 @@ class MoveNavigator : LinearLayout {
 
     constructor(context: Context, attrs: AttributeSet) : super(context, attrs){
         initialize(context)
-    }
-
-    init {
-        //activityID = 0
     }
 
 
@@ -141,9 +139,6 @@ class MoveNavigator : LinearLayout {
         if (this.visibility == View.VISIBLE) {
             recordList = pNavList
 
-            // Set orientation and size
-            setLayout()
-
             // Fill data
             moveNavAdapter = MoveNavigatorAdapter(this, pNavList, pSelectedId)
             binding.moveNavRecyclerView.adapter = moveNavAdapter
@@ -219,12 +214,20 @@ class MoveNavigator : LinearLayout {
     /**
      * Sets the orientation of the control
      */
-    private fun setLayout() {
+    fun setLayout(pIsPortrait: Boolean) {
+
+        // Exit straight away if orientation is not changing
+        if (pIsPortrait == isPortrait && isPortrait != isLandscape) return
 
         val mainActivity = context as MainActivity
 
+        isPortrait = pIsPortrait
+        isLandscape = !pIsPortrait
+
         // Set to vertical or horizontal layout depending on screen rotation
-        if(this.resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) {
+        if(!pIsPortrait) {
+
+
             binding.moveNavRecyclerView.layoutManager = object : androidx.recyclerview.widget.LinearLayoutManager(
                 mainActivity,
                 RecyclerView.VERTICAL,

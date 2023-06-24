@@ -23,7 +23,6 @@ import purpletreesoftware.karuahchess.common.App
 import purpletreesoftware.karuahchess.common.HelperJava
 import purpletreesoftware.karuahchess.database.DatabaseHelper
 import purpletreesoftware.karuahchess.database.TableName
-import purpletreesoftware.karuahchess.model.gamerecord.GameRecordDataService
 import java.io.InvalidClassException
 
 class ParameterDataService(pActivityID: Int) : IParameterDataService  {

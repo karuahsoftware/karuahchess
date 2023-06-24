@@ -18,7 +18,6 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 package purpletreesoftware.karuahchess
 
-
 import android.content.DialogInterface
 import android.content.Intent
 import android.content.pm.PackageManager
@@ -28,24 +27,56 @@ import android.media.AudioAttributes
 import android.media.SoundPool
 import android.net.Uri
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.speech.tts.TextToSpeech
-import android.view.*
+import android.view.ContextThemeWrapper
+import android.view.Gravity
+import android.view.Menu
+import android.view.MenuItem
+import android.view.View
 import android.widget.LinearLayout
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.view.menu.MenuBuilder
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.core.content.FileProvider
 import androidx.core.view.MenuCompat
 import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
-import kotlinx.coroutines.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.cancelChildren
 import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.sync.Semaphore
+import kotlinx.coroutines.withContext
 import purpletreesoftware.karuahchess.R.color
-import purpletreesoftware.karuahchess.common.*
-import purpletreesoftware.karuahchess.customcontrol.*
+import purpletreesoftware.karuahchess.common.App
+import purpletreesoftware.karuahchess.common.Constants
+import purpletreesoftware.karuahchess.common.Helper
+import purpletreesoftware.karuahchess.common.afterMeasured
+import purpletreesoftware.karuahchess.common.dpToPx
+import purpletreesoftware.karuahchess.common.nanoSecondsToSeconds
+import purpletreesoftware.karuahchess.common.secondsToNanoSeconds
+import purpletreesoftware.karuahchess.common.spToPx
+import purpletreesoftware.karuahchess.customcontrol.About
+import purpletreesoftware.karuahchess.customcontrol.ActivityFragmentFactory
+import purpletreesoftware.karuahchess.customcontrol.BoardSettings
+import purpletreesoftware.karuahchess.customcontrol.CastlingRights
+import purpletreesoftware.karuahchess.customcontrol.ClockSettings
+import purpletreesoftware.karuahchess.customcontrol.EngineSettings
+import purpletreesoftware.karuahchess.customcontrol.ImportPGN
+import purpletreesoftware.karuahchess.customcontrol.PawnPromotion
+import purpletreesoftware.karuahchess.customcontrol.PieceEditTool
+import purpletreesoftware.karuahchess.customcontrol.PieceSettings
+import purpletreesoftware.karuahchess.customcontrol.SoundSettings
+import purpletreesoftware.karuahchess.customcontrol.Tile
+import purpletreesoftware.karuahchess.customcontrol.TileAnimationInstruction
+import purpletreesoftware.karuahchess.customcontrol.TilePanel
 import purpletreesoftware.karuahchess.database.DatabaseHelper
 import purpletreesoftware.karuahchess.database.ExportDB
 import purpletreesoftware.karuahchess.database.ImportDB
@@ -56,7 +87,27 @@ import purpletreesoftware.karuahchess.model.boardsquare.BoardSquareDataService
 import purpletreesoftware.karuahchess.model.gamerecord.GameRecordArray
 import purpletreesoftware.karuahchess.model.gamerecord.GameRecordDataService
 import purpletreesoftware.karuahchess.model.parameter.ParameterDataService
-import purpletreesoftware.karuahchess.model.parameterobj.*
+import purpletreesoftware.karuahchess.model.parameterobj.ParamArrangeBoard
+import purpletreesoftware.karuahchess.model.parameterobj.ParamBoardCoord
+import purpletreesoftware.karuahchess.model.parameterobj.ParamClock
+import purpletreesoftware.karuahchess.model.parameterobj.ParamClockDefault
+import purpletreesoftware.karuahchess.model.parameterobj.ParamColourDarkSquares
+import purpletreesoftware.karuahchess.model.parameterobj.ParamComputerMoveFirst
+import purpletreesoftware.karuahchess.model.parameterobj.ParamComputerPlayer
+import purpletreesoftware.karuahchess.model.parameterobj.ParamHint
+import purpletreesoftware.karuahchess.model.parameterobj.ParamLevelAuto
+import purpletreesoftware.karuahchess.model.parameterobj.ParamLimitAdvanced
+import purpletreesoftware.karuahchess.model.parameterobj.ParamLimitDepth
+import purpletreesoftware.karuahchess.model.parameterobj.ParamLimitMoveDuration
+import purpletreesoftware.karuahchess.model.parameterobj.ParamLimitSkillLevel
+import purpletreesoftware.karuahchess.model.parameterobj.ParamLimitThreads
+import purpletreesoftware.karuahchess.model.parameterobj.ParamMoveHighlight
+import purpletreesoftware.karuahchess.model.parameterobj.ParamMoveSpeed
+import purpletreesoftware.karuahchess.model.parameterobj.ParamNavigator
+import purpletreesoftware.karuahchess.model.parameterobj.ParamRandomiseFirstMove
+import purpletreesoftware.karuahchess.model.parameterobj.ParamRotateBoard
+import purpletreesoftware.karuahchess.model.parameterobj.ParamSoundEffect
+import purpletreesoftware.karuahchess.model.parameterobj.ParamSoundRead
 import purpletreesoftware.karuahchess.rules.BoardAnimation
 import purpletreesoftware.karuahchess.rules.Move
 import purpletreesoftware.karuahchess.rules.Move.HighlightEnum
@@ -67,12 +118,12 @@ import purpletreesoftware.karuahchess.viewmodel.PawnPromotionViewModel
 import purpletreesoftware.karuahchess.viewmodel.PieceEditToolViewModel
 import java.io.InputStream
 
-
 @ExperimentalUnsignedTypes
 open class MainActivity(pActivityID: Int) : AppCompatActivity(), TilePanel.OnTilePanelInteractionListener, PieceEditTool.OnPieceEditToolInteractionListener, PawnPromotion.OnPawnPromotionInteractionListener {
 
     // Instance ID
     private val activityID: Int = pActivityID
+    private val activityFragmentFactory = ActivityFragmentFactory(pActivityID)
     private var dbHelper: DatabaseHelper? = null
     private var pieceMove: Move? = null
     private var userInteracted: Boolean = false
@@ -88,7 +139,9 @@ open class MainActivity(pActivityID: Int) : AppCompatActivity(), TilePanel.OnTil
     private var sndPool: SoundPool? = null
     private var sndMove: Int = 0
     lateinit var binding: ActivityMainBinding
-    private val navThrottler = Semaphore(1)
+    private val navThrottler: Semaphore = Semaphore(1)
+    private var resizeRunning: Boolean = false
+    private val resizeHandler: Handler = Handler(Looper.getMainLooper())
 
     // Coroutine job
     private val mainjob = SupervisorJob()
@@ -119,6 +172,7 @@ open class MainActivity(pActivityID: Int) : AppCompatActivity(), TilePanel.OnTil
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        supportFragmentManager.fragmentFactory = activityFragmentFactory
         super.onCreate(savedInstanceState)
 
         // Set engine boards
@@ -161,39 +215,7 @@ open class MainActivity(pActivityID: Int) : AppCompatActivity(), TilePanel.OnTil
         pawnPromotionVM = ViewModelProvider(this).get(PawnPromotionViewModel::class.java)
         pieceEditToolVM = ViewModelProvider(this).get(PieceEditToolViewModel::class.java)
 
-        // Current orientation
-        val currentOrientation :Int = this.resources.configuration.orientation
 
-        // Adjacent control gravity and orientation
-        val adjacentControlLayout = binding.adjacentControlLayout
-        if(currentOrientation == Configuration.ORIENTATION_LANDSCAPE) {
-            // Change the gravity so it attaches to the right of the board
-            val params = CoordinatorLayout.LayoutParams(
-                CoordinatorLayout.LayoutParams.WRAP_CONTENT,
-                CoordinatorLayout.LayoutParams.MATCH_PARENT
-            )
-            params.gravity = Gravity.TOP or Gravity.END
-            params.anchorGravity = Gravity.TOP or Gravity.END
-            params.anchorId = binding.totalBoardBoundaryView.id
-            adjacentControlLayout.layoutParams = params
-
-            // set the orientation to horizontal
-            adjacentControlLayout.orientation = LinearLayout.HORIZONTAL
-        }
-        else {
-            // Change the gravity so it attaches to the bottom of the board
-            val mainParams = CoordinatorLayout.LayoutParams(
-                CoordinatorLayout.LayoutParams.MATCH_PARENT,
-                CoordinatorLayout.LayoutParams.WRAP_CONTENT
-            )
-            mainParams.gravity = Gravity.START or Gravity.BOTTOM
-            mainParams.anchorGravity = Gravity.START or Gravity.BOTTOM
-            mainParams.anchorId = binding.totalBoardBoundaryView.id
-            adjacentControlLayout.layoutParams = mainParams
-
-            // set the orientation to vertical
-            adjacentControlLayout.orientation = LinearLayout.VERTICAL
-        }
 
 
         // Last move action button
@@ -237,9 +259,14 @@ open class MainActivity(pActivityID: Int) : AppCompatActivity(), TilePanel.OnTil
         BoardSquareDataService.getInstance(activityID).update(binding.boardPanelLayout, GameRecordDataService.getInstance(activityID).getCurrentGame())
 
         val mainFrame = binding.mainFrame
+
+
+
         mainFrame.afterMeasured {
             // Draw the board
-            drawBoard()
+            resizeHandler.postDelayed({
+                resizeBoard()
+            }, 600)
 
             // Move progress bar visibility
             binding.moveProgressBar.visibility = View.GONE
@@ -270,17 +297,32 @@ open class MainActivity(pActivityID: Int) : AppCompatActivity(), TilePanel.OnTil
             val arrangeBoardEnabled = ParameterDataService.getInstance(activityID).get(ParamArrangeBoard::class.java).enabled
             binding.boardPanelLayout.shake(arrangeBoardEnabled)
 
-            // Set floating action button orientation
-            val fabLayout = binding.floatingActionButtonLayout
-            if(binding.mainFrame.width < binding.mainFrame.height) { fabLayout.orientation = LinearLayout.HORIZONTAL }
-            else { fabLayout.orientation = LinearLayout.VERTICAL }
-
             // Set current record position
             uiScope.launch(Dispatchers.Main) { navigateMaxRecord() }
+
+
         }
     }
 
+    override fun onConfigurationChanged(newConfig: Configuration) {
+        super.onConfigurationChanged(newConfig)
+
+        if (!resizeRunning) {
+            resizeRunning =  true
+            resizeHandler.postDelayed({
+                resizeBoard()
+                refreshNavigation(true, false)
+                resizeRunning = false
+            }, 600)
+        }
+
+    }
+
+
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
+        //noinspection RestrictedApi
+        if (menu is MenuBuilder) menu.setOptionalIconsVisible(true)
+
         // Inflate the menu; this adds items to the action bar if it is present.
         menuInflater.inflate(R.menu.menu_main, menu)
         MenuCompat.setGroupDividerEnabled(menu, true)
@@ -387,7 +429,7 @@ open class MainActivity(pActivityID: Int) : AppCompatActivity(), TilePanel.OnTil
                 if(clock.enabled) showMessage("${item.title} is enabled","", Toast.LENGTH_SHORT)
                 else showMessage("${item.title} is disabled","", Toast.LENGTH_SHORT)
 
-                drawBoard()
+                resizeBoard()
                 true
             }
             R.id.action_coordinates -> {
@@ -398,7 +440,7 @@ open class MainActivity(pActivityID: Int) : AppCompatActivity(), TilePanel.OnTil
                 if(coordinates.enabled) showMessage("${item.title} is enabled","", Toast.LENGTH_SHORT)
                 else showMessage("${item.title} is disabled","", Toast.LENGTH_SHORT)
 
-                drawBoard()
+                resizeBoard()
                 true
             }
             R.id.action_navigator -> {
@@ -412,11 +454,15 @@ open class MainActivity(pActivityID: Int) : AppCompatActivity(), TilePanel.OnTil
                 if(navParam.enabled) showMessage("${item.title} is enabled", "", Toast.LENGTH_SHORT)
                 else showMessage("${item.title} is disabled", "", Toast.LENGTH_SHORT)
 
-                drawBoard()
+                resizeBoard()
                 true
             }
             R.id.action_boardsettings -> {
                 showBoardSettingsDialog()
+                true
+            }
+            R.id.action_piecesettings -> {
+                showPieceSettingsDialog()
                 true
             }
             R.id.action_importpgn -> {
@@ -635,23 +681,17 @@ open class MainActivity(pActivityID: Int) : AppCompatActivity(), TilePanel.OnTil
 
             if (moveResult.success) {
 
-                if (moveResult.returnMessage != "") {
-                    showMessage(moveResult.returnMessage,"", Toast.LENGTH_SHORT)
-                }
-                else {
-                    val ssml = getBoardSquareSSML(moveResult.moveDataStr)
-                    showMessage(ssml, "", Toast.LENGTH_SHORT)
-                }
-
                 val boardAfterMove = GameRecordDataService.getInstance(activityID).getCurrentGame()
 
                 if(pAnimate) {
+                    val moveSpeedIndex: Int = ParameterDataService.getInstance(activityID).get(ParamMoveSpeed::class.java).speed
+                    val moveSpeedMS: Long = (Constants.moveSpeedSeconds[moveSpeedIndex.coerceIn(0, Constants.strengthList.lastIndex)] * 1000).toLong()
                     val moveAnimationList = BoardAnimation.getInstance(activityID).createAnimationList(
                         boardBeforeMove,
                         boardAfterMove,
                         binding.boardPanelLayout,
                         this,
-                        1200L
+                        moveSpeedMS
                     )
 
                     // Do animation
@@ -748,23 +788,16 @@ open class MainActivity(pActivityID: Int) : AppCompatActivity(), TilePanel.OnTil
                 val moveResult = GameRecordDataService.getInstance(activityID).currentGame.move(topMove.moveFromIndex, topMove.moveToIndex, topMove.promotionPieceType, pValidateEnabled = true, pCommit = true)
                 if (moveResult.success) {
 
-                    // Read Text, show message
-                    if (moveResult.returnMessage != "") {
-                        showMessage(moveResult.returnMessage,"", Toast.LENGTH_SHORT)
-                    }
-                    else {
-                        val ssml = getBoardSquareSSML(moveResult.moveDataStr)
-                        showMessage(ssml, "", Toast.LENGTH_SHORT)
-                    }
-
                     // Do animation
+                    val moveSpeedIndex: Int = ParameterDataService.getInstance(activityID).get(ParamMoveSpeed::class.java).speed
+                    val moveSpeedMS: Long = (Constants.moveSpeedSeconds[moveSpeedIndex.coerceIn(0, Constants.strengthList.lastIndex)] * 1000).toLong()
                     val boardAfterMove = GameRecordDataService.getInstance(activityID).getCurrentGame()
                     val moveAnimationList = BoardAnimation.getInstance(activityID).createAnimationList(
                         boardBeforeMove,
                         boardAfterMove,
                         binding.boardPanelLayout,
                         this,
-                        1200L
+                        moveSpeedMS
                     )
 
                     // Do animation
@@ -896,11 +929,14 @@ open class MainActivity(pActivityID: Int) : AppCompatActivity(), TilePanel.OnTil
     fun showMessage(pTextFull: String, pTextShort: String, pDuration: Int) {
 
         if (pTextFull.trim() != "") {
+            // Read message
             if (pTextShort.trim() == "") readText(pTextFull)
             else readText(pTextShort)
 
+            // Display message
             val toast = Toast.makeText(this, pTextFull, pDuration)
             toast.show()
+
         }
     }
 
@@ -913,6 +949,8 @@ open class MainActivity(pActivityID: Int) : AppCompatActivity(), TilePanel.OnTil
             textReader?.tts?.speak(pText, TextToSpeech.QUEUE_ADD, null, "")
         }
     }
+
+
 
     /**
      * Get SSML for board square id
@@ -1053,12 +1091,14 @@ open class MainActivity(pActivityID: Int) : AppCompatActivity(), TilePanel.OnTil
                 binding.clockLayout.pauseClock()
                 loadChessClock(true, boardAfterUndo)
 
+                val moveSpeedIndex: Int = ParameterDataService.getInstance(activityID).get(ParamMoveSpeed::class.java).speed
+                val moveSpeedMS: Long = (Constants.moveSpeedSeconds[moveSpeedIndex.coerceIn(0, Constants.strengthList.lastIndex)] * 1000).toLong()
                 val moveAnimationList = BoardAnimation.getInstance(activityID).createAnimationList(
                     boardBeforeUndo,
                     boardAfterUndo,
                     binding.boardPanelLayout,
                     this,
-                    1200L
+                    moveSpeedMS
                 )
                 // Do animation
                 startPieceAnimation(true, moveAnimationList)
@@ -1248,19 +1288,24 @@ open class MainActivity(pActivityID: Int) : AppCompatActivity(), TilePanel.OnTil
     }
 
 
+
     /**
-     * Draws the board
+     * Sets the size of the board and position of controls
      */
-    private fun drawBoard(){
+    private fun resizeBoard(){
         val mainFrameWidth = binding.mainFrame.width
         val mainFrameHeight = binding.mainFrame.height
         val isPortrait: Boolean = mainFrameWidth < mainFrameHeight
 
-
-
         val isCoordinatesEnabled = ParameterDataService.getInstance(activityID).get(ParamBoardCoord::class.java).enabled
         val isNavigationEnabled = ParameterDataService.getInstance(activityID).get(ParamNavigator::class.java).enabled
         val isClockEnabled = ParameterDataService.getInstance(activityID).get(ParamClock::class.java).enabled
+
+        // Set floating action button orientation
+        val fabLayout = binding.floatingActionButtonLayout
+        if(isPortrait) { fabLayout.orientation = LinearLayout.HORIZONTAL }
+        else { fabLayout.orientation = LinearLayout.VERTICAL }
+
 
         // Calculate padding
         val coordMargin: Int = if (isCoordinatesEnabled) 18f.spToPx() else 0
@@ -1312,6 +1357,42 @@ open class MainActivity(pActivityID: Int) : AppCompatActivity(), TilePanel.OnTil
 
         // Set board rotation
         rotateBoard(ParameterDataService.getInstance(activityID).get(ParamRotateBoard::class.java).value)
+
+        // Set navigator orientation
+        binding.navigatorLayout.setLayout(isPortrait)
+
+        // Adjacent control gravity and orientation
+        if(!isPortrait) {
+            // Change the gravity so it attaches to the right of the board
+            val params = CoordinatorLayout.LayoutParams(
+                CoordinatorLayout.LayoutParams.WRAP_CONTENT,
+                CoordinatorLayout.LayoutParams.MATCH_PARENT
+            )
+            params.gravity = Gravity.TOP or Gravity.END
+            params.anchorGravity = Gravity.TOP or Gravity.END
+            params.anchorId = binding.totalBoardBoundaryView.id
+            binding.adjacentControlLayout.layoutParams = params
+
+            // set the orientation to horizontal
+            binding.adjacentControlLayout.orientation = LinearLayout.HORIZONTAL
+        }
+        else {
+            // Change the gravity so it attaches to the bottom of the board
+            val mainParams = CoordinatorLayout.LayoutParams(
+                CoordinatorLayout.LayoutParams.MATCH_PARENT,
+                CoordinatorLayout.LayoutParams.WRAP_CONTENT
+            )
+            mainParams.gravity = Gravity.START or Gravity.BOTTOM
+            mainParams.anchorGravity = Gravity.START or Gravity.BOTTOM
+            mainParams.anchorId = binding.totalBoardBoundaryView.id
+            binding.adjacentControlLayout.layoutParams = mainParams
+
+            // set the orientation to vertical
+            binding.adjacentControlLayout.orientation = LinearLayout.VERTICAL
+        }
+
+        // Clock orientation
+        binding.clockLayout.setOrientation(isPortrait)
 
     }
 
@@ -1419,6 +1500,16 @@ open class MainActivity(pActivityID: Int) : AppCompatActivity(), TilePanel.OnTil
         val fm = supportFragmentManager
         val boardSettingsDialogFragment = BoardSettings.newInstance(activityID)
         boardSettingsDialogFragment.show(fm, null)
+    }
+
+    /**
+     * Show piece settings dialog
+     */
+    private fun showPieceSettingsDialog() {
+
+        val fm = supportFragmentManager
+        val pieceSettingsDialogFragment = PieceSettings.newInstance(activityID)
+        pieceSettingsDialogFragment.show(fm, null)
     }
 
     /**
@@ -1569,12 +1660,14 @@ open class MainActivity(pActivityID: Int) : AppCompatActivity(), TilePanel.OnTil
             {
                 // Do animation
                 if (pAnimate && oldBoard != null) {
+                    val moveSpeedIndex: Int = ParameterDataService.getInstance(activityID).get(ParamMoveSpeed::class.java).speed
+                    val moveSpeedMS: Long = (Constants.moveSpeedSeconds[moveSpeedIndex.coerceIn(0, Constants.strengthList.lastIndex)] * 1000).toLong()
                     val moveAnimationList = BoardAnimation.getInstance(activityID).createAnimationList(
                         oldBoard,
                         updatedBoard,
                         binding.boardPanelLayout,
                         this,
-                        400L
+                        moveSpeedMS
                     )
 
 

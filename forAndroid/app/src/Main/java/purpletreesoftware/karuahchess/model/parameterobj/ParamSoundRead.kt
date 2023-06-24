@@ -19,5 +19,5 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 package purpletreesoftware.karuahchess.model.parameterobj
 
 class ParamSoundRead : java.io.Serializable {
-    var enabled: Boolean = true
+    var enabled: Boolean = false
 }

@@ -20,4 +20,5 @@
     <color name="colorButtonDialogTint">#CCCCCC</color>
     <color name="colorMango">#F4BB44</color>
     <color name="colorEmeraldGreen">#03A65A</color>
+    <color name="colorIcon">#565656</color>
 </resources>

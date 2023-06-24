@@ -94,9 +94,9 @@ class ClockPanel : LinearLayout {
     /**
      * Sets the orientation of the control
      */
-    private fun setOrientation() {
+    fun setOrientation(pIsPortrait: Boolean) {
         // Set to vertical or horizontal layout depending on screen rotation
-        if(this.resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) {
+        if(!pIsPortrait) {
             binding.mainClockLayout.orientation = LinearLayout.VERTICAL
         }
         else {
@@ -196,7 +196,6 @@ class ClockPanel : LinearLayout {
         this.visibility = View.VISIBLE
 
         // Set orientation
-        setOrientation()
         setEditButton()
 
         clockEnabled = true

@@ -16,14 +16,33 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
+        <ImageView
+            android:id="@+id/fragmentIcon"
+            android:layout_width="34dp"
+            android:layout_height="34dp"
+            android:src="@drawable/ic_sound"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginTop="0dp"
+            />
+
         <TextView android:id="@+id/fragmentTitleText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Sound"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@id/fragmentIcon"
+            app:layout_constraintBottom_toBottomOf="@id/fragmentIcon"
+            app:layout_constraintStart_toEndOf="@id/fragmentIcon"
             android:layout_marginTop="0dp"
             style="@style/TextAppearance.MaterialComponents.Headline6"
+            />
+
+        <androidx.constraintlayout.widget.Barrier
+            android:id="@+id/headingBarrier"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:barrierDirection="bottom"
+            app:constraint_referenced_ids="fragmentIcon,fragmentTitleText"
             />
 
 
@@ -32,7 +51,7 @@
             android:layout_height="wrap_content"
             android:text="Read messages out loud"
             style="@style/TextAppearance.MaterialComponents.Body1"
-            app:layout_constraintTop_toBottomOf="@id/fragmentTitleText"
+            app:layout_constraintTop_toBottomOf="@id/headingBarrier"
             app:layout_constraintStart_toStartOf="parent"
             android:layout_marginTop="20dp"
             android:padding="0dp"
@@ -41,7 +60,7 @@
         <CheckBox android:id="@+id/soundEffectCheckBox"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Sound effects"
+            android:text="Piece move sound"
             style="@style/TextAppearance.MaterialComponents.Body1"
             app:layout_constraintTop_toBottomOf="@id/soundReadCheckBox"
             app:layout_constraintStart_toStartOf="parent"

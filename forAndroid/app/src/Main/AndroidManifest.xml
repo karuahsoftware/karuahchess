@@ -16,23 +16,29 @@
             android:name="purpletreesoftware.karuahchess.common.App"
             android:resizeableActivity="true">
         <activity
-                android:name=".MainActivity0"
-                android:label="Karuah Chess"
-                android:exported="true">
+            android:name=".MainActivity0"
+            android:label="Karuah Chess"
+            android:exported="true"
+            android:configChanges="screenSize|smallestScreenSize|orientation|screenLayout"
+            >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
+
         </activity>
         <activity
             android:name=".MainActivity1"
             android:label="Karuah Chess +"
-            android:exported="false">
+            android:exported="false"
+            android:configChanges="screenSize|smallestScreenSize|orientation|screenLayout"
+            >
         </activity>
         <activity
             android:name=".ErrorActivity"
             android:label="Karuah Chess"
-            android:exported="false">
+            android:exported="false"
+            >
         </activity>
 
         <provider

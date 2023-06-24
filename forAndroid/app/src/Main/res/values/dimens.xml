@@ -9,4 +9,5 @@
     <dimen name="fabMargin">4dp</dimen>
     <dimen name="fabMaxImageSize">24dp</dimen>
     <dimen name="fabMinHeight">@dimen/design_fab_size_mini</dimen>
+
 </resources>

@@ -51,6 +51,9 @@ class Constants {
         const val NODELIMIT_STANDARD = 2000000
         const val NODELIMIT_HIGH = 100000000
 
+        // Activity parameter name
+        const val ACTIVITY_PARAMETER_NAME = "activityID"
+
         val FileDict = mapOf<String, IntArray>(
             "a" to intArrayOf( 0, 8, 16, 24, 32, 40, 48, 56 ),
             "b" to intArrayOf( 1, 9, 17, 25, 33, 41, 49, 57 ),
@@ -147,6 +150,8 @@ class Constants {
 
         val clockResetLabel = arrayListOf("1 min", "3 min", "5 min", "10 min", "15 min", "30 min", "45 min", "60 min", "90 min")
         val clockResetSeconds = arrayListOf(60, 180, 300, 600, 900, 1800, 2700, 3600, 5400)
+
+        val moveSpeedSeconds: ArrayList<Double> = arrayListOf(2.0, 1.7, 1.4, 1.1, 0.8, 0.5, 0.3)
     }
 
 

@@ -5,7 +5,7 @@
     <color name="colorSecondary">#4CAF50</color>
     <color name="colorWhite">#FFFFFF</color>
     <color name="colorInactive">#bbbbbb</color>
-     <color name="colorPopupHeader">#7c7c7c</color>
+    <color name="colorPopupHeader">#7c7c7c</color>
     <color name="colorBlackSquare">#999999</color>
     <color name="colorWhiteSquare">#FFFFFF</color>
     <color name="colorDarkGreen">#98C098</color>
@@ -20,4 +20,5 @@
     <color name="colorButtonDialogTint">#777777</color>
     <color name="colorMango">#F4BB44</color>
     <color name="colorEmeraldGreen">#03A65A</color>
+    <color name="colorIcon">#CECECE</color>
 </resources>

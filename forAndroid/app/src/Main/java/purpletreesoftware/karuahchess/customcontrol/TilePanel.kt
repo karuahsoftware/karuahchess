@@ -33,7 +33,6 @@ import android.graphics.drawable.Drawable
 import android.view.DragEvent
 import android.view.HapticFeedbackConstants
 import android.view.LayoutInflater
-import androidx.coordinatorlayout.widget.CoordinatorLayout
 import purpletreesoftware.karuahchess.R
 import purpletreesoftware.karuahchess.R.color
 import purpletreesoftware.karuahchess.common.Constants
@@ -560,6 +559,7 @@ class TilePanel: ConstraintLayout {
     fun setTilePanelInteractionListener(pEventListener: OnTilePanelInteractionListener) {
         _tileListener = pEventListener
     }
+
 
     interface OnTilePanelInteractionListener {
         fun onTileClick(pTile: Tile?)

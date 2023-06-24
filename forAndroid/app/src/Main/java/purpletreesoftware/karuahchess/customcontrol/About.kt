@@ -19,6 +19,8 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 package purpletreesoftware.karuahchess.customcontrol
 
 import android.app.Dialog
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -26,6 +28,7 @@ import android.view.ViewGroup
 import android.view.Window
 import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.ViewModelProvider
+import purpletreesoftware.karuahchess.R
 import purpletreesoftware.karuahchess.databinding.FragmentAboutBinding
 import purpletreesoftware.karuahchess.viewmodel.AboutViewModel
 
@@ -62,6 +65,22 @@ class About : DialogFragment() {
 
         // Connect button events
         binding.doneButton.setOnClickListener { dismiss() }
+
+        binding.socialLogoFButton.setOnClickListener {
+            val urlIntent = Intent(
+                Intent.ACTION_VIEW,
+                Uri.parse(getString(R.string.social_f_url))
+            )
+            startActivity(urlIntent)
+        }
+
+        binding.socialLogoTButton.setOnClickListener {
+            val urlIntent = Intent(
+                Intent.ACTION_VIEW,
+                Uri.parse(getString(R.string.social_t_url))
+            )
+            startActivity(urlIntent)
+        }
     }
 
     override fun onDestroyView() {
