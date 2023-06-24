@@ -2003,7 +2003,6 @@ open class MainActivity(pActivityID: Int) : AppCompatActivity(), TilePanel.OnTil
         }
     }
 
-
     /**
      * Show or hide the hints feature
      */
