@@ -92,6 +92,8 @@ struct ContentView: View {
                     EngineSettings(pMenuSheet: menuSheet)
                 case .boardSettings:
                     BoardSettings(pMenuSheet: menuSheet)
+                case .pieceSettings:
+                    PieceSettings(pMenuSheet: menuSheet)
                 case .soundSettings:
                     SoundSettings(pMenuSheet: menuSheet)
                 case .about:

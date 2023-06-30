@@ -34,7 +34,7 @@ import SwiftUI
                 BoardViewModel.instance.castlingRightsVM.close()
             }
             Task(priority: .userInitiated) {
-                await BoardViewModel.instance.stopSearchJob()
+                BoardViewModel.instance.stopSearchJob()
             }
             
         }

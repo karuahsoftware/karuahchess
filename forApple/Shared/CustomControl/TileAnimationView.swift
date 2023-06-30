@@ -77,6 +77,11 @@ struct TileAnimationView: View {
                                 complete[index] = 0
                             }
                         }
+                        .onAnimationCompleted(for: complete[index]) {
+                            tileAnimationVM.waiter?.resume()
+                            tileAnimationVM.waitCount = 0
+                            tileAnimationVM.waiter = nil
+                        }
                 }
             }
  

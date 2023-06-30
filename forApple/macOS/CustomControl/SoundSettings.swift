@@ -44,7 +44,7 @@ struct SoundSettings: View {
                     }
                     
                     Toggle(isOn: $soundSettingsVM.soundEffectEnabled) {
-                        Text("Sound effects")
+                        Text("Piece move sound")
                             .font(.body)
                     }
                     

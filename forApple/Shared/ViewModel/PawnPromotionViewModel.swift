@@ -23,29 +23,28 @@ class PawnPromotionViewModel: ObservableObject {
     var promotionPiece: Int = 0
     var colour: Int = 0
     
-    private let semaphore = DispatchSemaphore(value: 0)
     private var waitCount = 0
-    //private var waitTask: Int
-    
+    private var waiter: CheckedContinuation<Void, Never>?
+
     
     /// Displays the piece edit tool
     /// - Parameter pTile: The tile that was clicked
     func show(pColour: Int) async -> Int {
         
-        colour = pColour
-        
-        // Ensure nothing is higlighted
-        DispatchQueue.main.async {
-            self.visible = true
+        if (waitCount == 0) {
+            colour = pColour
+            
+            // Ensure nothing is higlighted
+            DispatchQueue.main.async {
+                self.visible = true
+            }
+            
+            await withCheckedContinuation { continuation in
+                waitCount += 1
+                waiter = continuation
+            }
+            
         }
-        
-        // Switch to a background thread
-        let waitTask = Task.detached(priority: .background) { [self] in
-            waitCount -= 1
-            semaphore.wait()
-        }
-        
-        _ = await waitTask.result
         
         return promotionPiece
     }
@@ -58,14 +57,10 @@ class PawnPromotionViewModel: ObservableObject {
        DispatchQueue.main.async {
            self.visible = false
        }
-       let waitTask = Task.detached(priority: .userInitiated) { [self] in
-            while waitCount < 0 {
-                waitCount += 1
-                semaphore.signal()
-            }
-       }
        
-       _ = await waitTask.result
+       waiter?.resume()
+       waiter = nil
+       waitCount = 0
        
    }
     

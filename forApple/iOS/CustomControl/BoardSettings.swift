@@ -48,6 +48,7 @@ struct BoardSettings: View {
                         .resizable()
                         .frame(width: 80, height: 80)
                         .rotationEffect(Angle(degrees: boardVM.boardRotation))
+                        .background(Device.instance.tileDarkSquareColour)
                     Button(action: {
                         BoardViewModel.instance.rotateClick()
                            }){

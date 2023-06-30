@@ -45,6 +45,9 @@ extension View {
         return modifier(self)
     }
     
+    func onAnimationCompleted<Value: VectorArithmetic>(for value: Value, completion: @escaping () -> Void) -> ModifiedContent<Self, AnimationCompletionObserverModifier<Value>> {
+        return modifier(AnimationCompletionObserverModifier(observedValue: value, completion: completion))
+    }
     
     
 }

@@ -190,6 +190,22 @@ struct MenuView: View {
                         }
                     }
                     
+                    NavigationLink(destination: PieceSettings(showMenu: $showMenu)) {
+                        Label() {
+                            Text("Piece")
+                        } icon: {
+                            Image(systemName: "person")
+                                .resizable()
+                                .aspectRatio(contentMode: .fit)
+                                .font(Font.system(.headline))
+                                .padding(3)
+                                .frame(width: 28, height: 28)
+                                .background(Color.green)
+                                .foregroundColor(Color.white)
+                                .cornerRadius(6)
+                        }
+                    }
+                    
                     NavigationLink(destination: SoundSettings(showMenu: $showMenu)) {
                         Label() {
                             Text("Sound")

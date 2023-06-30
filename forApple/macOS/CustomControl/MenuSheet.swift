@@ -26,6 +26,7 @@ class MenuSheet: ObservableObject {
     enum Sheets: Identifiable {
         case engineSettings
         case boardSettings
+        case pieceSettings
         case soundSettings
         case about
         

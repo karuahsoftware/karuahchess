@@ -46,7 +46,7 @@ struct BoardSettings: View {
                             HStack {
                                 // At this time had to use an image instead of a shape like Rectangle() as
                                 // the picker seems to only display images. Also the height of a picker
-                                // doesn't seem to be adjustable to had to use a small image.
+                                // doesn't seem to be adjustable so had to use a small image.
                                 Image("BoardColour" + colourItem.text)
                                 Text(colourItem.text)
                             }
@@ -62,6 +62,7 @@ struct BoardSettings: View {
                                 .resizable()
                                 .frame(width: 80, height: 80)
                                 .rotationEffect(Angle(degrees: boardVM.boardRotation))
+                                .background(Device.instance.tileDarkSquareColour)
                             Button(action: {
                                 BoardViewModel.instance.rotateClick()
                                    }){

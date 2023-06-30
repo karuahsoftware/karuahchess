@@ -69,6 +69,10 @@ class Menu : NSObject {
         MenuSheet.shared.active = .boardSettings
     }
     
+    @objc func pieceSettings() {
+        MenuSheet.shared.active = .pieceSettings
+    }
+    
     @objc func soundSettings() {
         MenuSheet.shared.active = .soundSettings
     }
@@ -195,6 +199,14 @@ class Menu : NSObject {
         do {
             let menuItem = NSMenuItem(title: "Board", action: #selector(self.boardSettings), keyEquivalent: "")
             menuItem.image = NSImage(systemSymbolName: "square.grid.3x3.square", accessibilityDescription: "Board")
+            menuItem.target = self
+            appMenu.addItem(menuItem)
+        }
+        
+        // Piece settings
+        do {
+            let menuItem = NSMenuItem(title: "Piece", action: #selector(self.pieceSettings), keyEquivalent: "")
+            menuItem.image = NSImage(systemSymbolName: "person", accessibilityDescription: "Piece")
             menuItem.target = self
             appMenu.addItem(menuItem)
         }

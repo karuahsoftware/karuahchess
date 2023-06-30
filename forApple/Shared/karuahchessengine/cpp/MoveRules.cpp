@@ -200,7 +200,8 @@ namespace MoveRules {
 			else if (origFromSpin == helper::BLACK_ROOK_SPIN && pFromIndex == 0) pBoard.StateCastlingAvailability = pBoard.StateCastlingAvailability & 0b111011;
 			else if (origFromSpin == helper::WHITE_KING_SPIN) pBoard.StateCastlingAvailability = pBoard.StateCastlingAvailability & 0b111100;
 			else if (origFromSpin == helper::BLACK_KING_SPIN) pBoard.StateCastlingAvailability = pBoard.StateCastlingAvailability & 0b110011;
-			else if (pToIndex == 63) pBoard.StateCastlingAvailability = pBoard.StateCastlingAvailability & 0b111101;
+			
+            if (pToIndex == 63) pBoard.StateCastlingAvailability = pBoard.StateCastlingAvailability & 0b111101;
 			else if (pToIndex == 56) pBoard.StateCastlingAvailability = pBoard.StateCastlingAvailability & 0b111110;
 			else if (pToIndex == 7) pBoard.StateCastlingAvailability = pBoard.StateCastlingAvailability & 0b110111;
 			else if (pToIndex == 0) pBoard.StateCastlingAvailability = pBoard.StateCastlingAvailability & 0b111011;
@@ -433,7 +434,8 @@ namespace MoveRules {
 		else if (origFromSpin == helper::BLACK_ROOK_SPIN && pFromIndex == 0) pBoard.StateCastlingAvailability = pBoard.StateCastlingAvailability & 0b111011;
 		else if (origFromSpin == helper::WHITE_KING_SPIN) pBoard.StateCastlingAvailability = pBoard.StateCastlingAvailability & 0b111100;
 		else if (origFromSpin == helper::BLACK_KING_SPIN) pBoard.StateCastlingAvailability = pBoard.StateCastlingAvailability & 0b110011;
-		else if (pToIndex == 63) pBoard.StateCastlingAvailability = pBoard.StateCastlingAvailability & 0b111101;
+		
+        if (pToIndex == 63) pBoard.StateCastlingAvailability = pBoard.StateCastlingAvailability & 0b111101;
 		else if (pToIndex == 56) pBoard.StateCastlingAvailability = pBoard.StateCastlingAvailability & 0b111110;
 		else if (pToIndex == 7) pBoard.StateCastlingAvailability = pBoard.StateCastlingAvailability & 0b110111;
 		else if (pToIndex == 0) pBoard.StateCastlingAvailability = pBoard.StateCastlingAvailability & 0b111011;

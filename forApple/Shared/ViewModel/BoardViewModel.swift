@@ -271,20 +271,15 @@ import AVFoundation
             let moveResult = GameRecordDataService.instance.currentGame.move(Int32(move.fromIndex), Int32(move.toIndex), Int32(promotionPiece), true, true) as? MoveResult ?? MoveResult()
             
             if moveResult.success {
-                if moveResult.returnMessage != "" {
-                    showMessage(pTextFull: moveResult.returnMessage, pTextShort: "", pDurationms: Constants.TOAST_SHORT)
-                }
-                else {
-                    let ssml = getBoardSquareSSML(pMoveDataStr: moveResult.moveDataStr)
-                    readText(pText: ssml)
-                }
-                
-                let boardAfterMove = GameRecordDataService.instance.getCurrentGame()
                 
                 // Do animation
                 if(pAnimate) {
-                    let moveAnimationList = boardAnimation.createAnimationList(pBoardRecA: boardBeforeMove, pBoardRecB: boardAfterMove)
-                    await startPieceAnimation(pLockPanel: true, pAnimationList: moveAnimationList, pDurationSeconds: 1.2)
+                    let moveSpeedIndex: Int = ParameterDataService.instance.get(pParameterClass: ParamMoveSpeed.self).speed
+                    if Constants.moveSpeedSeconds.indices.contains(moveSpeedIndex) {
+                        let boardAfterMove = GameRecordDataService.instance.getCurrentGame()
+                        let moveAnimationList = boardAnimation.createAnimationList(pBoardRecA: boardBeforeMove, pBoardRecB: boardAfterMove)
+                        await startPieceAnimation(pLockPanel: true, pAnimationList: moveAnimationList, pDurationSeconds: Constants.moveSpeedSeconds[moveSpeedIndex])
+                    }
                 }
                 
                 // Update Display
@@ -363,20 +358,14 @@ import AVFoundation
                 let moveResult: MoveResult = GameRecordDataService.instance.currentGame.move(topMove.moveFromIndex, topMove.moveToIndex, topMove.promotionPieceType, true, true) as? MoveResult ?? MoveResult()
                 if moveResult.success {
                     
-                    //Read text, showmessage
-                    if moveResult.returnMessage != "" {
-                        showMessage(pTextFull: moveResult.returnMessage, pTextShort: "", pDurationms: Constants.TOAST_SHORT)
-                    }
-                    else {
-                        let ssml = getBoardSquareSSML(pMoveDataStr: moveResult.moveDataStr)
-                        readText(pText: ssml)
+                    // Do animation
+                    let moveSpeedIndex: Int = ParameterDataService.instance.get(pParameterClass: ParamMoveSpeed.self).speed
+                    if Constants.moveSpeedSeconds.indices.contains(moveSpeedIndex) {
+                        let boardAfterMove = GameRecordDataService.instance.getCurrentGame()
+                        let moveAnimationList = boardAnimation.createAnimationList(pBoardRecA: boardBeforeMove, pBoardRecB: boardAfterMove)
+                        await startPieceAnimation(pLockPanel: true, pAnimationList: moveAnimationList, pDurationSeconds: Constants.moveSpeedSeconds[moveSpeedIndex])
                     }
                     
-                    // Do animation
-                    let boardAfterMove = GameRecordDataService.instance.getCurrentGame()
-                    let moveAnimationList = boardAnimation.createAnimationList(pBoardRecA: boardBeforeMove, pBoardRecB: boardAfterMove)
-                
-                    await startPieceAnimation(pLockPanel: true, pAnimationList: moveAnimationList, pDurationSeconds: 1.2)
                     BoardSquareDataService.instance.update(pTilePanelVM: self.tilePanelVM, pRecord: GameRecordDataService.instance.getCurrentGame())
                        
                     playPieceMoveSoundEffect()
@@ -434,7 +423,7 @@ import AVFoundation
             if (!topMove.cancelled) && (topMove.error == 0) {
                 let topMoveBits: UInt64 = (Constants.BITMASK >> topMove.moveFromIndex) | (Constants.BITMASK >> topMove.moveToIndex)
                 if let boardColourIndex = Constants.darkSquareColourArray.firstIndex(of: ParameterDataService.instance.get(pParameterClass: ParamColourDarkSquares.self).argb()) {
-                let highlightColour = Constants.hintColourArray[boardColourIndex]
+                    let highlightColour = Constants.hintColourArray[boardColourIndex]
                     tilePanelVM.setHighLightFullFadeOut(pBits: topMoveBits, pColour: highlightColour)
                     
                     // On mac only read the text so message doesn't cover the highlighted move
@@ -519,10 +508,8 @@ import AVFoundation
         }
         
         // Do the animation
-        tileAnimationVM.runAnimation(pAnimationList: pAnimationList, pTilePanelVM: self.tilePanelVM, pDuration: pDurationSeconds)
+        await tileAnimationVM.runAnimation(pAnimationList: pAnimationList, pTilePanelVM: self.tilePanelVM, pDuration: pDurationSeconds)
         
-        // Wait for enough time for animation to finish
-        try? await Task.sleep(nanoseconds: UInt64(pDurationSeconds + 0.3) * 1000000000)
         
         if pLockPanel {
             lockPanel = false
@@ -600,10 +587,14 @@ import AVFoundation
                 //Do Animation
                 if pAnimate {
                     if let oldBoard: GameRecordArray = GameRecordDataService.instance.get(pId: BoardSquareDataService.instance.gameRecordCurrentValue) {
-                        let moveAnimationList = boardAnimation.createAnimationList(pBoardRecA: oldBoard, pBoardRecB: updateBoard)
                         
                         // Do animation
-                        await startPieceAnimation(pLockPanel: true, pAnimationList: moveAnimationList, pDurationSeconds: 1.2)
+                        let moveSpeedIndex: Int = ParameterDataService.instance.get(pParameterClass: ParamMoveSpeed.self).speed
+                        if Constants.moveSpeedSeconds.indices.contains(moveSpeedIndex) {
+                            let moveAnimationList = boardAnimation.createAnimationList(pBoardRecA: oldBoard, pBoardRecB: updateBoard)
+                            await startPieceAnimation(pLockPanel: true, pAnimationList: moveAnimationList, pDurationSeconds: Constants.moveSpeedSeconds[moveSpeedIndex])
+                        }
+                        
                         BoardSquareDataService.instance.update(pTilePanelVM: self.tilePanelVM, pRecord: updateBoard)
                         BoardSquareDataService.instance.gameRecordCurrentValue = pRecId
                         updateBoardIndicators(pRecord: updateBoard)
@@ -664,8 +655,11 @@ import AVFoundation
             if GameRecordDataService.instance.undo() {
                 lockPanel = true
                 if let boardAfterUndo = GameRecordDataService.instance.get() {
-                    let moveAnimationList = self.boardAnimation.createAnimationList(pBoardRecA: boardBeforeUndo, pBoardRecB: boardAfterUndo)
-                    await startPieceAnimation(pLockPanel: true, pAnimationList: moveAnimationList, pDurationSeconds: 1.2)
+                    let moveSpeedIndex: Int = ParameterDataService.instance.get(pParameterClass: ParamMoveSpeed.self).speed
+                    if Constants.moveSpeedSeconds.indices.contains(moveSpeedIndex) {
+                        let moveAnimationList = self.boardAnimation.createAnimationList(pBoardRecA: boardBeforeUndo, pBoardRecB: boardAfterUndo)
+                        await startPieceAnimation(pLockPanel: true, pAnimationList: moveAnimationList, pDurationSeconds: Constants.moveSpeedSeconds[moveSpeedIndex])
+                    }
                 }
             }
         }

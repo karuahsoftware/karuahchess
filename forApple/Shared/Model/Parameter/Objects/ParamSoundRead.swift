@@ -20,6 +20,6 @@ class ParamSoundRead : ParamProtocol {
     var enabled : Bool
     
     required init() {
-        enabled = true // Default value
+        enabled = false // Default value
     }
 }

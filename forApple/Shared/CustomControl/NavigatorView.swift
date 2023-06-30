@@ -24,6 +24,8 @@ struct NavigatorView: View {
     @ObservedObject var boardVM : BoardViewModel
     @ObservedObject private var boardSquareDS = BoardSquareDataService.instance
     
+    
+    
     var body: some View {
         
         #if os(iOS)
@@ -41,7 +43,7 @@ struct NavigatorView: View {
                     // Left Scroll
                     Button(action: {
                         Task(priority: .userInitiated) {
-                            await boardVM.navigateGameRecord(pRecId: boardSquareDS.gameRecordCurrentValue - 1, pAnimate: false)
+                            await boardVM.navigateGameRecord(pRecId: boardSquareDS.gameRecordCurrentValue - 1, pAnimate: true)
                             withAnimation {
                                 scrollView.scrollTo(boardSquareDS.gameRecordCurrentValue)
                             }
@@ -60,7 +62,9 @@ struct NavigatorView: View {
                             ForEach(navigatorVM.recordIdList, id: \.self) {recordId in
                                 Button(action: {
                                     Task(priority: .userInitiated) {
-                                        await boardVM.navigateGameRecord(pRecId: recordId, pAnimate: false)
+                                        let currentRecordID = BoardSquareDataService.instance.gameRecordCurrentValue
+                                        let animate = abs(currentRecordID - recordId) == 1 ? true : false
+                                        await boardVM.navigateGameRecord(pRecId: recordId, pAnimate: animate)
                                     }
                                 }, label: {
                                     Text("\(recordId)")
@@ -87,7 +91,7 @@ struct NavigatorView: View {
                     // Scroll right button
                     Button(action: {
                         Task(priority: .userInitiated) {
-                            await boardVM.navigateGameRecord(pRecId: boardSquareDS.gameRecordCurrentValue + 1, pAnimate: false)
+                            await boardVM.navigateGameRecord(pRecId: boardSquareDS.gameRecordCurrentValue + 1, pAnimate: true)
                             withAnimation {
                                 scrollView.scrollTo(boardSquareDS.gameRecordCurrentValue)
                             }

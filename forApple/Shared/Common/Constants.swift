@@ -130,5 +130,5 @@ class Constants  {
      Color(red: 244 / 255, green: 187 / 255, blue: 68 / 255),
      Color(red: 244 / 255, green: 187 / 255, blue: 68 / 255)]
     
-    
+    static let moveSpeedSeconds: [Double] = [2.0, 1.7, 1.4, 1.1, 0.8, 0.5, 0.3]
 }

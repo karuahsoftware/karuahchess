@@ -101,6 +101,14 @@ class ParameterDataService : ParameterDataServiceProtocol {
                             if let obj = try? JSONDecoder().decode(ParamMoveHighlight.self, from: data) {
                                 parameters[name] = obj
                             }
+                        case String(describing: ParamMoveSpeed.self):
+                            if let obj = try? JSONDecoder().decode(ParamMoveSpeed.self, from: data) {
+                                parameters[name] = obj
+                            }
+                        case String(describing: ParamMoveText.self):
+                            if let obj = try? JSONDecoder().decode(ParamMoveText.self, from: data) {
+                                parameters[name] = obj
+                            }
                         case String(describing: ParamNavigator.self):
                             if let obj = try? JSONDecoder().decode(ParamNavigator.self, from: data) {
                                 parameters[name] = obj

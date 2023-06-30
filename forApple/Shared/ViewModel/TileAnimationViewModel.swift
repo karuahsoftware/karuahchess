@@ -23,6 +23,8 @@ import SwiftUI
     @Published var animationInstructionArray: [TileAnimationInstruction] = []
     @Published var visible: Bool = false
     @Published var duration: Double = 0
+    @Published var waiter: CheckedContinuation<Void, Never>?
+    @Published var waitCount = 0
     
     /// Clear all animation instructions
    func clear() {
@@ -36,25 +38,32 @@ import SwiftUI
        /// - Parameters:
        ///   - pBoardSquareDS: Board square data service
        ///   - pAnimationList: The list of animation instructions to run
-    func runAnimation(pAnimationList: [TileAnimationInstruction], pTilePanelVM: TilePanelViewModel, pDuration: Double) {
-           clear()
-           duration = pDuration
-        
-           // Loop through all the animation instructions
-           for animInstruct in pAnimationList {
+    func runAnimation(pAnimationList: [TileAnimationInstruction], pTilePanelVM: TilePanelViewModel, pDuration: Double) async {
+        if (waitCount == 0) {
+            clear()
+            duration = pDuration
+            
+            // Loop through all the animation instructions
+            for animInstruct in pAnimationList {
                 
                 // Add the animation to the array
                 animationInstructionArray.append(animInstruct)
-            
+                
                 // Clear the squares being animated
                 for index in animInstruct.hiddenSquareIndexes {
                     pTilePanelVM.getTile(pIndex: index).tileVM.visible = false
-        
+                    
                 }
+                
+            }
             
-           }
-        
-           visible = true
+            visible = true
+            
+            await withCheckedContinuation { continuation in
+                waitCount += 1
+                waiter = continuation
+            }
+        }
     }
     
     

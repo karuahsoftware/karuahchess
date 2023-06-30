@@ -1,7 +1,7 @@
 {
   "images" : [
     {
-      "filename" : "splashknightblack.pdf",
+      "filename" : "splashblackknight.png",
       "idiom" : "universal"
     },
     {
@@ -11,7 +11,7 @@
           "value" : "dark"
         }
       ],
-      "filename" : "splashknightwhite.pdf",
+      "filename" : "splashwhiteknight.png",
       "idiom" : "universal"
     }
   ],
