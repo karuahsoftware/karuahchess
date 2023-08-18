@@ -1,6 +1,6 @@
 /*
 Karuah Chess is a chess playing program
-Copyright (C) 2020 Karuah Software
+Copyright (C) 2020-2023 Karuah Software
 
 Karuah Chess is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -57,7 +57,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 		/// <summary>
 		/// White pawn enpassant
 		/// </summary>		
-		template<int Colour> uint64_t PawnEnpassant(const int pIndex, const int pEnpassantIndex)
+		template<int Colour> uint64_t PawnEnpassant(const int pIndex, const int pEnpassantIndex, const uint64_t pWhitePawnPos, const uint64_t pBlackPawnPos)
 		{
 			if constexpr (Colour == helper::WHITEPIECE) {
 				uint64_t enPassantPath = 0;
@@ -68,8 +68,8 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 				uint64_t sqEnpassantBinary = 0;
 				if (pEnpassantIndex > -1) {
 					sqEnpassantBinary = helper::BITMASK >> pEnpassantIndex;
-					if (((sqBinary >> 1) & rowMaskA) == sqEnpassantBinary) enPassantPath = (sqBinary << 7) & rowMaskB;
-					if (((sqBinary << 1) & rowMaskA) == sqEnpassantBinary) enPassantPath = enPassantPath | ((sqBinary << 9) & rowMaskB);
+					if (((sqBinary >> 1) & rowMaskA & pBlackPawnPos) == sqEnpassantBinary) enPassantPath = (sqBinary << 7) & rowMaskB;
+					if (((sqBinary << 1) & rowMaskA & pBlackPawnPos) == sqEnpassantBinary) enPassantPath = enPassantPath | ((sqBinary << 9) & rowMaskB);
 				}
 
 				return enPassantPath;
@@ -83,8 +83,8 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 				uint64_t sqEnpassantBinary = 0;
 				if (pEnpassantIndex > -1) {
 					sqEnpassantBinary = helper::BITMASK >> pEnpassantIndex;
-					if (((sqBinary >> 1) & rowMaskA) == sqEnpassantBinary) enPassantPath = (sqBinary >> 9) & rowMaskB;
-					if (((sqBinary << 1) & rowMaskA) == sqEnpassantBinary) enPassantPath = enPassantPath | ((sqBinary >> 7) & rowMaskB);
+					if (((sqBinary >> 1) & rowMaskA & pWhitePawnPos) == sqEnpassantBinary) enPassantPath = (sqBinary >> 9) & rowMaskB;
+					if (((sqBinary << 1) & rowMaskA & pWhitePawnPos) == sqEnpassantBinary) enPassantPath = enPassantPath | ((sqBinary >> 7) & rowMaskB);
 				}
 				return enPassantPath;
 			}
@@ -346,8 +346,8 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 
 		// Explicit template instantiation
-		template uint64_t PawnEnpassant<helper::WHITEPIECE>(const int pIndex, const int pEnpassantIndex);
-		template uint64_t PawnEnpassant<helper::BLACKPIECE>(const int pIndex, const int pEnpassantIndex);
+		template uint64_t PawnEnpassant<helper::WHITEPIECE>(const int pIndex, const int pEnpassantIndex, const uint64_t pWhitePawnPos, const uint64_t pBlackPawnPos);
+		template uint64_t PawnEnpassant<helper::BLACKPIECE>(const int pIndex, const int pEnpassantIndex, const uint64_t pWhitePawnPos, const uint64_t pBlackPawnPos);
 		template uint64_t PawnPotentialAttack<helper::WHITEPIECE>(const int pSqIndex);
 		template uint64_t PawnPotentialAttack<helper::BLACKPIECE>(const int pSqIndex);
 		template uint64_t PawnAttack<helper::WHITEPIECE>(const int pSqIndex, const uint64_t pBlockers);

@@ -1,6 +1,6 @@
 /*
   Stockfish, a UCI chess playing engine derived from Glaurung 2.1
-  Copyright (C) 2004-2022 The Stockfish developers (see AUTHORS file)
+  Copyright (C) 2004-2023 The Stockfish developers (see AUTHORS file)
 
   Stockfish is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -26,12 +26,14 @@
 
 #endif
 
+#include <cmath>
+#include <cstdlib>
 #include <fstream>
 #include <iomanip>
 #include <iostream>
 #include <sstream>
+#include <string_view>
 #include <vector>
-#include <cstdlib>
 
 #if defined(__linux__) && !defined(__ANDROID__)
 #include <stdlib.h>
@@ -57,9 +59,7 @@ namespace Stockfish {
 namespace {
 
 /// Version number or dev.
-const string version = "15.1";
-
-
+constexpr string_view version = "16";
 
 } // namespace
 
@@ -78,13 +78,13 @@ string engine_info(bool to_uci) {
   stringstream ss;
   ss << "Stockfish " << version << setfill('0');
 
-  if (version == "dev")
+  if constexpr (version == "dev")
   {
       ss << "-";
       #ifdef GIT_DATE
-      ss << GIT_DATE;
+      ss << stringify(GIT_DATE);
       #else
-      const string months("Jan Feb Mar Apr May Jun Jul Aug Sep Oct Nov Dec");
+      constexpr string_view months("Jan Feb Mar Apr May Jun Jul Aug Sep Oct Nov Dec");
       string month, day, year;
       stringstream date(__DATE__); // From compiler, format is "Sep 21 2008"
 
@@ -95,7 +95,7 @@ string engine_info(bool to_uci) {
       ss << "-";
 
       #ifdef GIT_SHA
-      ss << GIT_SHA;
+      ss << stringify(GIT_SHA);
       #else
       ss << "nogit";
       #endif
@@ -106,8 +106,6 @@ string engine_info(bool to_uci) {
 
   return ss.str();
 }
-
-
 
 /// prefetch() preloads the given address in L1/L2 cache. This is a non-blocking
 /// function that doesn't stall the CPU waiting for data to be loaded from memory,
@@ -127,11 +125,11 @@ void prefetch(void* addr) {
 #  endif
 
 #  if (defined(__INTEL_COMPILER) || defined(_MSC_VER)) && (defined(_M_X64) || defined(_M_IX86))
-  _mm_prefetch((char*)addr, _MM_HINT_T0);
+   _mm_prefetch((char*)addr, _MM_HINT_T0);
 #  elif (defined(__INTEL_COMPILER) || defined(_MSC_VER)) && (defined(_M_ARM) || defined(_M_ARM64))
    __prefetch(addr);
 #  else
-  __builtin_prefetch(addr);
+   __builtin_prefetch(addr);
 #  endif
 }
 
@@ -147,8 +145,10 @@ void* std_aligned_alloc(size_t alignment, size_t size) {
 #if defined(POSIXALIGNEDALLOC)
   void *mem;
   return posix_memalign(&mem, alignment, size) ? nullptr : mem;
-#elif defined(_WIN32)
+#elif defined(_WIN32) && !defined(_M_ARM) && !defined(_M_ARM64)
   return _mm_malloc(size, alignment);
+#elif defined(_WIN32)
+  return _aligned_malloc(size, alignment);
 #else
   return std::aligned_alloc(alignment, size);
 #endif
@@ -158,8 +158,10 @@ void std_aligned_free(void* ptr) {
 
 #if defined(POSIXALIGNEDALLOC)
   free(ptr);
-#elif defined(_WIN32)
+#elif defined(_WIN32) && !defined(_M_ARM) && !defined(_M_ARM64)
   _mm_free(ptr);
+#elif defined(_WIN32)
+  _aligned_free(ptr);
 #else
   free(ptr);
 #endif
@@ -182,12 +184,13 @@ static void* aligned_large_pages_alloc_windows([[maybe_unused]] size_t allocSize
   const size_t largePageSize = GetLargePageMinimum();
   if (!largePageSize)
       return nullptr;
+   
 
   // We need SeLockMemoryPrivilege, so try to enable it for the process
   if (!OpenProcessToken(GetCurrentProcess(), TOKEN_ADJUST_PRIVILEGES | TOKEN_QUERY, &hProcessToken))
-      return nullptr;
+          return nullptr;
 
-  if (LookupPrivilegeValue(NULL, SE_LOCK_MEMORY_NAME, &luid))
+  if (LookupPrivilegeValue(nullptr, SE_LOCK_MEMORY_NAME, &luid))      
   {
       TOKEN_PRIVILEGES tp { };
       TOKEN_PRIVILEGES prevTp { };
@@ -206,10 +209,10 @@ static void* aligned_large_pages_alloc_windows([[maybe_unused]] size_t allocSize
           // Round up size to full pages and allocate
           allocSize = (allocSize + largePageSize - 1) & ~size_t(largePageSize - 1);
           mem = VirtualAlloc(
-              NULL, allocSize, MEM_RESERVE | MEM_COMMIT | MEM_LARGE_PAGES, PAGE_READWRITE);
+              nullptr, allocSize, MEM_RESERVE | MEM_COMMIT | MEM_LARGE_PAGES, PAGE_READWRITE);
 
           // Privilege no longer needed, restore previous state
-          AdjustTokenPrivileges(hProcessToken, FALSE, &prevTp, 0, NULL, NULL);
+          AdjustTokenPrivileges (hProcessToken, FALSE, &prevTp, 0, nullptr, nullptr);
       }
   }
 
@@ -227,7 +230,7 @@ void* aligned_large_pages_alloc(size_t allocSize) {
 
   // Fall back to regular, page aligned, allocation if necessary
   if (!mem)
-      mem = VirtualAlloc(NULL, allocSize, MEM_RESERVE | MEM_COMMIT, PAGE_READWRITE);
+      mem = VirtualAlloc(nullptr, allocSize, MEM_RESERVE | MEM_COMMIT, PAGE_READWRITE);
 
   return mem;
 }
@@ -279,8 +282,6 @@ void aligned_large_pages_free(void *mem) {
 }
 
 #endif
-
-
 
 
 } // namespace Stockfish

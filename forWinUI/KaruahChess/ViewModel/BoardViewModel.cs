@@ -1,6 +1,6 @@
 ﻿/*
 Karuah Chess is a chess playing program
-Copyright (C) 2020 Karuah Software
+Copyright (C) 2020-2023 Karuah Software
 
 Karuah Chess is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -47,8 +47,6 @@ using static KaruahChess.Rules.Move;
 using Windows.Foundation;
 using Windows.Media.Playback;
 using Microsoft.UI.Dispatching;
-
-
 
 namespace KaruahChess.ViewModel
 {
@@ -742,9 +740,30 @@ namespace KaruahChess.ViewModel
                 }
             }
         }
-               
 
-                       
+        /// <summary>
+        /// Automatic pawn promotion
+        /// </summary>  
+        private ParamPromoteAuto _promoteAutoEnabled;
+        public bool PromoteAutoEnabled
+        {
+            get
+            {
+                var paramPromoteAutoObj = ParameterDataService.instance.Get<ParamPromoteAuto>();
+                _promoteAutoEnabled = paramPromoteAutoObj;
+                return _promoteAutoEnabled.Enabled;
+            }
+            set
+            {
+                if (_promoteAutoEnabled != null && _promoteAutoEnabled.Enabled != value)
+                {
+                    _promoteAutoEnabled.Enabled = value;
+                    ParameterDataService.instance.Set<ParamPromoteAuto>(_promoteAutoEnabled);
+                    RaisePropertyChanged(nameof(PromoteAutoEnabled));
+                }
+            }
+        }
+
 
         /// <summary>
         /// Game record current value
@@ -1666,7 +1685,7 @@ namespace KaruahChess.ViewModel
                 
                 // Ask user what pawn promotion piece they wish to use, if a promoting pawn move
                 int promotionPiece = (int)PawnPromotionEnum.Queen; // default
-                if (GameRecordDataService.instance.CurrentGame.IsPawnPromotion(_move.FromIndex, _move.ToIndex))
+                if ((!PromoteAutoEnabled) && GameRecordDataService.instance.CurrentGame.IsPawnPromotion(_move.FromIndex, _move.ToIndex))
                 {
                     _pawnPromotionDialogOpen = true;
                     var promotionDialog = new PawnPromotionDialog();

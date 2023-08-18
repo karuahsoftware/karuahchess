@@ -1,6 +1,6 @@
 ﻿/*
 Karuah Chess is a chess playing program
-Copyright (C) 2020 Karuah Software
+Copyright (C) 2020-2023 Karuah Software
 
 Karuah Chess is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -60,7 +60,7 @@ namespace winrt::KaruahChessEngine::implementation
 	/// </summary>	
 	IAsyncAction KaruahChessEngineClass::LoadNNUE()
 	{
-		const char* nnueFileName = "nn-ad9b42354671.nnue";
+		const char* nnueFileName = "nn-5af11540bbfe.nnue";
 		if (Stockfish::Eval::currentEvalFileName != nnueFileName) {
 			string nnueFilePath = "ms-appx:///Media/" + std::string(nnueFileName);
 			Foundation::Uri nnUri(winrt::to_hstring(nnueFilePath));
@@ -235,7 +235,14 @@ namespace winrt::KaruahChessEngine::implementation
 	/// Set state active colour
 	/// </summary>
 	void KaruahChessEngineClass::SetStateActiveColour(const int32_t pColour) {
-		MainBoard.StateActiveColour = pColour;
+		if (pColour != MainBoard.StateActiveColour) {
+			// Clear the enpassant if changing the colour
+			MainBoard.StateEnpassantIndex = -1;
+
+			// Change colour
+			MainBoard.StateActiveColour = pColour;
+		}
+		
 	}
 
 	/// <summary>
@@ -339,9 +346,14 @@ namespace winrt::KaruahChessEngine::implementation
 	/// Arrange a piece. Used for editing the board.
 	/// </summary>		
 	MoveResult KaruahChessEngineClass::Arrange(const int32_t pFromIndex, const int32_t pToIndex)
-	{		
+	{				
 		bool success = MoveRules::Arrange(pFromIndex, pToIndex, MainBoard);	
 		
+		if (success) {
+			// Clear EnPassant
+			MainBoard.StateEnpassantIndex = -1; 
+		}
+
 		MoveResult mResult;
 		mResult.success = success;
 		mResult.returnMessage = to_hstring(MainBoard.ReturnMessage);
@@ -357,6 +369,11 @@ namespace winrt::KaruahChessEngine::implementation
 	MoveResult KaruahChessEngineClass::ArrangeUpdate(const char16_t pFen, const int32_t pToIndex)
 	{
 		bool success = MoveRules::ArrangeUpdate((char)pFen, pToIndex, MainBoard);
+
+		if (success) {
+			// Clear EnPassant
+			MainBoard.StateEnpassantIndex = -1;
+		}
 
 		MoveResult mResult;
 		mResult.success = success;

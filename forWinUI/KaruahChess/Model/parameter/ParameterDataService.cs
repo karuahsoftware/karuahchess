@@ -1,6 +1,6 @@
 ﻿/*
 Karuah Chess is a chess playing program
-Copyright (C) 2020 Karuah Software
+Copyright (C) 2020-2023 Karuah Software
 
 Karuah Chess is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -155,7 +155,11 @@ namespace KaruahChess.Model
                 else if (param.Name == typeof(ParamMoveSpeed).Name)
                 {
                     _parameters.Add(param.Name, param.Value.Deserialize<ParamMoveSpeed>());
-                }                
+                }
+                else if (param.Name == typeof(ParamPromoteAuto).Name)
+                {
+                    _parameters.Add(param.Name, param.Value.Deserialize<ParamPromoteAuto>());
+                }
             }
 
 

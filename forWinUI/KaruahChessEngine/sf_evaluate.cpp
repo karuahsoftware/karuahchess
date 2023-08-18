@@ -1,6 +1,6 @@
 /*
   Stockfish, a UCI chess playing engine derived from Glaurung 2.1
-  Copyright (C) 2004-2022 The Stockfish developers (see AUTHORS file)
+  Copyright (C) 2004-2023 The Stockfish developers (see AUTHORS file)
 
   Stockfish is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -25,7 +25,6 @@
 #include <streambuf>
 #include <vector>
 
-
 #include "sf_bitboard.h"
 #include "sf_evaluate.h"
 #include "sf_material.h"
@@ -34,6 +33,7 @@
 #include "sf_thread.h"
 #include "sf_timeman.h"
 #include "sf_uci.h"
+#include "nnue/evaluate_nnue.h"
 
 #include "engine.h"
 #include "helper.h"
@@ -47,21 +47,21 @@ namespace Eval {
   bool useNNUE;
   string currentEvalFileName = "None";
 
-  
   /// Karuah Chess patch for loading NNUE file.
   void NNUE::init() {
-    
+
     useNNUE = Options["Use NNUE"];
     if (!useNNUE)
         return;
-        
+
     string eval_file = Engine::nnueFileName;
+
+    
 
     if (currentEvalFileName != eval_file)
     {
         Engine::membuf nnueMemoryBuffer(Engine::nnueFileBuffer, Engine::nnueFileBuffer + Engine::nnueFileBufferSize);
         std::istream nnueStream(&nnueMemoryBuffer);
-
         if (load_eval(eval_file, nnueStream)) {
             currentEvalFileName = eval_file;
         }
@@ -69,22 +69,20 @@ namespace Eval {
             Engine::engineErr.add(helper::NNUE_ERROR);
         }
     }
-            
+
   }
 
   /// Karuah Chess patch
   /// NNUE::verify() verifies that the last net used was loaded successfully
   void NNUE::verify() {
-          
-    if (useNNUE && (Engine::engineErr.exists(helper::NNUE_ERROR) ||
-                    Engine::engineErr.exists(helper::NNUE_FILE_OPEN_ERROR) ||
-                    Engine::engineErr.exists(helper::NNUE_MEMORY_ALLOCATION_ERROR) ))
-    {
-        // This should never happen
-        throw runtime_error("NNUE file is not loaded.");
-    }
 
-    
+      if (useNNUE && (Engine::engineErr.exists(helper::NNUE_ERROR) ||
+          Engine::engineErr.exists(helper::NNUE_FILE_OPEN_ERROR) ||
+          Engine::engineErr.exists(helper::NNUE_MEMORY_ALLOCATION_ERROR)))
+      {
+          // This should never happen
+          throw runtime_error("NNUE file is not loaded.");
+      }
   }
 }
 
@@ -98,24 +96,24 @@ namespace Trace {
 
   Score scores[TERM_NB][COLOR_NB];
 
-  double to_cp(Value v) { return double(v) / UCI::NormalizeToPawnValue; }
+  static double to_cp(Value v) { return double(v) / UCI::NormalizeToPawnValue; }
 
-  void add(int idx, Color c, Score s) {
+  static void add(int idx, Color c, Score s) {
     scores[idx][c] = s;
   }
 
-  void add(int idx, Score w, Score b = SCORE_ZERO) {
+  static void add(int idx, Score w, Score b = SCORE_ZERO) {
     scores[idx][WHITE] = w;
     scores[idx][BLACK] = b;
   }
 
-  std::ostream& operator<<(std::ostream& os, Score s) {
+  static std::ostream& operator<<(std::ostream& os, Score s) {
     os << std::setw(5) << to_cp(mg_value(s)) << " "
        << std::setw(5) << to_cp(eg_value(s));
     return os;
   }
 
-  std::ostream& operator<<(std::ostream& os, Term t) {
+  static std::ostream& operator<<(std::ostream& os, Term t) {
 
     if (t == MATERIAL || t == IMBALANCE || t == WINNABLE || t == TOTAL)
         os << " ----  ----"    << " | " << " ----  ----";
@@ -132,8 +130,8 @@ using namespace Trace;
 namespace {
 
   // Threshold for lazy and space evaluation
-  constexpr Value LazyThreshold1    =  Value(3631);
-  constexpr Value LazyThreshold2    =  Value(2084);
+  constexpr Value LazyThreshold1    =  Value(3622);
+  constexpr Value LazyThreshold2    =  Value(1962);
   constexpr Value SpaceThreshold    =  Value(11551);
 
   // KingAttackWeights[PieceType] contains king attack weights by piece type
@@ -327,10 +325,10 @@ namespace {
   template<Tracing T> template<Color Us, PieceType Pt>
   Score Evaluation<T>::pieces() {
 
-    constexpr Color     Them = ~Us;
-    constexpr Direction Down = -pawn_push(Us);
-    constexpr Bitboard OutpostRanks = (Us == WHITE ? Rank4BB | Rank5BB | Rank6BB
-                                                   : Rank5BB | Rank4BB | Rank3BB);
+    constexpr Color Them = ~Us;
+    [[maybe_unused]] constexpr Direction Down = -pawn_push(Us);
+    [[maybe_unused]] constexpr Bitboard OutpostRanks = (Us == WHITE ? Rank4BB | Rank5BB | Rank6BB
+                                                                    : Rank5BB | Rank4BB | Rank3BB);
     Bitboard b1 = pos.pieces(Us, Pt);
     Bitboard b, bb;
     Score score = SCORE_ZERO;
@@ -369,7 +367,7 @@ namespace {
         int mob = popcount(b & mobilityArea[Us]);
         mobility[Us] += MobilityBonus[Pt - 2][mob];
 
-        if (Pt == BISHOP || Pt == KNIGHT)
+        if constexpr (Pt == BISHOP || Pt == KNIGHT)
         {
             // Bonus if the piece is on an outpost square or can reach one
             // Bonus for knights (UncontestedOutpost) if few relevant targets
@@ -987,51 +985,40 @@ make_v:
 /// evaluate() is the evaluator for the outer world. It returns a static
 /// evaluation of the position from the point of view of the side to move.
 
-Value Eval::evaluate(const Position& pos, int* complexity) {
+Value Eval::evaluate(const Position& pos) {
+
+  assert(!pos.checkers());
 
   Value v;
   Value psq = pos.psq_eg_stm();
 
   // We use the much less accurate but faster Classical eval when the NNUE
   // option is set to false. Otherwise we use the NNUE eval unless the
-  // PSQ advantage is decisive and several pieces remain. (~3 Elo)
-  bool useClassical = !useNNUE || (pos.count<ALL_PIECES>() > 7 && abs(psq) > 1760);
+  // PSQ advantage is decisive. (~4 Elo at STC, 1 Elo at LTC)
+  bool useClassical = !useNNUE || abs(psq) > 2048;
 
   if (useClassical)
       v = Evaluation<NO_TRACE>(pos).value();
   else
   {
       int nnueComplexity;
-      int scale = 1064 + 106 * pos.non_pawn_material() / 5120;
+      int npm = pos.non_pawn_material() / 64;
 
       Color stm = pos.side_to_move();
       Value optimism = pos.this_thread()->optimism[stm];
 
       Value nnue = NNUE::evaluate(pos, true, &nnueComplexity);
 
-      // Blend nnue complexity with (semi)classical complexity
-      nnueComplexity = (  416 * nnueComplexity
-                        + 424 * abs(psq - nnue)
-                        + (optimism  > 0 ? int(optimism) * int(psq - nnue) : 0)
-                        ) / 1024;
-
-      // Return hybrid NNUE complexity to caller
-      if (complexity)
-          *complexity = nnueComplexity;
-
-      optimism = optimism * (269 + nnueComplexity) / 256;
-      v = (nnue * scale + optimism * (scale - 754)) / 1024;
+      // Blend optimism with nnue complexity and (semi)classical complexity
+      optimism += optimism * (nnueComplexity + abs(psq - nnue)) / 512;
+      v = (nnue * (945 + npm) + optimism * (150 + npm)) / 1024;
   }
 
   // Damp down the evaluation linearly when shuffling
-  v = v * (195 - pos.rule50_count()) / 211;
+  v = v * (200 - pos.rule50_count()) / 214;
 
   // Guarantee evaluation does not hit the tablebase range
   v = std::clamp(v, VALUE_TB_LOSS_IN_MAX_PLY + 1, VALUE_TB_WIN_IN_MAX_PLY - 1);
-
-  // When not using NNUE, return classical complexity to caller
-  if (complexity && (!useNNUE || useClassical))
-      *complexity = abs(v - psq);
 
   return v;
 }

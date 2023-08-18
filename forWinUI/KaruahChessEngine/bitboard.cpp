@@ -1,6 +1,6 @@
 /*
 Karuah Chess is a chess playing program
-Copyright (C) 2020 Karuah Software
+Copyright (C) 2020-2023 Karuah Software
 
 Karuah Chess is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -125,7 +125,7 @@ void BitBoard::CalculateAttackPaths()
 			_nonAttackPawnPath[sqIndex] = PiecePattern::PawnMove<WHITEPIECE>(sqIndex, blockers);
 			_potentialAttackPawnPath[sqIndex] = PiecePattern::PawnPotentialAttack<WHITEPIECE>(sqIndex);
 			_attackPath[sqIndex] = PiecePattern::PawnAttack<WHITEPIECE>(sqIndex, blockers);
-			_attackPath[sqIndex] |= PiecePattern::PawnEnpassant<WHITEPIECE>(sqIndex, StateEnpassantIndex);
+			_attackPath[sqIndex] |= PiecePattern::PawnEnpassant<WHITEPIECE>(sqIndex, StateEnpassantIndex, _positionWhitePawn, _positionBlackPawn);
 			_whiteAttack |= _attackPath[sqIndex];
 			_whitePotentialAttackPawn |= _potentialAttackPawnPath[sqIndex];
 		}
@@ -166,7 +166,7 @@ void BitBoard::CalculateAttackPaths()
 			_nonAttackPawnPath[sqIndex] = PiecePattern::PawnMove<BLACKPIECE>(sqIndex, blockers);
 			_potentialAttackPawnPath[sqIndex] = PiecePattern::PawnPotentialAttack<BLACKPIECE>(sqIndex);
 			_attackPath[sqIndex] = PiecePattern::PawnAttack<BLACKPIECE>(sqIndex, blockers);
-			_attackPath[sqIndex] |= PiecePattern::PawnEnpassant<BLACKPIECE>(sqIndex, StateEnpassantIndex);
+			_attackPath[sqIndex] |= PiecePattern::PawnEnpassant<BLACKPIECE>(sqIndex, StateEnpassantIndex, _positionWhitePawn, _positionBlackPawn);
 			_blackAttack |= _attackPath[sqIndex];
 			_blackPotentialAttackPawn |= _potentialAttackPawnPath[sqIndex];
 		}

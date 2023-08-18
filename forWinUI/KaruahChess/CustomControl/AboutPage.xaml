@@ -73,7 +73,7 @@
                         </StackPanel>
 
                         <TextBlock  TextWrapping="WrapWholeWords" Margin="0,0,0,10">
-                            Karuah Chess uses StockFish 15.1 with neural network version nn-ad9b42354671.nnue.                            
+                            Karuah Chess uses StockFish 16 with neural network version nn-5af11540bbfe.nnue.                            
                         </TextBlock>
 
                         <TextBlock  TextWrapping="WrapWholeWords" Margin="0,0,0,10">

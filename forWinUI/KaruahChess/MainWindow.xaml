@@ -57,7 +57,7 @@
                     </AppBarButton.KeyboardAccelerators>
                 </AppBarButton>
                 <AppBarButton Icon="Flag" Label="Resign" Click="BoardVM.btnResign_Click" IsEnabled="{x:Bind common:helper.NotBool(BoardVM.LockPanel), Mode=OneWay}"/>
-                <AppBarButton Icon="Setting" Label="Engine Settings" Click="BoardVM.btnEngineSettings_Click" />
+                <AppBarButton Icon="Setting" Label="Engine" Click="BoardVM.btnEngineSettings_Click" />
                 <AppBarSeparator/>
                 <AppBarToggleButton Icon="Clock" Label="Clock" IsChecked="{x:Bind BoardVM.ClockEnabled, Mode=TwoWay}" />
                 <AppBarToggleButton Icon="Globe" Label="Coordinates" IsChecked="{x:Bind BoardVM.BoardCoordEnabled, Mode=TwoWay}" />

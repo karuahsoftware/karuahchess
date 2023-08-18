@@ -74,6 +74,7 @@
     <ClInclude Include="nnue\nnue_architecture.h" />
     <ClInclude Include="nnue\nnue_common.h" />
     <ClInclude Include="nnue\nnue_feature_transformer.h" />
+    <ClInclude Include="nnue\layers\affine_transform_sparse_input.h" />
   </ItemGroup>
   <ItemGroup>
     <Midl Include="KaruahChessEngineClass.idl" />
@@ -82,5 +83,8 @@
     <None Include="KaruahChessEngine.def" />
     <None Include="PropertySheet.props" />
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Natvis Include="$(MSBuildThisFileDirectory)..\..\natvis\wil.natvis" />
   </ItemGroup>
 </Project>
