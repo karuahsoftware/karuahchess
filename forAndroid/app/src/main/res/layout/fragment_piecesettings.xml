@@ -77,13 +77,24 @@
             app:labelBehavior="floating"
             />
 
+        <CheckBox android:id="@+id/promoteAutoCheckBox"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Promote Pawn automatically"
+            style="@style/TextAppearance.MaterialComponents.Body1"
+            app:layout_constraintTop_toBottomOf="@id/moveSpeedSlider"
+            app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginTop="0dp"
+            android:layout_marginBottom="0dp"
+            />
+
 
         <androidx.constraintlayout.widget.Barrier
             android:id="@+id/bottomBarrier"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:barrierDirection="bottom"
-            app:constraint_referenced_ids="moveSpeedSlider"
+            app:constraint_referenced_ids="promoteAutoCheckBox"
             />
 
         <Button

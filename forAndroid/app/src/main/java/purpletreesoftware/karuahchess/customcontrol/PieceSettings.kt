@@ -1,6 +1,6 @@
 /*
 Karuah Chess is a chess playing program
-Copyright (C) 2020 Karuah Software
+Copyright (C) 2020-2023 Karuah Software
 
 Karuah Chess is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -28,7 +28,9 @@ import android.view.Window
 import androidx.fragment.app.DialogFragment
 import purpletreesoftware.karuahchess.databinding.FragmentPiecesettingsBinding
 import purpletreesoftware.karuahchess.model.parameter.ParameterDataService
+import purpletreesoftware.karuahchess.model.parameterobj.ParamComputerMoveFirst
 import purpletreesoftware.karuahchess.model.parameterobj.ParamMoveSpeed
+import purpletreesoftware.karuahchess.model.parameterobj.ParamPromoteAuto
 
 class PieceSettings(pActivityID: Int) : DialogFragment() {
 
@@ -71,11 +73,13 @@ class PieceSettings(pActivityID: Int) : DialogFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        // Set move speed slider
+        // Set initial values
         val moveSpeed = ParameterDataService.getInstance(activityID).get(ParamMoveSpeed::class.java).speed.toFloat()
         if (moveSpeed in binding.moveSpeedSlider.valueFrom .. binding.moveSpeedSlider.valueTo) {
             binding.moveSpeedSlider.value = moveSpeed
         }
+
+        binding.promoteAutoCheckBox.isChecked = ParameterDataService.getInstance(activityID).get(ParamPromoteAuto::class.java).enabled
 
 
         // Done button listener
@@ -99,6 +103,12 @@ class PieceSettings(pActivityID: Int) : DialogFragment() {
         if (moveSpeed.speed != binding.moveSpeedSlider.value.toInt()) {
             moveSpeed.speed = binding.moveSpeedSlider.value.toInt()
             ParameterDataService.getInstance(activityID).set(moveSpeed)
+        }
+
+        val promoteAuto = ParameterDataService.getInstance(activityID).get(ParamPromoteAuto::class.java)
+        if (promoteAuto.enabled != binding.promoteAutoCheckBox.isChecked) {
+            promoteAuto.enabled = binding.promoteAutoCheckBox.isChecked
+            ParameterDataService.getInstance(activityID).set(promoteAuto)
         }
 
     }

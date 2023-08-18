@@ -1,6 +1,6 @@
 /*
 Karuah Chess is a chess playing program
-Copyright (C) 2020 Karuah Software
+Copyright (C) 2020-2023 Karuah Software
 
 Karuah Chess is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -108,6 +108,7 @@ import purpletreesoftware.karuahchess.model.parameterobj.ParamRandomiseFirstMove
 import purpletreesoftware.karuahchess.model.parameterobj.ParamRotateBoard
 import purpletreesoftware.karuahchess.model.parameterobj.ParamSoundEffect
 import purpletreesoftware.karuahchess.model.parameterobj.ParamSoundRead
+import purpletreesoftware.karuahchess.model.parameterobj.ParamPromoteAuto
 import purpletreesoftware.karuahchess.rules.BoardAnimation
 import purpletreesoftware.karuahchess.rules.Move
 import purpletreesoftware.karuahchess.rules.Move.HighlightEnum
@@ -671,7 +672,9 @@ open class MainActivity(pActivityID: Int) : AppCompatActivity(), TilePanel.OnTil
 
             // Ask user what pawn promotion piece they wish to use, if a promoting pawn move
             var promotionPiece: Int = PawnPromotionEnum.Queen.value // default
-            if (GameRecordDataService.getInstance(activityID).currentGame.isPawnPromotion(pieceMove?.fromIndex ?: -1, pieceMove?.toIndex ?: -1)) {
+            val isPawnPromotion: Boolean = GameRecordDataService.getInstance(activityID).currentGame.isPawnPromotion(pieceMove?.fromIndex ?: -1, pieceMove?.toIndex ?: -1)
+            val promoteAutoEnabled: Boolean = ParameterDataService.getInstance(activityID).get(ParamPromoteAuto::class.java).enabled
+            if ((!promoteAutoEnabled) && isPawnPromotion) {
                 promotionPiece = showPawnPromotionDialog(GameRecordDataService.getInstance(activityID).currentGame.getStateActiveColour())
             }
 
@@ -2002,6 +2005,7 @@ open class MainActivity(pActivityID: Int) : AppCompatActivity(), TilePanel.OnTil
 
         }
     }
+
 
     /**
      * Show or hide the hints feature

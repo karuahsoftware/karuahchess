@@ -1,6 +1,6 @@
 /*
 Karuah Chess is a chess playing program
-Copyright (C) 2020 Karuah Software
+Copyright (C) 2020-2023 Karuah Software
 
 Karuah Chess is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -47,7 +47,7 @@ Java_purpletreesoftware_karuahchess_engine_KaruahChessEngineC_initialise (
     Engine::init();
 
     // Initialise with the NNUE file. Only do this if the file has not been previously loaded, or the name has changed.
-    const char *nnueFileName = "nn-ad9b42354671.nnue";
+    const char *nnueFileName = "nn-5af11540bbfe.nnue";
     if (Stockfish::Eval::currentEvalFileName != nnueFileName) {
 
         AAssetManager *mgr = AAssetManager_fromJava(pEnv, pAssetMgr);
@@ -677,6 +677,9 @@ Java_purpletreesoftware_karuahchess_engine_KaruahChessEngineC_arrange (
 
         if (success) {
             pEnv->SetBooleanField(mResultObj, successFieldID, JNI_TRUE);
+
+            // Clear EnPassant
+            boardItr->second->StateEnpassantIndex = -1;
         } else {
             pEnv->SetBooleanField(mResultObj, successFieldID, JNI_FALSE);
         }
@@ -717,6 +720,9 @@ Java_purpletreesoftware_karuahchess_engine_KaruahChessEngineC_arrangeUpdate (
 
         if (success) {
             pEnv->SetBooleanField(mResultObj, successFieldID, JNI_TRUE);
+
+            // Clear EnPassant
+            boardItr->second->StateEnpassantIndex = -1;
         } else {
             pEnv->SetBooleanField(mResultObj, successFieldID, JNI_FALSE);
         }

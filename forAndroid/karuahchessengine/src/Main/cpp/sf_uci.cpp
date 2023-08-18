@@ -1,6 +1,6 @@
 /*
   Stockfish, a UCI chess playing engine derived from Glaurung 2.1
-  Copyright (C) 2004-2022 The Stockfish developers (see AUTHORS file)
+  Copyright (C) 2004-2023 The Stockfish developers (see AUTHORS file)
 
   Stockfish is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -22,6 +22,7 @@
 #include <sstream>
 #include <string>
 
+
 #include "sf_evaluate.h"
 #include "sf_movegen.h"
 #include "sf_position.h"
@@ -31,12 +32,11 @@
 #include "sf_tt.h"
 #include "sf_uci.h"
 
+#include "nnue/evaluate_nnue.h"
 
 using namespace std;
 
 namespace Stockfish {
-
-extern vector<string> setup_bench(const Position&, istream&);
 
 namespace {
 
@@ -88,7 +88,6 @@ namespace {
     p.set(pos.fen(), Options["UCI_Chess960"], &states->back(), Threads.main());
 
     Eval::NNUE::verify();
-
     
   }
 
@@ -111,8 +110,7 @@ namespace {
         value += (value.empty() ? "" : " ") + token;
 
     if (Options.count(name))
-        Options[name] = value;
-    
+        Options[name] = value;    
   }
 
 
@@ -149,7 +147,6 @@ namespace {
     Threads.start_thinking(pos, states, limits, ponderMode);
   }
 
-    
   // The win rate model returns the probability of winning (in per mille units) given an
   // eval and a game ply. It fits the LTC fishtest statistics rather accurately.
   int win_rate_model(Value v, int ply) {
@@ -160,8 +157,8 @@ namespace {
      // The coefficients of a third-order polynomial fit is based on the fishtest data
      // for two parameters that need to transform eval to the argument of a logistic
      // function.
-     constexpr double as[] = {  -0.58270499,    2.68512549,   15.24638015,  344.49745382};
-     constexpr double bs[] = {  -2.65734562,   15.96509799,  -20.69040836,   73.61029937 };
+     constexpr double as[] = {   0.38036525,   -2.82015070,   23.17882135,  307.36768407};
+     constexpr double bs[] = {  -2.29434733,   13.27689788,  -14.26828904,   63.45318330 };
 
      // Enforce that NormalizeToPawnValue corresponds to a 50% win rate at ply 64
      static_assert(UCI::NormalizeToPawnValue == int(as[0] + as[1] + as[2] + as[3]));
@@ -215,15 +212,11 @@ void UCI::loop(int argc, char* argv[]) {
       // to the normal search.
       else if (token == "ponderhit")
           Threads.main()->ponder = false; // Switch to the normal search
-           
-
+      
       else if (token == "setoption")  setoption(is);
       else if (token == "go")         go(pos, is, states);
       else if (token == "position")   position(pos, is, states);
-      else if (token == "ucinewgame") Search::clear();
-      
-
-      
+      else if (token == "ucinewgame") Search::clear();                 
 
   } while (token != "quit" && argc == 1); // The command-line arguments are one-shot
 }
@@ -241,8 +234,13 @@ string UCI::value(Value v) {
 
   stringstream ss;
 
-  if (abs(v) < VALUE_MATE_IN_MAX_PLY)
+  if (abs(v) < VALUE_TB_WIN_IN_MAX_PLY)
       ss << "cp " << v * 100 / NormalizeToPawnValue;
+  else if (abs(v) < VALUE_MATE_IN_MAX_PLY)
+  {
+      const int ply = VALUE_MATE_IN_MAX_PLY - 1 - std::abs(v);  // recompute ss->ply
+      ss << "cp " << (v > 0 ? 20000 - ply : -20000 + ply);
+  }
   else
       ss << "mate " << (v > 0 ? VALUE_MATE - v + 1 : -VALUE_MATE - v) / 2;
 
@@ -280,14 +278,14 @@ std::string UCI::square(Square s) {
 
 string UCI::move(Move m, bool chess960) {
 
-  Square from = from_sq(m);
-  Square to = to_sq(m);
-
   if (m == MOVE_NONE)
       return "(none)";
 
   if (m == MOVE_NULL)
       return "0000";
+
+  Square from = from_sq(m);
+  Square to = to_sq(m);
 
   if (type_of(m) == CASTLING && !chess960)
       to = make_square(to > from ? FILE_G : FILE_C, rank_of(from));
