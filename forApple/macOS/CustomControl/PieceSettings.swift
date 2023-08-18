@@ -1,6 +1,6 @@
 /*
 Karuah Chess is a chess playing program
-Copyright (C) 2020 Karuah Software
+Copyright (C) 2020-2023 Karuah Software
 
 Karuah Chess is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -38,6 +38,11 @@ struct PieceSettings: View {
                         Text("Move Speed \(Int($pieceSettingsVM.moveSpeed.wrappedValue))")
                             .font(.body)
                     }
+                    
+                    Toggle(isOn: $pieceSettingsVM.promoteAuto) {
+                        Text("Promote Pawn automatically")
+                            .font(.body)
+                    }.padding(.top)
                     
                     Spacer().frame(maxWidth: .infinity)
                  

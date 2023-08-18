@@ -1,6 +1,6 @@
 /*
 Karuah Chess is a chess playing program
-Copyright (C) 2020 Karuah Software
+Copyright (C) 2020-2023 Karuah Software
 
 Karuah Chess is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -21,7 +21,7 @@ import SwiftUI
 struct AboutView: View {
     @Binding var showMenu: Bool
     private let infoText = "Karuah Chess is a chess playing program.\nCopyright © 2020 Karuah Software\n\nFind Karuah Chess on;"
-    private let otherInfoA = "Karuah Chess uses StockFish 15. You can find out more about StockFish at;"
+    private let otherInfoA = "Karuah Chess uses StockFish 16 with neural network version nn-5af11540bbfe. You can find out more about StockFish at;"
     private let otherInfoLinkA = Link("https://stockfishchess.org", destination: URL(string: "https://stockfishchess.org")!)
     private let otherInfoB = "The full source code for Karuah Chess is available at;"
     private let otherInfoLinkB = Link("https://github.com/karuahsoftware/karuahchess", destination: URL(string: "https://github.com/karuahsoftware/karuahchess")!)

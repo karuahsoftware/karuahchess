@@ -1,6 +1,6 @@
 /*
 Karuah Chess is a chess playing program
-Copyright (C) 2020 Karuah Software
+Copyright (C) 2020-2023 Karuah Software
 
 Karuah Chess is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -113,6 +113,10 @@ class ParameterDataService : ParameterDataServiceProtocol {
                             if let obj = try? JSONDecoder().decode(ParamNavigator.self, from: data) {
                                 parameters[name] = obj
                             }
+                        case String(describing: ParamPromoteAuto.self):
+                            if let obj = try? JSONDecoder().decode(ParamPromoteAuto.self, from: data) {
+                                parameters[name] = obj
+                            }
                         case String(describing: ParamRandomiseFirstMove.self):
                             if let obj = try? JSONDecoder().decode(ParamRandomiseFirstMove.self, from: data) {
                                 parameters[name] = obj
@@ -121,10 +125,10 @@ class ParameterDataService : ParameterDataServiceProtocol {
                             if let obj = try? JSONDecoder().decode(ParamRotateBoard.self, from: data) {
                                 parameters[name] = obj
                             }
-                    case String(describing: ParamSoundEffect.self):
-                        if let obj = try? JSONDecoder().decode(ParamSoundEffect.self, from: data) {
-                            parameters[name] = obj
-                        }
+                        case String(describing: ParamSoundEffect.self):
+                            if let obj = try? JSONDecoder().decode(ParamSoundEffect.self, from: data) {
+                                parameters[name] = obj
+                            }
                         case String(describing: ParamSoundRead.self):
                             if let obj = try? JSONDecoder().decode(ParamSoundRead.self, from: data) {
                                 parameters[name] = obj

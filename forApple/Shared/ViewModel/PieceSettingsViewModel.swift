@@ -1,6 +1,6 @@
 /*
 Karuah Chess is a chess playing program
-Copyright (C) 2020 Karuah Software
+Copyright (C) 2020-2023 Karuah Software
 
 Karuah Chess is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -26,6 +26,14 @@ import SwiftUI
             let parameter = ParamMoveSpeed()
             parameter.speed = Int(moveSpeed)
             _ = ParameterDataService.instance.set(pObj: parameter)
+        }
+    }
+    
+    @Published var promoteAuto: Bool = ParameterDataService.instance.get(pParameterClass: ParamPromoteAuto.self).enabled {
+        didSet {
+        let parameter = ParamPromoteAuto()
+        parameter.enabled = promoteAuto
+        _ = ParameterDataService.instance.set(pObj: parameter)
         }
     }
     

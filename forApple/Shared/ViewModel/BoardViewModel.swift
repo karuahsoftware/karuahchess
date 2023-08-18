@@ -1,6 +1,6 @@
 /*
 Karuah Chess is a chess playing program
-Copyright (C) 2020 Karuah Software
+Copyright (C) 2020-2023 Karuah Software
 
 Karuah Chess is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -262,7 +262,9 @@ import AVFoundation
             
             // Ask user what pawn promotion piece they wish to use, if a promoting pawn move
             var promotionPiece: Int = PawnPromotionEnum.Queen.rawValue
-            if GameRecordDataService.instance.currentGame.isPawnPromotion(Int32(move.fromIndex), Int32(move.toIndex)) {
+            let promoteAutoEnabled: Bool = ParameterDataService.instance.get(pParameterClass: ParamPromoteAuto.self).enabled
+            let isPawnPromotion: Bool = GameRecordDataService.instance.currentGame.isPawnPromotion(Int32(move.fromIndex), Int32(move.toIndex))
+            if (!promoteAutoEnabled) && isPawnPromotion {
                 promotionPiece = await pawnPromotionVM.show(pColour: Int(GameRecordDataService.instance.currentGame.getStateActiveColour()))
                 if promotionPiece == 0 { return };
             }

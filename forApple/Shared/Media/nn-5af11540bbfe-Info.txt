@@ -1,0 +1,9 @@
+Title: nn-5af11540bbfe.nnue
+Description: The file nn-5af11540bbfe.nnue is a trained neural network file.
+Source: https://tests.stockfishchess.org/nns
+Description: The file nn-5af11540bbfe.nnue is distributed under a CC0 license (https://creativecommons.org/share-your-work/public-domain/cc0/).
+
+
+
+
+ 

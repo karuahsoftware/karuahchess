@@ -1,6 +1,6 @@
 /*
 Karuah Chess is a chess playing program
-Copyright (C) 2020 Karuah Software
+Copyright (C) 2020-2023 Karuah Software
 
 Karuah Chess is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -26,7 +26,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 		// Functions
 		extern uint64_t Pattern(helper::PatternEnum pPattern, int pSqIndex, uint64_t pBlockers);
 		extern uint64_t PatternXRay(helper::PatternEnum pPattern, int pSqIndex, uint64_t pBlockers);
-		template<int Colour> extern uint64_t PawnEnpassant(const int pIndex, const int pEnpassantIndex);		
+		template<int Colour> extern uint64_t PawnEnpassant(const int pIndex, const int pEnpassantIndex, const uint64_t pWhitePawnPos, const uint64_t pBlackPawnPos);		
 		template<int Colour> extern uint64_t PawnPotentialAttack(const int pSqIndex);		
 		template<int Colour> extern uint64_t PawnPotentialAttackBB(const uint64_t p);
 		template<int Colour> extern uint64_t PawnAttack(const int pSqIndex, const uint64_t pBlockers);		

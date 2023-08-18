@@ -1,6 +1,6 @@
 /*
 Karuah Chess is a chess playing program
-Copyright (C) 2020 Karuah Software
+Copyright (C) 2020-2023 Karuah Software
 
 Karuah Chess is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -44,7 +44,7 @@ using namespace helper;
 // Constructor
 - (id) init {
     if (self = [super init]) {
-        const char* nnueFileName = "nn-ad9b42354671";
+        const char* nnueFileName = "nn-5af11540bbfe";
         
         Engine::init();
         
@@ -152,7 +152,13 @@ using namespace helper;
 
 // Set state active colour
 - (void) setStateActiveColour:(const int32_t) pColour {
-    MainBoard.StateActiveColour = pColour;
+    if (pColour != MainBoard.StateActiveColour) {
+        // Clear the enpassant if changing the colour
+        MainBoard.StateEnpassantIndex = -1;
+        
+        // Change colour
+        MainBoard.StateActiveColour = pColour;
+    }
 }
 
 // Get state game status
@@ -225,6 +231,12 @@ using namespace helper;
 // Arrange a piece. Used for editing the board.
 - (NSObject * _Nonnull) arrange:(const int32_t)pFromIndex :(const int32_t)pToIndex {
     bool success = MoveRules::Arrange(pFromIndex, pToIndex, MainBoard);
+    
+    if (success) {
+        // Clear EnPassant
+        MainBoard.StateEnpassantIndex = -1;
+    }
+    
     MoveResult *mResult = [[MoveResult alloc]init];
     mResult.success = success;
     mResult.returnMessage = [NSString stringWithUTF8String:MainBoard.ReturnMessage.c_str()];
@@ -234,6 +246,12 @@ using namespace helper;
 // Updates a piece on the board. Used for editing the board
 - (NSObject * _Nonnull) arrangeUpdate:(const char)pFen :(const int32_t)pToIndex {
     bool success = MoveRules::ArrangeUpdate(pFen, pToIndex, MainBoard);
+    
+    if (success) {
+        // Clear EnPassant
+        MainBoard.StateEnpassantIndex = -1;
+    }
+    
     MoveResult *mResult = [[MoveResult alloc]init];
     mResult.success = success;
     mResult.returnMessage = [NSString stringWithUTF8String:MainBoard.ReturnMessage.c_str()];
