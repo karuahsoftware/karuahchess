@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/mainScroll"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_alignParentTop="true"
+    android:layout_alignParentStart="true"
+    android:padding="15dp"
+    android:fillViewport="true">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <ImageView
+            android:id="@+id/fragmentIcon"
+            android:layout_width="34dp"
+            android:layout_height="34dp"
+            android:src="@drawable/ic_piece"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginTop="0dp"
+            />
+
+        <TextView android:id="@+id/fragmentTitleText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Piece"
+            app:layout_constraintTop_toTopOf="@id/fragmentIcon"
+            app:layout_constraintBottom_toBottomOf="@id/fragmentIcon"
+            app:layout_constraintStart_toEndOf="@id/fragmentIcon"
+            android:layout_marginTop="0dp"
+            style="@style/TextAppearance.MaterialComponents.Headline6"
+            />
+
+        <androidx.constraintlayout.widget.Barrier
+            android:id="@+id/headingBarrier"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:barrierDirection="bottom"
+            app:constraint_referenced_ids="fragmentIcon,fragmentTitleText"
+            />
+
+        <TextView android:id="@+id/moveSpeedTitleText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Move Speed"
+            style="@style/TextAppearance.MaterialComponents.Body1"
+            app:layout_constraintTop_toBottomOf="@id/headingBarrier"
+            app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginTop="20dp"
+            android:layout_marginBottom="0dp"
+            />
+
+        <com.google.android.material.slider.Slider
+            android:id="@+id/moveSpeedSlider"
+            app:layout_constraintWidth_max="180dp"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:valueFrom="0"
+            android:valueTo="6"
+            android:stepSize="1"
+            app:tickVisible="true"
+            app:layout_constraintTop_toBottomOf="@id/moveSpeedTitleText"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintHorizontal_bias="0"
+            app:trackColor="@color/colorSecondary"
+            app:thumbColor="@color/colorSecondary"
+            android:paddingTop="0dp"
+            android:paddingStart="0dp"
+            android:layout_marginTop="0dp"
+            android:layout_marginBottom="0dp"
+            android:layout_marginStart="0dp"
+            app:labelBehavior="floating"
+            />
+
+        <CheckBox android:id="@+id/promoteAutoCheckBox"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Promote Pawn automatically"
+            style="@style/TextAppearance.MaterialComponents.Body1"
+            app:layout_constraintTop_toBottomOf="@id/moveSpeedSlider"
+            app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginTop="0dp"
+            android:layout_marginBottom="0dp"
+            />
+
+
+        <androidx.constraintlayout.widget.Barrier
+            android:id="@+id/bottomBarrier"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:barrierDirection="bottom"
+            app:constraint_referenced_ids="promoteAutoCheckBox"
+            />
+
+        <Button
+            android:id="@+id/doneButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            style="@style/ButtonDialogStyle"
+            android:text="Close"
+            app:layout_constraintTop_toBottomOf="@id/bottomBarrier"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintHorizontal_bias="0"
+            android:layout_marginTop="40dp"
+            />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</ScrollView>
+

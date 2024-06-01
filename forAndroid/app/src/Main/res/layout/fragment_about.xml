@@ -1,0 +1,198 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/mainScroll"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_alignParentTop="true"
+    android:layout_alignParentStart="true"
+    android:padding="15dp"
+    android:fillViewport="true">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+
+        <ImageView
+            android:id="@+id/fragmentIcon"
+            android:layout_width="34dp"
+            android:layout_height="34dp"
+            android:src="@drawable/ic_about"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginTop="0dp"
+            />
+
+        <TextView android:id="@+id/fragmentTitleText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="About Karuah Chess"
+            app:layout_constraintTop_toTopOf="@id/fragmentIcon"
+            app:layout_constraintBottom_toBottomOf="@id/fragmentIcon"
+            app:layout_constraintStart_toEndOf="@id/fragmentIcon"
+            android:layout_marginTop="0dp"
+            style="@style/TextAppearance.MaterialComponents.Headline6"
+            />
+
+        <androidx.constraintlayout.widget.Barrier
+            android:id="@+id/headingBarrier"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:barrierDirection="bottom"
+            app:constraint_referenced_ids="fragmentIcon,fragmentTitleText"
+            />
+
+
+        <TextView android:id="@+id/versionText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="0dp"
+            style="@style/TextAppearance.MaterialComponents.Body1"
+            app:layout_constraintTop_toBottomOf="@id/headingBarrier"
+            app:layout_constraintStart_toStartOf="parent"
+            />
+
+        <TextView android:id="@+id/aboutText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="0dp"
+            android:text="@string/about_info"
+            android:autoLink="web"
+            style="@style/TextAppearance.MaterialComponents.Body1"
+            app:layout_constraintTop_toBottomOf="@id/versionText"
+            app:layout_constraintStart_toStartOf="parent"
+            />
+
+
+        <ImageButton
+            android:id="@+id/socialLogoFButton"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:src="@drawable/social_logo_f"
+            app:layout_constraintTop_toBottomOf="@id/aboutText"
+            app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginTop="0dp"
+            android:scaleType="fitXY"
+            android:adjustViewBounds="true"
+            android:padding="0dp"
+            android:layout_margin="10dp"
+            />
+
+        <ImageButton
+            android:id="@+id/socialLogoTButton"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:src="@drawable/social_logo_t"
+            app:layout_constraintTop_toTopOf="@id/socialLogoFButton"
+            app:layout_constraintBottom_toBottomOf="@id/socialLogoFButton"
+            app:layout_constraintStart_toEndOf="@id/socialLogoFButton"
+            android:layout_marginTop="0dp"
+            android:scaleType="fitXY"
+            android:adjustViewBounds="true"
+            android:padding="0dp"
+            android:layout_margin="10dp"
+
+            />
+
+        <androidx.constraintlayout.widget.Barrier
+            android:id="@+id/socialBarrier"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:barrierDirection="bottom"
+            app:constraint_referenced_ids="socialLogoFButton,socialLogoTButton"
+            />
+
+        <TextView android:id="@+id/otherTextA"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:text="@string/other_infoA"
+            android:autoLink="web"
+            style="@style/TextAppearance.MaterialComponents.Body1"
+            app:layout_constraintTop_toBottomOf="@id/socialBarrier"
+            app:layout_constraintStart_toStartOf="parent"
+            />
+
+         <TextView android:id="@+id/otherTextB"
+             android:layout_width="wrap_content"
+             android:layout_height="wrap_content"
+             android:layout_marginTop="0dp"
+             android:text="@string/other_infoB"
+             android:autoLink="web"
+             style="@style/TextAppearance.MaterialComponents.Body1"
+             app:layout_constraintTop_toBottomOf="@id/otherTextA"
+             app:layout_constraintStart_toStartOf="parent"
+             />
+
+         <TextView android:id="@+id/otherTextC"
+             android:layout_width="wrap_content"
+             android:layout_height="wrap_content"
+             android:layout_marginTop="0dp"
+             android:text="@string/other_infoC"
+             android:autoLink="web"
+             style="@style/TextAppearance.MaterialComponents.Body1"
+             app:layout_constraintTop_toBottomOf="@id/otherTextB"
+             app:layout_constraintStart_toStartOf="parent"
+             />
+
+         <TextView android:id="@+id/licenseTitle"
+             android:layout_width="wrap_content"
+             android:layout_height="wrap_content"
+             android:layout_marginTop="0dp"
+             android:text="@string/license_title"
+             android:autoLink="web"
+             style="@style/TextAppearance.MaterialComponents.Subtitle1"
+             app:layout_constraintTop_toBottomOf="@id/otherTextC"
+             app:layout_constraintStart_toStartOf="parent"
+             />
+
+         <TextView android:id="@+id/licenseAText"
+             android:layout_width="wrap_content"
+             android:layout_height="wrap_content"
+             android:layout_marginTop="0dp"
+             android:text="@string/license_infoA"
+             android:autoLink="web"
+             style="@style/TextAppearance.MaterialComponents.Body1"
+             app:layout_constraintTop_toBottomOf="@id/licenseTitle"
+             app:layout_constraintStart_toStartOf="parent"
+             />
+
+         <TextView android:id="@+id/licenseBText"
+             android:layout_width="wrap_content"
+             android:layout_height="wrap_content"
+             android:layout_marginTop="0dp"
+             android:text="@string/license_infoB"
+             android:autoLink="web"
+             style="@style/TextAppearance.MaterialComponents.Body1"
+             app:layout_constraintTop_toBottomOf="@id/licenseAText"
+             app:layout_constraintStart_toStartOf="parent"
+             />
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="20dp"
+            app:layout_constraintTop_toBottomOf="@id/licenseBText"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            >
+
+            <Button
+                android:id="@+id/doneButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                style="@style/ButtonDialogStyle"
+                android:text="Close"/>
+
+
+        </LinearLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</ScrollView>
+

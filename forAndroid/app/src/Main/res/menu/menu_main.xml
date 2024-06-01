@@ -1,0 +1,144 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+      xmlns:app="http://schemas.android.com/apk/res-auto"
+      xmlns:tools="http://schemas.android.com/tools"
+      tools:context="purpletreesoftware.karuahchess.MainActivity">
+
+        <group android:id="@+id/grp1">
+                <item android:id="@+id/action_newgame"
+                    android:title="New game"
+                    android:checkable="false"
+                    android:orderInCategory="100"
+                    android:icon="@drawable/ic_new"
+                    app:showAsAction="never" />
+                <item android:id="@+id/action_resign"
+                    android:title="Resign"
+                    android:checkable="false"
+                    android:orderInCategory="101"
+                    android:icon="@drawable/ic_resign"
+                    app:showAsAction="never" />
+                <item android:id="@+id/action_enginesettings"
+                    android:title="Engine"
+                    android:checkable="false"
+                    android:orderInCategory="102"
+                    android:icon="@drawable/ic_settings"
+                    app:showAsAction="never" />
+        </group>
+        <group android:id="@+id/grp2">
+                <item android:id="@+id/action_clock"
+                    android:title="Clock"
+                    android:checkable="true"
+                    android:orderInCategory="103"
+                    android:icon="@drawable/ic_alarm"
+                    app:showAsAction="never" />
+                <item android:id="@+id/action_coordinates"
+                    android:title="Coordinates"
+                    android:checkable="true"
+                    android:orderInCategory="104"
+                    android:icon="@drawable/ic_coordinates"
+                    app:showAsAction="never" />
+                <item android:id="@+id/action_highlight"
+                    android:title="Highlight Moves"
+                    android:checkable="true"
+                    android:orderInCategory="105"
+                    android:icon="@drawable/ic_highlight"
+                    app:showAsAction="never" />
+                <item android:id="@+id/action_hint"
+                    android:title="Hint"
+                    android:checkable="true"
+                    android:orderInCategory="106"
+                    android:icon="@drawable/ic_lightbulb"
+                    app:showAsAction="never" />
+                <item android:id="@+id/action_navigator"
+                    android:title="Navigator"
+                    android:checkable="true"
+                    android:orderInCategory="107"
+                    android:icon="@drawable/ic_movenav"
+                    app:showAsAction="never" />
+
+        </group>
+        <group android:id="@+id/grp3">
+                <item android:id="@+id/action_boardsettings"
+                    android:title="Board"
+                    android:checkable="false"
+                    android:orderInCategory="108"
+                    android:icon="@drawable/ic_board"
+                    app:showAsAction="never" />
+
+                <item android:id="@+id/action_piecesettings"
+                    android:title="Piece"
+                    android:checkable="false"
+                    android:orderInCategory="109"
+                    android:icon="@drawable/ic_piece"
+                    app:showAsAction="never" />
+
+                <item android:id="@+id/action_soundsettings"
+                      android:title="Sound"
+                      android:checkable="false"
+                      android:orderInCategory="110"
+                      android:icon="@drawable/ic_sound"
+                      app:showAsAction="never" />
+
+        </group>
+        <group android:id="@+id/grp4">
+                <item android:id="@+id/action_edit"
+                      android:title="Edit"
+                      android:checkable="true"
+                      android:orderInCategory="111"
+                      android:icon="@drawable/ic_edit"
+                      app:showAsAction="never" />
+                <item android:id="@+id/action_undo"
+                      android:title="Undo"
+                      android:checkable="false"
+                      android:orderInCategory="112"
+                    android:icon="@drawable/ic_undo"
+                      app:showAsAction="never" />
+                <item android:id="@+id/action_switchdirection"
+                      android:title="Switch Direction"
+                      android:checkable="false"
+                      android:orderInCategory="113"
+                      android:icon="@drawable/ic_switchdirection"
+                      app:showAsAction="never" />
+                <item android:id="@+id/action_importpgn"
+                      android:title="Import PGN"
+                      android:checkable="false"
+                      android:orderInCategory="114"
+                    android:icon="@drawable/ic_importpgn"
+                      app:showAsAction="never" />
+                <item android:id="@+id/action_load"
+                      android:title="Load Game"
+                      android:checkable="false"
+                      android:orderInCategory="115"
+                    android:icon="@drawable/ic_load"
+                      app:showAsAction="never" />
+                <item android:id="@+id/action_save"
+                      android:title="Save Game"
+                      android:checkable="false"
+                      android:orderInCategory="116"
+                     android:icon="@drawable/ic_save"
+                      app:showAsAction="never" />
+        </group>
+        <group android:id="@+id/grp5">
+                <item android:id="@+id/action_activitySecondWindowOpen"
+                    android:title="2nd Window"
+                    android:checkable="false"
+                    android:orderInCategory="117"
+                    android:icon="@drawable/ic_splitwindow"
+                    app:showAsAction="never" />
+                <item android:id="@+id/action_activitySecondWindowExit"
+                    android:title="Close Window"
+                    android:checkable="false"
+                    android:orderInCategory="118"
+                    android:icon="@drawable/ic_closewindow"
+                    app:showAsAction="never" />
+        </group>
+        <group android:id="@+id/grp6">
+                <item android:id="@+id/action_about"
+                android:title="About"
+                android:checkable="false"
+                android:orderInCategory="119"
+                android:icon="@drawable/ic_about"
+                app:showAsAction="never" />
+        </group>
+
+
+</menu>

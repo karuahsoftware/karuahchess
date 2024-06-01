@@ -1,0 +1,79 @@
+<resources>
+
+    <!-- Base application theme. -->
+    <style name="AppTheme" parent="Theme.MaterialComponents.DayNight">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorSecondary">@color/colorSecondary</item>
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+        <item name="android:navigationBarColor">@android:color/transparent</item>
+
+    </style>
+    <style name="MainToolbar" parent="Widget.MaterialComponents.Toolbar">
+        <item name="materialThemeOverlay">@style/ThemeOverlayMainToolbar</item>
+    </style>
+    <style name="ThemeOverlayMainToolbar" parent="">
+        <item name="colorControlNormal">@color/colorWhite</item>
+    </style>
+    <style name="FullScreenDialogStyle" parent="Theme.MaterialComponents.DayNight.Dialog.Alert">
+    <item name="android:windowNoTitle">true</item>
+    <item name="android:windowFullscreen">false</item>
+    <item name="android:windowIsFloating">true</item>
+    </style>
+    <style name="ButtonCustomStyle" parent="android:Widget">
+        <item name="android:layout_margin">0dp</item>
+        <item name="android:background">@color/colorBurlyWood</item>
+    </style>
+    <style name="ButtonDialogStyle" parent="@style/Widget.MaterialComponents.Button.TextButton">
+        <item name="android:textColor">@color/colorButtonDialogText</item>
+        <item name="backgroundTint">@color/colorButtonDialogTint</item>
+    </style>
+    <style name="ButtonNavigatorCustomStyle" parent="@style/Widget.MaterialComponents.Button.TextButton">
+        <item name="android:backgroundTint">@color/colorButtonDefault</item>
+        <item name="android:textColor">@color/colorButtonDefaultTextFade</item>
+        <item name="cornerRadius">0dp</item>
+        <item name="android:layout_marginTop">1dp</item>
+        <item name="android:layout_marginBottom">0dp</item>
+        <item name="android:layout_marginLeft">0dp</item>
+        <item name="android:layout_marginRight">1dp</item>
+        <item name="android:layout_width">@dimen/navButtonWidth</item>
+        <item name="android:layout_height">@dimen/navButtonWidth</item>
+        <item name="android:insetTop">0dp</item>
+        <item name="android:insetBottom">0dp</item>
+        <item name="android:insetLeft">0dp</item>
+        <item name="android:insetRight">0dp</item>
+        <item name="android:padding">0dp</item>
+
+    </style>
+    <style name="ButtonNavigatorNextStyle">
+        <item name="cornerRadius">0dp</item>
+        <item name="android:layout_marginTop">1dp</item>
+        <item name="android:layout_marginBottom">0dp</item>
+        <item name="android:layout_marginLeft">0dp</item>
+        <item name="android:layout_marginRight">1dp</item>
+        <item name="android:layout_width">@dimen/navButtonNextWidth</item>
+        <item name="android:layout_height">@dimen/navButtonNextWidth</item>
+        <item name="android:insetTop">0dp</item>
+        <item name="android:insetBottom">0dp</item>
+        <item name="android:insetLeft">0dp</item>
+        <item name="android:insetRight">0dp</item>
+        <item name="android:padding">10dp</item>
+    </style>
+    <style name="ButtonClockStyle">
+        <item name="cornerRadius">0dp</item>
+        <item name="android:layout_marginTop">1dp</item>
+        <item name="android:layout_marginBottom">0dp</item>
+        <item name="android:layout_marginLeft">0dp</item>
+        <item name="android:layout_marginRight">1dp</item>
+        <item name="android:layout_width">@dimen/clockButtonWidth</item>
+        <item name="android:layout_height">@dimen/clockButtonWidth</item>
+        <item name="android:insetTop">0dp</item>
+        <item name="android:insetBottom">0dp</item>
+        <item name="android:insetLeft">0dp</item>
+        <item name="android:insetRight">0dp</item>
+        <item name="android:padding">10dp</item>
+    </style>
+
+</resources>

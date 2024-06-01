@@ -1,0 +1,81 @@
+﻿<UserControl
+    x:Class="KaruahChess.CustomControl.TextMessage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"    
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    d:DesignHeight="300"
+    d:DesignWidth="400"  
+    Tapped="UserControl_Tapped"
+    >
+
+    <UserControl.Resources>
+        <ResourceDictionary x:Name="TextMessageStyleDefaultResourceDictionary">
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="ms-appx:///CustomControl/TextMessageStyleDefault.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </UserControl.Resources>
+
+
+    <Grid x:Name="TextMessageGrid"                     
+        Background="{x:Bind StyleTemplate.Background}"
+        BorderBrush="{x:Bind StyleTemplate.BorderBrush}"
+        BorderThickness="{x:Bind StyleTemplate.BorderThickness}"
+        CornerRadius="{x:Bind StyleTemplate.CornerRadius}"
+        MinWidth="{x:Bind StyleTemplate.MinWidth}"
+        MinHeight="{x:Bind StyleTemplate.MinHeight}"
+        MaxWidth="{x:Bind StyleTemplate.MaxWidth}"
+        MaxHeight="{x:Bind StyleTemplate.MaxHeight}"
+        Width="{x:Bind StyleTemplate.Width, Mode=OneWay}"
+        Height="{x:Bind StyleTemplate.Height, Mode=OneWay}"
+        Margin="{x:Bind StyleTemplate.Margin}"
+        Padding="{x:Bind StyleTemplate.Padding}"
+        Opacity="0" 
+       >
+        <Grid.Resources>
+            <Storyboard x:Key="TextMessageGridFadeOutStoryboard">
+                <DoubleAnimation x:Name="FadeOutAnimation" From="1" To="0" Storyboard.TargetProperty="Opacity" Storyboard.TargetName="TextMessageGrid"   Duration="0:0:3" >
+                    <DoubleAnimation.EasingFunction>
+                        <QuinticEase EasingMode="EaseIn" />
+                    </DoubleAnimation.EasingFunction>
+                </DoubleAnimation>
+            </Storyboard>
+
+            <Storyboard x:Key="TextMessageGridFlashStoryboard">
+                <DoubleAnimation From="1" To="0.1" Storyboard.TargetProperty="Opacity" Storyboard.TargetName="TextMessageGrid"   Duration="0:0:3" RepeatBehavior="Forever" AutoReverse="True" >
+                    <DoubleAnimation.EasingFunction>
+                        <QuinticEase EasingMode="EaseInOut" />
+                    </DoubleAnimation.EasingFunction>
+                </DoubleAnimation>
+            </Storyboard>
+
+            <Storyboard x:Key="TextMessageGridFixedStoryboard">
+                <DoubleAnimation From="0" To="1" Storyboard.TargetProperty="Opacity" Storyboard.TargetName="TextMessageGrid"   Duration="0:0:1" >
+                    <DoubleAnimation.EasingFunction>
+                        <QuinticEase EasingMode="EaseInOut" />
+                    </DoubleAnimation.EasingFunction>
+                </DoubleAnimation>
+            </Storyboard>
+            
+        </Grid.Resources>
+
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="*" />           
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />            
+        </Grid.RowDefinitions>
+        <TextBlock Grid.Row="0" Grid.Column="0" x:Name="TextMessageIcon" FontFamily="Segoe MDL2 Assets" FontSize="{x:Bind StyleTemplate.IconFontSize}" Margin="0,0,5,0" />
+        <StackPanel Orientation="Vertical" Grid.Row="0" Grid.Column="1">
+        <TextBlock  x:Name="TextTitleTextBlock" TextWrapping="WrapWholeWords" FontWeight="Bold" Margin="0,5,0,0" />
+        <TextBlock  x:Name="TextMessageTextBlock" TextWrapping="WrapWholeWords" Margin="0,5,0,0" />
+        </StackPanel>
+
+
+    </Grid>
+
+
+</UserControl>

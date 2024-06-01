@@ -1,0 +1,42 @@
+﻿<UserControl
+    x:Class="KaruahChess.CustomControl.MoveNavigator"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:KaruahChess.CustomControl"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    d:DesignHeight="300"
+    d:DesignWidth="400">
+
+    <UserControl.Resources>
+        <ResourceDictionary x:Name="CustomStyleDefaultResourceDictionary">
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="ms-appx:///Common/Styles.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </UserControl.Resources>
+
+    <Grid PointerEntered="NavGrid_PointerEntered" PointerExited="NavGrid_PointerExited">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="Auto" />
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <RepeatButton x:Name="LeftScrollBtn" Grid.Row="0" Grid.Column="0" Content="&#xE76B;" FontFamily="Segoe MDL2 Assets" Style="{StaticResource ButtonNavScrollLeftStyle}"  Click="LeftScrollBtn_Click" Opacity="0.31"/>
+        <ScrollViewer x:Name="navigatorScoll" Padding="0,0,0,0" Grid.Row="0" Grid.Column="1" HorizontalScrollMode="Enabled" HorizontalScrollBarVisibility="Hidden" VerticalScrollMode="Disabled" VerticalScrollBarVisibility="Hidden" >
+        <StackPanel x:Name="navigatorStack" Orientation="Horizontal" />
+        </ScrollViewer>
+        <RepeatButton x:Name="RightScrollBtn" Grid.Row="0" Grid.Column="2" Content="&#xE76C;" FontFamily="Segoe MDL2 Assets" Style="{StaticResource ButtonNavScrollRightStyle}" Click="RightScrollBtn_Click"  Opacity="0.31" />
+        <StackPanel x:Name="navigatorNextStack" Orientation="Horizontal" Grid.Row="0" Grid.Column="3">
+            <Button x:Name="backButton" Style="{StaticResource ButtonNavNextStyle}" Content="&#xE892;" FontFamily="Segoe MDL2 Assets" Click="BackBtn_Click" />
+            <Button x:Name="forwardButton" Style="{StaticResource ButtonNavNextStyle}" Content="&#xE893;" FontFamily="Segoe MDL2 Assets" Click="ForwardBtn_Click"  />
+        </StackPanel>
+    </Grid>
+
+</UserControl>

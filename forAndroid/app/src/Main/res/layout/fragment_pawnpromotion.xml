@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:padding="7dp"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <TextView android:id="@+id/promotionTitleText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Pawn promotion -> Select a piece"
+        android:layout_marginTop="0dp"
+        style="@style/TextAppearance.MaterialComponents.Headline6"
+        />
+
+    <LinearLayout android:id="@+id/pawnPromotionLinearLayout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="0dp"
+        android:orientation="horizontal"
+        android:padding="10dp">
+    </LinearLayout>
+
+</LinearLayout>
+
+
+
+
+
+

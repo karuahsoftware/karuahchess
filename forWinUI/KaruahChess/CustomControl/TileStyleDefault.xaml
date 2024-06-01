@@ -1,0 +1,29 @@
+﻿<ResourceDictionary
+ xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+ xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+ xmlns:local="using:PurpleTreeSoftware.Panel"
+ x:Name="TileResourceDictionaryDefault">
+
+   
+    <!-- Default Tile Style -->
+   
+    <SolidColorBrush x:Key="TileBackgroundHoverBrush" Color="{ThemeResource SystemChromeMediumColor}"/>
+    <SolidColorBrush x:Key="TileBackgroundPressedBrush" Color="{ThemeResource SystemChromeHighColor}"/>
+    <SolidColorBrush x:Key="TileBackgroundNormalBrush" Color="{ThemeResource SystemChromeLowColor}"/>
+    <SolidColorBrush x:Key="TileBorderBrush" Color="{ThemeResource SystemChromeHighColor}"/>
+
+    <local:TileStyleTemplate x:Key="TileStyleTemplateDefaultObject" >
+        <local:TileStyleTemplate.Background><StaticResource ResourceKey="TileBackgroundNormalBrush" /></local:TileStyleTemplate.Background>
+        <local:TileStyleTemplate.BackgroundHover><StaticResource ResourceKey="TileBackgroundHoverBrush" /></local:TileStyleTemplate.BackgroundHover>
+        <local:TileStyleTemplate.BackgroundPressed><StaticResource ResourceKey="TileBackgroundPressedBrush" /></local:TileStyleTemplate.BackgroundPressed>
+        <local:TileStyleTemplate.BorderBrush><StaticResource ResourceKey="TileBorderBrush" /></local:TileStyleTemplate.BorderBrush>
+        <local:TileStyleTemplate.BorderThickness>1</local:TileStyleTemplate.BorderThickness>
+        <local:TileStyleTemplate.MinWidth>100</local:TileStyleTemplate.MinWidth>
+        <local:TileStyleTemplate.MinHeight>100</local:TileStyleTemplate.MinHeight>
+        <local:TileStyleTemplate.Width>NaN</local:TileStyleTemplate.Width>
+        <local:TileStyleTemplate.Height>NaN</local:TileStyleTemplate.Height>
+        <local:TileStyleTemplate.Margin>3</local:TileStyleTemplate.Margin>
+        <local:TileStyleTemplate.Padding>3</local:TileStyleTemplate.Padding>        
+    </local:TileStyleTemplate>
+
+</ResourceDictionary>

@@ -1,0 +1,15 @@
+<resources>
+    <string name="app_name">Karuah Chess</string>
+    <string name="action_settings">Settings</string>
+    <string name="about_info">Karuah Chess is a chess playing program.\nCopyright © 2020 Karuah Software\n\nFind Karuah Chess on;</string>
+    <string name="social_f_url">https://www.facebook.com/KaruahChess</string>
+    <string name="social_t_url">https://x.com/karuahsoftware</string>
+    <string name="other_infoA">Karuah Chess uses StockFish 16.1 with neural network version nn-b1a57edbea57.nnue (Big) and nn-baff1ede1f90.nnue (Small).\n</string>
+    <string name="other_infoB">You can find out more about StockFish at https://stockfishchess.org.\n</string>
+    <string name="other_infoC">The full source code for Karuah Chess is available at <a href="https://github.com/karuahsoftware/karuahchess">https://github.com/karuahsoftware/karuahchess </a>.\n</string>
+    <string name="license_title"><b>Karuah Chess is distributed under the GNU General Public License Version 3 (GPLv3).</b></string>
+    <string name="license_infoA">Karuah Chess is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.</string>
+    <string name="license_infoB">Karuah Chess is distributed in the hope that it will be useful,but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for full details at <a href="https://www.gnu.org/licenses/gpl-3.0.txt">https://www.gnu.org/licenses/gpl-3.0.txt</a>.\n</string>
+    <string name="dbErrorA">The game is unable to start as a database error occurred.\n\nClose the application and try again.</string>
+    <string name="dbErrorB">If that fails, some other things to try;\n<ul><li>Uninstall and reinstall the application on your device.</li>\n<li>Clear the application data for Karuha Chess. This is usually done by going in to Settings -> Apps -> Karuah Chess -> Storage on your device. Then select \"Clear data\".</li></ul></string>
+</resources>

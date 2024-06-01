@@ -1,0 +1,85 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net6.0-windows10.0.22621.0</TargetFramework>
+    <TargetPlatformMinVersion>10.0.17763.0</TargetPlatformMinVersion>
+    <RootNamespace>KaruahChess</RootNamespace>
+    <ApplicationManifest>app.manifest</ApplicationManifest>
+    <Platforms>x86;x64;arm64</Platforms>
+    <RuntimeIdentifiers>win10-x86;win10-x64;win10-arm64</RuntimeIdentifiers>
+    <UseWinUI>true</UseWinUI>
+    <SupportedOSPlatformVersion>10.0.22000.0</SupportedOSPlatformVersion>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="CustomControl\PieceSettings.xaml" />
+    <None Remove="ErrorWindow.xaml" />
+    <None Remove="Media\nn-b1a57edbea57.nnue" />
+    <None Remove="Media\nn-baff1ede1f90.nnue" />
+    <None Remove="Media\piecesound.wav" />
+    <None Remove="Pieces\images\blackbishop.png" />
+    <None Remove="Pieces\images\blackking0.png" />
+    <None Remove="Pieces\images\blackknight.png" />
+    <None Remove="Pieces\images\blackpawn.png" />
+    <None Remove="Pieces\images\blackqueen.png" />
+    <None Remove="Pieces\images\blackrook.png" />
+    <None Remove="Pieces\images\whitebishop.png" />
+    <None Remove="Pieces\images\whiteking0.png" />
+    <None Remove="Pieces\images\whiteknight.png" />
+    <None Remove="Pieces\images\whitepawn.png" />
+    <None Remove="Pieces\images\whitequeen.png" />
+    <None Remove="Pieces\images\whiterook.png" />
+    <None Remove="Voice\Grammar-en-AU.xml" />
+    <None Remove="Voice\Grammar-en-CA.xml" />
+    <None Remove="Voice\Grammar-en-GB.xml" />
+    <None Remove="Voice\Grammar-en-IN.xml" />
+    <None Remove="Voice\Grammar-en-NZ.xml" />
+    <None Remove="Voice\Grammar-en-US.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Media\nn-b1a57edbea57.nnue" />
+    <Content Include="Media\nn-baff1ede1f90.nnue" />
+    <Content Include="Media\piecesound.wav" />
+    <Content Include="Pieces\images\blackbishop.png" />
+    <Content Include="Pieces\images\blackking0.png" />
+    <Content Include="Pieces\images\blackknight.png" />
+    <Content Include="Pieces\images\blackpawn.png" />
+    <Content Include="Pieces\images\blackqueen.png" />
+    <Content Include="Pieces\images\blackrook.png" />
+    <Content Include="Pieces\images\whitebishop.png" />
+    <Content Include="Pieces\images\whiteking0.png" />
+    <Content Include="Pieces\images\whiteknight.png" />
+    <Content Include="Pieces\images\whitepawn.png" />
+    <Content Include="Pieces\images\whitequeen.png" />
+    <Content Include="Pieces\images\whiterook.png" />
+    <Content Include="Voice\Grammar-en-AU.xml" />
+    <Content Include="Voice\Grammar-en-CA.xml" />
+    <Content Include="Voice\Grammar-en-GB.xml" />
+    <Content Include="Voice\Grammar-en-IN.xml" />
+    <Content Include="Voice\Grammar-en-NZ.xml" />
+    <Content Include="Voice\Grammar-en-US.xml" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Data.Sqlite" Version="8.0.5" />
+    <PackageReference Include="Microsoft.Windows.CsWinRT" Version="2.0.7" />
+    <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.5.240428000" />
+    <PackageReference Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.22621.3233" />
+    <Manifest Include="$(ApplicationManifest)" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\KaruahChessEngineProjection\KaruahChessEngineProjection.csproj">
+      <Private>True</Private>
+    </ProjectReference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Page Update="CustomControl\PieceSettings.xaml">
+      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+    </Page>
+    <Page Update="ErrorWindow.xaml">
+      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+    </Page>
+  </ItemGroup>
+</Project>

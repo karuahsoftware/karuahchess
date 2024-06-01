@@ -1,0 +1,71 @@
+﻿<UserControl
+    x:Class="KaruahChess.CustomControl.SoundSettings"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:KaruahChess.CustomControl"
+    xmlns:common="using:KaruahChess.Common"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    d:DesignHeight="300"
+    d:DesignWidth="400">
+
+    <UserControl.Resources>
+        <ResourceDictionary x:Name="CustomStyleDefaultResourceDictionary">
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="ms-appx:///CustomControl/CustomStyleDefault.xaml"/>
+                <ResourceDictionary Source="ms-appx:///Common/Styles.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </UserControl.Resources>
+
+
+    <Popup x:Name="PagePopup" VerticalAlignment="Center" HorizontalAlignment="Center" >
+        <Grid x:Name="PageGrid"                     
+        Background="{x:Bind StyleTemplate.Background}"
+        BorderBrush="{x:Bind StyleTemplate.BorderBrush}"
+        BorderThickness="{x:Bind StyleTemplate.BorderThickness}"
+        CornerRadius="{x:Bind StyleTemplate.CornerRadius}"
+        MinWidth="{x:Bind StyleTemplate.MinWidth}"
+        MinHeight="{x:Bind StyleTemplate.MinHeight}"
+        MaxWidth="{x:Bind StyleTemplate.MaxWidth}"
+        MaxHeight="{x:Bind StyleTemplate.MaxHeight}"
+        Width="{x:Bind StyleTemplate.Width, Mode=OneWay}"
+        Height="{x:Bind StyleTemplate.Height, Mode=OneWay}"
+        Margin="{x:Bind StyleTemplate.Margin}"
+        Padding="{x:Bind StyleTemplate.Padding}">
+
+
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="50" />
+                <RowDefinition Height="*" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+
+            <StackPanel Orientation="Horizontal" Grid.Row="0" Grid.Column="0">
+                <TextBlock x:Name="PageIcon" FontFamily="Segoe MDL2 Assets" FontSize="{x:Bind StyleTemplate.IconFontSize}" Text="&#xE8D6;" VerticalAlignment="Center" Margin="0,0,5,0"/>
+                <TextBlock  TextWrapping="WrapWholeWords" FontWeight="Bold" VerticalAlignment="Center"> 
+                        Sound
+                </TextBlock>
+            </StackPanel>
+
+            <ScrollViewer x:Name="MainTextScrollViewer"  VerticalScrollBarVisibility="Visible" Grid.Row="1" Grid.Column="0" Style="{StaticResource InfoScrollViewer}" BorderThickness="0">
+                <StackPanel Orientation="Vertical">                    
+                    <CheckBox x:Name="SoundReadCheckBox" Content="Read messages out loud" Style="{StaticResource CheckBoxStyle}" />
+                    <CheckBox x:Name="SoundEffectCheckBox" Content="Piece move sound" Style="{StaticResource CheckBoxStyle}" />
+                    
+                </StackPanel>
+            </ScrollViewer>
+
+            
+            <VariableSizedWrapGrid Orientation="Horizontal" ItemWidth="137" Grid.Row="2" Grid.Column="0">
+                <Button x:Name="btnCloseButton" Content="Close" Width="80" Click="Close_Click" Style="{StaticResource ButtonStyle}" />
+            </VariableSizedWrapGrid>
+            
+
+        </Grid>
+    </Popup>
+</UserControl>

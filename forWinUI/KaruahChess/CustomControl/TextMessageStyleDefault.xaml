@@ -1,0 +1,25 @@
+﻿<ResourceDictionary
+ xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+ xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+ xmlns:local="using:KaruahChess.CustomControl"
+ x:Name="TextMessageResourceDictionaryDefault">
+
+    <!-- Default Message Style -->
+    <SolidColorBrush x:Key="TextMessageBorderBrush" Color="{ThemeResource SystemBaseHighColor}"/>
+    <SolidColorBrush x:Key="TextMessageBackgroundNormalBrush" Color="{ThemeResource SystemChromeMediumColor}"/>
+
+    <local:TextMessageStyleTemplate x:Key="TextMessageStyleTemplateDefaultObject" >
+        <local:TextMessageStyleTemplate.Background><StaticResource ResourceKey="TextMessageBackgroundNormalBrush" /></local:TextMessageStyleTemplate.Background>        
+        <local:TextMessageStyleTemplate.BorderBrush><StaticResource ResourceKey="TextMessageBorderBrush" /></local:TextMessageStyleTemplate.BorderBrush>
+        <local:TextMessageStyleTemplate.CornerRadius>0</local:TextMessageStyleTemplate.CornerRadius>
+        <local:TextMessageStyleTemplate.BorderThickness>1</local:TextMessageStyleTemplate.BorderThickness>
+        <local:TextMessageStyleTemplate.MinWidth>100</local:TextMessageStyleTemplate.MinWidth>
+        <local:TextMessageStyleTemplate.MinHeight>20</local:TextMessageStyleTemplate.MinHeight>
+        <local:TextMessageStyleTemplate.Width>NaN</local:TextMessageStyleTemplate.Width>
+        <local:TextMessageStyleTemplate.Height>NaN</local:TextMessageStyleTemplate.Height>
+        <local:TextMessageStyleTemplate.Margin>50</local:TextMessageStyleTemplate.Margin>
+        <local:TextMessageStyleTemplate.Padding>10</local:TextMessageStyleTemplate.Padding>       
+        <local:TextMessageStyleTemplate.IconFontSize>30</local:TextMessageStyleTemplate.IconFontSize>
+    </local:TextMessageStyleTemplate>
+
+</ResourceDictionary>

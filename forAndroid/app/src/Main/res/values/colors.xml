@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#333333</color>
+    <color name="colorPrimaryDark">#000000</color>
+    <color name="colorSecondary">#4CAF50</color>
+    <color name="colorWhite">#FFFFFF</color>
+    <color name="colorInactive">#bbbbbb</color>
+    <color name="colorPopupHeader">#7c7c7c</color>
+    <color name="colorBlackSquare">#999999</color>
+    <color name="colorWhiteSquare">#FFFFFF</color>
+    <color name="colorDarkGreen">#98C098</color>
+    <color name="colorRed">#FF0000</color>
+    <color name="colorMagenta">#E91E63</color>
+    <color name="colorBurlyWood">#DEB887</color>
+    <color name="colorButtonSelected">#AAADFC</color>
+    <color name="colorButtonDefault">#D6D8D7</color>
+    <color name="colorButtonDefaultText">#FF1C1C1C</color>
+    <color name="colorButtonDefaultTextFade">#781C1C1C</color>
+    <color name="colorButtonDialogText">#333333</color>
+    <color name="colorButtonDialogTint">#CCCCCC</color>
+    <color name="colorMango">#F4BB44</color>
+    <color name="colorEmeraldGreen">#03A65A</color>
+    <color name="colorIcon">#565656</color>
+</resources>

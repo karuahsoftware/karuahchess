@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "KaruahChessEngineProjection": {
+      "commandName": "Project",
+      "nativeDebugging": true
+    }
+  }
+}

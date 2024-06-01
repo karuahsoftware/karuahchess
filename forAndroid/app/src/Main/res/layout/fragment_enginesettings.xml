@@ -1,0 +1,324 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/mainScroll"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_alignParentTop="true"
+    android:layout_alignParentStart="true"
+    android:padding="15dp"
+    android:fillViewport="true">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <ImageView
+            android:id="@+id/fragmentIcon"
+            android:layout_width="34dp"
+            android:layout_height="34dp"
+            android:src="@drawable/ic_settings"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginTop="0dp"
+            />
+
+        <TextView android:id="@+id/fragmentTitleText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Engine"
+            app:layout_constraintTop_toTopOf="@id/fragmentIcon"
+            app:layout_constraintBottom_toBottomOf="@id/fragmentIcon"
+            app:layout_constraintStart_toEndOf="@id/fragmentIcon"
+            android:layout_marginTop="0dp"
+            style="@style/TextAppearance.MaterialComponents.Headline6"
+            />
+
+        <androidx.constraintlayout.widget.Barrier
+            android:id="@+id/headingBarrier"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:barrierDirection="bottom"
+            app:constraint_referenced_ids="fragmentIcon,fragmentTitleText"
+            />
+
+        <CheckBox android:id="@+id/computerPlayerEnabledCheckBox"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Computer player enabled"
+            style="@style/TextAppearance.MaterialComponents.Body1"
+            app:layout_constraintTop_toBottomOf="@id/headingBarrier"
+            app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginTop="20dp"
+            android:padding="0dp"
+            />
+
+        <CheckBox android:id="@+id/computerMoveFirstCheckBox"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Computer moves first"
+            style="@style/TextAppearance.MaterialComponents.Body1"
+            app:layout_constraintTop_toBottomOf="@id/computerPlayerEnabledCheckBox"
+            app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginTop="0dp"
+            android:layout_marginBottom="0dp"
+            />
+
+        <CheckBox android:id="@+id/randomiseFirstMoveCheckBox"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Randomise first computer move"
+            style="@style/TextAppearance.MaterialComponents.Body1"
+            app:layout_constraintTop_toBottomOf="@id/computerMoveFirstCheckBox"
+            app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginTop="0dp"
+            android:layout_marginBottom="0dp"
+            />
+
+        <CheckBox android:id="@+id/levelAutoCheckBox"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Increase strength after checkmate win"
+            style="@style/TextAppearance.MaterialComponents.Body1"
+            app:layout_constraintTop_toBottomOf="@id/randomiseFirstMoveCheckBox"
+            app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginTop="0dp"
+            android:layout_marginBottom="0dp"
+            />
+
+        <TextView android:id="@+id/skillLevelTitleText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Strength"
+            style="@style/TextAppearance.MaterialComponents.Body1"
+            app:layout_constraintTop_toBottomOf="@id/levelAutoCheckBox"
+            app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="0dp"
+            android:paddingTop="5dp"
+            />
+
+        <Spinner
+            android:id="@+id/skillLevelSpinner"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:popupElevation="3dp"
+            android:spinnerMode="dropdown"
+            style="@style/TextAppearance.MaterialComponents.Body1"
+            app:layout_constraintTop_toBottomOf="@id/levelAutoCheckBox"
+            app:layout_constraintStart_toEndOf="@id/skillLevelTitleText"
+            android:layout_marginTop="10dp"
+            android:layout_marginStart="5dp"
+            android:layout_marginBottom="0dp"
+            android:background="@drawable/bordergreen"
+            android:padding="5dp"
+            />
+
+        <androidx.constraintlayout.widget.Barrier
+            android:id="@+id/advancedBarrier"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:barrierDirection="bottom"
+            app:constraint_referenced_ids="skillLevelSpinner,skillLevelTitleText" />
+
+        <CheckBox android:id="@+id/computerAdvancedSettingsCheckBox"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Advanced search settings"
+            style="@style/TextAppearance.MaterialComponents.Body1"
+            app:layout_constraintTop_toBottomOf="@id/advancedBarrier"
+            app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginTop="20dp"
+            android:layout_marginBottom="0dp"
+            />
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/advancedSettingsGuideline"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_begin="25dp"
+             />
+
+        <TextView android:id="@+id/depthLimitText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Depth limit"
+            style="@style/TextAppearance.MaterialComponents.Body1"
+            app:layout_constraintTop_toBottomOf="@id/computerAdvancedSettingsCheckBox"
+            app:layout_constraintEnd_toStartOf="@id/firstColumnBarrier"
+            app:layout_constraintStart_toStartOf="@id/advancedSettingsGuideline"
+            app:layout_constraintHorizontal_bias="1.0"
+            android:paddingTop="5dp"
+            />
+
+        <TextView android:id="@+id/depthLimitValueText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Value"
+            style="@style/TextAppearance.MaterialComponents.Body1"
+            app:layout_constraintTop_toBottomOf="@id/depthLimitText"
+            app:layout_constraintEnd_toStartOf="@id/firstColumnBarrier"
+            app:layout_constraintStart_toStartOf="@id/advancedSettingsGuideline"
+            app:layout_constraintHorizontal_bias="1.0"
+            android:paddingTop="0dp"
+            />
+
+        <com.google.android.material.slider.Slider
+            android:id="@+id/depthLimitSlider"
+            app:layout_constraintWidth_max="180dp"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:valueFrom="0"
+            android:valueTo="35"
+            android:stepSize="1"
+            app:tickVisible="true"
+            app:layout_constraintTop_toBottomOf="@id/computerAdvancedSettingsCheckBox"
+            app:layout_constraintStart_toEndOf="@id/firstColumnBarrier"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0"
+            app:trackColor="@color/colorSecondary"
+            app:thumbColor="@color/colorSecondary"
+            android:paddingTop="0dp"
+            android:layout_marginTop="0dp"
+            app:labelBehavior="gone"
+            />
+
+        <TextView android:id="@+id/moveDurationLimitText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Move time limit (ms)"
+            style="@style/TextAppearance.MaterialComponents.Body1"
+            app:layout_constraintTop_toBottomOf="@id/depthLimitValueText"
+            app:layout_constraintEnd_toStartOf="@id/firstColumnBarrier"
+            app:layout_constraintStart_toStartOf="@id/advancedSettingsGuideline"
+            app:layout_constraintHorizontal_bias="1.0"
+            android:paddingTop="20dp"
+            />
+
+        <EditText android:id="@+id/moveDurationLimitValueEditText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            style="@style/TextAppearance.MaterialComponents.Body1"
+            app:layout_constraintTop_toBottomOf="@id/depthLimitValueText"
+            app:layout_constraintStart_toEndOf="@id/firstColumnBarrier"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0"
+            android:digits="0123456789"
+            android:inputType="number"
+            android:importantForAutofill="no"
+            android:minWidth="100dp"
+            android:layout_marginStart="5dp"
+            android:layout_marginTop="5dp"
+            android:tooltipText="Valid values are 1 to 600,000ms. Leave blank for no limit."
+            />
+
+        <TextView android:id="@+id/threadsLimitText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="CPU threads"
+            style="@style/TextAppearance.MaterialComponents.Body1"
+            app:layout_constraintTop_toBottomOf="@id/moveDurationLimitText"
+            app:layout_constraintEnd_toStartOf="@id/firstColumnBarrier"
+            app:layout_constraintStart_toStartOf="@id/advancedSettingsGuideline"
+            app:layout_constraintHorizontal_bias="1.0"
+            android:paddingTop="20dp"
+            />
+
+        <TextView android:id="@+id/threadsLimitValueText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Value"
+            style="@style/TextAppearance.MaterialComponents.Body1"
+            app:layout_constraintTop_toBottomOf="@id/threadsLimitText"
+            app:layout_constraintEnd_toStartOf="@id/firstColumnBarrier"
+            app:layout_constraintStart_toStartOf="@id/advancedSettingsGuideline"
+            app:layout_constraintHorizontal_bias="1.0"
+            android:paddingTop="0dp"
+            />
+
+        <com.google.android.material.slider.Slider
+            android:id="@+id/threadsLimitSlider"
+            app:layout_constraintWidth_max="180dp"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:valueFrom="1"
+            android:valueTo="15"
+            android:stepSize="1"
+            app:tickVisible="true"
+            app:layout_constraintTop_toBottomOf="@id/moveDurationLimitText"
+            app:layout_constraintStart_toEndOf="@id/firstColumnBarrier"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0"
+            app:trackColor="@color/colorSecondary"
+            app:thumbColor="@color/colorSecondary"
+            android:paddingTop="0dp"
+            android:layout_marginTop="15dp"
+            app:labelBehavior="gone"
+            />
+
+        <androidx.constraintlayout.widget.Barrier
+            android:id="@+id/firstColumnBarrier"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:barrierDirection="end"
+            app:constraint_referenced_ids="depthLimitText,depthLimitValueText,moveDurationLimitText,threadsLimitText,threadsLimitValueText" />
+
+
+        <androidx.constraintlayout.widget.Barrier
+            android:id="@+id/bottomBarrier"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:barrierDirection="bottom"
+            app:constraint_referenced_ids="threadsLimitValueText,threadsLimitSlider"
+
+            />
+
+
+
+        <Button
+            android:id="@+id/doneButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            style="@style/ButtonDialogStyle"
+            android:text="Close"
+            />
+
+
+        <Button
+            android:id="@+id/stopSearchButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            style="@style/ButtonDialogStyle"
+            android:text="Stop search"
+            />
+
+        <Button
+            android:id="@+id/defaultButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            style="@style/ButtonDialogStyle"
+            android:text="Set to default"
+            />
+
+        <androidx.constraintlayout.helper.widget.Flow
+            android:id="@+id/buttonFlow"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:constraint_referenced_ids="doneButton,stopSearchButton,defaultButton"
+            app:flow_horizontalBias="0"
+            app:flow_horizontalGap="5dp"
+            app:flow_horizontalStyle="packed"
+            app:flow_verticalBias="0"
+            app:flow_wrapMode="chain"
+            app:layout_constraintTop_toBottomOf="@id/bottomBarrier"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginTop="40dp"
+             />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</ScrollView>
+

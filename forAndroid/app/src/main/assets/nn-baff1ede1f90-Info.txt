@@ -1,0 +1,9 @@
+Title: nn-baff1ede1f90.nnue
+Description: The file nn-baff1ede1f90.nnue is a trained neural network file. This is the small neural network file as defined by EvalFileDefaultNameSmall.
+Source: https://tests.stockfishchess.org/nns
+Description: The file nn-baff1ede1f90.nnue is distributed under a CC0 license (https://creativecommons.org/share-your-work/public-domain/cc0/).
+
+
+
+
+ 

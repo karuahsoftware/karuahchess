@@ -1,0 +1,36 @@
+﻿<ResourceDictionary
+ xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+ xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+ xmlns:local="using:KaruahChess.CustomControl"
+ x:Name="CustomResourceDictionaryDefault">
+
+    <!-- Default Message Style -->
+    <SolidColorBrush x:Key="CustomBorderBrush" Color="{ThemeResource SystemBaseHighColor}"/>
+    <SolidColorBrush x:Key="CustomBackgroundNormalBrush" Color="{ThemeResource SystemChromeLowColor}"/>
+
+    <local:CustomStyleTemplate x:Key="CustomStyleTemplateDefaultObject" >
+        <local:CustomStyleTemplate.Background><StaticResource ResourceKey="CustomBackgroundNormalBrush" /></local:CustomStyleTemplate.Background>
+        <local:CustomStyleTemplate.BorderBrush><StaticResource ResourceKey="CustomBorderBrush" /></local:CustomStyleTemplate.BorderBrush>
+        <local:CustomStyleTemplate.CornerRadius>0</local:CustomStyleTemplate.CornerRadius>
+        <local:CustomStyleTemplate.BorderThickness>1</local:CustomStyleTemplate.BorderThickness>
+        <local:CustomStyleTemplate.MinWidth>100</local:CustomStyleTemplate.MinWidth>
+        <local:CustomStyleTemplate.MinHeight>20</local:CustomStyleTemplate.MinHeight>
+        <local:CustomStyleTemplate.Width>NaN</local:CustomStyleTemplate.Width>
+        <local:CustomStyleTemplate.Height>NaN</local:CustomStyleTemplate.Height>
+        <local:CustomStyleTemplate.Margin>0</local:CustomStyleTemplate.Margin>
+        <local:CustomStyleTemplate.Padding>5</local:CustomStyleTemplate.Padding>
+        <local:CustomStyleTemplate.IconFontSize>30</local:CustomStyleTemplate.IconFontSize>
+        <local:CustomStyleTemplate.Opacity>1</local:CustomStyleTemplate.Opacity>
+    </local:CustomStyleTemplate>
+
+    <Style x:Key="InfoScrollViewer" TargetType="ScrollViewer">
+        <Setter Property="Margin" Value="0" />
+        <Setter Property="BorderThickness" Value="0"/>
+        <Setter Property="BorderBrush" Value="{ThemeResource SystemBaseMediumColor}" />        
+        <Setter Property="Padding" Value="5" />
+        <Setter Property="HorizontalAlignment" Value="Stretch" />
+        <Setter Property="VerticalAlignment" Value="Stretch" />
+    </Style>
+
+    
+</ResourceDictionary>

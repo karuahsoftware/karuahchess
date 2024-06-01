@@ -1,0 +1,110 @@
+/*
+Karuah Chess is a chess playing program
+Copyright (C) 2020-2023 Karuah Software
+
+Karuah Chess is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+Karuah Chess is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <https://www.gnu.org/licenses/>.
+*/
+
+namespace KaruahChessEngine
+{
+
+	
+
+	struct SearchResult
+	{		
+		Int32 moveFromIndex;
+		Int32 moveToIndex;
+		Int32 promotionPieceType;
+		Boolean cancelled;
+		Int32 error;
+		String errorMessage;
+		
+	};
+
+	struct MoveResult
+	{
+		Boolean success;
+		String returnMessage;
+		String moveDataStr;
+	};
+
+	struct SearchOptions
+	{
+		Int32 limitSkillLevel;
+		Int32 limitDepth;
+		Int32 limitNodes;
+		Int32 limitMoveDuration;
+		Int32 limitThreads;
+		Boolean randomiseFirstMove;
+	};
+
+	[default_interface]
+	runtimeclass KaruahChessEngineClass
+	{
+		KaruahChessEngineClass();
+		
+		// Bitboard operations
+		String GetBoard();
+		String GetState();
+		void SetBoard(const String pBoardFENString);
+		void SetState(const String pBoardStateString);
+		
+		void GetBoardArray(ref UInt64[] pBoardArray);
+		void GetStateArray(ref Int32[] pStateArray);
+		void SetBoardArray(const UInt64[] pBoardArray);
+		void SetStateArray(const Int32[] pStateArray);
+
+		void SetStateWhiteClockOffset(const Int32 pOffset);
+		void SetStateBlackClockOffset(const Int32 pOffset);
+		Int32 GetStateWhiteClockOffset();
+		Int32 GetStateBlackClockOffset();
+
+		void Reset();
+		void CancelSearch();
+
+		Int32 GetSpin(const Int32 pIndex);
+		Int32 GetStateActiveColour();
+		void SetStateActiveColour(const Int32 pColour);
+		Int32 GetStateGameStatus();
+		void SetStateGameStatus(const Int32 pStatus);
+		Int32 GetStateFullMoveCount();
+		Int32 GetStateCastlingAvailability();
+		Boolean SetStateCastlingAvailability(const Int32 pCastlingAvailability, const Int32 pColour);
+		Int32 GetKingIndex(const Int32 pColour);
+		Boolean IsKingCheck(const Int32 pColour);
+		UInt64 GetPotentialMove(const Int32 pSqIndex);
+		UInt64 GetOccupiedBySpin(const Int32 pSpin);
+		UInt64 GetOccupiedByColour(const Int32 pColour);
+		
+		// Move operations
+		MoveResult Move(const Int32 pFromIndex, const Int32 pToIndex, const Int32 pPawnPromotionPiece, const Boolean pValidateEnabled, const Boolean pCommit);
+		MoveResult Arrange(const Int32 pFromIndex, const Int32 pToIndex);
+		MoveResult ArrangeUpdate(const Char pFen, const Int32 pToIndex);
+		Int32 FindFromIndex(const Int32 pToIndex, const Int32 pSpin, const Int32[] pValidFromIndexes);
+		Int32 GetSpinFromPieceName(const String pPieceName);
+		String GetPieceNameFromChar(const Char pFENChar);
+		Char GetFENCharFromSpin(const Int32 pSpin);
+		Boolean IsPawnPromotion(const Int32 pFromIndex, const Int32 pToIndex);
+
+		// Export operations
+		String GetFullFEN();
+		
+
+		// Search operations
+		SearchResult SearchStart(const SearchOptions pSearchOptions);
+				
+
+	}
+	
+}

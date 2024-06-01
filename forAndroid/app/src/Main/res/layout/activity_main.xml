@@ -1,0 +1,190 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Karuah Chess is a chess playing program
+    Copyright (C) 2020-2023 Karuah Software
+
+    Karuah Chess is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    Karuah Chess is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <https://www.gnu.org/licenses/>.
+-->
+
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".MainActivity">
+
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/appBarTop"
+        android:layout_height="?android:attr/actionBarSize"
+        android:layout_width="match_parent"
+        >
+
+        <com.google.android.material.appbar.MaterialToolbar
+            android:id="@+id/toolbarTop"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_scrollFlags="noScroll"
+            app:titleTextColor="@color/colorWhite"
+            style="@style/MainToolbar"
+            >
+
+            <ImageView
+                android:id="@+id/indicatorImageView"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:adjustViewBounds="true"
+                android:background="@drawable/indicatorwhite"
+                android:contentDescription="Indicator"
+                android:layout_gravity="center_vertical|start"
+                android:text=""
+                android:layout_marginTop="0dp"
+                android:layout_marginBottom="0dp"
+                android:layout_marginStart="4dp"
+                android:layout_marginEnd="4dp"
+                />
+
+            <TextView
+                android:id="@+id/levelIndicatorText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical|start"
+                android:text=""
+                style="@style/TextAppearance.MaterialComponents.Body1"
+                android:textColor="@color/colorWhite"/>
+
+            <ProgressBar
+                android:id="@+id/moveProgressBar"
+                android:indeterminate="true"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:visibility="gone"/>
+
+        </com.google.android.material.appbar.MaterialToolbar>
+
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
+        android:id="@+id/mainFrame"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="?android:attr/actionBarSize"
+        >
+
+        <purpletreesoftware.karuahchess.customcontrol.TilePanel
+            android:id="@+id/boardPanelLayout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="top|start"
+            >
+        </purpletreesoftware.karuahchess.customcontrol.TilePanel>
+
+        <purpletreesoftware.karuahchess.customcontrol.TileAnimation
+            android:id="@+id/animationPanelLayout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="top|start"
+            >
+        </purpletreesoftware.karuahchess.customcontrol.TileAnimation>
+
+        <purpletreesoftware.karuahchess.customcontrol.CoordPanel
+            android:id="@+id/coordPanelLayout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="top|start"
+            android:padding="0dp"
+            >
+        </purpletreesoftware.karuahchess.customcontrol.CoordPanel>
+
+        <View
+            android:id="@+id/totalBoardBoundaryView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="top|start"
+            />
+
+        <LinearLayout
+            android:id="@+id/adjacentControlLayout"
+            android:orientation="horizontal"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_anchor="@id/coordPanelLayout"
+            app:layout_anchorGravity="start|bottom"
+            >
+
+            <purpletreesoftware.karuahchess.customcontrol.MoveNavigator
+                android:id="@+id/navigatorLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:visibility="gone"
+                >
+            </purpletreesoftware.karuahchess.customcontrol.MoveNavigator>
+
+            <purpletreesoftware.karuahchess.customcontrol.ClockPanel
+                android:id="@+id/clockLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:visibility="gone"
+                >
+            </purpletreesoftware.karuahchess.customcontrol.ClockPanel>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/floatingActionButtonLayout"
+            android:orientation="horizontal"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|end">
+
+            <com.google.android.material.floatingactionbutton.FloatingActionButton
+                android:id="@+id/newAction"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:fabSize="@integer/fabSize"
+                android:src="@drawable/ic_new"
+                android:layout_margin="@dimen/fabMargin"
+                android:elevation="8dp"
+                app:maxImageSize="@dimen/fabMaxImageSize"
+                />
+
+
+            <com.google.android.material.floatingactionbutton.FloatingActionButton
+                android:id="@+id/showLastMoveAction"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:fabSize="@integer/fabSize"
+                android:src="@drawable/ic_viewlast"
+                android:layout_margin="@dimen/fabMargin"
+                android:elevation="8dp"
+                app:maxImageSize="@dimen/fabMaxImageSize"
+                />
+
+
+            <com.google.android.material.floatingactionbutton.FloatingActionButton
+                android:id="@+id/showHintAction"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:fabSize="@integer/fabSize"
+                android:src="@drawable/ic_lightbulb"
+                android:layout_margin="@dimen/fabMargin"
+                android:elevation="8dp"
+                app:maxImageSize="@dimen/fabMaxImageSize"
+                />
+
+        </LinearLayout>
+
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
+</FrameLayout>
