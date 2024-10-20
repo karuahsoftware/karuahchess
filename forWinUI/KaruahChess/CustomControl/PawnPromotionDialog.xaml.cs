@@ -18,113 +18,76 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 
 using System;
-using System.Collections.Generic;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using KaruahChess.Common;
+using static KaruahChess.Pieces.Piece;
 
 namespace KaruahChess.CustomControl
 {
     
 
-    public sealed partial class PawnPromotionDialog : ContentDialog
-    {
-        double _buttonSize = 80;
-       
+    public sealed partial class PawnPromotionDialog : Page
+    {        
+        ContentDialog _dialog;
+
         public int Result { get; set; }
 
         /// <summary>
         /// Constructor
         /// </summary>
-        public PawnPromotionDialog()
+        public PawnPromotionDialog(int pColour)
         {
             this.InitializeComponent();
 
             // Default result
-            this.Result = 5; 
-        }
+            this.Result = 5;
 
-
-        /// <summary>
-        /// Show the popup
-        /// </summary>
-        /// <returns></returns>
-        public void CreateContent(int pColour)
-        {            
-            var pieceList = GetPieceList(pColour);
-            CreatePieceButtons(pieceList);
-            
-        }
-
-        
-        /// <summary>
-        /// Creates the piece list
-        /// </summary>
-        /// <returns></returns>
-        private List<char> GetPieceList(int pColour)
-        {
-            List<char> pieceList;
-            if (pColour == Constants.BLACKPIECE)
+            if (pColour == (int)ColourEnum.White)
             {
-                pieceList = new List<char>() { 'r', 'n', 'b', 'q' };
+                whitePiecesStack.Visibility = Visibility.Visible;
+                blackPiecesStack.Visibility = Visibility.Collapsed;
             }
             else
             {
-                pieceList = new List<char>() { 'R', 'N', 'B', 'Q' };
+                whitePiecesStack.Visibility = Visibility.Collapsed;
+                blackPiecesStack.Visibility = Visibility.Visible;
             }
-
-            return pieceList;
         }
 
-
         /// <summary>
-        /// Create piece buttons
+        /// Create the dialog
         /// </summary>
-        /// <param name="pColour"></param>
-        private void CreatePieceButtons(List<char> pPieceList)
+         public ContentDialog CreateDialog()
         {
-
-            mainStackA.Children.Clear();
-
-            foreach (char fen in pPieceList)
+            _dialog = new ContentDialog
             {
-                Button pieceButton = new Button
-                {
-                    Width = _buttonSize,
-                    Height = _buttonSize,
-                    Padding = new Thickness(0),
-                    Content = new Image
-                    {
-                        Source = Pieces.Piece.GetImage(fen, _buttonSize, _buttonSize),
-                        VerticalAlignment = VerticalAlignment.Center
-                    }
-                };
-                pieceButton.Tag = fen;
-
-                pieceButton.Click += PawnPromotePieceSelect_Click;
-
-                mainStackA.Children.Add(pieceButton);
-            }
-
+                Title = "Pawn promotion -> Select a piece",
+                Content = this
+            };
+           
+            return _dialog;
         }
+        
 
         /// <summary>
-        /// Update piece on board square
+        /// Update piece on board square with the selected promotion piece
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void PawnPromotePieceSelect_Click(object sender, RoutedEventArgs e)
-        {
-            char fen = (char)((Button)sender).Tag;
+        private void pieceBtn_Click(object sender, RoutedEventArgs e)
+        {            
+            Button btn = (Button)sender;
+            string tag = (string)btn.Tag;
+            Char fen = tag[0];
 
             fen = char.ToUpper(fen);
-
             if (fen == 'R') Result = 4;
             else if (fen == 'B') Result = 3;
             else if (fen == 'N') Result = 2;
             else Result = 5;
 
-            this.Hide();
+            _dialog.Hide();
         }
 
 

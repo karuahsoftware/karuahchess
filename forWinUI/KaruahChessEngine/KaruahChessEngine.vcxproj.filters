@@ -10,21 +10,24 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="pch.cpp" />
     <ClCompile Include="$(GeneratedFilesDir)module.g.cpp" />
     <ClCompile Include="bitboard.cpp" />
     <ClCompile Include="engine.cpp" />
     <ClCompile Include="helper.cpp" />
     <ClCompile Include="KaruahChessEngineClass.cpp" />
     <ClCompile Include="moverules.cpp" />
+    <ClCompile Include="pch.cpp" />
     <ClCompile Include="piecepattern.cpp" />
     <ClCompile Include="search.cpp" />
     <ClCompile Include="sf_bitboard.cpp" />
+    <ClCompile Include="sf_engine.cpp" />
     <ClCompile Include="sf_evaluate.cpp" />
+    <ClCompile Include="sf_memory.cpp" />
     <ClCompile Include="sf_misc.cpp" />
     <ClCompile Include="sf_movegen.cpp" />
     <ClCompile Include="sf_movepick.cpp" />
     <ClCompile Include="sf_position.cpp" />
+    <ClCompile Include="sf_score.cpp" />
     <ClCompile Include="sf_search.cpp" />
     <ClCompile Include="sf_thread.cpp" />
     <ClCompile Include="sf_timeman.cpp" />
@@ -32,53 +35,56 @@
     <ClCompile Include="sf_uci.cpp" />
     <ClCompile Include="sf_ucioption.cpp" />
     <ClCompile Include="nnue\features\half_ka_v2_hm.cpp" />
-    <ClCompile Include="nnue\evaluate_nnue.cpp" />
+    <ClCompile Include="nnue\network.cpp" />
+    <ClCompile Include="nnue\nnue_misc.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="pch.h" />
+    <ClInclude Include="sf_ucioption.h" />
     <ClInclude Include="bitboard.h" />
     <ClInclude Include="engine.h" />
     <ClInclude Include="helper.h" />
     <ClInclude Include="KaruahChessEngineClass.h" />
     <ClInclude Include="moverules.h" />
+    <ClInclude Include="pch.h" />
     <ClInclude Include="piecepattern.h" />
     <ClInclude Include="search.h" />
     <ClInclude Include="sf_bitboard.h" />
+    <ClInclude Include="sf_engine.h" />
     <ClInclude Include="sf_evaluate.h" />
+    <ClInclude Include="sf_memory.h" />
     <ClInclude Include="sf_misc.h" />
     <ClInclude Include="sf_movegen.h" />
     <ClInclude Include="sf_movepick.h" />
     <ClInclude Include="sf_position.h" />
+    <ClInclude Include="sf_score.h" />
     <ClInclude Include="sf_search.h" />
     <ClInclude Include="sf_thread.h" />
+    <ClInclude Include="sf_thread_win32_osx.h" />
     <ClInclude Include="sf_timeman.h" />
     <ClInclude Include="sf_tt.h" />
     <ClInclude Include="sf_types.h" />
     <ClInclude Include="sf_uci.h" />
+    <ClInclude Include="syzygy\tbprobe.h" />
     <ClInclude Include="nnue\features\half_ka_v2_hm.h" />
     <ClInclude Include="nnue\layers\affine_transform.h" />
+    <ClInclude Include="nnue\layers\affine_transform_sparse_input.h" />
     <ClInclude Include="nnue\layers\clipped_relu.h" />
     <ClInclude Include="nnue\layers\simd.h" />
     <ClInclude Include="nnue\layers\sqr_clipped_relu.h" />
-    <ClInclude Include="nnue\evaluate_nnue.h" />
+    <ClInclude Include="nnue\network.h" />
     <ClInclude Include="nnue\nnue_accumulator.h" />
     <ClInclude Include="nnue\nnue_architecture.h" />
     <ClInclude Include="nnue\nnue_common.h" />
     <ClInclude Include="nnue\nnue_feature_transformer.h" />
-    <ClInclude Include="nnue\layers\affine_transform_sparse_input.h" />
-    <ClInclude Include="sf_ucioption.h" />
-    <ClInclude Include="syzygy\tbprobe.h" />
-    <ClInclude Include="sf_thread_win32_osx.h" />
-  </ItemGroup>
-  <ItemGroup>
-    <Midl Include="KaruahChessEngineClass.idl" />
+    <ClInclude Include="nnue\nnue_misc.h" />
+    <ClInclude Include="sf_numa.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="KaruahChessEngine.def" />
-    <None Include="PropertySheet.props" />
     <None Include="packages.config" />
+    <None Include="PropertySheet.props" />
   </ItemGroup>
   <ItemGroup>
-    <Natvis Include="$(MSBuildThisFileDirectory)..\..\natvis\wil.natvis" />
+    <Midl Include="KaruahChessEngineClass.idl" />
   </ItemGroup>
 </Project>

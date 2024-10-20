@@ -7,7 +7,7 @@
     <!-- Default Chess Clock Style -->
     
 
-    <Style x:Key="ButtonClockStyle" TargetType="Button">
+    <Style x:Key="ButtonClockStyle" TargetType="Button" BasedOn="{StaticResource DefaultButtonStyle}">
         <Setter Property="BorderThickness" Value="1"/>
         <Setter Property="Margin" Value="1,0,0,0" />
         <Setter Property="Height" Value="32" />

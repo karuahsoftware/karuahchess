@@ -54,7 +54,7 @@ namespace KaruahChess.CustomControl
         public enum TypeEnum { Info, Error, Award }
         public enum AnimationEnum { Fixed, Flash, FadeOut }
 
-                
+
 
         /// <summary>
         /// Displays message and starts fade in animation
@@ -63,25 +63,29 @@ namespace KaruahChess.CustomControl
         {
             // Just exit immediately if no changes
             if (pTitle == TextTitleTextBlock.Text && pMessage == TextMessageTextBlock.Text) return;
-            
+
             this.Visibility = Visibility.Visible;
-                        
+
             var storyboardFlash = TextMessageGrid.Resources["TextMessageGridFlashStoryboard"] as Storyboard;
             var storyboardFixed = TextMessageGrid.Resources["TextMessageGridFixedStoryboard"] as Storyboard;
 
             TextTitleTextBlock.Text = pTitle;
-            if (pTitle != String.Empty) {                
+            if (pTitle != String.Empty)
+            {
                 TextTitleTextBlock.Visibility = Visibility.Visible;
             }
-            else {
+            else
+            {
                 TextTitleTextBlock.Visibility = Visibility.Collapsed;
             }
 
             TextMessageTextBlock.Text = pMessage;
-            if (pMessage != String.Empty) {
+            if (pMessage != String.Empty)
+            {
                 TextMessageTextBlock.Visibility = Visibility.Visible;
             }
-            else {
+            else
+            {
                 TextMessageTextBlock.Visibility = Visibility.Collapsed;
             }
 
@@ -90,13 +94,13 @@ namespace KaruahChess.CustomControl
             {
                 TextMessageIcon.Text = "\xE7BA";
                 TextMessageIcon.Foreground = _defaultTextBlock.Foreground;
-            } 
+            }
             else if (pType == TypeEnum.Award)
             {
                 TextMessageIcon.Text = "\xE735";
                 TextMessageIcon.Foreground = new SolidColorBrush(Windows.UI.Color.FromArgb(255, 241, 169, 22));
             }
-            else 
+            else
             {
                 TextMessageIcon.Text = "\xE946";
                 TextMessageIcon.Foreground = _defaultTextBlock.Foreground;
@@ -107,16 +111,17 @@ namespace KaruahChess.CustomControl
                 var duration = pType == TypeEnum.Error ? new TimeSpan(0, 0, 8) : new TimeSpan(0, 0, 3);
                 FadeOut(duration);
             }
-            else if (pAnimation == AnimationEnum.Flash) { 
+            else if (pAnimation == AnimationEnum.Flash)
+            {
                 storyboardFlash.AutoReverse = true;
-                storyboardFlash.Begin();                
+                storyboardFlash.Begin();
             }
             else
             {
                 storyboardFixed.Begin();
             }
 
-            
+
         }
 
 
@@ -125,7 +130,8 @@ namespace KaruahChess.CustomControl
         /// </summary>
         private void FadeOut(TimeSpan pDuration)
         {
-            if (!_fadeOutInProgress) { 
+            if (!_fadeOutInProgress)
+            {
                 _fadeOutInProgress = true;
                 var storyboardFadeOut = TextMessageGrid.Resources["TextMessageGridFadeOutStoryboard"] as Storyboard;
                 FadeOutAnimation.Duration = pDuration;
@@ -157,7 +163,7 @@ namespace KaruahChess.CustomControl
                 this.StyleTemplate.MaxHeight = pMaxWidth * 0.6;
             }
             else
-            { 
+            {
                 this.SetValue(Canvas.LeftProperty, pMaxWidth * 0.2);
                 this.SetValue(Canvas.TopProperty, pMaxWidth * 0.2);
                 this.StyleTemplate.Width = pMaxWidth * 0.6;
@@ -167,7 +173,7 @@ namespace KaruahChess.CustomControl
 
         }
 
-                
+
 
         /// <summary>
         /// Clears message
@@ -188,7 +194,7 @@ namespace KaruahChess.CustomControl
         /// <param name="e"></param>
         private void UserControl_Tapped(object sender, Microsoft.UI.Xaml.Input.TappedRoutedEventArgs e)
         {
-            var duration = new TimeSpan(0,0,0,0,800);
+            var duration = new TimeSpan(0, 0, 0, 0, 800);
             FadeOut(duration);
         }
     }

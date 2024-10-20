@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Page
+    x:Class="KaruahChess.CustomControl.PieceEditDialog"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <UserControl.Resources>
+        <ResourceDictionary x:Name="CustomStyleDefaultResourceDictionary">
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="ms-appx:///Common/Styles.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </UserControl.Resources>
+    
+    <Grid x:Name="Root">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <StackPanel x:Name="mainStackA" Orientation="Horizontal" Grid.Row="0">
+            <Button x:Name="blackPawnBtn" Style="{StaticResource PieceSelectButtonStyle}" Tag="p" Click="pieceBtn_Click">
+                <Button.Resources>
+                    <SolidColorBrush x:Key="ButtonBackgroundPointerOver" Color="{ThemeResource PieceButtonDialogBackgroundPointerOver}"/>
+                    <SolidColorBrush x:Key="ButtonBackground" Color="{ThemeResource PieceButtonDialogBackground}"/>
+                    <SolidColorBrush x:Key="ButtonBackgroundPressed" Color="{ThemeResource PieceButtonDialogBackgroundPressed}"/>
+                </Button.Resources>
+                <Image Source="ms-appx:///Pieces/images/blackpawn.png"  />
+            </Button>
+            <Button x:Name="blackRookBtn" Style="{StaticResource PieceSelectButtonStyle}" Tag="r" Click="pieceBtn_Click">
+                <Button.Resources>
+                    <SolidColorBrush x:Key="ButtonBackgroundPointerOver" Color="{ThemeResource PieceButtonDialogBackgroundPointerOver}"/>
+                    <SolidColorBrush x:Key="ButtonBackground" Color="{ThemeResource PieceButtonDialogBackground}"/>
+                    <SolidColorBrush x:Key="ButtonBackgroundPressed" Color="{ThemeResource PieceButtonDialogBackgroundPressed}"/>
+                </Button.Resources>
+                <Image Source="ms-appx:///Pieces/images/blackrook.png"  />
+            </Button>
+            <Button x:Name="blackKnightBtn" Style="{StaticResource PieceSelectButtonStyle}" Tag="n" Click="pieceBtn_Click">
+                <Button.Resources>
+                    <SolidColorBrush x:Key="ButtonBackgroundPointerOver" Color="{ThemeResource PieceButtonDialogBackgroundPointerOver}"/>
+                    <SolidColorBrush x:Key="ButtonBackground" Color="{ThemeResource PieceButtonDialogBackground}"/>
+                    <SolidColorBrush x:Key="ButtonBackgroundPressed" Color="{ThemeResource PieceButtonDialogBackgroundPressed}"/>
+                </Button.Resources>
+                <Image Source="ms-appx:///Pieces/images/blackknight.png"  />
+            </Button>
+            <Button x:Name="blackBishopBtn" Style="{StaticResource PieceSelectButtonStyle}" Tag="b" Click="pieceBtn_Click">
+                <Button.Resources>
+                    <SolidColorBrush x:Key="ButtonBackgroundPointerOver" Color="{ThemeResource PieceButtonDialogBackgroundPointerOver}"/>
+                    <SolidColorBrush x:Key="ButtonBackground" Color="{ThemeResource PieceButtonDialogBackground}"/>
+                    <SolidColorBrush x:Key="ButtonBackgroundPressed" Color="{ThemeResource PieceButtonDialogBackgroundPressed}"/>
+                </Button.Resources>
+                <Image Source="ms-appx:///Pieces/images/blackbishop.png"  />
+            </Button>
+            <Button x:Name="blackQueenBtn" Style="{StaticResource PieceSelectButtonStyle}" Tag="q" Click="pieceBtn_Click">
+                <Button.Resources>
+                    <SolidColorBrush x:Key="ButtonBackgroundPointerOver" Color="{ThemeResource PieceButtonDialogBackgroundPointerOver}"/>
+                    <SolidColorBrush x:Key="ButtonBackground" Color="{ThemeResource PieceButtonDialogBackground}"/>
+                    <SolidColorBrush x:Key="ButtonBackgroundPressed" Color="{ThemeResource PieceButtonDialogBackgroundPressed}"/>
+                </Button.Resources>
+                <Image Source="ms-appx:///Pieces/images/blackqueen.png"  />
+            </Button>
+        </StackPanel>
+        <StackPanel x:Name="mainStackB" Orientation="Horizontal" Grid.Row="1">
+            <Button x:Name="whitePawnBtn" Style="{StaticResource PieceSelectButtonStyle}" Tag="P" Click="pieceBtn_Click">
+                <Button.Resources>
+                    <SolidColorBrush x:Key="ButtonBackgroundPointerOver" Color="{ThemeResource PieceButtonDialogBackgroundPointerOver}"/>
+                    <SolidColorBrush x:Key="ButtonBackground" Color="{ThemeResource PieceButtonDialogBackground}"/>
+                    <SolidColorBrush x:Key="ButtonBackgroundPressed" Color="{ThemeResource PieceButtonDialogBackgroundPressed}"/>
+                </Button.Resources>
+                <Image Source="ms-appx:///Pieces/images/whitepawn.png"  />
+            </Button>
+            <Button x:Name="whiteRookBtn" Style="{StaticResource PieceSelectButtonStyle}" Tag="R" Click="pieceBtn_Click">
+                <Button.Resources>
+                    <SolidColorBrush x:Key="ButtonBackgroundPointerOver" Color="{ThemeResource PieceButtonDialogBackgroundPointerOver}"/>
+                    <SolidColorBrush x:Key="ButtonBackground" Color="{ThemeResource PieceButtonDialogBackground}"/>
+                    <SolidColorBrush x:Key="ButtonBackgroundPressed" Color="{ThemeResource PieceButtonDialogBackgroundPressed}"/>
+                </Button.Resources>
+                <Image Source="ms-appx:///Pieces/images/whiterook.png"  />
+            </Button>
+            <Button x:Name="whiteKnightBtn" Style="{StaticResource PieceSelectButtonStyle}" Tag="N" Click="pieceBtn_Click">
+                <Button.Resources>
+                    <SolidColorBrush x:Key="ButtonBackgroundPointerOver" Color="{ThemeResource PieceButtonDialogBackgroundPointerOver}"/>
+                    <SolidColorBrush x:Key="ButtonBackground" Color="{ThemeResource PieceButtonDialogBackground}"/>
+                    <SolidColorBrush x:Key="ButtonBackgroundPressed" Color="{ThemeResource PieceButtonDialogBackgroundPressed}"/>
+                </Button.Resources>
+                <Image Source="ms-appx:///Pieces/images/whiteknight.png"  />
+            </Button>
+            <Button x:Name="whiteBishopBtn" Style="{StaticResource PieceSelectButtonStyle}" Tag="B" Click="pieceBtn_Click">
+                <Button.Resources>
+                    <SolidColorBrush x:Key="ButtonBackgroundPointerOver" Color="{ThemeResource PieceButtonDialogBackgroundPointerOver}"/>
+                    <SolidColorBrush x:Key="ButtonBackground" Color="{ThemeResource PieceButtonDialogBackground}"/>
+                    <SolidColorBrush x:Key="ButtonBackgroundPressed" Color="{ThemeResource PieceButtonDialogBackgroundPressed}"/>
+                </Button.Resources>
+                <Image Source="ms-appx:///Pieces/images/whitebishop.png"  />
+            </Button>
+            <Button x:Name="whiteQueenBtn" Style="{StaticResource PieceSelectButtonStyle}" Tag="Q" Click="pieceBtn_Click">
+                <Button.Resources>
+                    <SolidColorBrush x:Key="ButtonBackgroundPointerOver" Color="{ThemeResource PieceButtonDialogBackgroundPointerOver}"/>
+                    <SolidColorBrush x:Key="ButtonBackground" Color="{ThemeResource PieceButtonDialogBackground}"/>
+                    <SolidColorBrush x:Key="ButtonBackgroundPressed" Color="{ThemeResource PieceButtonDialogBackgroundPressed}"/>
+                </Button.Resources>
+                <Image Source="ms-appx:///Pieces/images/whitequeen.png"  />
+            </Button>
+        </StackPanel>
+    </Grid>
+</Page>

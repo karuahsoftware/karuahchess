@@ -41,7 +41,7 @@ namespace KaruahChess.Voice
         public SpeechRecognizerState State { get; private set; }
 
         private Action<List<int>, String> MoveFunctionA { get; set; }
-        private Action<bool> HelpFunction { get; set; }
+        private Func<bool, Task> HelpFunction { get; set; }
 
         private Action<List<string>, String> MoveFunctionB { get; set; }
 
@@ -85,7 +85,7 @@ namespace KaruahChess.Voice
         /// </summary>
         /// <param name="pLanguage"></param>
         /// <returns></returns>
-        public async Task Initialise(Language pLanguage, Action<List<int>, String> pMoveFunctionA, Action<List<string>, String> pMoveFunctionB, Action<List<char>, String> pPieceFunction, Action<bool> pHelpFunction)
+        public async Task Initialise(Language pLanguage, Action<List<int>, String> pMoveFunctionA, Action<List<string>, String> pMoveFunctionB, Action<List<char>, String> pPieceFunction, Func<bool, Task> pHelpFunction)
         {
             // Stop first incase object already exists
             Stop();

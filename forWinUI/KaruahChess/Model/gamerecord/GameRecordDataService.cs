@@ -23,6 +23,7 @@ using System.Linq;
 using Microsoft.Data.Sqlite;
 using KaruahChessEngine;
 using KaruahChess.Common;
+using System.Collections;
 
 namespace KaruahChess.Model
 {
@@ -432,6 +433,20 @@ namespace KaruahChess.Model
             return _gameRecordDict.Count();
         }
 
+        /// <summary>
+        /// Gets the game history
+        /// </summary>        
+        public SortedList<int, GameRecordArray> GameHistory()
+        {            
+            SortedList<int, GameRecordArray> history = new SortedList<int, GameRecordArray>();
+
+            foreach (var kvp in _gameRecordDict)
+            {
+                history.Add(kvp.Key, kvp.Value);
+            }
+
+            return history;
+        }
 
     }
 }

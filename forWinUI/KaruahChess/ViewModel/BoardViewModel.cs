@@ -47,7 +47,6 @@ using static KaruahChess.Rules.Move;
 using Windows.Foundation;
 using Windows.Media.Playback;
 using Microsoft.UI.Dispatching;
-using System.Diagnostics;
 
 namespace KaruahChess.ViewModel
 {
@@ -59,41 +58,31 @@ namespace KaruahChess.ViewModel
         CancellationTokenSource _ctsComputer;
         CancellationTokenSource _ctsHint;
         TextMessage _boardTextMessageControl;
-        AboutPage _aboutPageControl;        
-        ImportPGN _importPGNControl;
-        Export _exportControl;
         MoveNavigator _moveNavigatorControl;
         TilePanel _boardTilePanelControl;
         PieceAnimation _pieceAnimationControl;
         VoiceRecognition _voiceRecogniser;
-        VoiceHelp _voiceHelpControl;
-        EngineSettings _engineSettingsControl;
-        SoundSettings _soundSettingsControl;
-        BoardSettings _boardSettingsControl;
-        PieceSettings _pieceSettingsControl;
-        BoardAnimation _boardAnimation;
-        PieceEditTool _pieceEditToolControl;
+        BoardAnimation _boardAnimation;        
         LevelIndicator _levelIndicatorControl;
-        ClockSettings _clockSettingsControl;
         bool _pawnPromotionDialogOpen = false;
         MediaPlayer _mediaplayerReadText;
         MediaPlayer _mediaplayerPieceMoveSound;
         KaruahChessEngineClass hintBoard = new KaruahChessEngineClass();
+        KaruahChessEngineClass editBoard = new KaruahChessEngineClass();
         ContentDialog boardContentDialog = null;
         int boardContentDialogCount = 0;
-        private SemaphoreSlim navThrottler = new SemaphoreSlim(initialCount: 1);
-        private SemaphoreSlim readTextThrottler = new SemaphoreSlim(1, 1);
-        private SemaphoreSlim pieceMoveSoundThrottler = new SemaphoreSlim(1, 1);
-        private bool _userMoveProcessing = false;
-        
-        private MainWindow mainWindowRef;
-        private DispatcherQueue mainDispatcherQueue = DispatcherQueue.GetForCurrentThread();
-        private bool postInitComplete = false;
-
+        SemaphoreSlim navThrottler = new SemaphoreSlim(initialCount: 1);
+        SemaphoreSlim readTextThrottler = new SemaphoreSlim(1, 1);
+        SemaphoreSlim pieceMoveSoundThrottler = new SemaphoreSlim(1, 1);
+        bool _userMoveProcessing = false;        
+        MainWindow mainWindowRef;
+        DispatcherQueue mainDispatcherQueue = DispatcherQueue.GetForCurrentThread();
+        bool postInitComplete = false;
         public Coordinates coordinatesControl;
         public ClockPanel chessClockControl;
-        
-        
+        HashSet<int> editSelection = new HashSet<int>();
+        int editLastTapIndex = -1;
+
 
         public enum MoveTypeEnum { None = 0, Normal = 1, EnPassant = 2, Castle = 3, Promotion = 4 }
         // 0  Game ready, 1 CheckMate, 2 Stalemate, 3 Resign
@@ -104,8 +93,9 @@ namespace KaruahChess.ViewModel
         // Error codes
         private static int noCaptureDevices = -1072845856;
 
+
         /// <summary>
-        /// Options menu items
+        /// Options menu 
         /// </summary>
         private ObservableCollectionCustom<Tile> _boardTiles;
         public ObservableCollectionCustom<Tile> BoardTiles
@@ -483,9 +473,12 @@ namespace KaruahChess.ViewModel
                     UpdateBoardIndicators(GameRecordDataService.instance.GetCurrentGame());
                     EndPieceAnimation();
                     RaisePropertyChanged(nameof(ArrangeBoardEnabled));
-                    if (value == false && _pieceEditToolControl != null) _pieceEditToolControl.Close();
+                    if (value == false)
+                    {
+                        editSelection.Clear();
+                        BoardSquare.PieceEditSelectClearAll();
 
-                                        
+                    }                                        
                 }
             }
         }
@@ -836,7 +829,67 @@ namespace KaruahChess.ViewModel
             }
         }
 
-        
+        /// <summary>
+        /// Hint button enabled
+        /// </summary>  
+        private ParamHint _hintEnabled;
+        public bool HintEnabled
+        {
+            get
+            {
+                var paramHintObj = ParameterDataService.instance.Get<ParamHint>();
+                _hintEnabled = paramHintObj;
+                return _hintEnabled.Enabled;
+            }
+            set
+            {
+                if (_hintEnabled != null && _hintEnabled.Enabled != value)
+                {
+                    _hintEnabled.Enabled = value;
+                    ParameterDataService.instance.Set<ParamHint>(_hintEnabled);
+                    RaisePropertyChanged(nameof(HintEnabled));
+                }
+            }
+        }
+
+        /// <summary>
+        /// Hint move piece enabled
+        /// </summary>  
+        private ParamHintMove _hintMoveEnabled;
+        public bool HintMoveEnabled
+        {
+            get
+            {
+                var paramHintMoveObj = ParameterDataService.instance.Get<ParamHintMove>();
+                _hintMoveEnabled = paramHintMoveObj;
+                return _hintMoveEnabled.Enabled;
+            }
+            set
+            {
+                if (_hintMoveEnabled != null && _hintMoveEnabled.Enabled != value)
+                {
+                    _hintMoveEnabled.Enabled = value;
+                    ParameterDataService.instance.Set<ParamHintMove>(_hintMoveEnabled);
+                    RaisePropertyChanged(nameof(HintMoveEnabled));
+                }
+            }
+        }
+
+        /// <summary>
+        /// Main control orientation
+        /// </summary>
+        private Orientation _mainControlOrientation;
+        public Orientation MainControlOrientation
+        {
+            get { return _mainControlOrientation; }
+            set
+            {
+                _mainControlOrientation = value;
+                RaisePropertyChanged(nameof(MainControlOrientation));
+            }
+        }
+
+
         // Constructor
         public BoardViewModel(MainWindow pMainWindow)
         {            
@@ -914,7 +967,6 @@ namespace KaruahChess.ViewModel
             _boardTextMessageControl = pTextControl;
         }
 
-
         /// <summary>
         ///  Sets the board tile panel control
         /// </summary>
@@ -936,17 +988,6 @@ namespace KaruahChess.ViewModel
            
         }
 
-        
-        /// <summary>
-        /// Sets the aboutPage control
-        /// </summary>
-        /// <param name="paboutPageControl"></param>
-        public void SetAboutPageControl(AboutPage pAboutPageControl)
-        {
-            _aboutPageControl = pAboutPageControl;
-
-        }
-        
         /// <summary>
         /// Sets the chess clock control
         /// </summary>
@@ -954,26 +995,6 @@ namespace KaruahChess.ViewModel
         public void SetChessClockControl(ClockPanel pChessClockControl)
         {
             chessClockControl = pChessClockControl;
-
-        }
-
-        /// <summary>
-        /// Sets the import PGN control
-        /// </summary>
-        /// <param name="pImportPGNControl"></param>
-        public void SetImportPGNControl(ImportPGN pImportPGNControl)
-        {
-            _importPGNControl = pImportPGNControl;
-
-        }
-
-        /// <summary>
-        /// Sets the export control
-        /// </summary>
-        /// <param name="pExportControl"></param>
-        public void SetExportControl(Export pExportControl)
-        {
-            _exportControl = pExportControl;
 
         }
 
@@ -996,67 +1017,8 @@ namespace KaruahChess.ViewModel
             coordinatesControl = pCoordinatesControl;
 
         }
-
-        
-
-        /// <summary>
-        /// Sets the voice help control
-        /// </summary>
-        /// <param name="pVoiceHelpControl"></param>
-        public void SetVoiceHelpControl(VoiceHelp pVoiceHelpControl)
-        {
-            _voiceHelpControl = pVoiceHelpControl;
-
-        }
-
-        /// <summary>
-        /// Sets the piece type select control
-        /// </summary>        
-        public void SetPieceTypeSelectControl(PieceEditTool pPieceEditToolControl)
-        {
-            _pieceEditToolControl = pPieceEditToolControl;
-
-        }
-
-        /// <summary>
-        /// Sets the engine settings control
-        /// </summary>
-        /// <param name="pEngineSettingsControl"></param>
-        public void SetEngineSettingsControl(EngineSettings pEngineSettingsControl)
-        {
-            _engineSettingsControl = pEngineSettingsControl;
-
-        }
-
-        
-        /// <summary>
-        /// Sets the sound settings control
-        /// </summary>
-        /// <param name="pSoundSettingsControl"></param>
-        public void SetSoundSettingsControl(SoundSettings pSoundSettingsControl)
-        {
-            _soundSettingsControl = pSoundSettingsControl;
-
-        }
-
-        /// <summary>
-        /// Sets the board settings control
-        /// </summary>        
-        public void SetBoardSettingsControl(BoardSettings pBoardSettingsControl)
-        {
-            _boardSettingsControl = pBoardSettingsControl;
-
-        }
-
-        /// <summary>
-        /// Sets the piece settings control
-        /// </summary>        
-        public void SetPieceSettingsControl(PieceSettings pPieceSettingsControl)
-        {
-            _pieceSettingsControl = pPieceSettingsControl;
-
-        }
-
+                
+                                       
         /// <summary>
         /// Sets the level indicator control
         /// </summary>
@@ -1067,16 +1029,7 @@ namespace KaruahChess.ViewModel
 
         }
 
-        /// <summary>
-        /// Sets the clock settings control
-        /// </summary>
-        /// <param name="pClockSettingsControl"></param>
-        public void SetClockSettingsControl(ClockSettings pClockSettingsControl)
-        {
-            _clockSettingsControl = pClockSettingsControl;
-
-        }
-
+                
         /// <summary>
         /// Highlights the last move
         /// </summary>
@@ -1212,9 +1165,9 @@ namespace KaruahChess.ViewModel
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        public void btnVoiceHelp_Click(object sender, RoutedEventArgs e)
+        public async void btnVoiceHelp_Click(object sender, RoutedEventArgs e)
         {
-            HelpVoiceAction(true);
+            await HelpVoiceAction(true);
 
         }
 
@@ -1333,54 +1286,70 @@ namespace KaruahChess.ViewModel
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        public void btnAbout_Click(object sender, RoutedEventArgs e)
+        public async void btnAbout_Click(object sender, RoutedEventArgs e)
         {
-            if (_aboutPageControl != null) {
-                _aboutPageControl.Show();
-                PositionBoardMessage();                                
-            }
-                        
+            ContentDialog dialog = new AboutDialog().CreateDialog();
+            await showContentDialog(dialog);
+
         }
 
         
 
         /// <summary>
-        /// About button
+        /// Import button
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        public void btnImportPGN_Click(object sender, RoutedEventArgs e)
+        public async void btnImportPGN_Click(object sender, RoutedEventArgs e)
         {
-            if (_importPGNControl != null)
-            {
-                StopSearchJob();
-                _importPGNControl.Show();
-                PositionBoardMessage();
-
-            }
-            
+            StopSearchJob();
+            ContentDialog dialog = new ImportPGNDialog(this).CreateDialog();
+            await showContentDialog(dialog);
         }
 
         /// <summary>
-        /// About button
+        /// Removed selected pieces from the board
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        public void btnExport_Click(object sender, RoutedEventArgs e)
+        public void btnEditEraseSelection_Click(object sender, RoutedEventArgs e)
         {
-            if (_exportControl != null)
-            {
-                // Gets the array record of the board currently displayed
-                // and sets the export board control to the same.
-                GameRecordArray recordArray = GameRecordDataService.instance.Get(GameRecordCurrentValue);
-                _exportControl.SetBoard(recordArray);
-                _exportControl.Show();
-                PositionBoardMessage();
+            if (editSelection.Count > 0)
+            {                
+                foreach (int sqIndex in editSelection)
+                {
+                  ArrangeUpdate(' ', sqIndex);
+                }
 
+                // Clear any edit selections
+                editSelection.Clear();
+                BoardSquare.PieceEditSelectClearAll();            
             }
-                       
-
+            else 
+            {                
+                 ShowBoardMessage("", "Cannot remove pieces, no squares selected", TextMessage.TypeEnum.Info, TextMessage.AnimationEnum.FadeOut);
+            }
         }
+
+        /// <summary>
+        /// Open the dialog that adds pieces to the board
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        public async void btnAddPiecesDialog_Click(object sender, RoutedEventArgs e)
+        {
+            if (editSelection.Count > 0)
+            {
+                var pieceEditDialogPage = new PieceEditDialog();
+                var pieceEditDialog = pieceEditDialogPage.CreateDialog(this);
+                await showContentDialog(pieceEditDialog);
+            }
+            else
+            {
+                ShowBoardMessage("", "Cannot add pieces, no squares selected", TextMessage.TypeEnum.Info, TextMessage.AnimationEnum.FadeOut);
+            }
+        }
+
 
 
         /// <summary>
@@ -1389,77 +1358,98 @@ namespace KaruahChess.ViewModel
         /// <param name="sender"></param>
         /// <param name="e"></param>
         public async void BoardTilePanel_TileClicked(TilePanel pTilePanel, object pEntity, int pTileId)
-        {
-            bool gameFinished = !(GameRecordDataService.instance.CurrentGame.GetStateGameStatus() == (int)BoardStatusEnum.Ready);
+    {
+        bool gameFinished = !(GameRecordDataService.instance.CurrentGame.GetStateGameStatus() == (int)BoardStatusEnum.Ready);
             
-            if (pEntity != null && !ArrangeBoardEnabled && !LockPanel && !pTilePanel.dragInProgress) {                
-                if (gameFinished == false)
-                {
-                    var sq = (BoardSquare)pEntity;
-                    await UserMoveAdd(sq, true);
-                }
-                else
-                {                 
-                   int maxRecId = GameRecordDataService.instance.GetMaxId();
-                   NavigateGameRecord(maxRecId, false, true, true);                               
-                }
-               
+        if (pEntity != null && !ArrangeBoardEnabled && !LockPanel && !pTilePanel.dragInProgress) {                
+            if (gameFinished == false)
+            {
+                var sq = (BoardSquare)pEntity;
+                await UserMoveAdd(sq, true);
             }
-            else if (_pieceEditToolControl != null && ArrangeBoardEnabled && !pTilePanel.dragInProgress)
+            else
+            {                 
+                int maxRecId = GameRecordDataService.instance.GetMaxId();
+                NavigateGameRecord(maxRecId, false, true, true);                               
+            }
+               
+        }
+        else if (ArrangeBoardEnabled && !pTilePanel.dragInProgress)
+        {                
+            var sq = (BoardSquare)pEntity;  
+                
+
+            if (sq.PieceType == TypeEnum.King)
+            {
+                var record = GameRecordDataService.instance.Get(GameRecordCurrentValue);
+                ContentDialog dialog = new CastlingRightsDialog(sq.PieceType, sq.PieceColour, record, this).CreateDialog();
+                await showContentDialog(dialog);
+            }
+            else
             {
                 int sqIndex = pTileId - 1;
-                if (_pieceEditToolControl.IsOpen())
-                {
-                    _pieceEditToolControl.Close();
-                    BoardSquare.EllipseClearAll();
+                if (!editSelection.Contains(sqIndex)) {
+                    // Select the tile
+                    editSelection.Add(sqIndex);
+                    editLastTapIndex = sqIndex;
                 }
-                else
-                {
-                    var sq = (BoardSquare)pEntity;
-
-                    if (sq.PieceType == TypeEnum.King)
-                    {
-                        var record = GameRecordDataService.instance.Get(GameRecordCurrentValue);
-                        CastlingRightsDialog castlingRights = new CastlingRightsDialog(sq.PieceType, sq.PieceColour, record, this);
-                        await showContentDialog(castlingRights);
-                    }
-                    else
-                    {
-                        if (sq.PieceColour == ColourEnum.White) _pieceEditToolControl.EditPieceColour = Common.Constants.WHITEPIECE;
-                        else if (sq.PieceColour == ColourEnum.Black) _pieceEditToolControl.EditPieceColour = Common.Constants.BLACKPIECE;
-
-                        Point tileCoord = pTilePanel.GetTileCoordinates(pTileId);
-                        _pieceEditToolControl.Show(sqIndex, tileCoord, BoardSquareDataService.instance.SquareSize);
-
-                        BoardSquare.EllipseClearAll();
-                        if (_pieceEditToolControl.IsOpen())
-                        {
-                            var sqMark = new HashSet<int>() { sqIndex };
-                            SolidColorBrush colour = new SolidColorBrush(Colors.DarkGreen);
-                            BoardSquare.EllipseShow(sqMark, colour, true);
+                else if (sq.PieceType != TypeEnum.Empty && editLastTapIndex == sqIndex && editSelection.Contains(sqIndex)) {
+                    // Attempt to select all pieces of the same type
+                    var found = false;
+                    foreach(Tile boardtile in pTilePanel.Tiles) {
+                        BoardSquare boardtilesquare = (BoardSquare)boardtile.Entity;
+                        int boardtilesquareindex = boardtile.Id - 1;
+                        if (sqIndex != boardtilesquareindex && boardtilesquare.PieceType != TypeEnum.Empty && boardtilesquare.PieceType == sq.PieceType && boardtilesquare.PieceColour == sq.PieceColour && (!editSelection.Contains(boardtilesquareindex))) {
+                            editSelection.Add(boardtilesquareindex);
+                            found = true;
                         }
                     }
+
+                    // If no similar pieces found just toggle the selection
+                    if (!found)
+                    {
+                        if (editSelection.Contains(sqIndex)) {
+                            editSelection.Remove(sqIndex);
+                        }
+                        else {
+                            editSelection.Add(sqIndex);
+                        }
+                            
+                    }
+                    editLastTapIndex = -1;
+                } 
+                else
+                {
+                    if (editSelection.Contains(sqIndex)) {
+                        editSelection.Remove(sqIndex);
+                    }
+                    else {
+                        editSelection.Add(sqIndex);
+                    }
+                    editLastTapIndex = -1;
                 }
-                
+
+                SolidColorBrush rectColour = new SolidColorBrush(Windows.UI.Color.FromArgb(255, 233, 30, 99));
+                BoardSquare.PieceEditSelectShow(editSelection, rectColour);
             }
-
         }
+    }
 
-        /// <summary>
-        /// Runs when a tile is dragged from one square to another
-        /// </summary>
-        /// <param name="pFromId"></param>
-        /// <param name="pToId"></param>
+    /// <summary>
+    /// Runs when a tile is dragged from one square to another
+    /// </summary>
+    /// <param name="pFromId"></param>
+    /// <param name="pToId"></param>
         public async void BoardTilePanel_MoveAction(int pFromIndex, int pToIndex)
-        {
-            // Clear move
+    {
+        // Clear move
             _move.Clear();
 
-            // Add the moves
-            
+        // Add the moves
+
             if (!LockPanel && !ArrangeBoardEnabled)
-            {
-                await UserMoveAdd(BoardSquareDataService.instance.Get(pFromIndex), false);
+        {
+            await UserMoveAdd(BoardSquareDataService.instance.Get(pFromIndex), false);
                 await UserMoveAdd(BoardSquareDataService.instance.Get(pToIndex), false);
             }
             else
@@ -1473,69 +1463,62 @@ namespace KaruahChess.ViewModel
         /// <summary>
         /// Engine settings button event
         /// </summary>
-        public void btnEngineSettings_Click(object sender, RoutedEventArgs e)
+        public async void btnEngineSettings_Click(object sender, RoutedEventArgs e)
         {
-            showEngineSettingsDialog();           
+            ContentDialog dialog = new EngineSettingsDialog(this).CreateDialog();
+            await showContentDialog(dialog);
         }
 
-        /// <summary>
-        /// Shows the engine settings dialog
-        /// </summary>
-        public void showEngineSettingsDialog()
-        {
-            if (_engineSettingsControl != null)
-            {
-                _engineSettingsControl.Show();
-            }
-        }
-
+        
                
         /// <summary>
         /// Sound settings button event
         /// </summary>
-        public void btnSoundSettings_Click(object sender, RoutedEventArgs e)
+        public async void btnSoundSettings_Click(object sender, RoutedEventArgs e)
         {
-            if (_soundSettingsControl != null)
-            {
-                _soundSettingsControl.Show();
-            }
-                        
+            ContentDialog dialog = new SoundSettingsDialog(this).CreateDialog();
+            await showContentDialog(dialog);
+
         }
 
         /// <summary>
         /// Board settings button event
         /// </summary>
-        public void btnBoardSettings_Click(object sender, RoutedEventArgs e)
+        public async void btnBoardSettings_Click(object sender, RoutedEventArgs e)
         {
-            if (_boardSettingsControl != null)
-            {
-                _boardSettingsControl.Show();
-            }
-                       
+            ContentDialog dialog = new BoardSettingsDialog(this).CreateDialog();
+            await showContentDialog(dialog);
+
         }
 
         /// <summary>
         /// Piece settings button event
         /// </summary>
-        public void btnPieceSettings_Click(object sender, RoutedEventArgs e)
+        public async void btnPieceSettings_Click(object sender, RoutedEventArgs e)
         {
-            if (_pieceSettingsControl != null)
-            {
-                _pieceSettingsControl.Show();
-            }
+            ContentDialog dialog = new PieceSettingsDialog(this).CreateDialog();
+            await showContentDialog(dialog);
 
         }
 
         /// <summary>
         /// Shows the clock settings dialog
         /// </summary>
-        public void ShowClockSettingsDialog()
+        public async Task ShowClockSettingsDialog()
         {
-            if (_clockSettingsControl != null)
-            {
-                _clockSettingsControl.Show();
-            }
-            
+            ContentDialog dialog = new ClockSettingsDialog(this).CreateDialog();
+            await showContentDialog(dialog);
+
+        }
+
+        /// <summary>
+        /// Hint settings button event
+        /// </summary>
+        public async void btnHintSettings_Click(object sender, RoutedEventArgs e)
+        {
+            ContentDialog dialog = new HintSettingsDialog(this).CreateDialog();
+            await showContentDialog(dialog);
+
         }
 
         /// <summary>
@@ -1586,15 +1569,15 @@ namespace KaruahChess.ViewModel
             if (ArrangeBoardEnabled)
             {
                 GameRecordArray record = GameRecordDataService.instance.Get(GameRecordCurrentValue);
-                _pieceEditToolControl.BufferBoard.SetBoardArray(record.BoardArray);
-                _pieceEditToolControl.BufferBoard.SetStateArray(record.StateArray);
+                editBoard.SetBoardArray(record.BoardArray);
+                editBoard.SetStateArray(record.StateArray);
                                 
-                var mResult = _pieceEditToolControl.BufferBoard.ArrangeUpdate(pFen, pToIndex);
+                var mResult = editBoard.ArrangeUpdate(pFen, pToIndex);
 
                 if (mResult.success)
                 {
-                    _pieceEditToolControl.BufferBoard.GetBoardArray(record.BoardArray);
-                    _pieceEditToolControl.BufferBoard.GetStateArray(record.StateArray);                    
+                    editBoard.GetBoardArray(record.BoardArray);
+                    editBoard.GetStateArray(record.StateArray);                    
                     BoardSquareDataService.instance.Update(record, true);
                     GameRecordDataService.instance.UpdateGameState(record);
                 }
@@ -1618,15 +1601,15 @@ namespace KaruahChess.ViewModel
             if (ArrangeBoardEnabled)
             {
                 GameRecordArray record = GameRecordDataService.instance.Get(GameRecordCurrentValue);
-                _pieceEditToolControl.BufferBoard.SetBoardArray(record.BoardArray);
-                _pieceEditToolControl.BufferBoard.SetStateArray(record.StateArray);
+                editBoard.SetBoardArray(record.BoardArray);
+                editBoard.SetStateArray(record.StateArray);
                                 
-                var mResult = _pieceEditToolControl.BufferBoard.Arrange(pFromIndex, pToIndex);
+                var mResult = editBoard.Arrange(pFromIndex, pToIndex);
 
                 if (mResult.success)
                 {
-                    _pieceEditToolControl.BufferBoard.GetBoardArray(record.BoardArray);
-                    _pieceEditToolControl.BufferBoard.GetStateArray(record.StateArray);
+                    editBoard.GetBoardArray(record.BoardArray);
+                    editBoard.GetStateArray(record.StateArray);
                     BoardSquareDataService.instance.Update(record, true);
                     GameRecordDataService.instance.UpdateGameState(record);
                 }
@@ -1690,10 +1673,10 @@ namespace KaruahChess.ViewModel
                 if ((!PromoteAutoEnabled) && GameRecordDataService.instance.CurrentGame.IsPawnPromotion(_move.FromIndex, _move.ToIndex))
                 {
                     _pawnPromotionDialogOpen = true;
-                    var promotionDialog = new PawnPromotionDialog();
-                    promotionDialog.CreateContent(GameRecordDataService.instance.CurrentGame.GetStateActiveColour());
+                    var promotionPage = new PawnPromotionDialog(GameRecordDataService.instance.CurrentGame.GetStateActiveColour());
+                    var promotionDialog = promotionPage.CreateDialog();
                     await showContentDialog(promotionDialog);
-                    promotionPiece = promotionDialog.Result;
+                    promotionPiece = promotionPage.Result;
                     _pawnPromotionDialogOpen = false;
                 }
 
@@ -1803,13 +1786,9 @@ namespace KaruahChess.ViewModel
                 
                 ComputerMoveProcessing = true;
                                 
-                GameRecordArray boardBeforeMove = GameRecordDataService.instance.GetCurrentGame();
-                int gameStatusBeforeMove = GameRecordDataService.instance.CurrentGame.GetStateGameStatus();
-
-                // Start the search      
-                SearchOptions options;
-                options.randomiseFirstMove = RandomiseFirstMoveEnabled;
                 
+                // Start the search      
+                SearchOptions options;                
                 Strength strengthSetting = Constants.strengthList[Math.Clamp(LimitSkillLevel, 0, Constants.strengthList.Count - 1)];
                 options.limitSkillLevel = strengthSetting.SkillLevel;  
                 
@@ -1827,6 +1806,10 @@ namespace KaruahChess.ViewModel
                     options.limitThreads = Environment.ProcessorCount > 1 ? Environment.ProcessorCount - 1 : 1;
                 }
 
+                options.randomiseFirstMove = RandomiseFirstMoveEnabled;
+
+                // Try alternate move if repeat move detected
+                options.alternateMove = IsRepeatMove();
 
                 var moveTask = Task.Run(() => GameRecordDataService.instance.CurrentGame.SearchStart(options), token);
                 SearchResult topMove = await moveTask;
@@ -1835,68 +1818,9 @@ namespace KaruahChess.ViewModel
                 {
                     helper.LogException(moveTask.Exception);
                 }
-                 
-                if((!topMove.cancelled) && (topMove.error == 0)) { 
-                    MoveResult mResult = GameRecordDataService.instance.CurrentGame.Move(topMove.moveFromIndex, topMove.moveToIndex, topMove.promotionPieceType, true, true);
-                    if (mResult.success) {
 
-                        // Read Text, show message
-                        var soundTasks = new List<Task>();
-                                                                        
-                        // Do animation
-                        var boardAfterMove = GameRecordDataService.instance.GetCurrentGame();
-                        double duration = Constants.movespeedseconds[Math.Clamp(moveSpeed, 0, Constants.movespeedseconds.Count - 1)];
-                        var moveAnimationList = _boardAnimation.CreateAnimationList(boardBeforeMove, boardAfterMove, duration);
-                        BoardSquareDataService.instance.Update(boardAfterMove, true);
-
-                        long transId = GameRecordDataService.instance.transactionId;
-                        await StartPieceAnimation(true, moveAnimationList, true);
-
-                        // Piece move sound effect
-                        soundTasks.Add(playPieceMoveSoundEffect());
-
-                        // Wait for sound tasks to finish
-                        if (soundTasks.Count > 0) {
-                            await Task.WhenAll(soundTasks);
-                        }
-
-                        // Continue if nothing changed during the animation
-                        if (transId == GameRecordDataService.instance.transactionId)
-                        {
-                            
-                            RecordCurrentGameState();
-                            CheckChessClock();
-
-                            // Update score if checkmate occurred
-                            if (gameStatusBeforeMove == (int)BoardStatusEnum.Ready && GameRecordDataService.instance.CurrentGame.GetStateGameStatus() == (int)BoardStatusEnum.Checkmate)
-                            {
-                                await afterCheckMate(GameRecordDataService.instance.CurrentGame);
-                            }
-                        }
-
-                    }
-                    else 
-                    {
-                        if (topMove.moveFromIndex > -1 && topMove.moveToIndex > -1)
-                        {                            
-                            ShowBoardMessage("", "Engine attempted an invalid move.", TextMessage.TypeEnum.Error, TextMessage.AnimationEnum.Fixed);   
-                        }
-                        else
-                        {                            
-                            ShowBoardMessage("", "Move not received from Engine.", TextMessage.TypeEnum.Error, TextMessage.AnimationEnum.Fixed);
-                            
-                        }
-                    }
-                }
-                else
-                {
-                    if (topMove.error > 0)
-                    {
-                        ShowBoardMessage("", topMove.errorMessage + "." , TextMessage.TypeEnum.Error, TextMessage.AnimationEnum.Fixed);
-                        helper.LogError(topMove.error);
-                    }
-                    
-                }
+                await DoMoveOnBoard(topMove);
+                
 
                 // Clear the cancellation token source
                 _ctsComputer = null;
@@ -1910,8 +1834,7 @@ namespace KaruahChess.ViewModel
                 
             }
         }
-
-
+                
         /// <summary>
         /// Start hint task
         /// </summary>
@@ -1931,13 +1854,14 @@ namespace KaruahChess.ViewModel
                 
 
                 // Hint always uses the highest selectable engine strength
-                SearchOptions searchOptions = new SearchOptions();
-                searchOptions.randomiseFirstMove = false;
+                SearchOptions searchOptions = new SearchOptions();                
                 searchOptions.limitSkillLevel = Constants.strengthList[^1].SkillLevel;
                 searchOptions.limitDepth = Constants.strengthList[^1].Depth;
                 searchOptions.limitNodes = Constants.NODELIMIT_STANDARD;
                 searchOptions.limitMoveDuration = Constants.strengthList[^1].TimeLimitms;
                 searchOptions.limitThreads = Environment.ProcessorCount > 1 ? Environment.ProcessorCount - 1 : 1;
+                searchOptions.randomiseFirstMove = false;
+                searchOptions.alternateMove = false;
 
                 _ctsHint = new CancellationTokenSource();
                 var token = _ctsHint.Token;
@@ -1950,20 +1874,30 @@ namespace KaruahChess.ViewModel
                     helper.LogException(moveTask.Exception);
                 }
 
+                bool moveSuccess = false;
                 if ((!topMove.cancelled) && (topMove.error == 0))
                 {
-                    HashSet<int> moveIndexes = new HashSet<int>();
-                    if (topMove.moveFromIndex != topMove.moveToIndex)
+                    if (HintMoveEnabled)
                     {
-                        moveIndexes.Add(topMove.moveFromIndex);
-                        moveIndexes.Add(topMove.moveToIndex);
+                        moveSuccess = await DoMoveOnBoard(topMove);
                     }
-
-                    int boardColourIndex = Constants.darkSquareColourList.IndexOf(ColourDarkSquaresARGB);
-                    if (boardColourIndex > -1)
+                    else
                     {
-                        BoardSquare.RectangleShow(moveIndexes, Constants.hintColourList[boardColourIndex]);
-                        ReadText("Best move hint.");
+                        HashSet<int> moveIndexes = new HashSet<int>();
+                        if (topMove.moveFromIndex != topMove.moveToIndex)
+                        {
+                            moveIndexes.Add(topMove.moveFromIndex);
+                            moveIndexes.Add(topMove.moveToIndex);
+                        }
+
+                        int boardColourIndex = Constants.darkSquareColourList.IndexOf(ColourDarkSquaresARGB);
+                        if (boardColourIndex > -1)
+                        {
+                            string fromCoord = helper.BoardCoordinateDict[topMove.moveFromIndex];
+                            string toCoord = helper.BoardCoordinateDict[topMove.moveToIndex];
+                            BoardSquare.RectangleShow(moveIndexes, Constants.hintColourList[boardColourIndex]);
+                            ReadText($"Best move is {fromCoord} to {toCoord}");
+                        }
                     }
                 }
                 else
@@ -1978,6 +1912,11 @@ namespace KaruahChess.ViewModel
 
                 ComputerHintProcessing = false;
                 LockPanel = false;
+
+                if (moveSuccess)
+                {
+                    await StartComputerMoveTask();
+                }
             }
             else
             {
@@ -1996,8 +1935,84 @@ namespace KaruahChess.ViewModel
                 }
 
             }
+                        
+        }
 
-            
+        private async Task<bool> DoMoveOnBoard(SearchResult topMove)
+        {
+            bool success = false;
+
+            if ((!topMove.cancelled) && (topMove.error == 0))
+            {
+                GameRecordArray boardBeforeMove = GameRecordDataService.instance.GetCurrentGame();
+                int gameStatusBeforeMove = GameRecordDataService.instance.CurrentGame.GetStateGameStatus();
+
+                MoveResult mResult = GameRecordDataService.instance.CurrentGame.Move(topMove.moveFromIndex, topMove.moveToIndex, topMove.promotionPieceType, true, true);
+                if (mResult.success)
+                {
+                    
+                    // Read Text, show message
+                    var soundTasks = new List<Task>();
+
+                    // Do animation
+                    var boardAfterMove = GameRecordDataService.instance.GetCurrentGame();
+                    double duration = Constants.movespeedseconds[Math.Clamp(moveSpeed, 0, Constants.movespeedseconds.Count - 1)];
+                    var moveAnimationList = _boardAnimation.CreateAnimationList(boardBeforeMove, boardAfterMove, duration);
+                    BoardSquareDataService.instance.Update(boardAfterMove, true);
+
+                    long transId = GameRecordDataService.instance.transactionId;
+                    await StartPieceAnimation(true, moveAnimationList, true);
+
+                    // Piece move sound effect
+                    soundTasks.Add(playPieceMoveSoundEffect());
+
+                    // Wait for sound tasks to finish
+                    if (soundTasks.Count > 0)
+                    {
+                        await Task.WhenAll(soundTasks);
+                    }
+
+                    // Continue if nothing changed during the animation
+                    if (transId == GameRecordDataService.instance.transactionId)
+                    {
+
+                        RecordCurrentGameState();
+                        CheckChessClock();
+
+                        // Update score if checkmate occurred
+                        if (gameStatusBeforeMove == (int)BoardStatusEnum.Ready && GameRecordDataService.instance.CurrentGame.GetStateGameStatus() == (int)BoardStatusEnum.Checkmate)
+                        {
+                            await afterCheckMate(GameRecordDataService.instance.CurrentGame);
+                        }
+
+                        success = true;
+                    }
+
+                }
+                else
+                {
+                    if (topMove.moveFromIndex > -1 && topMove.moveToIndex > -1)
+                    {
+                        ShowBoardMessage("", "Engine attempted an invalid move.", TextMessage.TypeEnum.Error, TextMessage.AnimationEnum.Fixed);
+                    }
+                    else
+                    {
+                        ShowBoardMessage("", "Move not received from Engine.", TextMessage.TypeEnum.Error, TextMessage.AnimationEnum.Fixed);
+
+                    }
+                }
+            }
+            else
+            {
+                if (topMove.error > 0)
+                {
+                    ShowBoardMessage("", topMove.errorMessage + ".", TextMessage.TypeEnum.Error, TextMessage.AnimationEnum.Fixed);
+                    helper.LogError(topMove.error);
+                }
+
+            }
+
+            return success;
         }
 
         /// <summary>
@@ -2427,9 +2442,24 @@ namespace KaruahChess.ViewModel
             var boardVerticalMargin = BoardCoordinateMargin.Top + BoardCoordinateMargin.Bottom;
             var rootHorizontalPadding = RootPadding.Left + RootPadding.Right;
             var rootVerticalPadding = RootPadding.Top + RootPadding.Bottom;
+            var actionButtonGutterWidth = 0;
+            var actionButtonGutterHeight = 0;
 
-            var boardWidthAvailable = windowWidth - boardBorderHorizontalThickness - boardHorizontalMargin - rootHorizontalPadding;
-            var boardHeightAvailable = windowHeight - menuBarHeight - navigatorBarHeight - clockHeight - boardBorderVerticalThickness - boardVerticalMargin - rootVerticalPadding;
+            // Main action button control space
+            if (windowWidth > windowHeight)
+            {
+                MainControlOrientation = Orientation.Vertical;
+                actionButtonGutterWidth = 42;
+            }
+            else
+            {
+                MainControlOrientation = Orientation.Horizontal;
+                actionButtonGutterHeight = 42;
+            }
+
+
+            var boardWidthAvailable = windowWidth - boardBorderHorizontalThickness - boardHorizontalMargin - rootHorizontalPadding - actionButtonGutterWidth;
+            var boardHeightAvailable = windowHeight - menuBarHeight - navigatorBarHeight - clockHeight - boardBorderVerticalThickness - boardVerticalMargin - rootVerticalPadding - actionButtonGutterHeight;
 
             // Calculate tilesize
             double tileSize;
@@ -2476,10 +2506,7 @@ namespace KaruahChess.ViewModel
 
             
             // Position board messages
-            PositionBoardMessage();
-
-            // Ensure board editor menu is closed
-            _pieceEditToolControl.Close();
+            PositionBoardMessage();           
 
             
         }
@@ -2577,6 +2604,7 @@ namespace KaruahChess.ViewModel
                         PositionBoardMessage();
                         _boardTextMessageControl.Show(pTitle, pMessage, pType, pAnimation);
 
+
                         if (pTitle != String.Empty)
                         {
                             Task t = ReadText(pTitle);
@@ -2629,52 +2657,7 @@ namespace KaruahChess.ViewModel
             {
                 _boardTextMessageControl.SetPosition(BoardWidth);
             }
-                       
-            if (_aboutPageControl != null)
-            {
-                _aboutPageControl.SetPosition(BoardWidth);
-            }
-
-            if (_importPGNControl != null)
-            {
-                _importPGNControl.SetPosition(BoardWidth);
-            }
-
-            if (_exportControl != null)
-            {
-                _exportControl.SetPosition(BoardWidth);
-            }
-
-            if (_voiceHelpControl != null)
-            {
-                _voiceHelpControl.SetPosition(BoardWidth);
-            }
-
-            if (_engineSettingsControl != null)
-            {
-                _engineSettingsControl.SetPosition(BoardWidth);
-            }
-                        
-            if (_soundSettingsControl != null)
-            {
-                _soundSettingsControl.SetPosition(BoardWidth);
-            }
-
-            if (_boardSettingsControl != null)
-            {
-                _boardSettingsControl.SetPosition(BoardWidth);
-            }
-
-            if (_pieceSettingsControl != null)
-            {
-                _pieceSettingsControl.SetPosition(BoardWidth);
-            }
-
-            if (_clockSettingsControl != null)
-            {
-                _clockSettingsControl.SetPosition(BoardWidth);
-            }
-
+            
         }
 
         /// <summary>
@@ -3321,14 +3304,11 @@ namespace KaruahChess.ViewModel
         /// <summary>
         /// Opens the voice help screen
         /// </summary>
-        private void HelpVoiceAction(bool pShow)
-        {
-            if (_voiceHelpControl != null)
-            {
-                if (pShow) { 
-                    _voiceHelpControl.Show();
-                    PositionBoardMessage();
-                }
+        private async Task HelpVoiceAction(bool pShow)
+        {            
+            if (pShow) {
+                ContentDialog dialog = new VoiceHelpDialog().CreateDialog();
+                await showContentDialog(dialog);
             }
             
         }
@@ -3447,6 +3427,26 @@ namespace KaruahChess.ViewModel
             }
         }
 
+        /// <summary>        
+        /// Updates selected tiles with a given piece type
+        /// </summary>
+        public void editToolUpdateSelectedTiles(Char pFen)
+        {
+            bool updated = false;        
+            foreach (int sqIndex in editSelection) {
+                ArrangeUpdate(pFen, sqIndex);
+                updated = true;
+            }
+
+            // Clear any edit selections
+            editSelection.Clear();
+            BoardSquare.PieceEditSelectClearAll();            
+
+            if (!updated) {                
+                ShowBoardMessage("", "Cannot update, no squares are selected", TextMessage.TypeEnum.Info, TextMessage.AnimationEnum.FadeOut);
+            }
+        }
+
         /// <summary>
         /// Shows a content dialog.
         /// Only one content dialog is allowed to be shown at a time otherwise a crash may occur.
@@ -3490,8 +3490,67 @@ namespace KaruahChess.ViewModel
             return pBusyMove || pBusyHint;
         }
 
+        /// <summary>
+        /// Indicates if the computer is processing
+        /// </summary>        
+        public Visibility MainActionButtonsVisiblility(bool pArrangeBoardEnabled)
+        {
+            return !pArrangeBoardEnabled ? Visibility.Visible : Visibility.Collapsed;
+        }
 
-        
+        /// <summary>
+        /// Convert bool to visibility
+        /// </summary>        
+        public Visibility GetVisibility(bool pVisible)
+        {
+            return pVisible ? Visibility.Visible : Visibility.Collapsed;
+        }
+
+        /// <summary>
+        /// Detect a repeat move
+        /// </summary>        
+        private bool IsRepeatMove()
+        {
+            bool repeated = false;
+
+            SortedList<int, GameRecordArray> history = GameRecordDataService.instance.GameHistory();
+            int endIndex = history.Count - 1;
+            if (endIndex >= 4)
+            {
+                ulong[] currentBoardArray = history.Values[endIndex].BoardArray;
+
+                for (int historyIndex = endIndex - 2; historyIndex >= 0; historyIndex -= 2)
+                {                    
+                    ulong[] historyBoardArray = history.Values[historyIndex].BoardArray;
+                    bool differenceFound = false;
+                         
+                    if (currentBoardArray.Length == historyBoardArray.Length && historyBoardArray.Length > 0)
+                    {                                                
+                        // Compare all elements in both arrays and if one of them different,
+                        // then they are different boards
+                        for (int i = 0; i < currentBoardArray.Length; i++)
+                        {
+                            if (currentBoardArray[i] != historyBoardArray[i])
+                            {
+                                differenceFound = true;
+                                break;
+                            }
+                        }
+
+                        // Break if difference not found as no need to search further
+                        if (!differenceFound)
+                        {
+                            repeated = true;
+                            break;
+                        }
+                    }
+                }               
+            }
+
+            return repeated;
+
+        }
+
 
     }
 

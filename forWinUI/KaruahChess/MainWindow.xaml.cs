@@ -32,44 +32,21 @@ namespace KaruahChess
 
             // Initialise the Board view model
             BoardVM = new BoardViewModel(this);
+                       
 
             this.InitializeComponent();
 
-            
+
+
             // Set Control reference                                 
             BoardVM.SetBoardTextMessageControl(BoardTextMessage);
             BoardVM.SetBoardTilePanelControl(BoardTilePanel);
             BoardVM.SetPieceAnimationControl(PieceAnimationControl);
-            BoardVM.SetAboutPageControl(AboutPageControl);
             BoardVM.SetCoordinatesControl(CoordinatesControl);
-            BoardVM.SetVoiceHelpControl(VoiceHelpControl);
-
+            
             ChessClockControl.SetBoardVM(BoardVM);
             BoardVM.SetChessClockControl(ChessClockControl);
-
-            ClockSettingsControl.SetBoardVM(BoardVM);
-            BoardVM.SetClockSettingsControl(ClockSettingsControl);
-
-            PieceEditToolControl.SetBoardVM(BoardVM);
-            BoardVM.SetPieceTypeSelectControl(PieceEditToolControl);
-
-            EngineSettingsControl.SetBoardVM(BoardVM);
-            BoardVM.SetEngineSettingsControl(EngineSettingsControl);
-
-            BoardSettingsControl.SetBoardVM(BoardVM);
-            BoardVM.SetBoardSettingsControl(BoardSettingsControl);
-
-            PieceSettingsControl.SetBoardVM(BoardVM);
-            BoardVM.SetPieceSettingsControl(PieceSettingsControl);
-
-            SoundSettingsControl.SetBoardVM(BoardVM);
-            BoardVM.SetSoundSettingsControl(SoundSettingsControl);
-
-            ImportPGNControl.SetBoardVM(BoardVM);
-            BoardVM.SetImportPGNControl(ImportPGNControl);
-
-            BoardVM.SetExportControl(ExportControl);
-
+            
             MoveNavigatorControl.SetBoardVM(BoardVM);
             BoardVM.SetMoveNavigatorControl(MoveNavigatorControl);
 
@@ -84,7 +61,6 @@ namespace KaruahChess
         //Propeties          
         public BoardViewModel BoardVM { get; set; }
 
-       
 
     }
 }

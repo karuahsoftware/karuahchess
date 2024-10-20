@@ -18,6 +18,7 @@
     </UserControl.Resources>
     
     <Canvas x:Name="PieceCanvas" Background="{x:Bind StyleTemplate.Background, Mode=OneWay}">
+        <Rectangle  x:Name="PieceEditSelect" StrokeThickness="2"   Stroke="Magenta" Height="20" Width="20" Visibility="Collapsed"/>
         <Rectangle  x:Name="PieceRectangle" StrokeThickness="2"   Stroke="Magenta" Height="20" Width="20" Opacity="0" >
             <Rectangle.Resources>
                 <Storyboard x:Key="PieceRectangleStoryboard">

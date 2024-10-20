@@ -1,0 +1,68 @@
+﻿<Page
+    x:Class="KaruahChess.CustomControl.AboutDialog"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    
+    <Grid x:Name="PageGrid">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="50" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <StackPanel Orientation="Horizontal" Grid.Row="0" Grid.Column="0">
+            <TextBlock x:Name="PageIcon" FontFamily="Segoe MDL2 Assets" Text="&#xF142;" VerticalAlignment="Center" Margin="0,0,5,0" Style="{StaticResource TitleTextBlockStyle}"/>
+            <TextBlock  TextWrapping="WrapWholeWords" VerticalAlignment="Center" Text="About Karuah Chess" Style="{StaticResource SubtitleTextBlockStyle}" />
+        </StackPanel>
+
+        <ScrollViewer x:Name="MainTextScrollViewer" Grid.Row="1" Grid.Column="0">
+            <StackPanel Orientation="Vertical" Margin="0,0,20,0">
+                <TextBlock x:Name="VersionText" TextWrapping="WrapWholeWords" Margin="0,0,0,10"/>
+
+                <TextBlock  TextWrapping="WrapWholeWords" Margin="0,0,0,10"> 
+                    Karuah Chess is a chess playing program.<LineBreak/>Copyright © 2020 Karuah Software
+                </TextBlock>
+
+                <TextBlock  TextWrapping="WrapWholeWords" Margin="0,0,0,0"> 
+                    Find Karuah Chess on;
+                </TextBlock>
+
+                <StackPanel Orientation="Horizontal" Margin="0,0,0,10">
+                    <HyperlinkButton NavigateUri="https://www.facebook.com/karuahchess">
+                        <Image Source="ms-appx:///Media/social_logo_f.png" Width="30" Height="30" />
+                    </HyperlinkButton>
+                    <HyperlinkButton NavigateUri="https://x.com/karuahsoftware">
+                        <Image Source="ms-appx:///Media/social_logo_t.png" Width="30" Height="30" />
+                    </HyperlinkButton>
+                </StackPanel>
+
+                <TextBlock  TextWrapping="WrapWholeWords" Margin="0,0,0,10">
+                    Karuah Chess uses StockFish 17 with neural network version nn-1111cefa1111.nnue (Big) and nn-37f18f62d772.nnue (Small).
+                </TextBlock>
+
+                <TextBlock  TextWrapping="WrapWholeWords" Margin="0,0,0,10">
+                    You can find out more about StockFish at <Hyperlink NavigateUri="https://stockfishchess.org" >https://stockfishchess.org</Hyperlink>.
+                </TextBlock>
+
+                <TextBlock  TextWrapping="WrapWholeWords" Margin="0,0,0,10"> 
+                    The full source code for Karuah Chess is available at <Hyperlink NavigateUri="https://github.com/karuahsoftware/karuahchess" >https://github.com/karuahsoftware/karuahchess</Hyperlink>.
+                </TextBlock>
+
+                <TextBlock  TextWrapping="WrapWholeWords" FontWeight="Bold" Margin="0,0,0,0"> 
+                    Karuah Chess is distributed under the GNU General Public License Version 3 (GPLv3).
+                </TextBlock>
+
+                <TextBlock  TextWrapping="WrapWholeWords" Margin="0,0,0,0"> 
+                    Karuah Chess is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+                </TextBlock>
+
+                <TextBlock  TextWrapping="WrapWholeWords" Margin="0,0,0,10"> 
+                    Karuah Chess is distributed in the hope that it will be useful,but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for full details at <Hyperlink NavigateUri="https://www.gnu.org/licenses/gpl-3.0.txt" >https://www.gnu.org/licenses/gpl-3.0.txt</Hyperlink>.
+                </TextBlock>
+            </StackPanel>
+        </ScrollViewer>
+
+    </Grid>
+</Page>

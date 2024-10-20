@@ -73,16 +73,11 @@ namespace KaruahChess.CustomControl
                 for (int index = 0; index < pNavList.Count; index++)
                 {
                     var navButton = new NavToggleButton
-                    {
-                        Width = 32,
-                        Height = 32,
-                        Padding = new Thickness(0),
-                        Margin = new Thickness(0, 0, 1, 0),
+                    {                        
                         Content = pNavList[index].ToString(),
                         Tag = pNavList[index],
-                        BorderThickness = new Thickness(0),
-                        VerticalAlignment = VerticalAlignment.Top
-
+                        VerticalAlignment = VerticalAlignment.Top,
+                        Style= (Style)Application.Current.Resources["ButtonNavStyle"]
                     };
 
                     // Add button to stackpanel

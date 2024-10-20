@@ -46,5 +46,7 @@ namespace KaruahChess.Model
         void newTransaction();
 
         int RecordCount();
+
+        SortedList<int, GameRecordArray> GameHistory();
     }
 }

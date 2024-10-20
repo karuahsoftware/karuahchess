@@ -21,6 +21,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #include "bitboard.h"
 #include "KaruahChessEngineClass.g.h"
 
+using namespace KaruahChess;
 
 namespace winrt::KaruahChessEngine::implementation
 {	    

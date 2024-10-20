@@ -23,11 +23,9 @@ using KaruahChess.Model;
 using KaruahChessEngine;
 using KaruahChess.Common;
 
-
-
 namespace KaruahChess.CustomControl
 {
-    public sealed partial class CastlingRightsDialog : ContentDialog
+    public sealed partial class CastlingRightsDialog : Page
     {
         private GameRecordArray record;
         private KaruahChessEngineClass board = new KaruahChessEngineClass();
@@ -51,7 +49,20 @@ namespace KaruahChess.CustomControl
             setControlState();
         }
 
-        
+        public ContentDialog CreateDialog()
+        {
+            var dialog = new ContentDialog
+            {
+                Title = "Castling Rights",
+                Content = this,
+                PrimaryButtonText = "Close"
+            };
+
+            dialog.PrimaryButtonClick += Close_Click;
+
+            return dialog;
+        }
+
         /// <summary>
         /// Enables and disables controls depending on options set
         /// </summary>        
@@ -76,7 +87,7 @@ namespace KaruahChess.CustomControl
         /// <summary>
         /// Saves form values
         /// </summary>  
-        private void save()
+        private void Save()
         {
 
             bool success = false;
@@ -116,9 +127,10 @@ namespace KaruahChess.CustomControl
         }
 
 
-        private void ContentDialog_PrimaryButtonClick(ContentDialog sender, ContentDialogButtonClickEventArgs args)
+        private void Close_Click(ContentDialog SenderDialog, ContentDialogButtonClickEventArgs DialogEventArgs)
         {
-            save();
+            Save();
+            SenderDialog.PrimaryButtonClick -= Close_Click;
         }
 
         

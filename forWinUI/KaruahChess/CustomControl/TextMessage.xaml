@@ -71,7 +71,7 @@
         <TextBlock Grid.Row="0" Grid.Column="0" x:Name="TextMessageIcon" FontFamily="Segoe MDL2 Assets" FontSize="{x:Bind StyleTemplate.IconFontSize}" Margin="0,0,5,0" />
         <StackPanel Orientation="Vertical" Grid.Row="0" Grid.Column="1">
         <TextBlock  x:Name="TextTitleTextBlock" TextWrapping="WrapWholeWords" FontWeight="Bold" Margin="0,5,0,0" />
-        <TextBlock  x:Name="TextMessageTextBlock" TextWrapping="WrapWholeWords" Margin="0,5,0,0" />
+            <TextBlock  x:Name="TextMessageTextBlock" TextWrapping="WrapWholeWords" Margin="0,5,0,0" />
         </StackPanel>
 
 

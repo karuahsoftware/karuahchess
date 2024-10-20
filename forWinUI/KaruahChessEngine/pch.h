@@ -25,3 +25,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #include <unknwn.h>
 #include <winrt/Windows.Foundation.h>
 #include <winrt/Windows.Foundation.Collections.h>
+
+#if defined small
+#undef small
+#endif

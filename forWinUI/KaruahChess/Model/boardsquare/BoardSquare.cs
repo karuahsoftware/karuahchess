@@ -484,6 +484,66 @@ namespace KaruahChess.Model
         }
 
 
+        /// <summary>
+        /// Function to show piece edit select
+        /// </summary>
+        /// <param name="pBoardSquareSet"></param>        
+        public static void PieceEditSelectShow(HashSet<int> pBoardSquareSet, SolidColorBrush pBrushColor)
+        {
+            BoardSquare obj;
+            var _objectInstancesValid = new HashSet<WeakReference<BoardSquare>>();
+
+            foreach (var weakRef in _objectInstances)
+            {
+                if (weakRef.TryGetTarget(out obj) && obj != null)
+                {
+                    if (pBoardSquareSet.Contains(obj.Index))
+                    {
+                        if (obj.Piece != null)
+                        {
+                           obj.Piece.SetPieceEditSelectVisibility(Visibility.Visible, pBrushColor);
+                        }
+                    }
+                    else
+                    {
+                        if (obj.Piece != null)
+                        {
+                           obj.Piece.SetPieceEditSelectVisibility(Visibility.Collapsed, null);
+                        }
+                    }
+                    _objectInstancesValid.Add(weakRef);
+                }
+            }
+
+            _objectInstances = _objectInstancesValid;
+        }
+
+
+
+        /// <summary>
+        /// Function to clear all piece edit selects
+        /// </summary>              
+        public static void PieceEditSelectClearAll()
+        {
+            BoardSquare obj;
+            var _objectInstancesValid = new HashSet<WeakReference<BoardSquare>>();
+
+            foreach (var weakRef in _objectInstances)
+            {
+                if (weakRef.TryGetTarget(out obj) && obj != null)
+                {
+                    if (obj.Piece != null)
+                    {
+                        obj.Piece.SetPieceEditSelectVisibility(Visibility.Collapsed, null);
+                    }
+
+                    _objectInstancesValid.Add(weakRef);
+                }
+            }
+
+            _objectInstances = _objectInstancesValid;
+        }
+
 
         /// <summary>
         /// Function to show Ellipse UnderAttacks

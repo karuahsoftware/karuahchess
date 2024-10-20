@@ -9,7 +9,7 @@
   <Identity
     Name="PurpleTreeSoftware.KaruahChess"
     Publisher="CN=00000000-0000-0000-0000-000000000000"
-    Version="5.1.19.0" />
+    Version="5.1.24.0" />
 	
   <Properties>
     <DisplayName>KaruahChess</DisplayName>

@@ -20,6 +20,7 @@ using Microsoft.UI.Xaml;
 using KaruahChess.Database;
 using KaruahChess.Common;
 using System.IO.MemoryMappedFiles;
+using Microsoft.UI.Xaml.Navigation;
 
 namespace KaruahChess
 {

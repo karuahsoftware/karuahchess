@@ -19,57 +19,49 @@
 #ifndef UCI_H_INCLUDED
 #define UCI_H_INCLUDED
 
+#include <cstdint>
 #include <iostream>
 #include <string>
-#include <unordered_map>
+#include <string_view>
 
-#include "sf_evaluate.h"
+#include "sf_engine.h"
 #include "sf_misc.h"
-#include "sf_position.h"
-#include "sf_thread.h"
-#include "sf_tt.h"
-#include "sf_ucioption.h"
+#include "sf_search.h"
 
 namespace Stockfish {
 
-namespace Eval::NNUE {
-enum NetSize : int;
-}
-
+class Position;
 class Move;
+class Score;
 enum Square : int;
 using Value = int;
 
-class UCI {
+class UCIEngine {
    public:
-    UCI();
-
-    void loop();
-
-    static int         to_cp(Value v);
-    static std::string value(Value v);
+    UCIEngine();
+    
+    static int         to_cp(Value v, const Position& pos);    
     static std::string square(Square s);
     static std::string move(Move m, bool chess960);
-    static std::string wdl(Value v, int ply);
-    static Move        to_move(const Position& pos, std::string& str);
-        
-    OptionsMap options;
+    static std::string wdl(Value v, const Position& pos);
+    static std::string to_lower(std::string str);
+    static Move        to_move(const Position& pos, std::string str);
 
-    std::unordered_map<Eval::NNUE::NetSize, Eval::EvalFile> evalFiles;
-            
+    static Search::LimitsType parse_limits(std::istream& is);
+
+    auto& engine_options() { return engine.get_options(); }
 
     // Karuah Chess - Making public so it can be accessed from app
-    ThreadPool threads;
-    void search_clear();
+    Engine      engine;
 
-   private:
-    TranspositionTable tt;
-    
-    
+   private:        
+        
+    void          position(std::istringstream& is);
+    void          setoption(std::istringstream& is);    
 
-    void go(Position& pos, std::istringstream& is, StateListPtr& states);    
-    void position(Position& pos, std::istringstream& is, StateListPtr& states);       
-    void setoption(std::istringstream& is);
+    static void on_update_no_moves(const Engine::InfoShort& info);
+    static void on_update_full(const Engine::InfoFull& info, bool showWDL);
+    static void on_iter(const Engine::InfoIter& info);    
 };
 
 }  // namespace Stockfish

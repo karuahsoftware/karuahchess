@@ -15,4 +15,8 @@
     <RemoteDebugEnabled>False</RemoteDebugEnabled>
     <BackgroundTaskDebugEngines>CoreClr</BackgroundTaskDebugEngines>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|arm64'">
+    <DebuggerFlavor>AppHostLocalDebugger</DebuggerFlavor>
+    <RemoteDebugEnabled>False</RemoteDebugEnabled>
+  </PropertyGroup>
 </Project>

@@ -160,6 +160,14 @@ namespace KaruahChess.Model
                 {
                     _parameters.Add(param.Name, param.Value.Deserialize<ParamPromoteAuto>());
                 }
+                else if (param.Name == typeof(ParamHint).Name)
+                {
+                    _parameters.Add(param.Name, param.Value.Deserialize<ParamHint>());
+                }
+                else if (param.Name == typeof(ParamHintMove).Name)
+                {
+                    _parameters.Add(param.Name, param.Value.Deserialize<ParamHintMove>());
+                }
             }
 
 

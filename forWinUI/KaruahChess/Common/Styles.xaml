@@ -5,15 +5,29 @@
     xmlns:customcontrol="using:KaruahChess.CustomControl"    
     xmlns:piece="using:KaruahChess.Pieces">
 
-        
-    <!-- Styles -->    
-    <Style x:Key="ButtonStyle" TargetType="Button">
-        <Setter Property="BorderThickness" Value="1"/>
-        <Setter Property="Margin" Value="1" />
-    </Style>
- 
+    <ResourceDictionary.ThemeDictionaries>
+        <ResourceDictionary x:Key="Light">
+            <Color x:Key="PieceButtonDialogBackground">#DDDDDD</Color>
+            <Color x:Key="PieceButtonDialogBackgroundPointerOver">#BBBBBB</Color>
+            <Color x:Key="PieceButtonDialogBackgroundPressed">#999999</Color>            
+        </ResourceDictionary>
+        <ResourceDictionary x:Key="Dark">
+            <Color x:Key="PieceButtonDialogBackground">#999999</Color>
+            <Color x:Key="PieceButtonDialogBackgroundPointerOver">#777777</Color>
+            <Color x:Key="PieceButtonDialogBackgroundPressed">#555555</Color>
+        </ResourceDictionary>
+    </ResourceDictionary.ThemeDictionaries>
 
-    <Style x:Key="ButtonNavScrollLeftStyle" TargetType="RepeatButton">
+    <Color x:Key="MainActionButtonBackgroundPointerOver">#62A164</Color>
+    <Color x:Key="MainActionButtonBackground">#4CAF50</Color>
+    <Color x:Key="MainActionButtonBackgroundPressed">#3D8C40</Color>
+
+    <Color x:Key="EditActionButtonBackgroundPointerOver">#C64470</Color>
+    <Color x:Key="EditActionButtonBackground">#E91E63</Color>
+    <Color x:Key="EditActionButtonBackgroundPressed">#BA184F</Color>
+
+    <!-- Styles -->    
+    <Style x:Key="ButtonNavScrollLeftStyle" TargetType="RepeatButton" BasedOn="{StaticResource DefaultRepeatButtonStyle}">
         <Setter Property="BorderThickness" Value="1"/>
         <Setter Property="Margin" Value="0,0,1,0" />
         <Setter Property="Height" Value="32" />
@@ -21,7 +35,7 @@
         <Setter Property="Padding" Value="0,4,0,5" />
     </Style>
 
-    <Style x:Key="ButtonNavScrollRightStyle" TargetType="RepeatButton">
+    <Style x:Key="ButtonNavScrollRightStyle" TargetType="RepeatButton" BasedOn="{StaticResource DefaultRepeatButtonStyle}">
         <Setter Property="BorderThickness" Value="1"/>
         <Setter Property="Margin" Value="1,0,0,0" />
         <Setter Property="Height" Value="32" />
@@ -29,32 +43,41 @@
         <Setter Property="Padding" Value="0,4,0,5" />
     </Style>
 
-    <Style x:Key="ButtonNavNextStyle" TargetType="Button">
+    <Style x:Key="ButtonNavNextStyle" TargetType="Button" BasedOn="{StaticResource DefaultButtonStyle}">
         <Setter Property="BorderThickness" Value="1"/>
         <Setter Property="Margin" Value="1,0,0,0" />
         <Setter Property="Height" Value="32" />
         <Setter Property="Width" Value="32" />
-        <Setter Property="Padding" Value="0,4,0,5" />
+        <Setter Property="Padding" Value="0,4,0,5" />        
     </Style>
 
-    <Style x:Key="TextBlockStyle" TargetType="TextBlock">
-        <Setter Property="HorizontalAlignment" Value="Left" />
-        <Setter Property="VerticalAlignment" Value="Top" />
-        <Setter Property="Margin" Value="3" />
-        <Setter Property="Padding" Value="0" />
+    <Style x:Key="PieceSelectButtonStyle" TargetType="Button" BasedOn="{StaticResource DefaultButtonStyle}">
+        <Setter Property="BorderThickness" Value="1" />        
+        <Setter Property="Height" Value="60" />
+        <Setter Property="Width" Value="60" />
+        <Setter Property="Padding" Value="0,0,0,0" />
+        <Setter Property="Margin" Value="2,2,2,2" />
     </Style>
 
+    <Style x:Key="PawnPromotionButtonStyle" TargetType="Button" BasedOn="{StaticResource PieceSelectButtonStyle}">        
+        <Setter Property="Height" Value="80" />
+        <Setter Property="Width" Value="80" />        
+    </Style>
+
+    <Style x:Key="ButtonNavStyle" TargetType="ToggleButton" BasedOn="{StaticResource DefaultToggleButtonStyle}">
+        <Setter Property="BorderThickness" Value="1"/>
+        <Setter Property="Margin" Value="0,0,1,0" />
+        <Setter Property="Height" Value="32" />
+        <Setter Property="Width" Value="32" />
+        <Setter Property="Padding" Value="0,0,0,0" />
+    </Style>
     
     <Style x:Key="TilePanelStyle" TargetType="tilepanel:TilePanel">
         <Setter Property="BorderBrush" Value="#649964" />
         <Setter Property="BorderThickness" Value="1" />
     </Style>
 
-
-    <Style x:Key="CheckBoxStyle" TargetType="CheckBox">
-        
-    </Style>
-
+   
     <!-- Tile Panel Style -->
     <SolidColorBrush x:Key="TileBackgroundHoverBrush" Color="{ThemeResource SystemChromeMediumColor}"/>
     <SolidColorBrush x:Key="TileBackgroundPressedBrush" Color="{ThemeResource SystemChromeHighColor}"/>
@@ -119,7 +142,7 @@
 
 
     <!-- Panel Text Message Style -->
-    <SolidColorBrush x:Key="TextMessageBorderBrush" Color="{ThemeResource SystemBaseHighColor}"/>
+    <SolidColorBrush x:Key="TextMessageBorderBrush" Color="{ThemeResource SystemBaseLowColor}"/>
     <SolidColorBrush x:Key="TextMessageBackgroundNormalBrush" Color="{ThemeResource SystemChromeLowColor}"/>
     <SolidColorBrush x:Key="TextMessageBackgroundMediumBrush" Color="{ThemeResource SystemChromeMediumColor}"/>
 
@@ -131,7 +154,7 @@
             <StaticResource ResourceKey="TextMessageBorderBrush" />
         </customcontrol:TextMessageStyleTemplate.BorderBrush>
         <customcontrol:TextMessageStyleTemplate.BorderThickness>1</customcontrol:TextMessageStyleTemplate.BorderThickness>
-        <customcontrol:TextMessageStyleTemplate.CornerRadius>0</customcontrol:TextMessageStyleTemplate.CornerRadius>
+        <customcontrol:TextMessageStyleTemplate.CornerRadius>5</customcontrol:TextMessageStyleTemplate.CornerRadius>
         <customcontrol:TextMessageStyleTemplate.MinWidth>100</customcontrol:TextMessageStyleTemplate.MinWidth>
         <customcontrol:TextMessageStyleTemplate.MinHeight>20</customcontrol:TextMessageStyleTemplate.MinHeight>
         <customcontrol:TextMessageStyleTemplate.Width>NaN</customcontrol:TextMessageStyleTemplate.Width>
@@ -141,91 +164,13 @@
         <customcontrol:TextMessageStyleTemplate.IconFontSize>30</customcontrol:TextMessageStyleTemplate.IconFontSize>
     </customcontrol:TextMessageStyleTemplate>
 
-
-
-
-
     <!-- Popup screen style objects -->
-
     <SolidColorBrush x:Key="CustomControlBorderBrush" Color="{ThemeResource SystemBaseHighColor}"/>
     <SolidColorBrush x:Key="CustomControlBorderHighBrush" Color="{ThemeResource SystemAltHighColor}"/>
     <SolidColorBrush x:Key="CustomControlBackgroundNormalBrush" Color="{ThemeResource SystemChromeLowColor}" />
     <SolidColorBrush x:Key="CustomControlBackgroundMediumBrush" Color="{ThemeResource SystemChromeMediumColor}"/>
     <SolidColorBrush x:Key="CustomControlBackgroundHighBrush" Color="{ThemeResource SystemChromeHighColor}"/>
     
-
-    <customcontrol:CustomStyleTemplate x:Key="ImportPGNControlStyleTemplateObject"  >
-        <customcontrol:CustomStyleTemplate.Background>
-            <StaticResource ResourceKey="CustomControlBackgroundNormalBrush" />
-        </customcontrol:CustomStyleTemplate.Background>
-        <customcontrol:CustomStyleTemplate.BorderBrush>
-            <StaticResource ResourceKey="CustomControlBorderBrush" />
-        </customcontrol:CustomStyleTemplate.BorderBrush>
-        <customcontrol:CustomStyleTemplate.BorderThickness>1</customcontrol:CustomStyleTemplate.BorderThickness>
-        <customcontrol:CustomStyleTemplate.CornerRadius>0</customcontrol:CustomStyleTemplate.CornerRadius>
-        <customcontrol:CustomStyleTemplate.MinWidth>100</customcontrol:CustomStyleTemplate.MinWidth>
-        <customcontrol:CustomStyleTemplate.MinHeight>20</customcontrol:CustomStyleTemplate.MinHeight>
-        <customcontrol:CustomStyleTemplate.Width>NaN</customcontrol:CustomStyleTemplate.Width>
-        <customcontrol:CustomStyleTemplate.Height>NaN</customcontrol:CustomStyleTemplate.Height>
-        <customcontrol:CustomStyleTemplate.Margin>0</customcontrol:CustomStyleTemplate.Margin>
-        <customcontrol:CustomStyleTemplate.Padding>5</customcontrol:CustomStyleTemplate.Padding>
-        <customcontrol:CustomStyleTemplate.IconFontSize>30</customcontrol:CustomStyleTemplate.IconFontSize>
-    </customcontrol:CustomStyleTemplate>
-
-    <customcontrol:CustomStyleTemplate x:Key="ExportControlStyleTemplateObject"  >
-        <customcontrol:CustomStyleTemplate.Background>
-            <StaticResource ResourceKey="CustomControlBackgroundNormalBrush" />
-        </customcontrol:CustomStyleTemplate.Background>
-        <customcontrol:CustomStyleTemplate.BorderBrush>
-            <StaticResource ResourceKey="CustomControlBorderBrush" />
-        </customcontrol:CustomStyleTemplate.BorderBrush>
-        <customcontrol:CustomStyleTemplate.BorderThickness>1</customcontrol:CustomStyleTemplate.BorderThickness>
-        <customcontrol:CustomStyleTemplate.CornerRadius>0</customcontrol:CustomStyleTemplate.CornerRadius>
-        <customcontrol:CustomStyleTemplate.MinWidth>100</customcontrol:CustomStyleTemplate.MinWidth>
-        <customcontrol:CustomStyleTemplate.MinHeight>20</customcontrol:CustomStyleTemplate.MinHeight>
-        <customcontrol:CustomStyleTemplate.Width>NaN</customcontrol:CustomStyleTemplate.Width>
-        <customcontrol:CustomStyleTemplate.Height>NaN</customcontrol:CustomStyleTemplate.Height>
-        <customcontrol:CustomStyleTemplate.Margin>0</customcontrol:CustomStyleTemplate.Margin>
-        <customcontrol:CustomStyleTemplate.Padding>5</customcontrol:CustomStyleTemplate.Padding>
-        <customcontrol:CustomStyleTemplate.IconFontSize>30</customcontrol:CustomStyleTemplate.IconFontSize>
-    </customcontrol:CustomStyleTemplate>
-    
-    <customcontrol:CustomStyleTemplate x:Key="AboutControlStyleTemplateObject"  >
-        <customcontrol:CustomStyleTemplate.Background>
-            <StaticResource ResourceKey="CustomControlBackgroundNormalBrush" />
-        </customcontrol:CustomStyleTemplate.Background>
-        <customcontrol:CustomStyleTemplate.BorderBrush>
-            <StaticResource ResourceKey="CustomControlBorderBrush" />
-        </customcontrol:CustomStyleTemplate.BorderBrush>
-        <customcontrol:CustomStyleTemplate.BorderThickness>1</customcontrol:CustomStyleTemplate.BorderThickness>
-        <customcontrol:CustomStyleTemplate.CornerRadius>0</customcontrol:CustomStyleTemplate.CornerRadius>
-        <customcontrol:CustomStyleTemplate.MinWidth>100</customcontrol:CustomStyleTemplate.MinWidth>
-        <customcontrol:CustomStyleTemplate.MinHeight>20</customcontrol:CustomStyleTemplate.MinHeight>
-        <customcontrol:CustomStyleTemplate.Width>NaN</customcontrol:CustomStyleTemplate.Width>
-        <customcontrol:CustomStyleTemplate.Height>NaN</customcontrol:CustomStyleTemplate.Height>
-        <customcontrol:CustomStyleTemplate.Margin>0</customcontrol:CustomStyleTemplate.Margin>
-        <customcontrol:CustomStyleTemplate.Padding>10</customcontrol:CustomStyleTemplate.Padding>
-        <customcontrol:CustomStyleTemplate.IconFontSize>30</customcontrol:CustomStyleTemplate.IconFontSize>
-    </customcontrol:CustomStyleTemplate>
-
-    <customcontrol:CustomStyleTemplate x:Key="VoiceHelpControlStyleTemplateObject"  >
-        <customcontrol:CustomStyleTemplate.Background>
-            <StaticResource ResourceKey="CustomControlBackgroundNormalBrush" />
-        </customcontrol:CustomStyleTemplate.Background>
-        <customcontrol:CustomStyleTemplate.BorderBrush>
-            <StaticResource ResourceKey="CustomControlBorderBrush" />
-        </customcontrol:CustomStyleTemplate.BorderBrush>
-        <customcontrol:CustomStyleTemplate.BorderThickness>1</customcontrol:CustomStyleTemplate.BorderThickness>
-        <customcontrol:CustomStyleTemplate.CornerRadius>0</customcontrol:CustomStyleTemplate.CornerRadius>
-        <customcontrol:CustomStyleTemplate.MinWidth>100</customcontrol:CustomStyleTemplate.MinWidth>
-        <customcontrol:CustomStyleTemplate.MinHeight>20</customcontrol:CustomStyleTemplate.MinHeight>
-        <customcontrol:CustomStyleTemplate.Width>NaN</customcontrol:CustomStyleTemplate.Width>
-        <customcontrol:CustomStyleTemplate.Height>NaN</customcontrol:CustomStyleTemplate.Height>
-        <customcontrol:CustomStyleTemplate.Margin>0</customcontrol:CustomStyleTemplate.Margin>
-        <customcontrol:CustomStyleTemplate.Padding>5</customcontrol:CustomStyleTemplate.Padding>
-        <customcontrol:CustomStyleTemplate.IconFontSize>30</customcontrol:CustomStyleTemplate.IconFontSize>
-    </customcontrol:CustomStyleTemplate>
-
     <customcontrol:CustomStyleTemplate x:Key="PieceTypeSelectControlStyleTemplateObject"  >
         <customcontrol:CustomStyleTemplate.Background>
             <StaticResource ResourceKey="CustomControlBackgroundNormalBrush" />
@@ -244,99 +189,5 @@
         <customcontrol:CustomStyleTemplate.IconFontSize>30</customcontrol:CustomStyleTemplate.IconFontSize>
      
     </customcontrol:CustomStyleTemplate>
-   
-    <customcontrol:CustomStyleTemplate x:Key="EngineSettingsControlStyleTemplateObject"  >
-        <customcontrol:CustomStyleTemplate.Background>
-            <StaticResource ResourceKey="CustomControlBackgroundNormalBrush" />
-        </customcontrol:CustomStyleTemplate.Background>
-        <customcontrol:CustomStyleTemplate.BorderBrush>
-            <StaticResource ResourceKey="CustomControlBorderBrush" />
-        </customcontrol:CustomStyleTemplate.BorderBrush>
-        <customcontrol:CustomStyleTemplate.BorderThickness>1</customcontrol:CustomStyleTemplate.BorderThickness>
-        <customcontrol:CustomStyleTemplate.CornerRadius>0</customcontrol:CustomStyleTemplate.CornerRadius>
-        <customcontrol:CustomStyleTemplate.MinWidth>100</customcontrol:CustomStyleTemplate.MinWidth>
-        <customcontrol:CustomStyleTemplate.MinHeight>20</customcontrol:CustomStyleTemplate.MinHeight>
-        <customcontrol:CustomStyleTemplate.Width>NaN</customcontrol:CustomStyleTemplate.Width>
-        <customcontrol:CustomStyleTemplate.Height>NaN</customcontrol:CustomStyleTemplate.Height>
-        <customcontrol:CustomStyleTemplate.Margin>0</customcontrol:CustomStyleTemplate.Margin>
-        <customcontrol:CustomStyleTemplate.Padding>5</customcontrol:CustomStyleTemplate.Padding>
-        <customcontrol:CustomStyleTemplate.IconFontSize>30</customcontrol:CustomStyleTemplate.IconFontSize>
-    </customcontrol:CustomStyleTemplate>
-
-    <customcontrol:CustomStyleTemplate x:Key="SoundSettingsControlStyleTemplateObject"  >
-        <customcontrol:CustomStyleTemplate.Background>
-            <StaticResource ResourceKey="CustomControlBackgroundNormalBrush" />
-        </customcontrol:CustomStyleTemplate.Background>
-        <customcontrol:CustomStyleTemplate.BorderBrush>
-            <StaticResource ResourceKey="CustomControlBorderBrush" />
-        </customcontrol:CustomStyleTemplate.BorderBrush>
-        <customcontrol:CustomStyleTemplate.BorderThickness>1</customcontrol:CustomStyleTemplate.BorderThickness>
-        <customcontrol:CustomStyleTemplate.CornerRadius>0</customcontrol:CustomStyleTemplate.CornerRadius>
-        <customcontrol:CustomStyleTemplate.MinWidth>100</customcontrol:CustomStyleTemplate.MinWidth>
-        <customcontrol:CustomStyleTemplate.MinHeight>20</customcontrol:CustomStyleTemplate.MinHeight>
-        <customcontrol:CustomStyleTemplate.Width>NaN</customcontrol:CustomStyleTemplate.Width>
-        <customcontrol:CustomStyleTemplate.Height>NaN</customcontrol:CustomStyleTemplate.Height>
-        <customcontrol:CustomStyleTemplate.Margin>0</customcontrol:CustomStyleTemplate.Margin>
-        <customcontrol:CustomStyleTemplate.Padding>5</customcontrol:CustomStyleTemplate.Padding>
-        <customcontrol:CustomStyleTemplate.IconFontSize>30</customcontrol:CustomStyleTemplate.IconFontSize>
-    </customcontrol:CustomStyleTemplate>
-
-    <customcontrol:CustomStyleTemplate x:Key="BoardSettingsControlStyleTemplateObject"  >
-        <customcontrol:CustomStyleTemplate.Background>
-            <StaticResource ResourceKey="CustomControlBackgroundNormalBrush" />
-        </customcontrol:CustomStyleTemplate.Background>
-        <customcontrol:CustomStyleTemplate.BorderBrush>
-            <StaticResource ResourceKey="CustomControlBorderBrush" />
-        </customcontrol:CustomStyleTemplate.BorderBrush>
-        <customcontrol:CustomStyleTemplate.BorderThickness>1</customcontrol:CustomStyleTemplate.BorderThickness>
-        <customcontrol:CustomStyleTemplate.CornerRadius>0</customcontrol:CustomStyleTemplate.CornerRadius>
-        <customcontrol:CustomStyleTemplate.MinWidth>100</customcontrol:CustomStyleTemplate.MinWidth>
-        <customcontrol:CustomStyleTemplate.MinHeight>20</customcontrol:CustomStyleTemplate.MinHeight>
-        <customcontrol:CustomStyleTemplate.Width>NaN</customcontrol:CustomStyleTemplate.Width>
-        <customcontrol:CustomStyleTemplate.Height>NaN</customcontrol:CustomStyleTemplate.Height>
-        <customcontrol:CustomStyleTemplate.Margin>0</customcontrol:CustomStyleTemplate.Margin>
-        <customcontrol:CustomStyleTemplate.Padding>5</customcontrol:CustomStyleTemplate.Padding>
-        <customcontrol:CustomStyleTemplate.IconFontSize>30</customcontrol:CustomStyleTemplate.IconFontSize>
-    </customcontrol:CustomStyleTemplate>
-
-    <customcontrol:CustomStyleTemplate x:Key="PieceSettingsControlStyleTemplateObject"  >
-        <customcontrol:CustomStyleTemplate.Background>
-            <StaticResource ResourceKey="CustomControlBackgroundNormalBrush" />
-        </customcontrol:CustomStyleTemplate.Background>
-        <customcontrol:CustomStyleTemplate.BorderBrush>
-            <StaticResource ResourceKey="CustomControlBorderBrush" />
-        </customcontrol:CustomStyleTemplate.BorderBrush>
-        <customcontrol:CustomStyleTemplate.BorderThickness>1</customcontrol:CustomStyleTemplate.BorderThickness>
-        <customcontrol:CustomStyleTemplate.CornerRadius>0</customcontrol:CustomStyleTemplate.CornerRadius>
-        <customcontrol:CustomStyleTemplate.MinWidth>100</customcontrol:CustomStyleTemplate.MinWidth>
-        <customcontrol:CustomStyleTemplate.MinHeight>20</customcontrol:CustomStyleTemplate.MinHeight>
-        <customcontrol:CustomStyleTemplate.Width>NaN</customcontrol:CustomStyleTemplate.Width>
-        <customcontrol:CustomStyleTemplate.Height>NaN</customcontrol:CustomStyleTemplate.Height>
-        <customcontrol:CustomStyleTemplate.Margin>0</customcontrol:CustomStyleTemplate.Margin>
-        <customcontrol:CustomStyleTemplate.Padding>5</customcontrol:CustomStyleTemplate.Padding>
-        <customcontrol:CustomStyleTemplate.IconFontSize>30</customcontrol:CustomStyleTemplate.IconFontSize>
-    </customcontrol:CustomStyleTemplate>
-
-    <customcontrol:CustomStyleTemplate x:Key="ClockSettingsControlStyleTemplateObject"  >
-        <customcontrol:CustomStyleTemplate.Background>
-            <StaticResource ResourceKey="CustomControlBackgroundNormalBrush" />
-        </customcontrol:CustomStyleTemplate.Background>
-        <customcontrol:CustomStyleTemplate.BorderBrush>
-            <StaticResource ResourceKey="CustomControlBorderBrush" />
-        </customcontrol:CustomStyleTemplate.BorderBrush>
-        <customcontrol:CustomStyleTemplate.BorderThickness>1</customcontrol:CustomStyleTemplate.BorderThickness>
-        <customcontrol:CustomStyleTemplate.CornerRadius>0</customcontrol:CustomStyleTemplate.CornerRadius>
-        <customcontrol:CustomStyleTemplate.MinWidth>100</customcontrol:CustomStyleTemplate.MinWidth>
-        <customcontrol:CustomStyleTemplate.MinHeight>20</customcontrol:CustomStyleTemplate.MinHeight>
-        <customcontrol:CustomStyleTemplate.Width>NaN</customcontrol:CustomStyleTemplate.Width>
-        <customcontrol:CustomStyleTemplate.Height>NaN</customcontrol:CustomStyleTemplate.Height>
-        <customcontrol:CustomStyleTemplate.Margin>0</customcontrol:CustomStyleTemplate.Margin>
-        <customcontrol:CustomStyleTemplate.Padding>5</customcontrol:CustomStyleTemplate.Padding>
-        <customcontrol:CustomStyleTemplate.IconFontSize>30</customcontrol:CustomStyleTemplate.IconFontSize>
-    </customcontrol:CustomStyleTemplate>
-
-    <customcontrol:CustomStyleTemplate x:Key="LevelIndicatorStyleTemplateObject"  >        
-               
-    </customcontrol:CustomStyleTemplate>
-    
+       
 </ResourceDictionary>

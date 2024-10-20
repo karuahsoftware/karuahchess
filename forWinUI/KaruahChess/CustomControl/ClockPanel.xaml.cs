@@ -326,9 +326,9 @@ namespace KaruahChess.CustomControl
         /// <summary>
         /// Clock edit button click event
         /// </summary>        
-        private void ClockEditButton_Click(object sender, RoutedEventArgs e)
+        private async void ClockEditButton_Click(object sender, RoutedEventArgs e)
         {
-            boardVM.ShowClockSettingsDialog();
+            await boardVM.ShowClockSettingsDialog();
             
         }
 

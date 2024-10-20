@@ -7,26 +7,10 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d"    
     d:DesignHeight="50"
-    d:DesignWidth="50"    
-    >
-
-    <UserControl.Resources>
-        <ResourceDictionary x:Name="CustomStyleDefaultResourceDictionary">
-            <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="ms-appx:///CustomControl/CustomStyleDefault.xaml"/>
-                <ResourceDictionary Source="ms-appx:///Common/Styles.xaml"/>
-            </ResourceDictionary.MergedDictionaries>
-        </ResourceDictionary>
-    </UserControl.Resources>
-
-
-
+    d:DesignWidth="50">
+    
     <Border x:Name="LevelIndicatorPanel" VerticalAlignment="Center">
         <TextBlock FontStyle="Normal" Opacity="0.8" Text="{x:Bind getLevelText(_boardVM.LimitSkillLevel, _boardVM.ComputerPlayerEnabled), Mode=OneWay}" Margin="3,0,0,0" VerticalAlignment="Center" />
     </Border>
-
-
-
-
 
 </UserControl>

@@ -1,21 +1,31 @@
 <Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup Label="Globals">
+    <WebView2EnableCsWinRTProjection>False</WebView2EnableCsWinRTProjection>
+  </PropertyGroup>
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
-    <TargetFramework>net6.0-windows10.0.22621.0</TargetFramework>
+    <TargetFramework>net8.0-windows10.0.26100.0</TargetFramework>
     <TargetPlatformMinVersion>10.0.17763.0</TargetPlatformMinVersion>
     <RootNamespace>KaruahChess</RootNamespace>
     <ApplicationManifest>app.manifest</ApplicationManifest>
     <Platforms>x86;x64;arm64</Platforms>
-    <RuntimeIdentifiers>win10-x86;win10-x64;win10-arm64</RuntimeIdentifiers>
+    <RuntimeIdentifiers>win-x86;win-x64;win-arm64</RuntimeIdentifiers>
     <UseWinUI>true</UseWinUI>
     <SupportedOSPlatformVersion>10.0.22000.0</SupportedOSPlatformVersion>
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="CustomControl\PieceSettings.xaml" />
+    <None Remove="CustomControl\AboutDialog.xaml" />
+    <None Remove="CustomControl\BoardSettingsDialog.xaml" />
+    <None Remove="CustomControl\ClockSettingsDialog.xaml" />
+    <None Remove="CustomControl\HintSettingsDialog.xaml" />
+    <None Remove="CustomControl\ImportPGNDialog.xaml" />
+    <None Remove="CustomControl\PieceEditDialog.xaml" />
+    <None Remove="CustomControl\SoundSettingsDialog.xaml" />
+    <None Remove="CustomControl\VoiceHelpDialog.xaml" />
     <None Remove="ErrorWindow.xaml" />
-    <None Remove="Media\nn-b1a57edbea57.nnue" />
-    <None Remove="Media\nn-baff1ede1f90.nnue" />
+    <None Remove="Media\nn-1111cefa1111.nnue" />
+    <None Remove="Media\nn-37f18f62d772.nnue" />
     <None Remove="Media\piecesound.wav" />
     <None Remove="Pieces\images\blackbishop.png" />
     <None Remove="Pieces\images\blackking0.png" />
@@ -37,8 +47,10 @@
     <None Remove="Voice\Grammar-en-US.xml" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Media\nn-b1a57edbea57.nnue" />
-    <Content Include="Media\nn-baff1ede1f90.nnue" />
+    <Content Include="Media\nn-1111cefa1111.nnue">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Media\nn-37f18f62d772.nnue" />
     <Content Include="Media\piecesound.wav" />
     <Content Include="Pieces\images\blackbishop.png" />
     <Content Include="Pieces\images\blackking0.png" />
@@ -61,9 +73,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.Data.Sqlite" Version="8.0.5" />
-    <PackageReference Include="Microsoft.Windows.CsWinRT" Version="2.0.7" />
-    <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.5.240428000" />
+    <PackageReference Include="Microsoft.Data.Sqlite" Version="8.0.10" />
+    <PackageReference Include="Microsoft.Windows.CsWinRT" Version="2.1.5" />
+    <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.6.240923002" />
     <PackageReference Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.22621.3233" />
     <Manifest Include="$(ApplicationManifest)" />
   </ItemGroup>
@@ -75,8 +87,49 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Page Update="CustomControl\PieceSettings.xaml">
+    <Page Update="CustomControl\PieceEditDialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Page Update="CustomControl\BoardSettingsDialog.xaml">
       <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="CustomControl\AboutDialog.xaml">
+      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="CustomControl\ClockSettingsDialog.xaml">
+      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="CustomControl\EngineSettingsDialog.xaml">
+      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Update="CustomControl\VoiceHelpDialog.xaml">
+      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="CustomControl\ImportPGNDialog.xaml">
+      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="CustomControl\SoundSettingsDialog.xaml">
+      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="CustomControl\PieceSettingsDialog.xaml">
+      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Update="CustomControl\HintSettingsDialog.xaml">
+      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+      <SubType>Designer</SubType>
     </Page>
     <Page Update="ErrorWindow.xaml">
       <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>

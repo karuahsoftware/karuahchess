@@ -1,0 +1,67 @@
+﻿<Page
+    x:Class="KaruahChess.CustomControl.VoiceHelpDialog"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    
+    <Grid x:Name="PageGrid">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="50" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <StackPanel Orientation="Horizontal" Grid.Row="0" Grid.Column="0">
+            <TextBlock x:Name="PageIcon" FontFamily="Segoe MDL2 Assets" Text="&#xE946;" VerticalAlignment="Center" Margin="0,0,5,0" Style="{StaticResource TitleTextBlockStyle}"/>
+            <TextBlock  TextWrapping="WrapWholeWords" VerticalAlignment="Center" Text="Voice Command Help" Style="{StaticResource SubtitleTextBlockStyle}" />
+        </StackPanel>
+
+        <ScrollViewer x:Name="MainTextScrollViewer" Grid.Row="1" Grid.Column="0">
+            <StackPanel Orientation="Vertical" Margin="0,0,20,0">
+                <TextBlock x:Name="VoiceCommandHelpText" TextWrapping="WrapWholeWords" VerticalAlignment="Stretch" HorizontalAlignment="Stretch">                
+                    Voice commands can be used if your operating system language is set to English. <LineBreak/>
+                    <LineBreak/>
+            
+                    When you have activated the voice command option (in the menu), you can open this help page by saying "Help". <LineBreak/><LineBreak/>
+            
+                    Here are examples of what to say to move a piece;<LineBreak/>
+                      "Move e2 to e4"<LineBreak/>
+                      "Knight to f3"<LineBreak/>
+                      "Knight to f6"<LineBreak/>
+                      "White Knight to c3"<LineBreak/>
+                      "Black Knight to f6"<LineBreak/>                
+                    <LineBreak/>
+    
+                    You can also substitute the coordinate letters for the following words;<LineBreak/>
+                      a - Alfa <LineBreak/>
+                      b - Bravo <LineBreak/>
+                      c - Charlie <LineBreak/>
+                      d - Delta <LineBreak/>
+                      e - Echo <LineBreak/>
+                      f - Foxtrot <LineBreak/>
+                      g - Golf <LineBreak/>
+                      h - Hotel <LineBreak/>
+                     <LineBreak/>                          
+                      Some examples of moving a piece with this method;<LineBreak/>
+                        "Move echo 2 to echo 4"<LineBreak/>
+                        "Knight to foxtrot 3"<LineBreak/>
+                        "Knight to foxtrot 6<LineBreak/>
+                        "White Knight to charlie 3"<LineBreak/>
+                        "Black knight to foxtrot 6"<LineBreak/>
+                     <LineBreak/>   
+                    Using the full coordinates of both the to and from squares is required when the move is ambiguous, or if you are in edit mode.<LineBreak/><LineBreak/>
+            
+                    To read out the coordinates of a piece, say the piece name. Here are some examples of what to say;<LineBreak/>
+                    "Rook"<LineBreak/>
+                    "Pawn"<LineBreak/>
+                    "Black Knight"<LineBreak/>
+                    "Black Pawn"<LineBreak/>
+                    "White Bishop"<LineBreak/>
+                    <LineBreak/>    
+                </TextBlock>
+            </StackPanel>
+        </ScrollViewer>
+
+    </Grid>
+</Page>

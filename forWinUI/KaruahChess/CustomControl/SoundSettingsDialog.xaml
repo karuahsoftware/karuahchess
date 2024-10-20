@@ -1,0 +1,28 @@
+﻿<Page
+    x:Class="KaruahChess.CustomControl.SoundSettingsDialog"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    
+    <Grid x:Name="PageGrid">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="50" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <StackPanel Orientation="Horizontal" Grid.Row="0" Grid.Column="0">
+            <TextBlock x:Name="PageIcon" FontFamily="Segoe MDL2 Assets" Text="&#xE8D6;" VerticalAlignment="Center" Margin="0,0,5,0" Style="{StaticResource TitleTextBlockStyle}"/>
+            <TextBlock  TextWrapping="WrapWholeWords" VerticalAlignment="Center" Text="Sound" Style="{StaticResource SubtitleTextBlockStyle}" />
+        </StackPanel>
+
+        <ScrollViewer x:Name="MainTextScrollViewer" Grid.Row="1" Grid.Column="0">
+            <StackPanel Orientation="Vertical">
+                <CheckBox x:Name="SoundReadCheckBox" Content="Read messages out loud" />
+                <CheckBox x:Name="SoundEffectCheckBox" Content="Piece move sound" />
+            </StackPanel>
+        </ScrollViewer>
+
+    </Grid>
+</Page>

@@ -32,8 +32,8 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 namespace winrt::KaruahChessEngine::implementation
 {		
-		
-	using namespace helper;
+	using namespace KaruahChess;
+	using namespace KaruahChess::helper;
 	using namespace std;
 	using namespace winrt::Windows;
 		
@@ -42,26 +42,22 @@ namespace winrt::KaruahChessEngine::implementation
 	/// Constructor
 	/// </summary>	
 	KaruahChessEngineClass::KaruahChessEngineClass() {
-		
-		// Initialise the main components of the engine without the NNUE
-		Engine::init();
-						
-		// Initialise with the NNUE file.
+									
+		// Initialise engine with the NNUE files.
 		Concurrency::create_task([this] {
 			LoadNNUE().get();
-			}).get();
-			
+			}).get();		
 		
 	}
 
 	/// <summary>
 	/// Initialise with the NNUE file. 
-	/// Only do this if the file has not been previously loaded, or the name has changed.
+	/// Only do this if the file has not been previously loaded.
 	/// </summary>	
 	IAsyncAction KaruahChessEngineClass::LoadNNUE()
 	{
-		const char* nnueFileNameBig = "nn-b1a57edbea57.nnue";
-		const char* nnueFileNameSmall = "nn-baff1ede1f90.nnue";
+		const char* nnueFileNameBig = "nn-1111cefa1111.nnue";
+		const char* nnueFileNameSmall = "nn-37f18f62d772.nnue";
 
 		if (!(Engine::nnueLoadedBig && Engine::nnueLoadedSmall)) 
 		{
@@ -466,13 +462,14 @@ namespace winrt::KaruahChessEngine::implementation
 		// Search for a move
 		Search::SearchTreeNode bestMove;
 		Search::SearchStatistics statistics;
-		Search::SearchOptions options;
-		options.randomiseFirstMove = pSearchOptions.randomiseFirstMove;
+		Search::SearchOptions options;		
 		options.limitSkillLevel = pSearchOptions.limitSkillLevel;
 		options.limitDepth = pSearchOptions.limitDepth;
 		options.limitNodes = pSearchOptions.limitNodes;
 		options.limitMoveDuration = pSearchOptions.limitMoveDuration;
 		options.limitThreads = pSearchOptions.limitThreads;
+		options.randomiseFirstMove = pSearchOptions.randomiseFirstMove;
+		options.alternateMove = pSearchOptions.alternateMove;
 		
 		Search::GetBestMove(SearchBoard, options, bestMove, statistics);
 

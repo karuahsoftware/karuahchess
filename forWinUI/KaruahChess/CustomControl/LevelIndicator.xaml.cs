@@ -19,17 +19,12 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 using System;
 using Microsoft.UI.Xaml.Controls;
-using KaruahChess.Common;
 
 namespace KaruahChess.CustomControl
 {
     public sealed partial class LevelIndicator : UserControl
     {
-        /// <summary>
-        /// A class containing styling info for the control
-        /// </summary>
-        public CustomStyleTemplate StyleTemplate { get; set; }
-
+        
         private ViewModel.BoardViewModel _boardVM;
 
         /// <summary>
@@ -38,12 +33,6 @@ namespace KaruahChess.CustomControl
         public LevelIndicator()
         {
             this.InitializeComponent();
-
-            if (StyleTemplate == null)
-            {
-                StyleTemplate = (CustomStyleTemplate)CustomStyleDefaultResourceDictionary["CustomStyleTemplateDefaultObject"];
-            }
-
         }
 
         /// <summary>

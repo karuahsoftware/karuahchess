@@ -101,6 +101,22 @@ namespace KaruahChess.Pieces
         }
 
         /// <summary>
+        /// Sets the piece edit select visibility
+        /// </summary>
+        /// <param name="pVisibility"></param>
+        public void SetPieceEditSelectVisibility(Visibility pVisibility, SolidColorBrush pBrushColor)
+        {
+            PieceEditSelect.Visibility = pVisibility;
+
+            if (pBrushColor != null)
+            {
+                PieceEditSelect.Stroke = pBrushColor;
+                PieceEditSelect.Fill = pBrushColor;
+            }
+
+        }
+
+        /// <summary>
         /// Sets the ellipse UnderAttack visibility
         /// </summary>
         /// <param name="pVisibility"></param>
@@ -175,6 +191,11 @@ namespace KaruahChess.Pieces
             Canvas.SetLeft(PieceEllipseUnderAttack, pWidth / 2 - PieceEllipseUnderAttack.Width / 2);
             Canvas.SetTop(PieceEllipseUnderAttack, pHeight / 2 - PieceEllipseUnderAttack.Height / 2);
 
+            // Set Rectangle dimensions
+            PieceEditSelect.Width = _pieceWidth > 0 ? _pieceWidth - 1 : _pieceWidth;
+            PieceEditSelect.Height = _pieceHeight > 0 ? _pieceHeight - 1 : _pieceHeight;
+            Canvas.SetLeft(PieceEditSelect, pWidth / 2 - PieceEditSelect.Width / 2);
+            Canvas.SetTop(PieceEditSelect, pHeight / 2 - PieceEditSelect.Height / 2);
 
             if (pType == TypeEnum.Empty)
             {
@@ -231,6 +252,7 @@ namespace KaruahChess.Pieces
             }
         }
 
+        
         /// <summary>
         /// Start the ellipse storyboard if not empty
         /// </summary>

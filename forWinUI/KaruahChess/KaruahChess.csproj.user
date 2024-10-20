@@ -5,12 +5,39 @@
     <None Update="App.xaml">
       <SubType>Designer</SubType>
     </None>
+    <Page Update="CustomControl\PieceEditDialog.xaml">
+      <SubType>Designer</SubType>
+    </Page>
     <None Update="MainWindow.xaml">
       <SubType>Designer</SubType>
     </None>
   </ItemGroup>
   <ItemGroup>
-    <Page Update="CustomControl\PieceSettings.xaml">
+    <Page Update="CustomControl\BoardSettingsDialog.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="CustomControl\AboutDialog.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="CustomControl\ClockSettingsDialog.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="CustomControl\EngineSettingsDialog.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="CustomControl\VoiceHelpDialog.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="CustomControl\ImportPGNDialog.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="CustomControl\SoundSettingsDialog.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="CustomControl\PieceSettingsDialog.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="CustomControl\HintSettingsDialog.xaml">
       <SubType>Designer</SubType>
     </Page>
     <Page Update="ErrorWindow.xaml">
