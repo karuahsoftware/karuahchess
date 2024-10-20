@@ -22,41 +22,44 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #include <cstdint>
 #include <chrono>
 
+namespace KaruahChess {
 
-namespace Search {
+	namespace Search {
 
-	struct SearchTreeNode {
+		struct SearchTreeNode {
 
-		int moveFromIndex = -1;
-		int moveToIndex = -1;
-		int promotionPieceType = 0;
-		bool cancelled = false;
-		int error = 0;
+			int moveFromIndex = -1;
+			int moveToIndex = -1;
+			int promotionPieceType = 0;
+			bool cancelled = false;
+			int error = 0;
 
-	};
+		};
 
-	struct SearchStatistics {
-		std::chrono::time_point<std::chrono::steady_clock> StartTime;
-		std::chrono::time_point<std::chrono::steady_clock> EndTime;
-		std::chrono::milliseconds DurationMS = std::chrono::milliseconds::zero();
+		struct SearchStatistics {
+			std::chrono::time_point<std::chrono::steady_clock> StartTime;
+			std::chrono::time_point<std::chrono::steady_clock> EndTime;
+			std::chrono::milliseconds DurationMS = std::chrono::milliseconds::zero();
 
-	};
+		};
 
-	struct SearchOptions {
-		int limitSkillLevel = 0;
-		int limitDepth = 0;
-		int limitNodes = 0;
-		int limitMoveDuration = 0;
-		int limitThreads = 1;
-		bool randomiseFirstMove = false;
-		
-	};
+		struct SearchOptions {
+			int limitSkillLevel = 0;
+			int limitDepth = 0;
+			int limitNodes = 0;
+			int limitMoveDuration = 0;
+			int limitThreads = 1;
+			bool randomiseFirstMove = false;
+			bool alternateMove = false;
 
-	// Functions
-	extern void GetBestMove(BitBoard& pBoard, SearchOptions pSearchOptions, SearchTreeNode& pBestMove, SearchStatistics& pStatistics);
+		};
+
+		// Functions
+		extern void GetBestMove(BitBoard& pBoard, SearchOptions pSearchOptions, SearchTreeNode& pBestMove, SearchStatistics& pStatistics);
 
 
-	extern void Cancel();
-	extern void ClearCache();
+		extern void Cancel();
+		extern void ClearCache();
+	}
+
 }
-

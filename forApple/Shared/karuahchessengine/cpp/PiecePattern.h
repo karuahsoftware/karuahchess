@@ -20,6 +20,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #include "helper.h"
 #include <cstdint>
 
+namespace KaruahChess {
 
 	namespace PiecePattern {
 
@@ -27,13 +28,15 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 		extern uint64_t Pattern(helper::PatternEnum pPattern, int pSqIndex, uint64_t pBlockers);
 		extern uint64_t PatternXRay(helper::PatternEnum pPattern, int pSqIndex, uint64_t pBlockers);
 		template<int Colour> extern uint64_t PawnEnpassant(const int pIndex, const int pEnpassantIndex, const uint64_t pWhitePawnPos, const uint64_t pBlackPawnPos);
-		template<int Colour> extern uint64_t PawnPotentialAttack(const int pSqIndex);		
+		template<int Colour> extern uint64_t PawnPotentialAttack(const int pSqIndex);
 		template<int Colour> extern uint64_t PawnPotentialAttackBB(const uint64_t p);
-		template<int Colour> extern uint64_t PawnAttack(const int pSqIndex, const uint64_t pBlockers);		
-		template<int Colour> extern uint64_t PawnMove(const int pSqIndex, const uint64_t pBlockers);		
+		template<int Colour> extern uint64_t PawnAttack(const int pSqIndex, const uint64_t pBlockers);
+		template<int Colour> extern uint64_t PawnMove(const int pSqIndex, const uint64_t pBlockers);
 		extern uint64_t Bishop(const int pIndex, const uint64_t pBlockers, const bool pXRay);
 		extern uint64_t Rook(const int pIndex, const uint64_t pBlockers, const bool pXRay);
 		extern uint64_t King(const int pIndex);
-		template<int Colour> extern uint64_t KingCastle(const int pIndex, const uint64_t pWhitePos, const uint64_t pBlackPos, const uint64_t pUsRookPos, const uint64_t pThemAttack, const uint64_t pThemPawnPotentialAttack, const int pStateCastlingAvailability);		
+		template<int Colour> extern uint64_t KingCastle(const int pIndex, const uint64_t pWhitePos, const uint64_t pBlackPos, const uint64_t pUsRookPos, const uint64_t pThemAttack, const uint64_t pThemPawnPotentialAttack, const int pStateCastlingAvailability);
 		extern uint64_t Knight(const int pIndex);
 	}
+
+}

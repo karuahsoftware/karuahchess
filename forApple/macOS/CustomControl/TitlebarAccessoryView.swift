@@ -19,7 +19,8 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 import SwiftUI
 
 struct TitlebarAccessoryView: View {
-    @ObservedObject private var hintVM : HintViewModel = HintViewModel.instance
+    @ObservedObject private var hintSettingsVM : HintSettingsViewModel = HintSettingsViewModel.instance
+    @ObservedObject private var menuSettingsVM : MenuSettingsViewModel = MenuSettingsViewModel.instance
     
     var body: some View {
         HStack {
@@ -29,39 +30,57 @@ struct TitlebarAccessoryView: View {
             
             Spacer()
             
-            Button(action: {
-                let action : ()->Void = {
-                    Task(priority: .userInitiated) {
-                        await BoardViewModel.instance.newGame()
+            if !menuSettingsVM.arrangeBoardEnabled {
+                Button(action: {
+                    let action : ()->Void = {
+                        Task(priority: .userInitiated) {
+                            await BoardViewModel.instance.newGame()
+                        }
                     }
-                }
-                BoardViewModel.instance.boardMessageAlertVM.show("Start a new game?", "", BoardMessageAlertViewModel.alertTypeEnum.YesNo, action)
-                   }){
+                    BoardViewModel.instance.boardMessageAlertVM.show("Start a new game?", "", BoardMessageAlertViewModel.alertTypeEnum.YesNo, action)
+                }){
                     Image(systemName: "target").foregroundColor(Color(.textColor))
-            }
-            .help("New Game ⌘N")
-            
-            
-            Button(action: {
-                BoardViewModel.instance.showLastMove()
-                   }){
-                Image(systemName: "eye.fill").foregroundColor(Color(.textColor))
+                }
+                .help("New Game ⌘N")
+                
+                
+                Button(action: {
+                    BoardViewModel.instance.showLastMove()
+                }){
+                    Image(systemName: "eye.fill").foregroundColor(Color(.textColor))
                     
-            }.keyboardShortcut("l", modifiers: [.command])
-            .help("Last move ⌘L")
-            
-            if hintVM.enabled {
+                }.keyboardShortcut("l", modifiers: [.command])
+                    .help("Last move ⌘L")
+                
+                if hintSettingsVM.hintEnabled {
+                    Button(action: {
+                        Task(priority: .userInitiated) {
+                            await BoardViewModel.instance.showHint()
+                        }
+                    }){
+                        Image(systemName: "lightbulb").foregroundColor(Color(.textColor))
+                        
+                    }.keyboardShortcut("h", modifiers: [.command])
+                        .help("Hint ⌘H")
+                }
+            }
+            else {
+                Button(action: {
+                    BoardViewModel.instance.pieceEditSelectVM.show()
+                }){
+                    Image(systemName: "person").foregroundColor(Color(.textColor))
+                }
+                    
+                
                 Button(action: {
                     Task(priority: .userInitiated) {
-                    await BoardViewModel.instance.showHint()
+                        await BoardViewModel.instance.editEraseSelection()
                     }
-                       }){
-                    Image(systemName: "lightbulb").foregroundColor(Color(.textColor))
-                        
-                }.keyboardShortcut("h", modifiers: [.command])
-                .help("Hint ⌘H")
+                }){
+                    Image(systemName: "trash.fill").foregroundColor(Color(.textColor))
+                }
+                
             }
-            
         }.padding(.init(top: 0, leading: 7, bottom: 0, trailing: 7))
     }
     

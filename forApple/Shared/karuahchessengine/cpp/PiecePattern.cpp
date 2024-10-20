@@ -20,7 +20,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #include "helper.h"
 #include <cstdint>
 
-
+namespace KaruahChess {
 	namespace PiecePattern {
 
 		/// <summary>
@@ -79,7 +79,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 				uint64_t rowMaskA = helper::RowMask[pIndex];
 				uint64_t rowMaskB = helper::RowMask[pIndex] >> 8;
 				uint64_t sqBinary = helper::BITMASK >> pIndex;
-				
+
 				uint64_t sqEnpassantBinary = 0;
 				if (pEnpassantIndex > -1) {
 					sqEnpassantBinary = helper::BITMASK >> pEnpassantIndex;
@@ -171,7 +171,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 			else {
 				return ((p & ~helper::FILEH) >> 9) | ((p & ~helper::FILEA) >> 7);
 			}
-			
+
 		}
 
 
@@ -359,3 +359,5 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 		template uint64_t PawnPotentialAttackBB<helper::WHITEPIECE>(const uint64_t p);
 		template uint64_t PawnPotentialAttackBB<helper::BLACKPIECE>(const uint64_t p);
 	}
+
+}

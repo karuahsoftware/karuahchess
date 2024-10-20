@@ -12,9 +12,8 @@
 		3A04D29125E502FA00FB2B58 /* ExportDB.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A04D29025E502FA00FB2B58 /* ExportDB.swift */; };
 		3A04D29225E502FA00FB2B58 /* ExportDB.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A04D29025E502FA00FB2B58 /* ExportDB.swift */; };
 		3A05E3E325D911BE004E223F /* BoardButtonStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3ADFD8EA25D8F7A200D6EB6E /* BoardButtonStyle.swift */; };
-		3A05E3E625D919EB004E223F /* PieceEditToolView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AF7931A25B6F65A00A86A35 /* PieceEditToolView.swift */; };
-		3A09023A288CF75800CB965B /* HintViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A090239288CF75800CB965B /* HintViewModel.swift */; };
-		3A09023B288CF75800CB965B /* HintViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A090239288CF75800CB965B /* HintViewModel.swift */; };
+		3A09023A288CF75800CB965B /* HintSettingsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A090239288CF75800CB965B /* HintSettingsViewModel.swift */; };
+		3A09023B288CF75800CB965B /* HintSettingsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A090239288CF75800CB965B /* HintSettingsViewModel.swift */; };
 		3A0C4E8325FE2531003B9111 /* GameRecord.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A0C4E8225FE2531003B9111 /* GameRecord.swift */; };
 		3A0C4E8425FE2531003B9111 /* GameRecord.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A0C4E8225FE2531003B9111 /* GameRecord.swift */; };
 		3A11245425D6237D004D24E8 /* EngineSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AF7930D25B6F65A00A86A35 /* EngineSettings.swift */; };
@@ -45,46 +44,6 @@
 		3A2A44542624709C00FEC25C /* CoordPanelView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A2A44522624709C00FEC25C /* CoordPanelView.swift */; };
 		3A2D8DBA27780B0100BF114B /* libz.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 3A2D8DB927780B0100BF114B /* libz.tbd */; };
 		3A2D8DBC27780B3000BF114B /* libz.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 3A2D8DBB27780B3000BF114B /* libz.tbd */; };
-		3A2FF8802BF0D884006781C2 /* sf_position.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3A2FF8642BF0D884006781C2 /* sf_position.cpp */; };
-		3A2FF8812BF0D884006781C2 /* sf_position.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3A2FF8642BF0D884006781C2 /* sf_position.cpp */; };
-		3A2FF8822BF0D884006781C2 /* sf_timeman.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3A2FF8672BF0D884006781C2 /* sf_timeman.cpp */; };
-		3A2FF8832BF0D884006781C2 /* sf_timeman.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3A2FF8672BF0D884006781C2 /* sf_timeman.cpp */; };
-		3A2FF8842BF0D884006781C2 /* search.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3A2FF8682BF0D884006781C2 /* search.cpp */; };
-		3A2FF8852BF0D885006781C2 /* search.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3A2FF8682BF0D884006781C2 /* search.cpp */; };
-		3A2FF8862BF0D885006781C2 /* sf_search.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3A2FF8692BF0D884006781C2 /* sf_search.cpp */; };
-		3A2FF8872BF0D885006781C2 /* sf_search.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3A2FF8692BF0D884006781C2 /* sf_search.cpp */; };
-		3A2FF8882BF0D885006781C2 /* sf_misc.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3A2FF86A2BF0D884006781C2 /* sf_misc.cpp */; };
-		3A2FF8892BF0D885006781C2 /* sf_misc.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3A2FF86A2BF0D884006781C2 /* sf_misc.cpp */; };
-		3A2FF88A2BF0D885006781C2 /* sf_bitboard.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3A2FF86B2BF0D884006781C2 /* sf_bitboard.cpp */; };
-		3A2FF88B2BF0D885006781C2 /* sf_bitboard.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3A2FF86B2BF0D884006781C2 /* sf_bitboard.cpp */; };
-		3A2FF88C2BF0D885006781C2 /* sf_movegen.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3A2FF86D2BF0D884006781C2 /* sf_movegen.cpp */; };
-		3A2FF88D2BF0D885006781C2 /* sf_movegen.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3A2FF86D2BF0D884006781C2 /* sf_movegen.cpp */; };
-		3A2FF88E2BF0D885006781C2 /* sf_movepick.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3A2FF86E2BF0D884006781C2 /* sf_movepick.cpp */; };
-		3A2FF88F2BF0D885006781C2 /* sf_movepick.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3A2FF86E2BF0D884006781C2 /* sf_movepick.cpp */; };
-		3A2FF8902BF0D885006781C2 /* sf_ucioption.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3A2FF86F2BF0D884006781C2 /* sf_ucioption.cpp */; };
-		3A2FF8912BF0D885006781C2 /* sf_ucioption.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3A2FF86F2BF0D884006781C2 /* sf_ucioption.cpp */; };
-		3A2FF8922BF0D885006781C2 /* sf_tt.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3A2FF8702BF0D884006781C2 /* sf_tt.cpp */; };
-		3A2FF8932BF0D885006781C2 /* sf_tt.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3A2FF8702BF0D884006781C2 /* sf_tt.cpp */; };
-		3A2FF8942BF0D885006781C2 /* sf_uci.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3A2FF8752BF0D884006781C2 /* sf_uci.cpp */; };
-		3A2FF8952BF0D885006781C2 /* sf_uci.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3A2FF8752BF0D884006781C2 /* sf_uci.cpp */; };
-		3A2FF8962BF0D885006781C2 /* sf_thread.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3A2FF8772BF0D884006781C2 /* sf_thread.cpp */; };
-		3A2FF8972BF0D885006781C2 /* sf_thread.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3A2FF8772BF0D884006781C2 /* sf_thread.cpp */; };
-		3A2FF8982BF0D885006781C2 /* sf_evaluate.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3A2FF87D2BF0D884006781C2 /* sf_evaluate.cpp */; };
-		3A2FF8992BF0D885006781C2 /* sf_evaluate.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3A2FF87D2BF0D884006781C2 /* sf_evaluate.cpp */; };
-		3A2FF89C2BF0D893006781C2 /* piecepattern.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3A2FF89A2BF0D893006781C2 /* piecepattern.cpp */; };
-		3A2FF89D2BF0D893006781C2 /* piecepattern.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3A2FF89A2BF0D893006781C2 /* piecepattern.cpp */; };
-		3A2FF8A02BF0D8A1006781C2 /* moverules.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3A2FF89E2BF0D8A1006781C2 /* moverules.cpp */; };
-		3A2FF8A12BF0D8A1006781C2 /* moverules.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3A2FF89E2BF0D8A1006781C2 /* moverules.cpp */; };
-		3A2FF8A82BF0D8B1006781C2 /* engine.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3A2FF8A52BF0D8B1006781C2 /* engine.cpp */; };
-		3A2FF8A92BF0D8B1006781C2 /* engine.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3A2FF8A52BF0D8B1006781C2 /* engine.cpp */; };
-		3A2FF8AA2BF0D8B1006781C2 /* bitboard.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3A2FF8A62BF0D8B1006781C2 /* bitboard.cpp */; };
-		3A2FF8AB2BF0D8B1006781C2 /* bitboard.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3A2FF8A62BF0D8B1006781C2 /* bitboard.cpp */; };
-		3A2FF8AC2BF0D8B1006781C2 /* helper.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3A2FF8A72BF0D8B1006781C2 /* helper.cpp */; };
-		3A2FF8AD2BF0D8B1006781C2 /* helper.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3A2FF8A72BF0D8B1006781C2 /* helper.cpp */; };
-		3A2FF8C02BF0D8EB006781C2 /* half_ka_v2_hm.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3A2FF8B02BF0D8EB006781C2 /* half_ka_v2_hm.cpp */; };
-		3A2FF8C12BF0D8EB006781C2 /* half_ka_v2_hm.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3A2FF8B02BF0D8EB006781C2 /* half_ka_v2_hm.cpp */; };
-		3A2FF8C22BF0D8EB006781C2 /* evaluate_nnue.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3A2FF8B92BF0D8EB006781C2 /* evaluate_nnue.cpp */; };
-		3A2FF8C32BF0D8EB006781C2 /* evaluate_nnue.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3A2FF8B92BF0D8EB006781C2 /* evaluate_nnue.cpp */; };
 		3A35C938288BB9BF00DE83F7 /* LevelIndicatorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A35C937288BB9BF00DE83F7 /* LevelIndicatorView.swift */; };
 		3A35C939288BB9BF00DE83F7 /* LevelIndicatorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A35C937288BB9BF00DE83F7 /* LevelIndicatorView.swift */; };
 		3A3A004125CF6F3500252B36 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A3A004025CF6F3500252B36 /* AppDelegate.swift */; };
@@ -112,26 +71,84 @@
 		3A6EEC6625D65504005B637F /* EngineSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A6EEC6525D65504005B637F /* EngineSettings.swift */; };
 		3A70B2CB2A10ED2C0077A662 /* PieceSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A70B2CA2A10ED2C0077A662 /* PieceSettings.swift */; };
 		3A7816FC27708D4800DCE7E6 /* SoundSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A7816FB27708D4800DCE7E6 /* SoundSettings.swift */; };
+		3A7A4D072C26B9C900E5BCF1 /* ParamHintMove.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A7A4D062C26B9C900E5BCF1 /* ParamHintMove.swift */; };
+		3A7A4D082C26B9C900E5BCF1 /* ParamHintMove.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A7A4D062C26B9C900E5BCF1 /* ParamHintMove.swift */; };
+		3A7A4D0A2C26BAEE00E5BCF1 /* HintSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A7A4D092C26BAEE00E5BCF1 /* HintSettings.swift */; };
+		3A7A4D0C2C26D42A00E5BCF1 /* HintSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A7A4D0B2C26D42A00E5BCF1 /* HintSettings.swift */; };
 		3A8061B3288BF5A100F7729C /* ParamHint.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A8061B2288BF5A100F7729C /* ParamHint.swift */; };
 		3A8061B4288BF5A100F7729C /* ParamHint.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A8061B2288BF5A100F7729C /* ParamHint.swift */; };
 		3A8061B6288BFADD00F7729C /* HintActor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A8061B5288BFADD00F7729C /* HintActor.swift */; };
 		3A8061B7288BFADD00F7729C /* HintActor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A8061B5288BFADD00F7729C /* HintActor.swift */; };
+		3A9536B12C8DB73000E95B2D /* PieceSelectButtonStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A9536B02C8DB73000E95B2D /* PieceSelectButtonStyle.swift */; };
+		3A9536B22C8DB73000E95B2D /* PieceSelectButtonStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A9536B02C8DB73000E95B2D /* PieceSelectButtonStyle.swift */; };
 		3A96EDBF2945DEC0008A05DF /* Strength.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A96EDBE2945DEC0008A05DF /* Strength.swift */; };
 		3A96EDC02945DEC0008A05DF /* Strength.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A96EDBE2945DEC0008A05DF /* Strength.swift */; };
 		3AA1DBA02A0FAF8000B242D0 /* AnimationCompletionObserverModifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AA1DB9F2A0FAF8000B242D0 /* AnimationCompletionObserverModifier.swift */; };
 		3AA1DBA12A0FAF8000B242D0 /* AnimationCompletionObserverModifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AA1DB9F2A0FAF8000B242D0 /* AnimationCompletionObserverModifier.swift */; };
 		3AA5A1DB25D4EF6A00CD2121 /* Menu.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AA5A1DA25D4EF6A00CD2121 /* Menu.swift */; };
-		3ABACCF72BF0CB08002C5752 /* nn-baff1ede1f90-Info.txt in Resources */ = {isa = PBXBuildFile; fileRef = 3ABACCF32BF0CB08002C5752 /* nn-baff1ede1f90-Info.txt */; };
-		3ABACCF82BF0CB08002C5752 /* nn-baff1ede1f90-Info.txt in Resources */ = {isa = PBXBuildFile; fileRef = 3ABACCF32BF0CB08002C5752 /* nn-baff1ede1f90-Info.txt */; };
-		3ABACCF92BF0CB08002C5752 /* nn-b1a57edbea57-Info.txt in Resources */ = {isa = PBXBuildFile; fileRef = 3ABACCF42BF0CB08002C5752 /* nn-b1a57edbea57-Info.txt */; };
-		3ABACCFA2BF0CB08002C5752 /* nn-b1a57edbea57-Info.txt in Resources */ = {isa = PBXBuildFile; fileRef = 3ABACCF42BF0CB08002C5752 /* nn-b1a57edbea57-Info.txt */; };
-		3ABACCFB2BF0CB08002C5752 /* nn-baff1ede1f90.nnue in Resources */ = {isa = PBXBuildFile; fileRef = 3ABACCF52BF0CB08002C5752 /* nn-baff1ede1f90.nnue */; };
-		3ABACCFC2BF0CB08002C5752 /* nn-baff1ede1f90.nnue in Resources */ = {isa = PBXBuildFile; fileRef = 3ABACCF52BF0CB08002C5752 /* nn-baff1ede1f90.nnue */; };
-		3ABACCFD2BF0CB08002C5752 /* nn-b1a57edbea57.nnue in Resources */ = {isa = PBXBuildFile; fileRef = 3ABACCF62BF0CB08002C5752 /* nn-b1a57edbea57.nnue */; };
-		3ABACCFE2BF0CB08002C5752 /* nn-b1a57edbea57.nnue in Resources */ = {isa = PBXBuildFile; fileRef = 3ABACCF62BF0CB08002C5752 /* nn-b1a57edbea57.nnue */; };
 		3AC1DD2525D22D7F0054F636 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AC1DD2425D22D7F0054F636 /* AppDelegate.swift */; };
 		3AC2C8EF25E65C30004E1744 /* GameRecordParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AC2C8EE25E65C30004E1744 /* GameRecordParser.swift */; };
 		3AC2C8F025E65C30004E1744 /* GameRecordParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AC2C8EE25E65C30004E1744 /* GameRecordParser.swift */; };
+		3ACD313B2CBA67030060B1C5 /* search.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3ACD31192CBA67030060B1C5 /* search.cpp */; };
+		3ACD313C2CBA67030060B1C5 /* sf_engine.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3ACD311D2CBA67030060B1C5 /* sf_engine.cpp */; };
+		3ACD313D2CBA67030060B1C5 /* sf_tt.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3ACD31352CBA67030060B1C5 /* sf_tt.cpp */; };
+		3ACD313E2CBA67030060B1C5 /* sf_uci.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3ACD31382CBA67030060B1C5 /* sf_uci.cpp */; };
+		3ACD313F2CBA67030060B1C5 /* sf_score.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3ACD312C2CBA67030060B1C5 /* sf_score.cpp */; };
+		3ACD31402CBA67030060B1C5 /* sf_memory.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3ACD31212CBA67030060B1C5 /* sf_memory.cpp */; };
+		3ACD31412CBA67030060B1C5 /* sf_evaluate.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3ACD311F2CBA67030060B1C5 /* sf_evaluate.cpp */; };
+		3ACD31422CBA67030060B1C5 /* sf_timeman.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3ACD31332CBA67030060B1C5 /* sf_timeman.cpp */; };
+		3ACD31432CBA67030060B1C5 /* sf_movegen.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3ACD31252CBA67030060B1C5 /* sf_movegen.cpp */; };
+		3ACD31442CBA67030060B1C5 /* piecepattern.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3ACD31172CBA67030060B1C5 /* piecepattern.cpp */; };
+		3ACD31452CBA67030060B1C5 /* sf_bitboard.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3ACD311B2CBA67030060B1C5 /* sf_bitboard.cpp */; };
+		3ACD31462CBA67030060B1C5 /* sf_movepick.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3ACD31272CBA67030060B1C5 /* sf_movepick.cpp */; };
+		3ACD31472CBA67030060B1C5 /* sf_thread.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3ACD31302CBA67030060B1C5 /* sf_thread.cpp */; };
+		3ACD31482CBA67030060B1C5 /* sf_ucioption.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3ACD313A2CBA67030060B1C5 /* sf_ucioption.cpp */; };
+		3ACD31492CBA67030060B1C5 /* sf_search.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3ACD312E2CBA67030060B1C5 /* sf_search.cpp */; };
+		3ACD314A2CBA67030060B1C5 /* sf_position.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3ACD312A2CBA67030060B1C5 /* sf_position.cpp */; };
+		3ACD314B2CBA67030060B1C5 /* sf_misc.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3ACD31232CBA67030060B1C5 /* sf_misc.cpp */; };
+		3ACD314C2CBA67030060B1C5 /* search.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3ACD31192CBA67030060B1C5 /* search.cpp */; };
+		3ACD314D2CBA67030060B1C5 /* sf_engine.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3ACD311D2CBA67030060B1C5 /* sf_engine.cpp */; };
+		3ACD314E2CBA67030060B1C5 /* sf_tt.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3ACD31352CBA67030060B1C5 /* sf_tt.cpp */; };
+		3ACD314F2CBA67030060B1C5 /* sf_uci.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3ACD31382CBA67030060B1C5 /* sf_uci.cpp */; };
+		3ACD31502CBA67030060B1C5 /* sf_score.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3ACD312C2CBA67030060B1C5 /* sf_score.cpp */; };
+		3ACD31512CBA67030060B1C5 /* sf_memory.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3ACD31212CBA67030060B1C5 /* sf_memory.cpp */; };
+		3ACD31522CBA67030060B1C5 /* sf_evaluate.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3ACD311F2CBA67030060B1C5 /* sf_evaluate.cpp */; };
+		3ACD31532CBA67030060B1C5 /* sf_timeman.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3ACD31332CBA67030060B1C5 /* sf_timeman.cpp */; };
+		3ACD31542CBA67030060B1C5 /* sf_movegen.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3ACD31252CBA67030060B1C5 /* sf_movegen.cpp */; };
+		3ACD31552CBA67030060B1C5 /* piecepattern.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3ACD31172CBA67030060B1C5 /* piecepattern.cpp */; };
+		3ACD31562CBA67030060B1C5 /* sf_bitboard.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3ACD311B2CBA67030060B1C5 /* sf_bitboard.cpp */; };
+		3ACD31572CBA67030060B1C5 /* sf_movepick.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3ACD31272CBA67030060B1C5 /* sf_movepick.cpp */; };
+		3ACD31582CBA67030060B1C5 /* sf_thread.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3ACD31302CBA67030060B1C5 /* sf_thread.cpp */; };
+		3ACD31592CBA67030060B1C5 /* sf_ucioption.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3ACD313A2CBA67030060B1C5 /* sf_ucioption.cpp */; };
+		3ACD315A2CBA67030060B1C5 /* sf_search.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3ACD312E2CBA67030060B1C5 /* sf_search.cpp */; };
+		3ACD315B2CBA67030060B1C5 /* sf_position.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3ACD312A2CBA67030060B1C5 /* sf_position.cpp */; };
+		3ACD315C2CBA67030060B1C5 /* sf_misc.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3ACD31232CBA67030060B1C5 /* sf_misc.cpp */; };
+		3ACD315F2CBA674E0060B1C5 /* moverules.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3ACD315E2CBA674E0060B1C5 /* moverules.cpp */; };
+		3ACD31602CBA674E0060B1C5 /* moverules.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3ACD315E2CBA674E0060B1C5 /* moverules.cpp */; };
+		3ACD31672CBA67760060B1C5 /* engine.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3ACD31642CBA67760060B1C5 /* engine.cpp */; };
+		3ACD31682CBA67760060B1C5 /* helper.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3ACD31662CBA67760060B1C5 /* helper.cpp */; };
+		3ACD31692CBA67760060B1C5 /* bitboard.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3ACD31622CBA67760060B1C5 /* bitboard.cpp */; };
+		3ACD316A2CBA67760060B1C5 /* engine.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3ACD31642CBA67760060B1C5 /* engine.cpp */; };
+		3ACD316B2CBA67760060B1C5 /* helper.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3ACD31662CBA67760060B1C5 /* helper.cpp */; };
+		3ACD316C2CBA67760060B1C5 /* bitboard.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3ACD31622CBA67760060B1C5 /* bitboard.cpp */; };
+		3ACD316F2CBA67BF0060B1C5 /* half_ka_v2_hm.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3ACD316E2CBA67BF0060B1C5 /* half_ka_v2_hm.cpp */; };
+		3ACD31702CBA67BF0060B1C5 /* half_ka_v2_hm.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3ACD316E2CBA67BF0060B1C5 /* half_ka_v2_hm.cpp */; };
+		3ACD317E2CBA67FC0060B1C5 /* network.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3ACD31772CBA67FC0060B1C5 /* network.cpp */; };
+		3ACD317F2CBA67FC0060B1C5 /* nnue_misc.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3ACD317D2CBA67FC0060B1C5 /* nnue_misc.cpp */; };
+		3ACD31802CBA67FC0060B1C5 /* network.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3ACD31772CBA67FC0060B1C5 /* network.cpp */; };
+		3ACD31812CBA67FC0060B1C5 /* nnue_misc.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3ACD317D2CBA67FC0060B1C5 /* nnue_misc.cpp */; };
+		3ACD31872CBA68B80060B1C5 /* nn-1111cefa1111.nnue in Resources */ = {isa = PBXBuildFile; fileRef = 3ACD31852CBA68B80060B1C5 /* nn-1111cefa1111.nnue */; };
+		3ACD31882CBA68B80060B1C5 /* nn-1111cefa1111-Info.txt in Resources */ = {isa = PBXBuildFile; fileRef = 3ACD31862CBA68B80060B1C5 /* nn-1111cefa1111-Info.txt */; };
+		3ACD31892CBA68B80060B1C5 /* nn-37f18f62d772.nnue in Resources */ = {isa = PBXBuildFile; fileRef = 3ACD31832CBA68B80060B1C5 /* nn-37f18f62d772.nnue */; };
+		3ACD318A2CBA68B80060B1C5 /* nn-37f18f62d772-Info.txt in Resources */ = {isa = PBXBuildFile; fileRef = 3ACD31842CBA68B80060B1C5 /* nn-37f18f62d772-Info.txt */; };
+		3ACD318B2CBA68B80060B1C5 /* nn-1111cefa1111.nnue in Resources */ = {isa = PBXBuildFile; fileRef = 3ACD31852CBA68B80060B1C5 /* nn-1111cefa1111.nnue */; };
+		3ACD318C2CBA68B80060B1C5 /* nn-1111cefa1111-Info.txt in Resources */ = {isa = PBXBuildFile; fileRef = 3ACD31862CBA68B80060B1C5 /* nn-1111cefa1111-Info.txt */; };
+		3ACD318D2CBA68B80060B1C5 /* nn-37f18f62d772.nnue in Resources */ = {isa = PBXBuildFile; fileRef = 3ACD31832CBA68B80060B1C5 /* nn-37f18f62d772.nnue */; };
+		3ACD318E2CBA68B80060B1C5 /* nn-37f18f62d772-Info.txt in Resources */ = {isa = PBXBuildFile; fileRef = 3ACD31842CBA68B80060B1C5 /* nn-37f18f62d772-Info.txt */; };
+		3ACDE04A2C85CC0B004C3880 /* PieceEditSelectView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3ACDE0492C85CC0B004C3880 /* PieceEditSelectView.swift */; };
+		3ACDE04B2C85CC0B004C3880 /* PieceEditSelectView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3ACDE0492C85CC0B004C3880 /* PieceEditSelectView.swift */; };
+		3ACDE04D2C85CCDC004C3880 /* PieceEditSelectViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3ACDE04C2C85CCDC004C3880 /* PieceEditSelectViewModel.swift */; };
+		3ACDE04E2C85CCDC004C3880 /* PieceEditSelectViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3ACDE04C2C85CCDC004C3880 /* PieceEditSelectViewModel.swift */; };
 		3ACE50EE2A0D0775004E68FF /* PieceSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3ACE50ED2A0D0775004E68FF /* PieceSettings.swift */; };
 		3ACE50F02A0D0822004E68FF /* ParamMoveSpeed.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3ACE50EF2A0D0822004E68FF /* ParamMoveSpeed.swift */; };
 		3ACE50F12A0D0822004E68FF /* ParamMoveSpeed.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3ACE50EF2A0D0822004E68FF /* ParamMoveSpeed.swift */; };
@@ -202,7 +219,6 @@
 		3AF7936125B6F65A00A86A35 /* BoardMessageAlertView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AF7931825B6F65A00A86A35 /* BoardMessageAlertView.swift */; };
 		3AF7936325B6F65A00A86A35 /* Device.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AF7931925B6F65A00A86A35 /* Device.swift */; };
 		3AF7936425B6F65A00A86A35 /* Device.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AF7931925B6F65A00A86A35 /* Device.swift */; };
-		3AF7936525B6F65A00A86A35 /* PieceEditToolView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AF7931A25B6F65A00A86A35 /* PieceEditToolView.swift */; };
 		3AF7936725B6F65A00A86A35 /* TileAnimationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AF7931B25B6F65A00A86A35 /* TileAnimationView.swift */; };
 		3AF7936825B6F65A00A86A35 /* TileAnimationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AF7931B25B6F65A00A86A35 /* TileAnimationView.swift */; };
 		3AF7936925B6F65A00A86A35 /* ActivityIndicatorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AF7931C25B6F65A00A86A35 /* ActivityIndicatorView.swift */; };
@@ -252,8 +268,6 @@
 		3AF7939625B6F65A00A86A35 /* BoardAnimation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AF7933825B6F65A00A86A35 /* BoardAnimation.swift */; };
 		3AF7939725B6F65A00A86A35 /* EngineSettingsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AF7933A25B6F65A00A86A35 /* EngineSettingsViewModel.swift */; };
 		3AF7939825B6F65A00A86A35 /* EngineSettingsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AF7933A25B6F65A00A86A35 /* EngineSettingsViewModel.swift */; };
-		3AF7939925B6F65A00A86A35 /* PieceEditToolViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AF7933B25B6F65A00A86A35 /* PieceEditToolViewModel.swift */; };
-		3AF7939A25B6F65A00A86A35 /* PieceEditToolViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AF7933B25B6F65A00A86A35 /* PieceEditToolViewModel.swift */; };
 		3AF7939B25B6F65A00A86A35 /* TileAnimationViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AF7933C25B6F65A00A86A35 /* TileAnimationViewModel.swift */; };
 		3AF7939C25B6F65A00A86A35 /* TileAnimationViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AF7933C25B6F65A00A86A35 /* TileAnimationViewModel.swift */; };
 		3AF7939D25B6F65A00A86A35 /* MenuSettingsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AF7933D25B6F65A00A86A35 /* MenuSettingsViewModel.swift */; };
@@ -273,7 +287,7 @@
 /* Begin PBXFileReference section */
 		3A014AA825D7BA9500D7A466 /* TitlebarAccessoryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TitlebarAccessoryView.swift; sourceTree = "<group>"; };
 		3A04D29025E502FA00FB2B58 /* ExportDB.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExportDB.swift; sourceTree = "<group>"; };
-		3A090239288CF75800CB965B /* HintViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HintViewModel.swift; sourceTree = "<group>"; };
+		3A090239288CF75800CB965B /* HintSettingsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HintSettingsViewModel.swift; sourceTree = "<group>"; };
 		3A0C4E8225FE2531003B9111 /* GameRecord.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameRecord.swift; sourceTree = "<group>"; };
 		3A12B02325B9841700221FF6 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		3A159E0226D0FFF1001100CC /* ParamLevelAuto.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ParamLevelAuto.swift; sourceTree = "<group>"; };
@@ -292,58 +306,6 @@
 		3A2A44522624709C00FEC25C /* CoordPanelView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoordPanelView.swift; sourceTree = "<group>"; };
 		3A2D8DB927780B0100BF114B /* libz.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libz.tbd; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS15.2.sdk/usr/lib/libz.tbd; sourceTree = DEVELOPER_DIR; };
 		3A2D8DBB27780B3000BF114B /* libz.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libz.tbd; path = usr/lib/libz.tbd; sourceTree = SDKROOT; };
-		3A2FF8642BF0D884006781C2 /* sf_position.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = sf_position.cpp; sourceTree = "<group>"; };
-		3A2FF8652BF0D884006781C2 /* sf_uci.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = sf_uci.h; sourceTree = "<group>"; };
-		3A2FF8662BF0D884006781C2 /* sf_search.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = sf_search.h; sourceTree = "<group>"; };
-		3A2FF8672BF0D884006781C2 /* sf_timeman.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = sf_timeman.cpp; sourceTree = "<group>"; };
-		3A2FF8682BF0D884006781C2 /* search.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = search.cpp; sourceTree = "<group>"; };
-		3A2FF8692BF0D884006781C2 /* sf_search.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = sf_search.cpp; sourceTree = "<group>"; };
-		3A2FF86A2BF0D884006781C2 /* sf_misc.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = sf_misc.cpp; sourceTree = "<group>"; };
-		3A2FF86B2BF0D884006781C2 /* sf_bitboard.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = sf_bitboard.cpp; sourceTree = "<group>"; };
-		3A2FF86C2BF0D884006781C2 /* sf_tt.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = sf_tt.h; sourceTree = "<group>"; };
-		3A2FF86D2BF0D884006781C2 /* sf_movegen.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = sf_movegen.cpp; sourceTree = "<group>"; };
-		3A2FF86E2BF0D884006781C2 /* sf_movepick.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = sf_movepick.cpp; sourceTree = "<group>"; };
-		3A2FF86F2BF0D884006781C2 /* sf_ucioption.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = sf_ucioption.cpp; sourceTree = "<group>"; };
-		3A2FF8702BF0D884006781C2 /* sf_tt.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = sf_tt.cpp; sourceTree = "<group>"; };
-		3A2FF8712BF0D884006781C2 /* sf_types.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = sf_types.h; sourceTree = "<group>"; };
-		3A2FF8722BF0D884006781C2 /* search.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = search.h; sourceTree = "<group>"; };
-		3A2FF8732BF0D884006781C2 /* sf_movepick.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = sf_movepick.h; sourceTree = "<group>"; };
-		3A2FF8742BF0D884006781C2 /* sf_bitboard.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = sf_bitboard.h; sourceTree = "<group>"; };
-		3A2FF8752BF0D884006781C2 /* sf_uci.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = sf_uci.cpp; sourceTree = "<group>"; };
-		3A2FF8762BF0D884006781C2 /* sf_thread_win32_osx.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = sf_thread_win32_osx.h; sourceTree = "<group>"; };
-		3A2FF8772BF0D884006781C2 /* sf_thread.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = sf_thread.cpp; sourceTree = "<group>"; };
-		3A2FF8782BF0D884006781C2 /* sf_movegen.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = sf_movegen.h; sourceTree = "<group>"; };
-		3A2FF8792BF0D884006781C2 /* sf_position.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = sf_position.h; sourceTree = "<group>"; };
-		3A2FF87A2BF0D884006781C2 /* sf_evaluate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = sf_evaluate.h; sourceTree = "<group>"; };
-		3A2FF87B2BF0D884006781C2 /* sf_misc.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = sf_misc.h; sourceTree = "<group>"; };
-		3A2FF87C2BF0D884006781C2 /* sf_ucioption.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = sf_ucioption.h; sourceTree = "<group>"; };
-		3A2FF87D2BF0D884006781C2 /* sf_evaluate.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = sf_evaluate.cpp; sourceTree = "<group>"; };
-		3A2FF87E2BF0D884006781C2 /* sf_timeman.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = sf_timeman.h; sourceTree = "<group>"; };
-		3A2FF87F2BF0D884006781C2 /* sf_thread.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = sf_thread.h; sourceTree = "<group>"; };
-		3A2FF89A2BF0D893006781C2 /* piecepattern.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = piecepattern.cpp; sourceTree = "<group>"; };
-		3A2FF89B2BF0D893006781C2 /* piecepattern.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = piecepattern.h; sourceTree = "<group>"; };
-		3A2FF89E2BF0D8A1006781C2 /* moverules.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = moverules.cpp; sourceTree = "<group>"; };
-		3A2FF89F2BF0D8A1006781C2 /* moverules.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = moverules.h; sourceTree = "<group>"; };
-		3A2FF8A22BF0D8B1006781C2 /* helper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = helper.h; sourceTree = "<group>"; };
-		3A2FF8A32BF0D8B1006781C2 /* engine.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = engine.h; sourceTree = "<group>"; };
-		3A2FF8A42BF0D8B1006781C2 /* bitboard.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = bitboard.h; sourceTree = "<group>"; };
-		3A2FF8A52BF0D8B1006781C2 /* engine.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = engine.cpp; sourceTree = "<group>"; };
-		3A2FF8A62BF0D8B1006781C2 /* bitboard.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = bitboard.cpp; sourceTree = "<group>"; };
-		3A2FF8A72BF0D8B1006781C2 /* helper.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = helper.cpp; sourceTree = "<group>"; };
-		3A2FF8AE2BF0D8DA006781C2 /* tbprobe.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = tbprobe.h; sourceTree = "<group>"; };
-		3A2FF8B02BF0D8EB006781C2 /* half_ka_v2_hm.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = half_ka_v2_hm.cpp; sourceTree = "<group>"; };
-		3A2FF8B12BF0D8EB006781C2 /* half_ka_v2_hm.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = half_ka_v2_hm.h; sourceTree = "<group>"; };
-		3A2FF8B32BF0D8EB006781C2 /* affine_transform_sparse_input.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = affine_transform_sparse_input.h; sourceTree = "<group>"; };
-		3A2FF8B42BF0D8EB006781C2 /* affine_transform.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = affine_transform.h; sourceTree = "<group>"; };
-		3A2FF8B52BF0D8EB006781C2 /* clipped_relu.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = clipped_relu.h; sourceTree = "<group>"; };
-		3A2FF8B62BF0D8EB006781C2 /* simd.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = simd.h; sourceTree = "<group>"; };
-		3A2FF8B72BF0D8EB006781C2 /* sqr_clipped_relu.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = sqr_clipped_relu.h; sourceTree = "<group>"; };
-		3A2FF8B92BF0D8EB006781C2 /* evaluate_nnue.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = evaluate_nnue.cpp; sourceTree = "<group>"; };
-		3A2FF8BA2BF0D8EB006781C2 /* evaluate_nnue.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = evaluate_nnue.h; sourceTree = "<group>"; };
-		3A2FF8BB2BF0D8EB006781C2 /* nnue_accumulator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = nnue_accumulator.h; sourceTree = "<group>"; };
-		3A2FF8BC2BF0D8EB006781C2 /* nnue_architecture.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = nnue_architecture.h; sourceTree = "<group>"; };
-		3A2FF8BD2BF0D8EB006781C2 /* nnue_common.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = nnue_common.h; sourceTree = "<group>"; };
-		3A2FF8BE2BF0D8EB006781C2 /* nnue_feature_transformer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = nnue_feature_transformer.h; sourceTree = "<group>"; };
 		3A35C937288BB9BF00DE83F7 /* LevelIndicatorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LevelIndicatorView.swift; sourceTree = "<group>"; };
 		3A3A004025CF6F3500252B36 /* AppDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		3A3A004425CF6F4F00252B36 /* SceneDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -364,17 +326,84 @@
 		3A6EEC6525D65504005B637F /* EngineSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EngineSettings.swift; sourceTree = "<group>"; };
 		3A70B2CA2A10ED2C0077A662 /* PieceSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PieceSettings.swift; sourceTree = "<group>"; };
 		3A7816FB27708D4800DCE7E6 /* SoundSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SoundSettings.swift; sourceTree = "<group>"; };
+		3A7A4D062C26B9C900E5BCF1 /* ParamHintMove.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ParamHintMove.swift; sourceTree = "<group>"; };
+		3A7A4D092C26BAEE00E5BCF1 /* HintSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HintSettings.swift; sourceTree = "<group>"; };
+		3A7A4D0B2C26D42A00E5BCF1 /* HintSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HintSettings.swift; sourceTree = "<group>"; };
 		3A8061B2288BF5A100F7729C /* ParamHint.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ParamHint.swift; sourceTree = "<group>"; };
 		3A8061B5288BFADD00F7729C /* HintActor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HintActor.swift; sourceTree = "<group>"; };
+		3A9536B02C8DB73000E95B2D /* PieceSelectButtonStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PieceSelectButtonStyle.swift; sourceTree = "<group>"; };
 		3A96EDBE2945DEC0008A05DF /* Strength.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Strength.swift; sourceTree = "<group>"; };
 		3AA1DB9F2A0FAF8000B242D0 /* AnimationCompletionObserverModifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnimationCompletionObserverModifier.swift; sourceTree = "<group>"; };
 		3AA5A1DA25D4EF6A00CD2121 /* Menu.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Menu.swift; sourceTree = "<group>"; };
-		3ABACCF32BF0CB08002C5752 /* nn-baff1ede1f90-Info.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "nn-baff1ede1f90-Info.txt"; sourceTree = "<group>"; };
-		3ABACCF42BF0CB08002C5752 /* nn-b1a57edbea57-Info.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "nn-b1a57edbea57-Info.txt"; sourceTree = "<group>"; };
-		3ABACCF52BF0CB08002C5752 /* nn-baff1ede1f90.nnue */ = {isa = PBXFileReference; lastKnownFileType = file; path = "nn-baff1ede1f90.nnue"; sourceTree = "<group>"; };
-		3ABACCF62BF0CB08002C5752 /* nn-b1a57edbea57.nnue */ = {isa = PBXFileReference; lastKnownFileType = file; path = "nn-b1a57edbea57.nnue"; sourceTree = "<group>"; };
 		3AC1DD2425D22D7F0054F636 /* AppDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		3AC2C8EE25E65C30004E1744 /* GameRecordParser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameRecordParser.swift; sourceTree = "<group>"; };
+		3ACD31162CBA67030060B1C5 /* piecepattern.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = piecepattern.h; sourceTree = "<group>"; };
+		3ACD31172CBA67030060B1C5 /* piecepattern.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = piecepattern.cpp; sourceTree = "<group>"; };
+		3ACD31182CBA67030060B1C5 /* search.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = search.h; sourceTree = "<group>"; };
+		3ACD31192CBA67030060B1C5 /* search.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = search.cpp; sourceTree = "<group>"; };
+		3ACD311A2CBA67030060B1C5 /* sf_bitboard.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = sf_bitboard.h; sourceTree = "<group>"; };
+		3ACD311B2CBA67030060B1C5 /* sf_bitboard.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = sf_bitboard.cpp; sourceTree = "<group>"; };
+		3ACD311C2CBA67030060B1C5 /* sf_engine.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = sf_engine.h; sourceTree = "<group>"; };
+		3ACD311D2CBA67030060B1C5 /* sf_engine.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = sf_engine.cpp; sourceTree = "<group>"; };
+		3ACD311E2CBA67030060B1C5 /* sf_evaluate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = sf_evaluate.h; sourceTree = "<group>"; };
+		3ACD311F2CBA67030060B1C5 /* sf_evaluate.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = sf_evaluate.cpp; sourceTree = "<group>"; };
+		3ACD31202CBA67030060B1C5 /* sf_memory.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = sf_memory.h; sourceTree = "<group>"; };
+		3ACD31212CBA67030060B1C5 /* sf_memory.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = sf_memory.cpp; sourceTree = "<group>"; };
+		3ACD31222CBA67030060B1C5 /* sf_misc.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = sf_misc.h; sourceTree = "<group>"; };
+		3ACD31232CBA67030060B1C5 /* sf_misc.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = sf_misc.cpp; sourceTree = "<group>"; };
+		3ACD31242CBA67030060B1C5 /* sf_movegen.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = sf_movegen.h; sourceTree = "<group>"; };
+		3ACD31252CBA67030060B1C5 /* sf_movegen.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = sf_movegen.cpp; sourceTree = "<group>"; };
+		3ACD31262CBA67030060B1C5 /* sf_movepick.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = sf_movepick.h; sourceTree = "<group>"; };
+		3ACD31272CBA67030060B1C5 /* sf_movepick.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = sf_movepick.cpp; sourceTree = "<group>"; };
+		3ACD31282CBA67030060B1C5 /* sf_numa.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = sf_numa.h; sourceTree = "<group>"; };
+		3ACD31292CBA67030060B1C5 /* sf_position.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = sf_position.h; sourceTree = "<group>"; };
+		3ACD312A2CBA67030060B1C5 /* sf_position.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = sf_position.cpp; sourceTree = "<group>"; };
+		3ACD312B2CBA67030060B1C5 /* sf_score.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = sf_score.h; sourceTree = "<group>"; };
+		3ACD312C2CBA67030060B1C5 /* sf_score.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = sf_score.cpp; sourceTree = "<group>"; };
+		3ACD312D2CBA67030060B1C5 /* sf_search.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = sf_search.h; sourceTree = "<group>"; };
+		3ACD312E2CBA67030060B1C5 /* sf_search.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = sf_search.cpp; sourceTree = "<group>"; };
+		3ACD312F2CBA67030060B1C5 /* sf_thread.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = sf_thread.h; sourceTree = "<group>"; };
+		3ACD31302CBA67030060B1C5 /* sf_thread.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = sf_thread.cpp; sourceTree = "<group>"; };
+		3ACD31312CBA67030060B1C5 /* sf_thread_win32_osx.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = sf_thread_win32_osx.h; sourceTree = "<group>"; };
+		3ACD31322CBA67030060B1C5 /* sf_timeman.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = sf_timeman.h; sourceTree = "<group>"; };
+		3ACD31332CBA67030060B1C5 /* sf_timeman.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = sf_timeman.cpp; sourceTree = "<group>"; };
+		3ACD31342CBA67030060B1C5 /* sf_tt.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = sf_tt.h; sourceTree = "<group>"; };
+		3ACD31352CBA67030060B1C5 /* sf_tt.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = sf_tt.cpp; sourceTree = "<group>"; };
+		3ACD31362CBA67030060B1C5 /* sf_types.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = sf_types.h; sourceTree = "<group>"; };
+		3ACD31372CBA67030060B1C5 /* sf_uci.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = sf_uci.h; sourceTree = "<group>"; };
+		3ACD31382CBA67030060B1C5 /* sf_uci.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = sf_uci.cpp; sourceTree = "<group>"; };
+		3ACD31392CBA67030060B1C5 /* sf_ucioption.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = sf_ucioption.h; sourceTree = "<group>"; };
+		3ACD313A2CBA67030060B1C5 /* sf_ucioption.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = sf_ucioption.cpp; sourceTree = "<group>"; };
+		3ACD315D2CBA674E0060B1C5 /* moverules.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = moverules.h; sourceTree = "<group>"; };
+		3ACD315E2CBA674E0060B1C5 /* moverules.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = moverules.cpp; sourceTree = "<group>"; };
+		3ACD31612CBA67760060B1C5 /* bitboard.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = bitboard.h; sourceTree = "<group>"; };
+		3ACD31622CBA67760060B1C5 /* bitboard.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = bitboard.cpp; sourceTree = "<group>"; };
+		3ACD31632CBA67760060B1C5 /* engine.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = engine.h; sourceTree = "<group>"; };
+		3ACD31642CBA67760060B1C5 /* engine.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = engine.cpp; sourceTree = "<group>"; };
+		3ACD31652CBA67760060B1C5 /* helper.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = helper.h; sourceTree = "<group>"; };
+		3ACD31662CBA67760060B1C5 /* helper.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = helper.cpp; sourceTree = "<group>"; };
+		3ACD316D2CBA67BF0060B1C5 /* half_ka_v2_hm.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = half_ka_v2_hm.h; sourceTree = "<group>"; };
+		3ACD316E2CBA67BF0060B1C5 /* half_ka_v2_hm.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = half_ka_v2_hm.cpp; sourceTree = "<group>"; };
+		3ACD31712CBA67DA0060B1C5 /* affine_transform.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = affine_transform.h; sourceTree = "<group>"; };
+		3ACD31722CBA67DA0060B1C5 /* affine_transform_sparse_input.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = affine_transform_sparse_input.h; sourceTree = "<group>"; };
+		3ACD31732CBA67DA0060B1C5 /* clipped_relu.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = clipped_relu.h; sourceTree = "<group>"; };
+		3ACD31742CBA67DA0060B1C5 /* simd.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = simd.h; sourceTree = "<group>"; };
+		3ACD31752CBA67DA0060B1C5 /* sqr_clipped_relu.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = sqr_clipped_relu.h; sourceTree = "<group>"; };
+		3ACD31762CBA67FC0060B1C5 /* network.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = network.h; sourceTree = "<group>"; };
+		3ACD31772CBA67FC0060B1C5 /* network.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = network.cpp; sourceTree = "<group>"; };
+		3ACD31782CBA67FC0060B1C5 /* nnue_accumulator.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = nnue_accumulator.h; sourceTree = "<group>"; };
+		3ACD31792CBA67FC0060B1C5 /* nnue_architecture.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = nnue_architecture.h; sourceTree = "<group>"; };
+		3ACD317A2CBA67FC0060B1C5 /* nnue_common.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = nnue_common.h; sourceTree = "<group>"; };
+		3ACD317B2CBA67FC0060B1C5 /* nnue_feature_transformer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = nnue_feature_transformer.h; sourceTree = "<group>"; };
+		3ACD317C2CBA67FC0060B1C5 /* nnue_misc.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = nnue_misc.h; sourceTree = "<group>"; };
+		3ACD317D2CBA67FC0060B1C5 /* nnue_misc.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = nnue_misc.cpp; sourceTree = "<group>"; };
+		3ACD31822CBA68150060B1C5 /* tbprobe.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = tbprobe.h; sourceTree = "<group>"; };
+		3ACD31832CBA68B80060B1C5 /* nn-37f18f62d772.nnue */ = {isa = PBXFileReference; lastKnownFileType = file; path = "nn-37f18f62d772.nnue"; sourceTree = "<group>"; };
+		3ACD31842CBA68B80060B1C5 /* nn-37f18f62d772-Info.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = "nn-37f18f62d772-Info.txt"; sourceTree = "<group>"; };
+		3ACD31852CBA68B80060B1C5 /* nn-1111cefa1111.nnue */ = {isa = PBXFileReference; lastKnownFileType = file; path = "nn-1111cefa1111.nnue"; sourceTree = "<group>"; };
+		3ACD31862CBA68B80060B1C5 /* nn-1111cefa1111-Info.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = "nn-1111cefa1111-Info.txt"; sourceTree = "<group>"; };
+		3ACDE0492C85CC0B004C3880 /* PieceEditSelectView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PieceEditSelectView.swift; sourceTree = "<group>"; };
+		3ACDE04C2C85CCDC004C3880 /* PieceEditSelectViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PieceEditSelectViewModel.swift; sourceTree = "<group>"; };
 		3ACE50ED2A0D0775004E68FF /* PieceSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PieceSettings.swift; sourceTree = "<group>"; };
 		3ACE50EF2A0D0822004E68FF /* ParamMoveSpeed.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ParamMoveSpeed.swift; sourceTree = "<group>"; };
 		3ACE50F22A0D0835004E68FF /* ParamMoveText.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ParamMoveText.swift; sourceTree = "<group>"; };
@@ -421,7 +450,6 @@
 		3AF7931725B6F65A00A86A35 /* TileAnimationTakeModifier.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TileAnimationTakeModifier.swift; sourceTree = "<group>"; };
 		3AF7931825B6F65A00A86A35 /* BoardMessageAlertView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BoardMessageAlertView.swift; sourceTree = "<group>"; };
 		3AF7931925B6F65A00A86A35 /* Device.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Device.swift; sourceTree = "<group>"; };
-		3AF7931A25B6F65A00A86A35 /* PieceEditToolView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PieceEditToolView.swift; sourceTree = "<group>"; };
 		3AF7931B25B6F65A00A86A35 /* TileAnimationView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TileAnimationView.swift; sourceTree = "<group>"; };
 		3AF7931C25B6F65A00A86A35 /* ActivityIndicatorView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ActivityIndicatorView.swift; sourceTree = "<group>"; };
 		3AF7931D25B6F65A00A86A35 /* MenuView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MenuView.swift; sourceTree = "<group>"; };
@@ -447,7 +475,6 @@
 		3AF7933725B6F65A00A86A35 /* Move.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Move.swift; sourceTree = "<group>"; };
 		3AF7933825B6F65A00A86A35 /* BoardAnimation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BoardAnimation.swift; sourceTree = "<group>"; };
 		3AF7933A25B6F65A00A86A35 /* EngineSettingsViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EngineSettingsViewModel.swift; sourceTree = "<group>"; };
-		3AF7933B25B6F65A00A86A35 /* PieceEditToolViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PieceEditToolViewModel.swift; sourceTree = "<group>"; };
 		3AF7933C25B6F65A00A86A35 /* TileAnimationViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TileAnimationViewModel.swift; sourceTree = "<group>"; };
 		3AF7933D25B6F65A00A86A35 /* MenuSettingsViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MenuSettingsViewModel.swift; sourceTree = "<group>"; };
 		3AF7933E25B6F65A00A86A35 /* BoardViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BoardViewModel.swift; sourceTree = "<group>"; };
@@ -486,6 +513,7 @@
 				3AF792FC25B6F63800A86A35 /* AdaptiveStack.swift */,
 				3A6EEC6525D65504005B637F /* EngineSettings.swift */,
 				3AF7931325B6F65A00A86A35 /* FloatingActionView.swift */,
+				3A7A4D0B2C26D42A00E5BCF1 /* HintSettings.swift */,
 				3AF7931D25B6F65A00A86A35 /* MenuView.swift */,
 				3A7816FB27708D4800DCE7E6 /* SoundSettings.swift */,
 			);
@@ -497,10 +525,11 @@
 			children = (
 				3ADFD8DC25D8DAF800D6EB6E /* AboutView.swift */,
 				3A2785EF288A33F8001F4FE6 /* BoardSettings.swift */,
-				3ACE50ED2A0D0775004E68FF /* PieceSettings.swift */,
 				3AF7930D25B6F65A00A86A35 /* EngineSettings.swift */,
+				3A7A4D092C26BAEE00E5BCF1 /* HintSettings.swift */,
 				3AA5A1DA25D4EF6A00CD2121 /* Menu.swift */,
 				3A6EEC5D25D64871005B637F /* MenuSheet.swift */,
+				3ACE50ED2A0D0775004E68FF /* PieceSettings.swift */,
 				3AF49240275E16EE006BC8F1 /* SoundSettings.swift */,
 				3A014AA825D7BA9500D7A466 /* TitlebarAccessoryView.swift */,
 			);
@@ -519,46 +548,53 @@
 		3A2FF8632BF0D83D006781C2 /* cpp */ = {
 			isa = PBXGroup;
 			children = (
+				3ACD31612CBA67760060B1C5 /* bitboard.h */,
+				3ACD31622CBA67760060B1C5 /* bitboard.cpp */,
+				3ACD31632CBA67760060B1C5 /* engine.h */,
+				3ACD31642CBA67760060B1C5 /* engine.cpp */,
+				3ACD31652CBA67760060B1C5 /* helper.h */,
+				3ACD31662CBA67760060B1C5 /* helper.cpp */,
+				3ACD315D2CBA674E0060B1C5 /* moverules.h */,
+				3ACD315E2CBA674E0060B1C5 /* moverules.cpp */,
+				3ACD31162CBA67030060B1C5 /* piecepattern.h */,
+				3ACD31172CBA67030060B1C5 /* piecepattern.cpp */,
+				3ACD31182CBA67030060B1C5 /* search.h */,
+				3ACD31192CBA67030060B1C5 /* search.cpp */,
+				3ACD311A2CBA67030060B1C5 /* sf_bitboard.h */,
+				3ACD311B2CBA67030060B1C5 /* sf_bitboard.cpp */,
+				3ACD311C2CBA67030060B1C5 /* sf_engine.h */,
+				3ACD311D2CBA67030060B1C5 /* sf_engine.cpp */,
+				3ACD311E2CBA67030060B1C5 /* sf_evaluate.h */,
+				3ACD311F2CBA67030060B1C5 /* sf_evaluate.cpp */,
+				3ACD31202CBA67030060B1C5 /* sf_memory.h */,
+				3ACD31212CBA67030060B1C5 /* sf_memory.cpp */,
+				3ACD31222CBA67030060B1C5 /* sf_misc.h */,
+				3ACD31232CBA67030060B1C5 /* sf_misc.cpp */,
+				3ACD31242CBA67030060B1C5 /* sf_movegen.h */,
+				3ACD31252CBA67030060B1C5 /* sf_movegen.cpp */,
+				3ACD31262CBA67030060B1C5 /* sf_movepick.h */,
+				3ACD31272CBA67030060B1C5 /* sf_movepick.cpp */,
+				3ACD31282CBA67030060B1C5 /* sf_numa.h */,
+				3ACD31292CBA67030060B1C5 /* sf_position.h */,
+				3ACD312A2CBA67030060B1C5 /* sf_position.cpp */,
+				3ACD312B2CBA67030060B1C5 /* sf_score.h */,
+				3ACD312C2CBA67030060B1C5 /* sf_score.cpp */,
+				3ACD312D2CBA67030060B1C5 /* sf_search.h */,
+				3ACD312E2CBA67030060B1C5 /* sf_search.cpp */,
+				3ACD312F2CBA67030060B1C5 /* sf_thread.h */,
+				3ACD31302CBA67030060B1C5 /* sf_thread.cpp */,
+				3ACD31312CBA67030060B1C5 /* sf_thread_win32_osx.h */,
+				3ACD31322CBA67030060B1C5 /* sf_timeman.h */,
+				3ACD31332CBA67030060B1C5 /* sf_timeman.cpp */,
+				3ACD31342CBA67030060B1C5 /* sf_tt.h */,
+				3ACD31352CBA67030060B1C5 /* sf_tt.cpp */,
+				3ACD31362CBA67030060B1C5 /* sf_types.h */,
+				3ACD31372CBA67030060B1C5 /* sf_uci.h */,
+				3ACD31382CBA67030060B1C5 /* sf_uci.cpp */,
+				3ACD31392CBA67030060B1C5 /* sf_ucioption.h */,
+				3ACD313A2CBA67030060B1C5 /* sf_ucioption.cpp */,
 				3A2FF8BF2BF0D8EB006781C2 /* nnue */,
 				3A2FF8AF2BF0D8DA006781C2 /* syzygy */,
-				3A2FF8A62BF0D8B1006781C2 /* bitboard.cpp */,
-				3A2FF8A42BF0D8B1006781C2 /* bitboard.h */,
-				3A2FF8A52BF0D8B1006781C2 /* engine.cpp */,
-				3A2FF8A32BF0D8B1006781C2 /* engine.h */,
-				3A2FF8A72BF0D8B1006781C2 /* helper.cpp */,
-				3A2FF8A22BF0D8B1006781C2 /* helper.h */,
-				3A2FF89E2BF0D8A1006781C2 /* moverules.cpp */,
-				3A2FF89F2BF0D8A1006781C2 /* moverules.h */,
-				3A2FF89A2BF0D893006781C2 /* piecepattern.cpp */,
-				3A2FF89B2BF0D893006781C2 /* piecepattern.h */,
-				3A2FF8682BF0D884006781C2 /* search.cpp */,
-				3A2FF8722BF0D884006781C2 /* search.h */,
-				3A2FF86B2BF0D884006781C2 /* sf_bitboard.cpp */,
-				3A2FF8742BF0D884006781C2 /* sf_bitboard.h */,
-				3A2FF87D2BF0D884006781C2 /* sf_evaluate.cpp */,
-				3A2FF87A2BF0D884006781C2 /* sf_evaluate.h */,
-				3A2FF86A2BF0D884006781C2 /* sf_misc.cpp */,
-				3A2FF87B2BF0D884006781C2 /* sf_misc.h */,
-				3A2FF86D2BF0D884006781C2 /* sf_movegen.cpp */,
-				3A2FF8782BF0D884006781C2 /* sf_movegen.h */,
-				3A2FF86E2BF0D884006781C2 /* sf_movepick.cpp */,
-				3A2FF8732BF0D884006781C2 /* sf_movepick.h */,
-				3A2FF8642BF0D884006781C2 /* sf_position.cpp */,
-				3A2FF8792BF0D884006781C2 /* sf_position.h */,
-				3A2FF8692BF0D884006781C2 /* sf_search.cpp */,
-				3A2FF8662BF0D884006781C2 /* sf_search.h */,
-				3A2FF8762BF0D884006781C2 /* sf_thread_win32_osx.h */,
-				3A2FF8772BF0D884006781C2 /* sf_thread.cpp */,
-				3A2FF87F2BF0D884006781C2 /* sf_thread.h */,
-				3A2FF8672BF0D884006781C2 /* sf_timeman.cpp */,
-				3A2FF87E2BF0D884006781C2 /* sf_timeman.h */,
-				3A2FF8702BF0D884006781C2 /* sf_tt.cpp */,
-				3A2FF86C2BF0D884006781C2 /* sf_tt.h */,
-				3A2FF8712BF0D884006781C2 /* sf_types.h */,
-				3A2FF8752BF0D884006781C2 /* sf_uci.cpp */,
-				3A2FF8652BF0D884006781C2 /* sf_uci.h */,
-				3A2FF86F2BF0D884006781C2 /* sf_ucioption.cpp */,
-				3A2FF87C2BF0D884006781C2 /* sf_ucioption.h */,
 			);
 			path = cpp;
 			sourceTree = "<group>";
@@ -566,7 +602,7 @@
 		3A2FF8AF2BF0D8DA006781C2 /* syzygy */ = {
 			isa = PBXGroup;
 			children = (
-				3A2FF8AE2BF0D8DA006781C2 /* tbprobe.h */,
+				3ACD31822CBA68150060B1C5 /* tbprobe.h */,
 			);
 			path = syzygy;
 			sourceTree = "<group>";
@@ -574,8 +610,8 @@
 		3A2FF8B22BF0D8EB006781C2 /* features */ = {
 			isa = PBXGroup;
 			children = (
-				3A2FF8B02BF0D8EB006781C2 /* half_ka_v2_hm.cpp */,
-				3A2FF8B12BF0D8EB006781C2 /* half_ka_v2_hm.h */,
+				3ACD316D2CBA67BF0060B1C5 /* half_ka_v2_hm.h */,
+				3ACD316E2CBA67BF0060B1C5 /* half_ka_v2_hm.cpp */,
 			);
 			path = features;
 			sourceTree = "<group>";
@@ -583,11 +619,11 @@
 		3A2FF8B82BF0D8EB006781C2 /* layers */ = {
 			isa = PBXGroup;
 			children = (
-				3A2FF8B32BF0D8EB006781C2 /* affine_transform_sparse_input.h */,
-				3A2FF8B42BF0D8EB006781C2 /* affine_transform.h */,
-				3A2FF8B52BF0D8EB006781C2 /* clipped_relu.h */,
-				3A2FF8B62BF0D8EB006781C2 /* simd.h */,
-				3A2FF8B72BF0D8EB006781C2 /* sqr_clipped_relu.h */,
+				3ACD31712CBA67DA0060B1C5 /* affine_transform.h */,
+				3ACD31722CBA67DA0060B1C5 /* affine_transform_sparse_input.h */,
+				3ACD31732CBA67DA0060B1C5 /* clipped_relu.h */,
+				3ACD31742CBA67DA0060B1C5 /* simd.h */,
+				3ACD31752CBA67DA0060B1C5 /* sqr_clipped_relu.h */,
 			);
 			path = layers;
 			sourceTree = "<group>";
@@ -595,14 +631,16 @@
 		3A2FF8BF2BF0D8EB006781C2 /* nnue */ = {
 			isa = PBXGroup;
 			children = (
+				3ACD31762CBA67FC0060B1C5 /* network.h */,
+				3ACD31772CBA67FC0060B1C5 /* network.cpp */,
+				3ACD31782CBA67FC0060B1C5 /* nnue_accumulator.h */,
+				3ACD31792CBA67FC0060B1C5 /* nnue_architecture.h */,
+				3ACD317A2CBA67FC0060B1C5 /* nnue_common.h */,
+				3ACD317B2CBA67FC0060B1C5 /* nnue_feature_transformer.h */,
+				3ACD317C2CBA67FC0060B1C5 /* nnue_misc.h */,
+				3ACD317D2CBA67FC0060B1C5 /* nnue_misc.cpp */,
 				3A2FF8B22BF0D8EB006781C2 /* features */,
 				3A2FF8B82BF0D8EB006781C2 /* layers */,
-				3A2FF8B92BF0D8EB006781C2 /* evaluate_nnue.cpp */,
-				3A2FF8BA2BF0D8EB006781C2 /* evaluate_nnue.h */,
-				3A2FF8BB2BF0D8EB006781C2 /* nnue_accumulator.h */,
-				3A2FF8BC2BF0D8EB006781C2 /* nnue_architecture.h */,
-				3A2FF8BD2BF0D8EB006781C2 /* nnue_common.h */,
-				3A2FF8BE2BF0D8EB006781C2 /* nnue_feature_transformer.h */,
 			);
 			path = nnue;
 			sourceTree = "<group>";
@@ -619,10 +657,10 @@
 		3AE2A57C2760BCAD0003D6AB /* Media */ = {
 			isa = PBXGroup;
 			children = (
-				3ABACCF42BF0CB08002C5752 /* nn-b1a57edbea57-Info.txt */,
-				3ABACCF62BF0CB08002C5752 /* nn-b1a57edbea57.nnue */,
-				3ABACCF32BF0CB08002C5752 /* nn-baff1ede1f90-Info.txt */,
-				3ABACCF52BF0CB08002C5752 /* nn-baff1ede1f90.nnue */,
+				3ACD31832CBA68B80060B1C5 /* nn-37f18f62d772.nnue */,
+				3ACD31842CBA68B80060B1C5 /* nn-37f18f62d772-Info.txt */,
+				3ACD31852CBA68B80060B1C5 /* nn-1111cefa1111.nnue */,
+				3ACD31862CBA68B80060B1C5 /* nn-1111cefa1111-Info.txt */,
 				3AE2A57D2760BE260003D6AB /* piecesound.wav */,
 			);
 			path = Media;
@@ -714,6 +752,7 @@
 				3AF792F925B6F63800A86A35 /* Constants.swift */,
 				3AF4923A275E0C03006BC8F1 /* ColourARGB.swift */,
 				3AF792FA25B6F63800A86A35 /* Extensions.swift */,
+				3A9536B02C8DB73000E95B2D /* PieceSelectButtonStyle.swift */,
 			);
 			path = Common;
 			sourceTree = "<group>";
@@ -744,7 +783,7 @@
 				3A35C937288BB9BF00DE83F7 /* LevelIndicatorView.swift */,
 				3AD871FA262DA80700828A87 /* NavigatorView.swift */,
 				3A4A71A1264A9FA000F68478 /* PawnPromotionView.swift */,
-				3AF7931A25B6F65A00A86A35 /* PieceEditToolView.swift */,
+				3ACDE0492C85CC0B004C3880 /* PieceEditSelectView.swift */,
 				3A2930522772B4EB00F34565 /* SearchActor.swift */,
 				3AF7930B25B6F65A00A86A35 /* TileAnimationInstruction.swift */,
 				3AF7931625B6F65A00A86A35 /* TileAnimationMoveModifier.swift */,
@@ -814,6 +853,7 @@
 				3AF4923D275E0FBA006BC8F1 /* ParamColourDarkSquares.swift */,
 				3A159E0226D0FFF1001100CC /* ParamLevelAuto.swift */,
 				3A8061B2288BF5A100F7729C /* ParamHint.swift */,
+				3A7A4D062C26B9C900E5BCF1 /* ParamHintMove.swift */,
 				3A159E0526D1002B001100CC /* ParamLimitAdvanced.swift */,
 				3A159E0826D10091001100CC /* ParamLimitDepth.swift */,
 				3AF7933025B6F65A00A86A35 /* ParamLimitSkillLevel.swift */,
@@ -853,11 +893,11 @@
 				3A4A6DD8261B1EA600BB2199 /* CastlingRightsViewModel.swift */,
 				3AF7934125B6F65A00A86A35 /* DirectionIndicatorViewModel.swift */,
 				3AF7933A25B6F65A00A86A35 /* EngineSettingsViewModel.swift */,
-				3A090239288CF75800CB965B /* HintViewModel.swift */,
+				3A090239288CF75800CB965B /* HintSettingsViewModel.swift */,
 				3AF7933D25B6F65A00A86A35 /* MenuSettingsViewModel.swift */,
 				3ADCAB35262EF82B00962FEE /* NavigatorViewModel.swift */,
 				3A4A71A4264AA02F00F68478 /* PawnPromotionViewModel.swift */,
-				3AF7933B25B6F65A00A86A35 /* PieceEditToolViewModel.swift */,
+				3ACDE04C2C85CCDC004C3880 /* PieceEditSelectViewModel.swift */,
 				3ACE50F52A0D09EE004E68FF /* PieceSettingsViewModel.swift */,
 				3AF49243275E1787006BC8F1 /* SoundSettingsViewModel.swift */,
 				3AF7933C25B6F65A00A86A35 /* TileAnimationViewModel.swift */,
@@ -946,11 +986,11 @@
 			buildActionMask = 2147483647;
 			files = (
 				3AF7927325B6F1B100A86A35 /* Assets.xcassets in Resources */,
-				3ABACCF92BF0CB08002C5752 /* nn-b1a57edbea57-Info.txt in Resources */,
+				3ACD31872CBA68B80060B1C5 /* nn-1111cefa1111.nnue in Resources */,
+				3ACD31882CBA68B80060B1C5 /* nn-1111cefa1111-Info.txt in Resources */,
+				3ACD31892CBA68B80060B1C5 /* nn-37f18f62d772.nnue in Resources */,
+				3ACD318A2CBA68B80060B1C5 /* nn-37f18f62d772-Info.txt in Resources */,
 				3AE2A57E2760BE260003D6AB /* piecesound.wav in Resources */,
-				3ABACCF72BF0CB08002C5752 /* nn-baff1ede1f90-Info.txt in Resources */,
-				3ABACCFD2BF0CB08002C5752 /* nn-b1a57edbea57.nnue in Resources */,
-				3ABACCFB2BF0CB08002C5752 /* nn-baff1ede1f90.nnue in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -959,11 +999,11 @@
 			buildActionMask = 2147483647;
 			files = (
 				3AF7927425B6F1B100A86A35 /* Assets.xcassets in Resources */,
-				3ABACCFA2BF0CB08002C5752 /* nn-b1a57edbea57-Info.txt in Resources */,
+				3ACD318B2CBA68B80060B1C5 /* nn-1111cefa1111.nnue in Resources */,
+				3ACD318C2CBA68B80060B1C5 /* nn-1111cefa1111-Info.txt in Resources */,
+				3ACD318D2CBA68B80060B1C5 /* nn-37f18f62d772.nnue in Resources */,
+				3ACD318E2CBA68B80060B1C5 /* nn-37f18f62d772-Info.txt in Resources */,
 				3AE2A57F2760BE260003D6AB /* piecesound.wav in Resources */,
-				3ABACCF82BF0CB08002C5752 /* nn-baff1ede1f90-Info.txt in Resources */,
-				3ABACCFE2BF0CB08002C5752 /* nn-b1a57edbea57.nnue in Resources */,
-				3ABACCFC2BF0CB08002C5752 /* nn-baff1ede1f90.nnue in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -977,6 +1017,7 @@
 				3A0C4E8325FE2531003B9111 /* GameRecord.swift in Sources */,
 				3AF7934325B6F65A00A86A35 /* KaruahChessDB.swift in Sources */,
 				3AF792F425B6F5E400A86A35 /* SearchOptions.swift in Sources */,
+				3ACD31702CBA67BF0060B1C5 /* half_ka_v2_hm.cpp in Sources */,
 				3AF793A125B6F65A00A86A35 /* ActivityIndicatorViewModel.swift in Sources */,
 				3AF7937125B6F65A00A86A35 /* GameRecordDataService.swift in Sources */,
 				3AD871FB262DA80700828A87 /* NavigatorView.swift in Sources */,
@@ -989,64 +1030,77 @@
 				3AF7938F25B6F65A00A86A35 /* ParamRotateBoard.swift in Sources */,
 				3AF7938325B6F65A00A86A35 /* ParamNavigator.swift in Sources */,
 				3A6EEC6625D65504005B637F /* EngineSettings.swift in Sources */,
-				3AF7936525B6F65A00A86A35 /* PieceEditToolView.swift in Sources */,
-				3A2FF88C2BF0D885006781C2 /* sf_movegen.cpp in Sources */,
 				3AF7938725B6F65A00A86A35 /* ParamLimitSkillLevel.swift in Sources */,
 				3AF792F225B6F5E400A86A35 /* MoveResult.swift in Sources */,
-				3A2FF8902BF0D885006781C2 /* sf_ucioption.cpp in Sources */,
-				3A2FF8862BF0D885006781C2 /* sf_search.cpp in Sources */,
 				3ADCAB36262EF82B00962FEE /* NavigatorViewModel.swift in Sources */,
 				3A7816FC27708D4800DCE7E6 /* SoundSettings.swift in Sources */,
-				3A2FF8A82BF0D8B1006781C2 /* engine.cpp in Sources */,
+				3ACDE04A2C85CC0B004C3880 /* PieceEditSelectView.swift in Sources */,
 				3A4A71A5264AA02F00F68478 /* PawnPromotionViewModel.swift in Sources */,
 				3AF7937B25B6F65A00A86A35 /* ParamMoveHighlight.swift in Sources */,
 				3AF7937F25B6F65A00A86A35 /* ParamComputerMoveFirst.swift in Sources */,
-				3A2FF88A2BF0D885006781C2 /* sf_bitboard.cpp in Sources */,
 				3A422D9127771A4B00327D4B /* CompressionC.mm in Sources */,
 				3AF792FD25B6F63800A86A35 /* Constants.swift in Sources */,
 				3A159E0C26D100E9001100CC /* ParamLimitMoveDuration.swift in Sources */,
 				3AF793A525B6F65A00A86A35 /* DirectionIndicatorViewModel.swift in Sources */,
+				3ACD317E2CBA67FC0060B1C5 /* network.cpp in Sources */,
+				3ACD317F2CBA67FC0060B1C5 /* nnue_misc.cpp in Sources */,
 				3AF58D5F25FA32CE008AAAD1 /* ImportDB.swift in Sources */,
-				3A2FF8C02BF0D8EB006781C2 /* half_ka_v2_hm.cpp in Sources */,
 				3AC2C8EF25E65C30004E1744 /* GameRecordParser.swift in Sources */,
 				3AF7936925B6F65A00A86A35 /* ActivityIndicatorView.swift in Sources */,
 				3A3A004B25CF6F8100252B36 /* ContentView.swift in Sources */,
 				3A3F6766288AB7600069FD3A /* BoardSettings.swift in Sources */,
-				3A2FF8C22BF0D8EB006781C2 /* evaluate_nnue.cpp in Sources */,
 				3AF7934D25B6F65A00A86A35 /* TileFrameBoardPreference.swift in Sources */,
 				3AF7939D25B6F65A00A86A35 /* MenuSettingsViewModel.swift in Sources */,
 				3AF792BC25B6F5E400A86A35 /* KaruahChessEngineC.mm in Sources */,
 				3AA1DBA02A0FAF8000B242D0 /* AnimationCompletionObserverModifier.swift in Sources */,
 				3AF7936125B6F65A00A86A35 /* BoardMessageAlertView.swift in Sources */,
-				3A09023A288CF75800CB965B /* HintViewModel.swift in Sources */,
+				3A09023A288CF75800CB965B /* HintSettingsViewModel.swift in Sources */,
 				3A226877276D71BE0082F8DB /* TileAnimationMoveFadeModifier.swift in Sources */,
-				3A2FF8AA2BF0D8B1006781C2 /* bitboard.cpp in Sources */,
 				3A159E0926D10091001100CC /* ParamLimitDepth.swift in Sources */,
-				3A2FF88E2BF0D885006781C2 /* sf_movepick.cpp in Sources */,
 				3AF7935125B6F65A00A86A35 /* TilePanelView.swift in Sources */,
-				3A2FF89C2BF0D893006781C2 /* piecepattern.cpp in Sources */,
+				3ACDE04D2C85CCDC004C3880 /* PieceEditSelectViewModel.swift in Sources */,
 				3AF7936F25B6F65A00A86A35 /* BoardSquareDataService.swift in Sources */,
 				3A2785F3288A34AA001F4FE6 /* BoardSettingsViewModel.swift in Sources */,
 				3AF792BE25B6F5E400A86A35 /* SearchResult.swift in Sources */,
 				3AF7938D25B6F65A00A86A35 /* ParamVoiceCommand.swift in Sources */,
 				3A35C938288BB9BF00DE83F7 /* LevelIndicatorView.swift in Sources */,
 				3AF7937325B6F65A00A86A35 /* GameRecordDataServiceProtocol.swift in Sources */,
-				3A2FF8942BF0D885006781C2 /* sf_uci.cpp in Sources */,
 				3AF7935925B6F65A00A86A35 /* TileShakeEffect.swift in Sources */,
+				3ACD314C2CBA67030060B1C5 /* search.cpp in Sources */,
+				3ACD314D2CBA67030060B1C5 /* sf_engine.cpp in Sources */,
+				3ACD314E2CBA67030060B1C5 /* sf_tt.cpp in Sources */,
+				3ACD314F2CBA67030060B1C5 /* sf_uci.cpp in Sources */,
+				3ACD31502CBA67030060B1C5 /* sf_score.cpp in Sources */,
+				3ACD31512CBA67030060B1C5 /* sf_memory.cpp in Sources */,
+				3ACD31522CBA67030060B1C5 /* sf_evaluate.cpp in Sources */,
+				3ACD31532CBA67030060B1C5 /* sf_timeman.cpp in Sources */,
+				3ACD31542CBA67030060B1C5 /* sf_movegen.cpp in Sources */,
+				3ACD31552CBA67030060B1C5 /* piecepattern.cpp in Sources */,
+				3ACD31562CBA67030060B1C5 /* sf_bitboard.cpp in Sources */,
+				3ACD31572CBA67030060B1C5 /* sf_movepick.cpp in Sources */,
+				3ACD31582CBA67030060B1C5 /* sf_thread.cpp in Sources */,
+				3ACD31592CBA67030060B1C5 /* sf_ucioption.cpp in Sources */,
+				3ACD315A2CBA67030060B1C5 /* sf_search.cpp in Sources */,
+				3ACD315B2CBA67030060B1C5 /* sf_position.cpp in Sources */,
+				3ACD315C2CBA67030060B1C5 /* sf_misc.cpp in Sources */,
 				3A3A004525CF6F4F00252B36 /* SceneDelegate.swift in Sources */,
 				3AF7934525B6F65A00A86A35 /* TileFadeOutModifier.swift in Sources */,
 				3A2930532772B4EB00F34565 /* SearchActor.swift in Sources */,
-				3A2FF8AC2BF0D8B1006781C2 /* helper.cpp in Sources */,
 				3AF7939325B6F65A00A86A35 /* Move.swift in Sources */,
 				3A2A44532624709C00FEC25C /* CoordPanelView.swift in Sources */,
 				3AF7935B25B6F65A00A86A35 /* DirectionIndicatorView.swift in Sources */,
 				3A4A71A2264A9FA000F68478 /* PawnPromotionView.swift in Sources */,
 				3A159E0326D0FFF1001100CC /* ParamLevelAuto.swift in Sources */,
+				3ACD316A2CBA67760060B1C5 /* engine.cpp in Sources */,
+				3ACD316B2CBA67760060B1C5 /* helper.cpp in Sources */,
+				3ACD316C2CBA67760060B1C5 /* bitboard.cpp in Sources */,
 				3AF7939B25B6F65A00A86A35 /* TileAnimationViewModel.swift in Sources */,
 				3AF7935F25B6F65A00A86A35 /* TileAnimationTakeModifier.swift in Sources */,
 				3A159E1226D1018D001100CC /* ParamLimitThreads.swift in Sources */,
 				3AF7930325B6F63800A86A35 /* AdaptiveStack.swift in Sources */,
+				3A9536B12C8DB73000E95B2D /* PieceSelectButtonStyle.swift in Sources */,
 				3A4A6DE4261B28EA00BB2199 /* CastlingRightsViewModel.swift in Sources */,
+				3ACD315F2CBA674E0060B1C5 /* moverules.cpp in Sources */,
 				3AF793A725B6F65A00A86A35 /* BoardMessageAlertViewModel.swift in Sources */,
 				3AF7938125B6F65A00A86A35 /* ParamSoundRead.swift in Sources */,
 				3AF7935725B6F65A00A86A35 /* FloatingActionView.swift in Sources */,
@@ -1056,39 +1110,32 @@
 				3A4A8467261FDB2E00F4CA19 /* TileFrameMainPreference.swift in Sources */,
 				3A04D29125E502FA00FB2B58 /* ExportDB.swift in Sources */,
 				3ACE50F62A0D09EE004E68FF /* PieceSettingsViewModel.swift in Sources */,
-				3AF7939925B6F65A00A86A35 /* PieceEditToolViewModel.swift in Sources */,
-				3A2FF8922BF0D885006781C2 /* sf_tt.cpp in Sources */,
 				3A70B2CB2A10ED2C0077A662 /* PieceSettings.swift in Sources */,
 				3AF7938925B6F65A00A86A35 /* ParamBoardCoord.swift in Sources */,
 				3AF7939125B6F65A00A86A35 /* ParameterDataServiceProtocol.swift in Sources */,
 				3A25B9212772FE03007AF2E1 /* ExportFileDocument.swift in Sources */,
 				3AF7936725B6F65A00A86A35 /* TileAnimationView.swift in Sources */,
 				3AF7936B25B6F65A00A86A35 /* MenuView.swift in Sources */,
-				3A2FF8822BF0D884006781C2 /* sf_timeman.cpp in Sources */,
 				3A6916E72A751AC8003BF8A2 /* ParamPromoteAuto.swift in Sources */,
-				3A2FF8882BF0D885006781C2 /* sf_misc.cpp in Sources */,
 				3A8061B3288BF5A100F7729C /* ParamHint.swift in Sources */,
 				3AF7934725B6F65A00A86A35 /* TileAnimationInstruction.swift in Sources */,
-				3A2FF8962BF0D885006781C2 /* sf_thread.cpp in Sources */,
-				3A2FF8842BF0D884006781C2 /* search.cpp in Sources */,
+				3A7A4D072C26B9C900E5BCF1 /* ParamHintMove.swift in Sources */,
 				3A96EDBF2945DEC0008A05DF /* Strength.swift in Sources */,
 				3A639ACC262AF38F00E4C29F /* TilePanelViewModel.swift in Sources */,
 				3ACE50F02A0D0822004E68FF /* ParamMoveSpeed.swift in Sources */,
 				3A05E3E325D911BE004E223F /* BoardButtonStyle.swift in Sources */,
 				3AF793A325B6F65A00A86A35 /* TileViewModel.swift in Sources */,
-				3A2FF8802BF0D884006781C2 /* sf_position.cpp in Sources */,
 				3AF7937D25B6F65A00A86A35 /* ParamProtocol.swift in Sources */,
 				3AF7937925B6F65A00A86A35 /* ParameterDataService.swift in Sources */,
+				3A7A4D0C2C26D42A00E5BCF1 /* HintSettings.swift in Sources */,
 				3A8061B6288BFADD00F7729C /* HintActor.swift in Sources */,
 				3AF7939725B6F65A00A86A35 /* EngineSettingsViewModel.swift in Sources */,
 				3AF792FF25B6F63800A86A35 /* Extensions.swift in Sources */,
 				3AF7939F25B6F65A00A86A35 /* BoardViewModel.swift in Sources */,
-				3A2FF8A02BF0D8A1006781C2 /* moverules.cpp in Sources */,
 				3A3A004125CF6F3500252B36 /* AppDelegate.swift in Sources */,
 				3AF49244275E1787006BC8F1 /* SoundSettingsViewModel.swift in Sources */,
 				3A4A6DE7261B28F900BB2199 /* CastlingRightsView.swift in Sources */,
 				3AF7934925B6F65A00A86A35 /* TileFallEffect.swift in Sources */,
-				3A2FF8982BF0D885006781C2 /* sf_evaluate.cpp in Sources */,
 				3AF7938B25B6F65A00A86A35 /* ParamArrangeBoard.swift in Sources */,
 				3AF7938525B6F65A00A86A35 /* ParamComputerPlayer.swift in Sources */,
 				3AF7934F25B6F65A00A86A35 /* TileView.swift in Sources */,
@@ -1105,14 +1152,13 @@
 			buildActionMask = 2147483647;
 			files = (
 				3AF7934425B6F65A00A86A35 /* KaruahChessDB.swift in Sources */,
-				3A2FF8A92BF0D8B1006781C2 /* engine.cpp in Sources */,
 				3AF792F525B6F5E400A86A35 /* SearchOptions.swift in Sources */,
 				3A182C7D25D136E400C7A31F /* ContentView.swift in Sources */,
 				3AF793A225B6F65A00A86A35 /* ActivityIndicatorViewModel.swift in Sources */,
 				3AF7937225B6F65A00A86A35 /* GameRecordDataService.swift in Sources */,
 				3A8061B7288BFADD00F7729C /* HintActor.swift in Sources */,
-				3A2FF88F2BF0D885006781C2 /* sf_movepick.cpp in Sources */,
 				3AF7936425B6F65A00A86A35 /* Device.swift in Sources */,
+				3A7A4D082C26B9C900E5BCF1 /* ParamHintMove.swift in Sources */,
 				3AF7937625B6F65A00A86A35 /* GameRecordArray.swift in Sources */,
 				3AF7939025B6F65A00A86A35 /* ParamRotateBoard.swift in Sources */,
 				3A159E0A26D10091001100CC /* ParamLimitDepth.swift in Sources */,
@@ -1132,11 +1178,13 @@
 				3A04D29225E502FA00FB2B58 /* ExportDB.swift in Sources */,
 				3AF7936A25B6F65A00A86A35 /* ActivityIndicatorView.swift in Sources */,
 				3A4A71A3264A9FA000F68478 /* PawnPromotionView.swift in Sources */,
+				3A7A4D0A2C26BAEE00E5BCF1 /* HintSettings.swift in Sources */,
 				3AF49245275E1787006BC8F1 /* SoundSettingsViewModel.swift in Sources */,
 				3A159E0426D0FFF1001100CC /* ParamLevelAuto.swift in Sources */,
 				3AF7934E25B6F65A00A86A35 /* TileFrameBoardPreference.swift in Sources */,
 				3AF7939E25B6F65A00A86A35 /* MenuSettingsViewModel.swift in Sources */,
-				3A09023B288CF75800CB965B /* HintViewModel.swift in Sources */,
+				3A09023B288CF75800CB965B /* HintSettingsViewModel.swift in Sources */,
+				3ACD31602CBA674E0060B1C5 /* moverules.cpp in Sources */,
 				3AF792BD25B6F5E400A86A35 /* KaruahChessEngineC.mm in Sources */,
 				3A159E0726D1002B001100CC /* ParamLimitAdvanced.swift in Sources */,
 				3A2785F0288A33F8001F4FE6 /* BoardSettings.swift in Sources */,
@@ -1148,11 +1196,9 @@
 				3ACE50F42A0D0835004E68FF /* ParamMoveText.swift in Sources */,
 				3AA1DBA12A0FAF8000B242D0 /* AnimationCompletionObserverModifier.swift in Sources */,
 				3A226878276D71BE0082F8DB /* TileAnimationMoveFadeModifier.swift in Sources */,
-				3A05E3E625D919EB004E223F /* PieceEditToolView.swift in Sources */,
 				3A4A8468261FDB2E00F4CA19 /* TileFrameMainPreference.swift in Sources */,
 				3AD871FC262DA80700828A87 /* NavigatorView.swift in Sources */,
 				3AF7937025B6F65A00A86A35 /* BoardSquareDataService.swift in Sources */,
-				3A2FF8992BF0D885006781C2 /* sf_evaluate.cpp in Sources */,
 				3AF792BF25B6F5E400A86A35 /* SearchResult.swift in Sources */,
 				3AC2C8F025E65C30004E1744 /* GameRecordParser.swift in Sources */,
 				3AF49248275E18D2006BC8F1 /* ParamSoundEffect.swift in Sources */,
@@ -1161,57 +1207,66 @@
 				3AF7937425B6F65A00A86A35 /* GameRecordDataServiceProtocol.swift in Sources */,
 				3A0C4E8425FE2531003B9111 /* GameRecord.swift in Sources */,
 				3ACE50F72A0D09EE004E68FF /* PieceSettingsViewModel.swift in Sources */,
-				3A2FF8892BF0D885006781C2 /* sf_misc.cpp in Sources */,
 				3A2930542772B4EB00F34565 /* SearchActor.swift in Sources */,
 				3AF7935A25B6F65A00A86A35 /* TileShakeEffect.swift in Sources */,
 				3AF7934625B6F65A00A86A35 /* TileFadeOutModifier.swift in Sources */,
 				3AF7939425B6F65A00A86A35 /* Move.swift in Sources */,
 				3AF7935C25B6F65A00A86A35 /* DirectionIndicatorView.swift in Sources */,
-				3A2FF8912BF0D885006781C2 /* sf_ucioption.cpp in Sources */,
 				3AF7939C25B6F65A00A86A35 /* TileAnimationViewModel.swift in Sources */,
-				3A2FF8C12BF0D8EB006781C2 /* half_ka_v2_hm.cpp in Sources */,
+				3A9536B22C8DB73000E95B2D /* PieceSelectButtonStyle.swift in Sources */,
 				3AF7936025B6F65A00A86A35 /* TileAnimationTakeModifier.swift in Sources */,
 				3A4A6DDF261B265F00BB2199 /* CastlingRightsView.swift in Sources */,
-				3A2FF88B2BF0D885006781C2 /* sf_bitboard.cpp in Sources */,
+				3ACD316F2CBA67BF0060B1C5 /* half_ka_v2_hm.cpp in Sources */,
 				3ACE50F12A0D0822004E68FF /* ParamMoveSpeed.swift in Sources */,
 				3ADFD8DD25D8DAF800D6EB6E /* AboutView.swift in Sources */,
-				3A2FF8952BF0D885006781C2 /* sf_uci.cpp in Sources */,
 				3AF793A825B6F65A00A86A35 /* BoardMessageAlertViewModel.swift in Sources */,
 				3AF7938225B6F65A00A86A35 /* ParamSoundRead.swift in Sources */,
 				3AF7935625B6F65A00A86A35 /* ToastView.swift in Sources */,
-				3AF7939A25B6F65A00A86A35 /* PieceEditToolViewModel.swift in Sources */,
 				3AF7938A25B6F65A00A86A35 /* ParamBoardCoord.swift in Sources */,
 				3AF7939225B6F65A00A86A35 /* ParameterDataServiceProtocol.swift in Sources */,
 				3AF58D6025FA32CE008AAAD1 /* ImportDB.swift in Sources */,
+				3ACDE04E2C85CCDC004C3880 /* PieceEditSelectViewModel.swift in Sources */,
+				3ACD31802CBA67FC0060B1C5 /* network.cpp in Sources */,
+				3ACD31812CBA67FC0060B1C5 /* nnue_misc.cpp in Sources */,
 				3AF7936825B6F65A00A86A35 /* TileAnimationView.swift in Sources */,
-				3A2FF8AB2BF0D8B1006781C2 /* bitboard.cpp in Sources */,
 				3AF7934825B6F65A00A86A35 /* TileAnimationInstruction.swift in Sources */,
 				3A11245425D6237D004D24E8 /* EngineSettings.swift in Sources */,
 				3A25B9222772FE03007AF2E1 /* ExportFileDocument.swift in Sources */,
 				3A35C939288BB9BF00DE83F7 /* LevelIndicatorView.swift in Sources */,
 				3AF793A425B6F65A00A86A35 /* TileViewModel.swift in Sources */,
-				3A2FF8812BF0D884006781C2 /* sf_position.cpp in Sources */,
-				3A2FF8932BF0D885006781C2 /* sf_tt.cpp in Sources */,
 				3AF7937E25B6F65A00A86A35 /* ParamProtocol.swift in Sources */,
 				3AF7937A25B6F65A00A86A35 /* ParameterDataService.swift in Sources */,
-				3A2FF8972BF0D885006781C2 /* sf_thread.cpp in Sources */,
 				3AF7939825B6F65A00A86A35 /* EngineSettingsViewModel.swift in Sources */,
-				3A2FF8A12BF0D8A1006781C2 /* moverules.cpp in Sources */,
-				3A2FF88D2BF0D885006781C2 /* sf_movegen.cpp in Sources */,
 				3A8061B4288BF5A100F7729C /* ParamHint.swift in Sources */,
-				3A2FF89D2BF0D893006781C2 /* piecepattern.cpp in Sources */,
-				3A2FF8832BF0D884006781C2 /* sf_timeman.cpp in Sources */,
 				3A159E0D26D100E9001100CC /* ParamLimitMoveDuration.swift in Sources */,
-				3A2FF8C32BF0D8EB006781C2 /* evaluate_nnue.cpp in Sources */,
 				3AF7930025B6F63800A86A35 /* Extensions.swift in Sources */,
 				3AF793A025B6F65A00A86A35 /* BoardViewModel.swift in Sources */,
 				3A422D9227771A4B00327D4B /* CompressionC.mm in Sources */,
 				3A159E1626D10496001100CC /* ParamRandomiseFirstMove.swift in Sources */,
-				3A2FF8872BF0D885006781C2 /* sf_search.cpp in Sources */,
 				3A639ACD262AF38F00E4C29F /* TilePanelViewModel.swift in Sources */,
 				3ADFD8EB25D8F7A200D6EB6E /* BoardButtonStyle.swift in Sources */,
 				3A2785F2288A3470001F4FE6 /* BoardSettingsViewModel.swift in Sources */,
-				3A2FF8AD2BF0D8B1006781C2 /* helper.cpp in Sources */,
+				3ACDE04B2C85CC0B004C3880 /* PieceEditSelectView.swift in Sources */,
+				3ACD313B2CBA67030060B1C5 /* search.cpp in Sources */,
+				3ACD313C2CBA67030060B1C5 /* sf_engine.cpp in Sources */,
+				3ACD313D2CBA67030060B1C5 /* sf_tt.cpp in Sources */,
+				3ACD31672CBA67760060B1C5 /* engine.cpp in Sources */,
+				3ACD31682CBA67760060B1C5 /* helper.cpp in Sources */,
+				3ACD31692CBA67760060B1C5 /* bitboard.cpp in Sources */,
+				3ACD313E2CBA67030060B1C5 /* sf_uci.cpp in Sources */,
+				3ACD313F2CBA67030060B1C5 /* sf_score.cpp in Sources */,
+				3ACD31402CBA67030060B1C5 /* sf_memory.cpp in Sources */,
+				3ACD31412CBA67030060B1C5 /* sf_evaluate.cpp in Sources */,
+				3ACD31422CBA67030060B1C5 /* sf_timeman.cpp in Sources */,
+				3ACD31432CBA67030060B1C5 /* sf_movegen.cpp in Sources */,
+				3ACD31442CBA67030060B1C5 /* piecepattern.cpp in Sources */,
+				3ACD31452CBA67030060B1C5 /* sf_bitboard.cpp in Sources */,
+				3ACD31462CBA67030060B1C5 /* sf_movepick.cpp in Sources */,
+				3ACD31472CBA67030060B1C5 /* sf_thread.cpp in Sources */,
+				3ACD31482CBA67030060B1C5 /* sf_ucioption.cpp in Sources */,
+				3ACD31492CBA67030060B1C5 /* sf_search.cpp in Sources */,
+				3ACD314A2CBA67030060B1C5 /* sf_position.cpp in Sources */,
+				3ACD314B2CBA67030060B1C5 /* sf_misc.cpp in Sources */,
 				3A182C7425D1343D00C7A31F /* KaruahChessApp.swift in Sources */,
 				3AF7934A25B6F65A00A86A35 /* TileFallEffect.swift in Sources */,
 				3AF7938C25B6F65A00A86A35 /* ParamArrangeBoard.swift in Sources */,
@@ -1219,7 +1274,6 @@
 				3AF7935025B6F65A00A86A35 /* TileView.swift in Sources */,
 				3AF7937825B6F65A00A86A35 /* Parameter.swift in Sources */,
 				3AF4923F275E0FBA006BC8F1 /* ParamColourDarkSquares.swift in Sources */,
-				3A2FF8852BF0D885006781C2 /* search.cpp in Sources */,
 				3AF7935E25B6F65A00A86A35 /* TileAnimationMoveModifier.swift in Sources */,
 				3A014AA925D7BA9500D7A466 /* TitlebarAccessoryView.swift in Sources */,
 				3A3C7EB125D25D70002AFB5A /* MainWindowController.swift in Sources */,
@@ -1355,7 +1409,7 @@
 				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
 				CODE_SIGN_ENTITLEMENTS = "Karuah Chess.entitlements";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 24;
+				CURRENT_PROJECT_VERSION = 30;
 				DEVELOPMENT_TEAM = JQA45NT8J5;
 				ENABLE_PREVIEWS = YES;
 				GCC_PREPROCESSOR_DEFINITIONS_NOT_USED_IN_PRECOMPS = USE_POPCNT;
@@ -1367,7 +1421,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.24;
+				MARKETING_VERSION = 1.30;
 				PRODUCT_BUNDLE_IDENTIFIER = karuahsoftware.karuahchess;
 				PRODUCT_NAME = "Karuah Chess";
 				SCAN_ALL_SOURCE_FILES_FOR_INCLUDES = NO;
@@ -1388,7 +1442,7 @@
 				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
 				CODE_SIGN_ENTITLEMENTS = "Karuah Chess.entitlements";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 24;
+				CURRENT_PROJECT_VERSION = 30;
 				DEVELOPMENT_TEAM = JQA45NT8J5;
 				ENABLE_PREVIEWS = YES;
 				GCC_PREPROCESSOR_DEFINITIONS_NOT_USED_IN_PRECOMPS = (
@@ -1403,7 +1457,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.24;
+				MARKETING_VERSION = 1.30;
 				PRODUCT_BUNDLE_IDENTIFIER = karuahsoftware.karuahchess;
 				PRODUCT_NAME = "Karuah Chess";
 				SCAN_ALL_SOURCE_FILES_FOR_INCLUDES = NO;
@@ -1425,7 +1479,7 @@
 				CODE_SIGN_ENTITLEMENTS = macOS/macOS.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 24;
+				CURRENT_PROJECT_VERSION = 30;
 				DEVELOPMENT_TEAM = JQA45NT8J5;
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
@@ -1438,7 +1492,7 @@
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 12.0;
-				MARKETING_VERSION = 1.24;
+				MARKETING_VERSION = 1.30;
 				OTHER_LDFLAGS = "";
 				PRODUCT_BUNDLE_IDENTIFIER = karuahsoftware.karuahchess;
 				PRODUCT_NAME = "Karuah Chess";
@@ -1458,7 +1512,7 @@
 				CODE_SIGN_ENTITLEMENTS = macOS/macOS.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 24;
+				CURRENT_PROJECT_VERSION = 30;
 				DEVELOPMENT_TEAM = JQA45NT8J5;
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
@@ -1474,7 +1528,7 @@
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 12.0;
-				MARKETING_VERSION = 1.24;
+				MARKETING_VERSION = 1.30;
 				PRODUCT_BUNDLE_IDENTIFIER = karuahsoftware.karuahchess;
 				PRODUCT_NAME = "Karuah Chess";
 				SDKROOT = macosx;

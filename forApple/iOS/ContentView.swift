@@ -60,22 +60,16 @@ struct ContentView: View {
                             .disabled(self.showMenu ? true : false)
                             .zIndex(2)
                             
-                            
-                            
-                        
-                            
                         // Animation Layout
                         TileAnimationView(tileAnimationVM: boardVM.tileAnimationVM)
                             .rotationEffect(Angle(degrees: boardVM.boardRotation))
                             .offset(x: device.boardCoordPadding)
                             .zIndex(3)
                         
-                            
                         // Piece Edit Tool
-                        PieceEditToolView(pieceEditToolVM: boardVM.pieceEditToolVM)
+                        PieceEditSelectView(pieceEditSelectVM: boardVM.pieceEditSelectVM)
                             .offset(x: device.boardCoordPadding)
                             .zIndex(4)
-                        
                 
                         // Castling Rights
                         CastlingRightsView(castlingRightsVM: boardVM.castlingRightsVM)

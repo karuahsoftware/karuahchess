@@ -21,15 +21,13 @@ import SwiftUI
 struct CastlingRightsView: View {
     @ObservedObject private var device : Device = Device.instance
     @ObservedObject var castlingRightsVM : CastlingRightsViewModel 
- 
+    @State private var contentWidth: CGFloat = 0
     
     var body: some View {
         
         ZStack(alignment: Alignment(horizontal: .center, vertical: .center)) {
             if castlingRightsVM.visible {
-            
                 VStack(alignment: .leading) {
-                    
                     Text("Castling Rights").font(.headline).padding(.bottom, 10)
                     
                     HStack(alignment: .center) {
@@ -51,19 +49,29 @@ struct CastlingRightsView: View {
                         }
                         
                     }
+                    .background(
+                        GeometryReader { geometry in
+                            Color.clear.onAppear {
+                                self.contentWidth = geometry.size.width
+                            }
+                        }
+                    )
+                    
+                    
+                    Divider()
+                        .frame(width: contentWidth)
+                        .padding(.top)
                     
                     HStack(alignment: .center) {
-                        Spacer()
                         Button(action: {
                             castlingRightsVM.close()
                         }){
                             Text("Close")
-                        }.padding(.top)
+                        }
                     }
                 }
                 .padding(10)
-                .background(Color("FormBackground"))
-                .padding(10)
+                .background(RoundedRectangle(cornerRadius: 10).fill(Color("FormBackground")))
                 .clipped()
                 .shadow(radius: 6)
                 .shadow(radius: 10)

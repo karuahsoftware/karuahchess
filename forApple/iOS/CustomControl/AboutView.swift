@@ -21,7 +21,7 @@ import SwiftUI
 struct AboutView: View {
     @Binding var showMenu: Bool
     private let infoText = "Karuah Chess is a chess playing program.\nCopyright © 2020 Karuah Software\n\nFind Karuah Chess on;"
-    private let otherInfoA = "Karuah Chess uses StockFish 16.1 with neural network version nn-b1a57edbea57.nnue (big) and nn-baff1ede1f90.nnue (small). You can find out more about StockFish at;"
+    private let otherInfoA = "Karuah Chess uses StockFish 17 with neural network version nn-1111cefa1111.nnue (big) and nn-37f18f62d772.nnue (small). You can find out more about StockFish at;"
     private let otherInfoLinkA = Link("https://stockfishchess.org", destination: URL(string: "https://stockfishchess.org")!)
     private let otherInfoB = "The full source code for Karuah Chess is available at;"
     private let otherInfoLinkB = Link("https://github.com/karuahsoftware/karuahchess", destination: URL(string: "https://github.com/karuahsoftware/karuahchess")!)
@@ -42,7 +42,7 @@ struct AboutView: View {
                         Link(destination: URL(string: "https://www.facebook.com/karuahchess")!) {
                             Image("SocialLogoF").resizable().frame(width: 30, height: 30, alignment: Alignment.center)
                         }.buttonStyle(BorderlessButtonStyle())
-                        Link(destination: URL(string: "https://twitter.com/karuahsoftware")!) {
+                        Link(destination: URL(string: "https://x.com/karuahsoftware")!) {
                             Image("SocialLogoT").resizable().frame(width: 30, height: 30, alignment: Alignment.center)
                         }.buttonStyle(BorderlessButtonStyle())
                     }.padding(10)
@@ -51,20 +51,20 @@ struct AboutView: View {
                 
                 Group {
                     Text(otherInfoA)
-                    otherInfoLinkA.buttonStyle(BorderlessButtonStyle())
+                    otherInfoLinkA
                     Text("")
                 }
                 
                 Group {
                     Text(otherInfoB)
-                    otherInfoLinkB.buttonStyle(BorderlessButtonStyle())
+                    otherInfoLinkB
                     Text("")
                 }
                 
                 Group {
                     Text(licenseTitle).fontWeight(.bold)
                     Text(licenseInfoA + licenseInfoB)
-                    licenseInfoLinkB.buttonStyle(BorderlessButtonStyle())
+                    licenseInfoLinkB
                 }
                 
             }

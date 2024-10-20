@@ -37,18 +37,18 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 @implementation KaruahChessEngineC
 
+using namespace KaruahChess;
 using namespace helper;
 
 // Constructor
 - (id) init {
     
     if (self = [super init]) {
-        Engine::init();
         
         if (!(Engine::nnueLoadedBig && Engine::nnueLoadedSmall))
         {
-            const char* nnueFileNameBig = "nn-b1a57edbea57";
-            const char* nnueFileNameSmall = "nn-baff1ede1f90";
+            const char* nnueFileNameBig = "nn-1111cefa1111";
+            const char* nnueFileNameSmall = "nn-37f18f62d772";
             
             NSString *nnueFilePathBig = [[NSBundle mainBundle] pathForResource:[NSString stringWithUTF8String:nnueFileNameBig] ofType:@"nnue"];
             NSData *nnueNSDataBig = [NSData dataWithContentsOfFile:nnueFilePathBig];

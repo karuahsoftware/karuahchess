@@ -22,29 +22,32 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #include <filesystem>
 #include <istream>
 #include <streambuf>
-#include "sf_uci.h"
 
+// Forward declaring class
+namespace Stockfish {
+	class UCIEngine;
+}
+
+namespace KaruahChess {
 	namespace Engine {
 
-		using namespace std;
-
-		
+		using namespace std;		
 
 		struct EngineError {
 			vector<int> errorList;
-						
+
 			// Add the error to the list if it does not exist
 			void add(int errorNumber) {
 				if (find(errorList.begin(), errorList.end(), errorNumber) == errorList.end()) {
 					errorList.push_back(errorNumber);
-				}				
+				}
 			}
 
 			// Checks for the existance of an error
 			bool exists(int errorNumber) {
 				return find(errorList.begin(), errorList.end(), errorNumber) != errorList.end();
 			}
-						
+
 		};
 
 		struct membuf : streambuf
@@ -54,14 +57,13 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 			}
 		};
 
-		extern void init();
 		extern void init(string pNNUEFileNameBig, char* pNNUEFileBufferBig, long pNNUEFileBufferSizeBig, string pNNUEFileNameSmall, char* pNNUEFileBufferSmall, long pNNUEFileBufferSizeSmall);
 		extern void setThreads(unsigned int pMaxThreads);
 		extern EngineError engineErr;
-		
+
 		extern string nnueFileNameBig;
 		extern char* nnueFileBufferBig;
-        extern long nnueFileBufferSizeBig;
+		extern long nnueFileBufferSizeBig;
 		extern bool nnueLoadedBig;
 
 		extern string nnueFileNameSmall;
@@ -69,6 +71,8 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 		extern long nnueFileBufferSizeSmall;
 		extern bool nnueLoadedSmall;
 
-		extern std::unique_ptr<Stockfish::UCI> mainUCI;
+		extern std::unique_ptr<Stockfish::UCIEngine> mainUCI;
 	}
+
+}
 

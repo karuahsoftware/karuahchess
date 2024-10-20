@@ -21,8 +21,9 @@ import SwiftUI
 struct FloatingActionView: View {
     @State private var showingNewGameAlert = false
     @ObservedObject private var device : Device = Device.instance
-    @ObservedObject private var hintVM : HintViewModel = HintViewModel.instance
-   
+    @ObservedObject private var hintSettingsVM : HintSettingsViewModel = HintSettingsViewModel.instance
+    @ObservedObject private var menuSettingsVM : MenuSettingsViewModel = MenuSettingsViewModel.instance
+    
     @Binding var showMenu: Bool
     
     var body: some View {
@@ -34,10 +35,50 @@ struct FloatingActionView: View {
             AdaptiveStack(reverse: false, horizontalAlignment: .trailing, verticalAlignment: .bottom, spacing: 12) {
                 Spacer()
                 
-                Button(action: {
-                    self.showingNewGameAlert = true
-                       }){
-                            Image(systemName: "target")
+                
+                if !menuSettingsVM.arrangeBoardEnabled {
+                    Button(action: {
+                        self.showingNewGameAlert = true
+                    }){
+                        Image(systemName: "target")
+                            .resizable()
+                            .padding()
+                            .aspectRatio(contentMode: .fill)
+                            .background(Color("ActionGreen"))
+                            .foregroundColor(Color.black)
+                            .clipShape(Circle())
+                            .shadow(radius: 8)
+                            .frame(width: calcButtonSize(device.tileSize) * 1.1, height: calcButtonSize(device.tileSize) * 1.1)
+                    }.alert(isPresented: $showingNewGameAlert) {
+                        Alert(title: Text("New"), message: Text("Start a new game?"), primaryButton: .default(Text("Yes")) {
+                            Task(priority: .userInitiated)  {
+                                self.showMenu = false
+                                await BoardViewModel.instance.newGame()
+                            }
+                        } , secondaryButton: .cancel())
+                    }
+                    
+                    Button(action: {
+                        BoardViewModel.instance.showLastMove()
+                    }){
+                        Image(systemName: "eye")
+                            .resizable()
+                            .padding()
+                            .aspectRatio(contentMode: .fill)
+                            .background(Color("ActionGreen"))
+                            .foregroundColor(Color.black)
+                            .clipShape(Circle())
+                            .shadow(radius: 8)
+                            .frame(width: calcButtonSize(device.tileSize) * 1.1, height: calcButtonSize(device.tileSize) * 1.1)
+                    }
+                    
+                    if hintSettingsVM.hintEnabled {
+                        Button(action: {
+                            Task(priority: .userInitiated) {
+                                await BoardViewModel.instance.showHint()
+                            }
+                        }){
+                            Image(systemName: "lightbulb")
                                 .resizable()
                                 .padding()
                                 .aspectRatio(contentMode: .fill)
@@ -46,45 +87,40 @@ struct FloatingActionView: View {
                                 .clipShape(Circle())
                                 .shadow(radius: 8)
                                 .frame(width: calcButtonSize(device.tileSize) * 1.1, height: calcButtonSize(device.tileSize) * 1.1)
-                       }.alert(isPresented: $showingNewGameAlert) {
-                           Alert(title: Text("New"), message: Text("Start a new game?"), primaryButton: .destructive(Text("Yes")) {
-                               Task(priority: .userInitiated)  {
-                                   self.showMenu = false
-                                   await BoardViewModel.instance.newGame()
-                               }
-                           } , secondaryButton: .cancel())
-                       }
-                
-                Button(action: {
-                    BoardViewModel.instance.showLastMove()
-                       }){
-                         Image(systemName: "eye")
-                             .resizable()
-                             .padding()
-                             .aspectRatio(contentMode: .fill)
-                             .background(Color("ActionGreen"))
-                             .foregroundColor(Color.black)
-                             .clipShape(Circle())
-                             .shadow(radius: 8)
-                             .frame(width: calcButtonSize(device.tileSize) * 1.1, height: calcButtonSize(device.tileSize) * 1.1)
-                       }
-                
-                if hintVM.enabled {
+                        }
+                    }
+                }
+                else {
+                    Button(action: {
+                        BoardViewModel.instance.pieceEditSelectVM.show()
+                    }){
+                        Image(systemName: "person")
+                            .resizable()
+                            .padding()
+                            .aspectRatio(contentMode: .fill)
+                            .background(Color("ActionMagenta"))
+                            .foregroundColor(Color.white)
+                            .clipShape(Circle())
+                            .shadow(radius: 8)
+                            .frame(width: calcButtonSize(device.tileSize) * 1.1, height: calcButtonSize(device.tileSize) * 1.1)
+                    }
+                    
                     Button(action: {
                         Task(priority: .userInitiated) {
-                            await BoardViewModel.instance.showHint()
+                            await BoardViewModel.instance.editEraseSelection()
                         }
-                           }){
-                             Image(systemName: "lightbulb")
-                                 .resizable()
-                                 .padding()
-                                 .aspectRatio(contentMode: .fill)
-                                 .background(Color("ActionGreen"))
-                                 .foregroundColor(Color.black)
-                                 .clipShape(Circle())
-                                 .shadow(radius: 8)
-                                 .frame(width: calcButtonSize(device.tileSize) * 1.1, height: calcButtonSize(device.tileSize) * 1.1)
-                           }
+                    }){
+                        Image(systemName: "trash.fill")
+                            .resizable()
+                            .padding()
+                            .aspectRatio(contentMode: .fill)
+                            .background(Color("ActionMagenta"))
+                            .foregroundColor(Color.white)
+                            .clipShape(Circle())
+                            .shadow(radius: 8)
+                            .frame(width: calcButtonSize(device.tileSize) * 1.1, height: calcButtonSize(device.tileSize) * 1.1)
+                    }
+                    
                 }
                 
             }.padding()

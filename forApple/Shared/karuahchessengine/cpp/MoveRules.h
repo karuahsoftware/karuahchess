@@ -20,7 +20,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #include "helper.h"
 #include "bitboard.h"
 
-
+namespace KaruahChess {
 	namespace MoveRules {
 		extern bool IsCheckMate(BitBoard& pBoard);
 		extern bool IsStaleMate(BitBoard& pBoard);
@@ -31,3 +31,4 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 		extern bool IsPawnPromotion(const int pFromIndex, const int pToIndex, BitBoard& pBoard);
 	}
 
+}

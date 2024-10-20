@@ -34,6 +34,13 @@ struct PieceSettings: View {
             ScrollView([.vertical]) {
                 
                 VStack(alignment: .leading) {
+                    
+                    HStack {
+                        Image(systemName: "person")
+                        .imageScale(.large)
+                        Text("Piece").font(.headline)
+                    }.padding(.bottom, 10)
+                    
                     Slider(value: $pieceSettingsVM.moveSpeed, in: 0...6, step:1) {
                         Text("Move Speed \(Int($pieceSettingsVM.moveSpeed.wrappedValue))")
                             .font(.body)

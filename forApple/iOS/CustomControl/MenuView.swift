@@ -49,7 +49,7 @@ struct MenuView: View {
                         
                     }
                     .alert(isPresented: $showingNewGameAlert) {
-                        Alert(title: Text("New"), message: Text("Start a new game?"), primaryButton: .destructive(Text("Yes")) {
+                        Alert(title: Text("New"), message: Text("Start a new game?"), primaryButton: .default(Text("Yes")) {
                             Task(priority: .userInitiated)  {
                                 self.showMenu = false
                                 await BoardViewModel.instance.newGame()
@@ -77,7 +77,7 @@ struct MenuView: View {
                         }
                     }
                     .alert(isPresented: $showingResignAlert) {
-                        Alert(title: Text("Resign"), message: Text("Resign from current game?"), primaryButton: .destructive(Text("Yes")) {
+                        Alert(title: Text("Resign"), message: Text("Resign from current game?"), primaryButton: .default(Text("Yes")) {
                             Task(priority: .userInitiated) {
                                 self.showMenu = false
                                 await BoardViewModel.instance.resignGame()
@@ -155,22 +155,6 @@ struct MenuView: View {
                             
                     }
                     
-                    Toggle(isOn: $menuSettingsVM.hintEnabled) {
-                        Label() {
-                            Text("Hint Button")
-                        } icon: {
-                            Image(systemName: "lightbulb")
-                                .resizable()
-                                .aspectRatio(contentMode: .fit)
-                                .font(Font.system(.headline))
-                                .padding(3)
-                                .frame(width: 28, height: 28)
-                                .background(Color.orange)
-                                .foregroundColor(Color.white)
-                                .cornerRadius(6)
-                        }
-                            
-                    }
                 }
             
                 Section {
@@ -195,6 +179,22 @@ struct MenuView: View {
                             Text("Piece")
                         } icon: {
                             Image(systemName: "person")
+                                .resizable()
+                                .aspectRatio(contentMode: .fit)
+                                .font(Font.system(.headline))
+                                .padding(3)
+                                .frame(width: 28, height: 28)
+                                .background(Color.green)
+                                .foregroundColor(Color.white)
+                                .cornerRadius(6)
+                        }
+                    }
+                    
+                    NavigationLink(destination: HintSettings(showMenu: $showMenu)) {
+                        Label() {
+                            Text("Hint")
+                        } icon: {
+                            Image(systemName: "lightbulb")
                                 .resizable()
                                 .aspectRatio(contentMode: .fit)
                                 .font(Font.system(.headline))

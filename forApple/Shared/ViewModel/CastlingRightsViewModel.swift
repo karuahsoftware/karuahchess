@@ -27,12 +27,9 @@ import SwiftUI
     let board: KaruahChessEngineC = KaruahChessEngineC()
     var recordId: Int = 0
     
-    /// Displays the piece edit tool
+    /// Displays the castling rights view
     /// - Parameter pTile: The tile that was clicked
     func show(_ pTile: TileView, _ pRecord: GameRecordArray) {
-        // Ensure nothing is higlighted
-        BoardViewModel.instance.tilePanelVM.setHighLightFull(pBits: 0, pColour: Color("Magenta"))
-        
         if visible == true {
             close()
         }
@@ -40,9 +37,6 @@ import SwiftUI
             // Show the view and put it in the correct position
             lastTileIndexTapped = pTile.index
             kingSpin = pTile.tileVM.spin
-            
-            // Highlight square being modified
-            pTile.tileVM.setHighLightFull(pActive: true, pColour: Color("Magenta"))
             
             // Set the control state
             setControlState(pRecord)
@@ -59,7 +53,6 @@ import SwiftUI
     func close() {
         // save before closing
         if visible {save()
-            BoardViewModel.instance.tilePanelVM.setHighLightFull(pBits: 0, pColour: Color("Magenta"))
             lastTileIndexTapped = -1
             visible = false
         }

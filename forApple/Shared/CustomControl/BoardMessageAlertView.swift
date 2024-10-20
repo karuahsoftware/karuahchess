@@ -25,7 +25,7 @@ struct BoardMessageAlertView: View {
         if BoardMessageAlertVM.alertType == BoardMessageAlertViewModel.alertTypeEnum.YesNo {
             Spacer()
             .alert(isPresented: $BoardMessageAlertVM.showAlert) { () -> Alert in
-                Alert(title: Text(BoardMessageAlertVM.title), message: Text(BoardMessageAlertVM.message), primaryButton: .destructive(Text("Yes")) {
+                Alert(title: Text(BoardMessageAlertVM.title), message: Text(BoardMessageAlertVM.message), primaryButton: .default(Text("Yes")) {
                     if let action = BoardMessageAlertVM.action {
                         action()
                     }

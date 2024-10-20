@@ -25,4 +25,6 @@ import SwiftUI
     @objc var limitMoveDuration: Int32 = 0
     @objc var limitThreads: Int32 = 1
     @objc var randomiseFirstMove: Bool = false
+    @objc var alternateMove: Bool = false
+    
 }

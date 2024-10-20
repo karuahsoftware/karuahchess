@@ -368,5 +368,10 @@ class GameRecordDataService : GameRecordDataServiceProtocol {
         
     }
  
+    /// Gets the game history
+    /// - Returns: A array of record Ids
+    func gameHistory() -> [Int: GameRecordArray] {
+        return gameRecordDict
+    }
     
 }

@@ -18,62 +18,44 @@
 
 #include "sf_misc.h"
 
-#ifdef _WIN32    
-
-    #ifndef NOMINMAX
-        #define NOMINMAX
-    #endif
-
-    #include <windows.h>
-
-#endif
-
 #include <atomic>
+#include <cctype>
 #include <cmath>
 #include <cstdlib>
 #include <iomanip>
 #include <iostream>
+#include <iterator>
+#include <limits>
 #include <mutex>
 #include <sstream>
 #include <string_view>
 
 #include "sf_types.h"
-
-#if defined(__linux__) && !defined(__ANDROID__)
-    #include <sys/mman.h>
-#endif
-
-#if defined(__APPLE__) || defined(__ANDROID__) || defined(__OpenBSD__) \
-  || (defined(__GLIBCXX__) && !defined(_GLIBCXX_HAVE_ALIGNED_ALLOC) && !defined(_WIN32)) \
-  || defined(__e2k__)
-    #define POSIXALIGNEDALLOC
-    #include <stdlib.h>
-#endif
-
-// Karuah Chess
-#include "helper.h"
 #include "engine.h"
+#include "helper.h"
 
 namespace Stockfish {
 
 namespace {
 
 // Version number or dev.
-constexpr std::string_view version = "16.1";
+constexpr std::string_view version = "17";
 
 
 }  // namespace
 
 
 // Returns the full name of the current Stockfish version.
-// For local dev compiles we try to append the commit sha and commit date
-// from git if that fails only the local compilation date is set and "nogit" is specified:
-// Stockfish dev-YYYYMMDD-SHA
-// or
-// Stockfish dev-YYYYMMDD-nogit
+//
+// For local dev compiles we try to append the commit SHA and
+// commit date from git. If that fails only the local compilation
+// date is set and "nogit" is specified:
+//      Stockfish dev-YYYYMMDD-SHA
+//      or
+//      Stockfish dev-YYYYMMDD-nogit
 //
 // For releases (non-dev builds) we only include the version number:
-// Stockfish version
+//      Stockfish version
 std::string engine_info(bool to_uci) {
     std::stringstream ss;
     ss << "Stockfish " << version << std::setfill('0');
@@ -85,8 +67,9 @@ std::string engine_info(bool to_uci) {
         ss << stringify(GIT_DATE);
 #else
         constexpr std::string_view months("Jan Feb Mar Apr May Jun Jul Aug Sep Oct Nov Dec");
-        std::string                month, day, year;
-        std::stringstream          date(__DATE__);  // From compiler, format is "Sep 21 2008"
+
+        std::string       month, day, year;
+        std::stringstream date(__DATE__);  // From compiler, format is "Sep 21 2008"
 
         date >> month >> day >> year;
         ss << year << std::setw(2) << std::setfill('0') << (1 + months.find(month) / 4)
@@ -110,168 +93,31 @@ std::string engine_info(bool to_uci) {
 
 #ifdef NO_PREFETCH
 
-void prefetch(void*) {}
+void prefetch(const void*) {}
 
 #else
 
-void prefetch(void* addr) {
+void prefetch(const void* addr) {
 
     #if defined(_MSC_VER) && (defined(_M_X64) || defined(_M_IX86))
-    _mm_prefetch((char*) addr, _MM_HINT_T0);
+    _mm_prefetch((char const*) addr, _MM_HINT_T0);
     #elif defined(_MSC_VER) && (defined(_M_ARM) || defined(_M_ARM64))
     __prefetch(addr);
     #else
     __builtin_prefetch(addr);
     #endif
+
 }
 
 #endif
 
-
-// Wrapper for systems where the c++17 implementation
-// does not guarantee the availability of aligned_alloc(). Memory allocated with
-// std_aligned_alloc() must be freed with std_aligned_free().
-void* std_aligned_alloc(size_t alignment, size_t size) {
-
-#if defined(POSIXALIGNEDALLOC)
-    void* mem;
-    return posix_memalign(&mem, alignment, size) ? nullptr : mem;
-#elif defined(_WIN32) && !defined(_M_ARM) && !defined(_M_ARM64)
-    return _mm_malloc(size, alignment);
-#elif defined(_WIN32)
-    return _aligned_malloc(size, alignment);
-#else
-    return std::aligned_alloc(alignment, size);
-#endif
+size_t str_to_size_t(const std::string& s) {
+    unsigned long long value = std::stoull(s);
+    if (value > std::numeric_limits<size_t>::max())
+        // Karuah Chess - Lock engine without exiting
+        KaruahChess::Engine::engineErr.add(KaruahChess::helper::STR_TO_SIZE_T_ERROR);
+    return static_cast<size_t>(value);
 }
-
-void std_aligned_free(void* ptr) {
-
-#if defined(POSIXALIGNEDALLOC)
-    free(ptr);
-#elif defined(_WIN32) && !defined(_M_ARM) && !defined(_M_ARM64)
-    _mm_free(ptr);
-#elif defined(_WIN32)
-    _aligned_free(ptr);
-#else
-    free(ptr);
-#endif
-}
-
-// aligned_large_pages_alloc() will return suitably aligned memory, if possible using large pages.
-
-#if defined(_WIN32)
-
-static void* aligned_large_pages_alloc_windows([[maybe_unused]] size_t allocSize) {
-
-    #if !defined(_WIN64)
-    return nullptr;
-    #else
-
-    HANDLE hProcessToken{};
-    LUID   luid{};
-    void*  mem = nullptr;
-
-    const size_t largePageSize = GetLargePageMinimum();
-    if (!largePageSize)
-        return nullptr;
-
-   
-
-    // We need SeLockMemoryPrivilege, so try to enable it for the process
-    if (!OpenProcessToken(GetCurrentProcess(), TOKEN_ADJUST_PRIVILEGES | TOKEN_QUERY, &hProcessToken))
-        return nullptr;
-
-    if (LookupPrivilegeValue(nullptr, SE_LOCK_MEMORY_NAME, &luid))          
-    {
-        TOKEN_PRIVILEGES tp{};
-        TOKEN_PRIVILEGES prevTp{};
-        DWORD            prevTpLen = 0;
-
-        tp.PrivilegeCount           = 1;
-        tp.Privileges[0].Luid       = luid;
-        tp.Privileges[0].Attributes = SE_PRIVILEGE_ENABLED;
-
-        // Try to enable SeLockMemoryPrivilege. Note that even if AdjustTokenPrivileges() succeeds,
-        // we still need to query GetLastError() to ensure that the privileges were actually obtained.
-        if (AdjustTokenPrivileges(
-              hProcessToken, FALSE, &tp, sizeof(TOKEN_PRIVILEGES), &prevTp, &prevTpLen)
-            && GetLastError() == ERROR_SUCCESS)
-        {
-            // Round up size to full pages and allocate
-            allocSize = (allocSize + largePageSize - 1) & ~size_t(largePageSize - 1);
-            mem       = VirtualAlloc(nullptr, allocSize, MEM_RESERVE | MEM_COMMIT | MEM_LARGE_PAGES,
-                                     PAGE_READWRITE);
-
-            // Privilege no longer needed, restore previous state
-            AdjustTokenPrivileges (hProcessToken, FALSE, &prevTp, 0, nullptr, nullptr);
-        }
-    }
-
-    CloseHandle(hProcessToken);
-
-    return mem;
-
-    #endif
-}
-
-void* aligned_large_pages_alloc(size_t allocSize) {
-
-    // Try to allocate large pages
-    void* mem = aligned_large_pages_alloc_windows(allocSize);
-
-    // Fall back to regular, page-aligned, allocation if necessary
-    if (!mem)
-        mem = VirtualAlloc(nullptr, allocSize, MEM_RESERVE | MEM_COMMIT, PAGE_READWRITE);
-
-    return mem;
-}
-
-#else
-
-void* aligned_large_pages_alloc(size_t allocSize) {
-
-    #if defined(__linux__)
-    constexpr size_t alignment = 2 * 1024 * 1024;  // assumed 2MB page size
-    #else
-    constexpr size_t alignment = 4096;  // assumed small page size
-    #endif
-
-    // Round up to multiples of alignment
-    size_t size = ((allocSize + alignment - 1) / alignment) * alignment;
-    void*  mem  = std_aligned_alloc(alignment, size);
-    #if defined(MADV_HUGEPAGE)
-    madvise(mem, size, MADV_HUGEPAGE);
-    #endif
-    return mem;
-}
-
-#endif
-
-
-// aligned_large_pages_free() will free the previously allocated ttmem
-
-#if defined(_WIN32)
-
-void aligned_large_pages_free(void* mem) {
-
-    if (mem && !VirtualFree(mem, 0, MEM_RELEASE))
-    {
-        DWORD err = GetLastError();
-        std::cerr << "Failed to free large page memory. Error code: 0x" << std::hex << err
-                  << std::dec << std::endl;
-        
-        // Karuah Chess - lock engine without exiting
-        Engine::engineErr.add(helper::FREELARGEPAGEMEMORY_ERROR);
-    }
-}
-
-#else
-
-void aligned_large_pages_free(void* mem) { std_aligned_free(mem); }
-
-#endif
-
 
 
 

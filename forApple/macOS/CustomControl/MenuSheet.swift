@@ -27,6 +27,7 @@ class MenuSheet: ObservableObject {
         case engineSettings
         case boardSettings
         case pieceSettings
+        case hintSettings
         case soundSettings
         case about
         

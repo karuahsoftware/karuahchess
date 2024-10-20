@@ -50,7 +50,7 @@ struct ContentView: View {
                     
         
                 // Piece Edit Tool
-                PieceEditToolView(pieceEditToolVM: boardVM.pieceEditToolVM)
+                PieceEditSelectView(pieceEditSelectVM: boardVM.pieceEditSelectVM)
                     .offset(x: device.boardCoordPadding)
                     .zIndex(4)
                 
@@ -94,6 +94,8 @@ struct ContentView: View {
                     BoardSettings(pMenuSheet: menuSheet)
                 case .pieceSettings:
                     PieceSettings(pMenuSheet: menuSheet)
+                case .hintSettings:
+                    HintSettings(pMenuSheet: menuSheet)
                 case .soundSettings:
                     SoundSettings(pMenuSheet: menuSheet)
                 case .about:
@@ -123,7 +125,6 @@ struct ContentView: View {
                 boardVM.showFileImporter = false
             }
         }
-        
     }
 
     

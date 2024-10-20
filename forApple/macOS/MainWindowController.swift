@@ -22,7 +22,6 @@ class MainWindowController: NSWindowController, NSWindowDelegate {
     
     func windowDidResize(_ notification: Notification) {
         MainWindowController.refreshTileSize()
-        BoardViewModel.instance.pieceEditToolVM.close() // Close the edit tool if it is open as it is not positioned correctly when window resizes
     }
     
     /// Refreshes the tile size

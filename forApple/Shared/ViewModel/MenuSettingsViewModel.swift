@@ -30,8 +30,8 @@ import SwiftUI
             parameter.enabled = arrangeBoardEnabled
             _ = ParameterDataService.instance.set(pObj: parameter)
             if !parameter.enabled {
-                BoardViewModel.instance.pieceEditToolVM.close()
                 BoardViewModel.instance.castlingRightsVM.close()
+                BoardViewModel.instance.editClear()
             }
             Task(priority: .userInitiated) {
                 BoardViewModel.instance.stopSearchJob()
@@ -66,16 +66,6 @@ import SwiftUI
             _ = ParameterDataService.instance.set(pObj: parameter)
             BoardViewModel.instance.navigatorVM.enabled = parameter.enabled
             BoardViewModel.instance.loadNavigator(pEnabled: parameter.enabled)
-        }
-    }
-    
-    @Published var hintEnabled : Bool = ParameterDataService.instance.get(pParameterClass: ParamHint.self).enabled {
-        didSet {
-            let parameter = ParamHint()
-            parameter.enabled = hintEnabled
-            _ = ParameterDataService.instance.set(pObj: parameter)
-            HintViewModel.instance.enabled = hintEnabled
-
         }
     }
     

@@ -28,4 +28,5 @@ protocol GameRecordDataServiceProtocol {
     func getBoardSquareChanges(pBoardA: GameRecordArray?, pBoardB: GameRecordArray?) -> UInt64
     func getMaxId() -> Int
     func getAllRecordIDList() -> [Int]
+    func gameHistory() -> [Int: GameRecordArray]
 }

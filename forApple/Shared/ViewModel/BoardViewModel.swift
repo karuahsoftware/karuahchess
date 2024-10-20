@@ -33,7 +33,7 @@ import AVFoundation
     let move: Move
     var computerMoveProcessing = false
     var computerHintProcessing = false
-    let pieceEditToolVM : PieceEditToolViewModel
+    let pieceEditSelectVM : PieceEditSelectViewModel
     let boardMessageAlertVM : BoardMessageAlertViewModel
     let castlingRightsVM : CastlingRightsViewModel
     let navigatorVM : NavigatorViewModel 
@@ -41,6 +41,9 @@ import AVFoundation
     var audioPlayerPieceMoveSound: AVAudioPlayer?
     let hintBoardActor = HintActor()
     let srchActor = SearchActor()
+    var editSelection: UInt64 = 0
+    var editLastTapIndex: Int = -1
+    var editBufferBoard: KaruahChessEngineC = KaruahChessEngineC()
     
     @Published var showFileExporter: Bool = false
     @Published var exportFileDocument: ExportFileDocument? = nil
@@ -69,8 +72,8 @@ import AVFoundation
         // Direction indicator
         directionIndicatorVM = DirectionIndicatorViewModel()
         
-        // Piece Edit Tool
-        pieceEditToolVM = PieceEditToolViewModel()
+        // Piece Edit Selection
+        pieceEditSelectVM = PieceEditSelectViewModel()
         
         // Castling Rights
         castlingRightsVM = CastlingRightsViewModel()
@@ -171,25 +174,39 @@ import AVFoundation
             }
         }
         else if arrangeBoardEnabled {
-            if pieceEditToolVM.visible || castlingRightsVM.visible {
-                pieceEditToolVM.close()
-                castlingRightsVM.close()
-            }
-            else if pTile.tileVM.spin == Constants.WHITE_KING_SPIN || pTile.tileVM.spin == Constants.BLACK_KING_SPIN {
+            if pTile.tileVM.spin == Constants.WHITE_KING_SPIN || pTile.tileVM.spin == Constants.BLACK_KING_SPIN {
                 if let record = GameRecordDataService.instance.get(pId: BoardSquareDataService.instance.gameRecordCurrentValue) {
                     castlingRightsVM.show(pTile, record)
                 }
-                pieceEditToolVM.close()
             }
             else {
-                pieceEditToolVM.show(pTile: pTile)
-                castlingRightsVM.close()
+                let tileIndexBit: UInt64 = Constants.BITMASK >> pTile.index
+                if (editSelection & tileIndexBit) == 0 {
+                    editSelection = editSelection | tileIndexBit
+                    editLastTapIndex = pTile.index
+                }
+                else if pTile.tileVM.spin != 0 && editLastTapIndex == pTile.index && ((editSelection & tileIndexBit) > 0) {
+                    var found: Bool = false
+                    for tileIndex in 0...63 {
+                        if pTile.index != tileIndex && tilePanelVM.getTile(pIndex: tileIndex).tileVM.spin != 0 && tilePanelVM.getTile(pIndex: tileIndex).tileVM.spin == pTile.tileVM.spin && (editSelection & (Constants.BITMASK >> tileIndex) == 0) {
+                            editSelection = editSelection | (Constants.BITMASK >> tileIndex)
+                            found = true
+                        }
+                    }
+                
+                    if !found {
+                        editSelection = editSelection ^ tileIndexBit
+                    }
+                    
+                    editLastTapIndex = -1
+                }
+                else {
+                    editSelection = editSelection ^ tileIndexBit
+                    editLastTapIndex = -1
+                }
+                tilePanelVM.setHighLightEdit(pBits: editSelection)
             }
-        }
-        
-        if gameFinished {
-          //  showMessage(pTextFull: "Cannot move as game has finished.", pTextShort: "", pDurationms: Constants.TOAST_LONG)
-        }
+        } 
     }
     
     
@@ -198,12 +215,12 @@ import AVFoundation
         let arrangeBoardEnabled: Bool = ParameterDataService.instance.get(pParameterClass: ParamArrangeBoard.self).enabled
         if arrangeBoardEnabled {
             if let record: GameRecordArray = GameRecordDataService.instance.get(pId: BoardSquareDataService.instance.gameRecordCurrentValue) {
-                pieceEditToolVM.bufferBoard.setBoardArray(record.boardArray)
-                pieceEditToolVM.bufferBoard.setStateArray(record.stateArray)
-                let result : MoveResult = pieceEditToolVM.bufferBoard.arrange(Int32(pFromIndex), Int32(pToIndex)) as? MoveResult ?? MoveResult()
+                editBufferBoard.setBoardArray(record.boardArray)
+                editBufferBoard.setStateArray(record.stateArray)
+                let result : MoveResult = editBufferBoard.arrange(Int32(pFromIndex), Int32(pToIndex)) as? MoveResult ?? MoveResult()
                 if result.success {
-                    record.boardArray = pieceEditToolVM.bufferBoard.getBoardArraySafe()
-                    record.stateArray = pieceEditToolVM.bufferBoard.getStateArraySafe()
+                    record.boardArray = editBufferBoard.getBoardArraySafe()
+                    record.stateArray = editBufferBoard.getStateArraySafe()
                     BoardSquareDataService.instance.update(pTilePanelVM: tilePanelVM, pRecord: record)
                     _ = GameRecordDataService.instance.updateGameState(pGameRecordArray: record)
                 }
@@ -220,12 +237,12 @@ import AVFoundation
         let arrangeBoardEnabled: Bool = ParameterDataService.instance.get(pParameterClass: ParamArrangeBoard.self).enabled
         if arrangeBoardEnabled {
             if let record: GameRecordArray = GameRecordDataService.instance.get(pId: BoardSquareDataService.instance.gameRecordCurrentValue) {
-                pieceEditToolVM.bufferBoard.setBoardArray(record.boardArray)
-                pieceEditToolVM.bufferBoard.setStateArray(record.stateArray)
-                let result : MoveResult = pieceEditToolVM.bufferBoard.arrangeUpdate(Int8(pFen.asciiValue ?? 0), Int32(pToIndex)) as? MoveResult ?? MoveResult()
+                editBufferBoard.setBoardArray(record.boardArray)
+                editBufferBoard.setStateArray(record.stateArray)
+                let result : MoveResult = editBufferBoard.arrangeUpdate(Int8(pFen.asciiValue ?? 0), Int32(pToIndex)) as? MoveResult ?? MoveResult()
                 if result.success {
-                    record.boardArray = pieceEditToolVM.bufferBoard.getBoardArraySafe()
-                    record.stateArray = pieceEditToolVM.bufferBoard.getStateArraySafe()
+                    record.boardArray = editBufferBoard.getBoardArraySafe()
+                    record.stateArray = editBufferBoard.getStateArraySafe()
                     BoardSquareDataService.instance.update(pTilePanelVM: tilePanelVM, pRecord: record)
                     _ = GameRecordDataService.instance.updateGameState(pGameRecordArray: record)
                 }
@@ -336,7 +353,6 @@ import AVFoundation
             activityIndicatorVM.enabled = true
         
             let searchOptions = SearchOptions()
-            searchOptions.randomiseFirstMove = ParameterDataService.instance.get(pParameterClass: ParamRandomiseFirstMove.self).enabled
             
             let limitSkillLevel = Int(ParameterDataService.instance.get(pParameterClass: ParamLimitSkillLevel.self).level)
             let strengthSetting = Constants.strengthList[min(max(limitSkillLevel, 0), Constants.strengthList.endIndex - 1)]
@@ -357,43 +373,13 @@ import AVFoundation
                 searchOptions.limitThreads = ProcessInfo.processInfo.activeProcessorCount > 1 ? Int32(ProcessInfo.processInfo.activeProcessorCount - 1) : Int32(1)
             }
             
+            searchOptions.randomiseFirstMove = ParameterDataService.instance.get(pParameterClass: ParamRandomiseFirstMove.self).enabled
+            searchOptions.alternateMove = isRepeatMove()
+            
             let topMove = await srchActor.searchStart(pSearchOptions: searchOptions)
-        
-            if (!topMove.cancelled) && (topMove.error == 0) {
-                let boardBeforeMove = GameRecordDataService.instance.getCurrentGame()
-                let gameStatusBeforeMove = GameRecordDataService.instance.currentGame.getStateGameStatus()
-                let moveResult: MoveResult = GameRecordDataService.instance.currentGame.move(topMove.moveFromIndex, topMove.moveToIndex, topMove.promotionPieceType, true, true) as? MoveResult ?? MoveResult()
-                if moveResult.success {
-                    
-                    // Do animation
-                    let moveSpeedIndex: Int = ParameterDataService.instance.get(pParameterClass: ParamMoveSpeed.self).speed
-                    if Constants.moveSpeedSeconds.indices.contains(moveSpeedIndex) {
-                        let boardAfterMove = GameRecordDataService.instance.getCurrentGame()
-                        let moveAnimationList = boardAnimation.createAnimationList(pBoardRecA: boardBeforeMove, pBoardRecB: boardAfterMove)
-                        await startPieceAnimation(pLockPanel: true, pAnimationList: moveAnimationList, pDurationSeconds: Constants.moveSpeedSeconds[moveSpeedIndex])
-                    }
-                    
-                    BoardSquareDataService.instance.update(pTilePanelVM: self.tilePanelVM, pRecord: GameRecordDataService.instance.getCurrentGame())
-                       
-                    playPieceMoveSoundEffect()
-                    
-                    // Record the game state
-                    await recordCurrentGameState()
-                    
-                    // Update score if checkmate occurred
-                    if gameStatusBeforeMove == BoardStatusEnum.Ready.rawValue && GameRecordDataService.instance.currentGame.getStateGameStatus() == BoardStatusEnum.Checkmate.rawValue {
-                        await afterCheckMate(pBoard: GameRecordDataService.instance.currentGame)
-                    }
-                }
-            }
-            else {
-                if topMove.error > 0 {
-                    showMessage(pTextFull: topMove.errorMessage, pTextShort: "", pDurationms: Constants.TOAST_LONG)
-                }
-            }
+            _ = await doMoveOnBoard(topMove: topMove)
             
             self.activityIndicatorVM.enabled = false
-            
             computerMoveProcessing = false
             lockPanel = false
            
@@ -416,29 +402,38 @@ import AVFoundation
             activityIndicatorVM.enabled = true
             
             let searchOptions = SearchOptions()
-            searchOptions.randomiseFirstMove = false
-            
-        
             searchOptions.limitSkillLevel = Int32(Constants.strengthList[Constants.strengthList.endIndex - 1].skillLevel)
             searchOptions.limitDepth = Int32(Constants.strengthList[Constants.strengthList.endIndex - 1].depth)
             searchOptions.limitNodes = Int32(Constants.NODELIMIT_STANDARD)
             searchOptions.limitMoveDuration = Int32(Constants.strengthList[Constants.strengthList.endIndex - 1].timeLimitms)
             searchOptions.limitThreads = ProcessInfo.processInfo.activeProcessorCount > 1 ? Int32(ProcessInfo.processInfo.activeProcessorCount - 1) : Int32(1)
+            searchOptions.randomiseFirstMove = false
+            searchOptions.alternateMove = false
             
             let topMove = await hintBoardActor.searchStart(pSearchOptions: searchOptions)
         
+            var moveSuccess: Bool = false
             if (!topMove.cancelled) && (topMove.error == 0) {
-                let topMoveBits: UInt64 = (Constants.BITMASK >> topMove.moveFromIndex) | (Constants.BITMASK >> topMove.moveToIndex)
-                if let boardColourIndex = Constants.darkSquareColourArray.firstIndex(of: ParameterDataService.instance.get(pParameterClass: ParamColourDarkSquares.self).argb()) {
-                    let highlightColour = Constants.hintColourArray[boardColourIndex]
-                    tilePanelVM.setHighLightFullFadeOut(pBits: topMoveBits, pColour: highlightColour)
-                    
-                    // On mac only read the text so message doesn't cover the highlighted move
-                    #if os(macOS)
-                        readText(pText: "Best move hint")
-                    #else
-                        showMessage(pTextFull: "Best move hint", pTextShort: "", pDurationms: Constants.TOAST_SHORT)
-                    #endif
+                let hintMove = ParameterDataService.instance.get(pParameterClass: ParamHintMove.self).enabled
+                if hintMove {
+                    moveSuccess = await doMoveOnBoard(topMove: topMove)
+                }
+                else {
+                    let topMoveBits: UInt64 = (Constants.BITMASK >> topMove.moveFromIndex) | (Constants.BITMASK >> topMove.moveToIndex)
+                    if let boardColourIndex = Constants.darkSquareColourArray.firstIndex(of: ParameterDataService.instance.get(pParameterClass: ParamColourDarkSquares.self).argb()) {
+                        let highlightColour = Constants.hintColourArray[boardColourIndex]
+                        tilePanelVM.setHighLightFullFadeOut(pBits: topMoveBits, pColour: highlightColour)
+                        
+                        let fromCoord: String = Constants.BoardCoordinateDict[Int(topMove.moveFromIndex)] ?? ""
+                        let toCoord: String = Constants.BoardCoordinateDict[Int(topMove.moveToIndex)] ?? ""
+                        
+                        // On mac only read the text so message doesn't cover the highlighted move
+                        #if os(macOS)
+                        readText(pText: "Best move is \(fromCoord) to \(toCoord)")
+                        #else
+                        showMessage(pTextFull: "Best move is \(fromCoord) to \(toCoord)", pTextShort: "", pDurationms: Constants.TOAST_SHORT)
+                        #endif
+                    }
                 }
             }
             else {
@@ -450,6 +445,10 @@ import AVFoundation
             self.activityIndicatorVM.enabled = false
             computerHintProcessing = false
             lockPanel = false
+            
+            if moveSuccess {
+                await startComputerMoveTask()
+            }
            
         } else {
             if boardStatus != 0 {
@@ -464,6 +463,48 @@ import AVFoundation
             
         }
            
+    }
+    
+    /// Moves a piece on the board
+    private func doMoveOnBoard(topMove: SearchResult) async -> Bool {
+        var success: Bool = true
+        
+        if (!topMove.cancelled) && (topMove.error == 0) {
+            let boardBeforeMove = GameRecordDataService.instance.getCurrentGame()
+            let gameStatusBeforeMove = GameRecordDataService.instance.currentGame.getStateGameStatus()
+            let moveResult: MoveResult = GameRecordDataService.instance.currentGame.move(topMove.moveFromIndex, topMove.moveToIndex, topMove.promotionPieceType, true, true) as? MoveResult ?? MoveResult()
+            if moveResult.success {
+                
+                // Do animation
+                let moveSpeedIndex: Int = ParameterDataService.instance.get(pParameterClass: ParamMoveSpeed.self).speed
+                if Constants.moveSpeedSeconds.indices.contains(moveSpeedIndex) {
+                    let boardAfterMove = GameRecordDataService.instance.getCurrentGame()
+                    let moveAnimationList = boardAnimation.createAnimationList(pBoardRecA: boardBeforeMove, pBoardRecB: boardAfterMove)
+                    await startPieceAnimation(pLockPanel: true, pAnimationList: moveAnimationList, pDurationSeconds: Constants.moveSpeedSeconds[moveSpeedIndex])
+                }
+                
+                BoardSquareDataService.instance.update(pTilePanelVM: self.tilePanelVM, pRecord: GameRecordDataService.instance.getCurrentGame())
+                   
+                playPieceMoveSoundEffect()
+                
+                // Record the game state
+                await recordCurrentGameState()
+                
+                // Update score if checkmate occurred
+                if gameStatusBeforeMove == BoardStatusEnum.Ready.rawValue && GameRecordDataService.instance.currentGame.getStateGameStatus() == BoardStatusEnum.Checkmate.rawValue {
+                    await afterCheckMate(pBoard: GameRecordDataService.instance.currentGame)
+                }
+                
+                success = true
+            }
+        }
+        else {
+            if topMove.error > 0 {
+                showMessage(pTextFull: topMove.errorMessage, pTextShort: "", pDurationms: Constants.TOAST_LONG)
+            }
+        }
+        
+        return success
     }
     
     /// Get SSML for board square id
@@ -1030,6 +1071,90 @@ import AVFoundation
             await startHintTask(pRecord: record)
         }
     }
+    
+    /// Clears the edit mode square selection
+    func editClear () {
+        editSelection = 0
+        tilePanelVM.setHighLightEdit(pBits: editSelection)
+    }
+    
+    /// Updates selected board squares when in edit mode
+    func editToolUpdateSelectedTiles(pFen: Character) async {
+        var updated: Bool = false
+        var sqIndexBit: UInt64 = Constants.BITMASK
+        for sqIndex in 0...63 {
+            if sqIndexBit & editSelection != 0 {
+                arrangeUpdate(pFen: pFen, pToIndex: sqIndex)
+                updated = true
+            }
+            sqIndexBit = sqIndexBit >> 1
+        }
+        
+        editClear()
+        
+        if (!updated) {
+            showMessage(pTextFull: "Cannot update, no squares are selected", pTextShort: "", pDurationms: Constants.TOAST_SHORT)
+        }
+    }
+    
+    /// Remove selected pieces from the board
+    func editEraseSelection() async {
+        if (editSelection > 0) {
+            var sqIndexBit: UInt64 = Constants.BITMASK
+            for sqIndex in 0...63 {
+                if sqIndexBit & editSelection != 0 {
+                    arrangeUpdate(pFen: " ", pToIndex: sqIndex)
+                }
+                sqIndexBit = sqIndexBit >> 1
+            }
+            editClear()
+        }
+        else {
+            showMessage(pTextFull: "Cannot remove pieces, no squares selected", pTextShort: "", pDurationms: Constants.TOAST_SHORT)
+        }
+    }
+    
+    /**
+        * Detect a repeat move
+        */
+     private func isRepeatMove() -> Bool {
+        var repeated: Bool = false
+        let history: [Int: GameRecordArray] = GameRecordDataService.instance.gameHistory()
+
+         let endIndex: Int = history.count - 1
+           if (endIndex >= 4) {
+               if let currentBoardArray: [UInt64] = history[endIndex]?.boardArray {
+                   
+                   var historyIndex = endIndex - 2
+                   while historyIndex >= 0 {
+                       if let historyBoardArray: [UInt64] = history[historyIndex]?.boardArray {
+                           var differenceFound: Bool = false
+                           
+                           if currentBoardArray.count == historyBoardArray.count && historyBoardArray.count > 0 {
+                               // Compare all elements in both arrays and if one of them different,
+                               // then they are different boards
+                               for i in 0 ..< currentBoardArray.count {
+                                   if currentBoardArray[i] != historyBoardArray[i] {
+                                       differenceFound = true
+                                       break
+                                   }
+                               }
+                               
+                               // Break if difference not found as no need to search further
+                               if (!differenceFound) {
+                                   repeated = true
+                                   break
+                               }
+                           }
+                       }
+                       
+                       historyIndex -= 2
+                   }
+               }
+           }
+
+           return repeated
+       }
     
     
 }

@@ -21,12 +21,11 @@ import SwiftUI
 struct PawnPromotionView: View {
     @ObservedObject private var device : Device = Device.instance
     @ObservedObject var pawnPromotionVM : PawnPromotionViewModel
-    let maxButtonSize = 45
     
     var body: some View {
         
         ZStack(alignment: Alignment(horizontal: .center, vertical: .center)) {
-            let buttonSize = min(45, device.tileSize)
+            let buttonSize = max(40, device.tileSize * 1.1)
             if pawnPromotionVM.visible {
             
                 VStack(alignment: .leading) {
@@ -35,24 +34,6 @@ struct PawnPromotionView: View {
                     
                     HStack(alignment: .center) {
                        
-                        Button(action: {
-                            Task(priority: .userInitiated) {
-                                // Only positive values required here as pawn promotion value is positive
-                                pawnPromotionVM.promotionPiece = Constants.WHITE_QUEEN_SPIN
-                                await pawnPromotionVM.close()
-                            }
-                        }, label: {
-                            
-                            Image(pawnPromotionVM.colour == Constants.WHITEPIECE ? "WhiteQueen" : "BlackQueen").resizable()
-                                .frame(width:buttonSize, height: buttonSize)
-                                .padding(2)
-                                
-                        })
-                        .buttonStyle(PlainButtonStyle())
-                        .background(Color("ButtonBackground"))
-                        .cornerRadius(8)
-                        
-                        
                         Button(action: {
                             Task(priority: .userInitiated) {
                                 // Only positive values required here as pawn promotion value is positive
@@ -66,26 +47,7 @@ struct PawnPromotionView: View {
                                 .padding(2)
                                 
                         })
-                        .buttonStyle(PlainButtonStyle())
-                        .background(Color("ButtonBackground"))
-                        .cornerRadius(8)
-                        
-                        Button(action: {
-                            Task(priority: .userInitiated) {
-                                // Only positive values required here as pawn promotion value is positive
-                                pawnPromotionVM.promotionPiece = Constants.WHITE_BISHOP_SPIN
-                                await pawnPromotionVM.close()
-                            }
-                        }, label: {
-                            
-                            Image(pawnPromotionVM.colour == Constants.WHITEPIECE ? "WhiteBishop" : "BlackBishop").resizable()
-                                .frame(width:buttonSize, height: buttonSize)
-                                .padding(2)
-                                
-                        })
-                        .buttonStyle(PlainButtonStyle())
-                        .background(Color("ButtonBackground"))
-                        .cornerRadius(8)
+                        .buttonStyle(PieceSelectButtonStyle())
                         
                         Button(action: {
                             Task(priority: .userInitiated) {
@@ -100,17 +62,45 @@ struct PawnPromotionView: View {
                                 .padding(2)
                                 
                         })
-                        .buttonStyle(PlainButtonStyle())
-                        .background(Color("ButtonBackground"))
-                        .cornerRadius(8)
+                        .buttonStyle(PieceSelectButtonStyle())
+                        
+                        Button(action: {
+                            Task(priority: .userInitiated) {
+                                // Only positive values required here as pawn promotion value is positive
+                                pawnPromotionVM.promotionPiece = Constants.WHITE_BISHOP_SPIN
+                                await pawnPromotionVM.close()
+                            }
+                        }, label: {
+                            
+                            Image(pawnPromotionVM.colour == Constants.WHITEPIECE ? "WhiteBishop" : "BlackBishop").resizable()
+                                .frame(width:buttonSize, height: buttonSize)
+                                .padding(2)
+                                
+                        })
+                        .buttonStyle(PieceSelectButtonStyle())
+                        
+                        Button(action: {
+                            Task(priority: .userInitiated) {
+                                // Only positive values required here as pawn promotion value is positive
+                                pawnPromotionVM.promotionPiece = Constants.WHITE_QUEEN_SPIN
+                                await pawnPromotionVM.close()
+                            }
+                        }, label: {
+                            
+                            Image(pawnPromotionVM.colour == Constants.WHITEPIECE ? "WhiteQueen" : "BlackQueen").resizable()
+                                .frame(width:buttonSize, height: buttonSize)
+                                .padding(2)
+                                
+                        })
+                        .buttonStyle(PieceSelectButtonStyle())
+                        
                         
                     }
                     
                     
                 }
                 .padding(10)
-                .background(Color("FormBackground"))
-                .padding(10)
+                .background(RoundedRectangle(cornerRadius: 10).fill(Color("FormBackground")))
                 .clipped()
                 .shadow(radius: 6)
                 .shadow(radius: 10)

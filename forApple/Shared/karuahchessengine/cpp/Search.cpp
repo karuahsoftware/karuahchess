@@ -26,162 +26,194 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #include "sf_thread.h"
 #include "sf_uci.h"
 #include "sf_types.h"
+#include "sf_search.h"
 #include <chrono>
 #include <time.h>
 #include <random>
 
 
+namespace KaruahChess {
 
-namespace Search {
+    namespace Search {
 
-    using namespace helper;
+        using namespace helper;
 
-    bool _cancel = false;
-       
-
-    /// <summary>
-    /// Sets an option in stock fish if the option is different from the current option
-    /// </summary>
-    void setOption(std::string name, int value) {
-        
-        if (Engine::mainUCI->options.count(name)) {
-            double currentValue = Engine::mainUCI->options[name];
-            double newValue = (double)value;
-            
-            if (currentValue != newValue) {
-                Engine::mainUCI->options[name] = std::to_string(value);
-            }
-        }
-
-    }
+        bool _cancel = false;
 
 
-    /// <summary>
-    /// Gets top move for a given board
-    /// </summary>
-    void GetBestMove(BitBoard& pBoard, SearchOptions pSearchOptions, SearchTreeNode& pBestMove, SearchStatistics& pStatistics)
-    {
-        
-        _cancel = false;
-        
-        pStatistics.StartTime = std::chrono::steady_clock::now();
+        /// <summary>
+        /// Sets an option in stock fish if the option is different from the current option
+        /// </summary>
+        void setOption(std::string name, int value) {
 
-        // Don't perform a search if the engine can't cope with the board configuration
-        int searchError = pBoard.VerifyBoardConfiguration();
-        
-        // Check for engine errors.
-        if (Engine::engineErr.errorList.size() > 0) {
-            searchError = Engine::engineErr.errorList[0]; // Get the first error.
-        }
-        
-        if (searchError == 0) {
-          
-            setOption("Threads", pSearchOptions.limitThreads);
-                     
-            // Set options
-            if (pSearchOptions.limitSkillLevel >= -10 && pSearchOptions.limitSkillLevel < 20) {
-                // Set engine strength             
-                setOption("Skill Level", pSearchOptions.limitSkillLevel);
-            }
-            else {
-                // Set engine to max
-                setOption("Skill Level", 20);
-            }
+            if (Engine::mainUCI->engine_options().count(name)) {
+                double currentValue = Engine::mainUCI->engine_options()[name];
+                double newValue = (double)value;
 
-            // Get the board position
-            Stockfish::Position pos;
-            Stockfish::StateListPtr states = Stockfish::StateListPtr(new std::deque<Stockfish::StateInfo>(1));
-            std::string startFEN = pBoard.GetFullFEN();
-
-            // Set the position            
-            pos.set(startFEN, false, &states->back());
-
-            // Do the search
-            Stockfish::Search::LimitsType limits;
-            limits.startTime = Stockfish::now();
-          
-            // Set the limits from the GUI
-            limits.depth = pSearchOptions.limitDepth;
-            limits.nodes = pSearchOptions.limitNodes;
-            limits.movetime = pSearchOptions.limitMoveDuration;
-                        
-            
-            Engine::mainUCI->threads.start_thinking(Engine::mainUCI->options, pos, states, limits, false);
-            Engine::mainUCI->threads.main_thread()->wait_for_search_finished();
-            Stockfish::Search::RootMoves rootMoves = Engine::mainUCI->threads.main_thread()->worker.get()->getRootMoves();
-           
-            int rootIndex = 0;
-            if (pSearchOptions.randomiseFirstMove && pBoard.StateFullMoveCount < 1 && rootMoves.size() > 4) {
-                auto rd = std::random_device{};
-                std::mt19937 gen(rd());
-                std::uniform_int_distribution<> distrib(0, 4);
-                rootIndex = distrib(gen);
-            }
-
-            Stockfish::Move m = rootMoves[rootIndex].pv[0];
-
-            // Mirror the result as the karuah chess board is a mirror of
-            // the sf board
-            const int fromIndex = helper::mirrorRank(m.from_sq());
-            const int toIndex = helper::mirrorRank(m.to_sq());
-
-            if (m == Stockfish::Move::none() || m == Stockfish::Move::null()) {
-                // No move found
-                pBestMove.moveFromIndex = -1;
-                pBestMove.moveToIndex = -1;
-            }
-            else if (m.type_of() == Stockfish::CASTLING) {
-                pBestMove.moveFromIndex = fromIndex;
-
-                // Set up the castling move
-                if (fromIndex == 4) {
-                    pBestMove.moveToIndex = toIndex > fromIndex ? 6 : 2;
-                }
-                else if (fromIndex == 60) {
-                    pBestMove.moveToIndex = toIndex > fromIndex ? 62 : 58;
+                if (currentValue != newValue) {
+                    Engine::mainUCI->engine_options()[name] = std::to_string(value);
                 }
             }
-            else if (m.type_of() == Stockfish::PROMOTION) {
-                // Set the promotion piece
-                pBestMove.promotionPieceType = m.promotion_type();
-                pBestMove.moveFromIndex = fromIndex;
-                pBestMove.moveToIndex = toIndex;
+
+        }
+
+
+        /// <summary>
+        /// Gets top move for a given board
+        /// </summary>
+        void GetBestMove(BitBoard& pBoard, SearchOptions pSearchOptions, SearchTreeNode& pBestMove, SearchStatistics& pStatistics)
+        {
+
+            _cancel = false;
+
+            pStatistics.StartTime = std::chrono::steady_clock::now();
+
+            // Don't perform a search if the engine can't cope with the board configuration
+            int searchError = pBoard.VerifyBoardConfiguration();
+
+            // Check for engine errors.
+            if (Engine::engineErr.errorList.size() > 0) {
+                searchError = Engine::engineErr.errorList[0]; // Get the first error.
+            }
+
+            if (searchError == 0) {
+
+                // Clear the cache if starting a new game
+                if (pBoard.StateFullMoveCount == 0) {
+                    ClearCache();
+                }
+
+                // Thread limit
+                setOption("Threads", pSearchOptions.limitThreads);
+
+                // Set options
+                if (pSearchOptions.limitSkillLevel >= -10 && pSearchOptions.limitSkillLevel < 20) {
+                    // Set engine strength             
+                    setOption("Skill Level", pSearchOptions.limitSkillLevel);
+                }
+                else {
+                    // Set engine to max
+                    setOption("Skill Level", 20);
+                }
+                                
+                
+                if (pSearchOptions.randomiseFirstMove && pBoard.StateFullMoveCount < 1) {
+                    // For the first move look at 4 different possibilities for openings
+                    // to make the game more interesting
+                    setOption("MultiPV", 5);
+                }
+                else if (pSearchOptions.alternateMove) {
+                    // Attempt to avoid repetitions
+                    setOption("MultiPV", 2);
+                }
+                else {
+                    setOption("MultiPV", 1);
+                }
+
+                // Get the board position            
+                std::string fullFEN = pBoard.GetFullFEN();
+
+                // Set the position            
+                std::vector<std::string> moves;
+                Engine::mainUCI->engine.set_position(fullFEN, moves);
+
+                // Do the search
+                Stockfish::Search::LimitsType limits;
+                limits.startTime = Stockfish::now();
+
+                // Set the limits from the GUI
+                limits.depth = pSearchOptions.limitDepth;
+                limits.nodes = pSearchOptions.limitNodes;
+                limits.movetime = pSearchOptions.limitMoveDuration;
+                
+                
+                std::vector<Stockfish::Search::RootMove> rootmoves;
+                Engine::mainUCI->engine.set_on_bestmove([&rootmoves](const auto& bm, const auto& p, const auto& rm) {
+                    rootmoves = rm;
+                    });
+                Engine::mainUCI->engine.go(limits);
+                Engine::mainUCI->engine.wait_for_search_finished();
+               
+                int rootIndex = 0;
+                if (pSearchOptions.randomiseFirstMove && pBoard.StateFullMoveCount < 1 && rootmoves.size() >= 5) {
+                    // Randomiser for first move
+                    auto rd = std::random_device{};
+                    std::mt19937 gen(rd());
+                    std::uniform_int_distribution<> distrib(0, 4);
+                    rootIndex = distrib(gen);
+                }
+                else if (pSearchOptions.alternateMove && rootmoves.size() >= 2) {
+                    // Alternate move selector, attempt to avoid repetition
+                    rootIndex = 1;
+                }
+
+                Stockfish::Move m = rootmoves[rootIndex].pv[0];
+                                
+                // Mirror the result as the karuah chess board is a mirror of
+                // the sf board
+                const int fromIndex = helper::mirrorRank(m.from_sq());
+                const int toIndex = helper::mirrorRank(m.to_sq());
+
+
+                if (m == Stockfish::Move::none() || m == Stockfish::Move::null()) {
+                    // No move found
+                    pBestMove.moveFromIndex = -1;
+                    pBestMove.moveToIndex = -1;
+                }
+                else if (m.type_of() == Stockfish::CASTLING) {
+                    pBestMove.moveFromIndex = fromIndex;
+
+                    // Set up the castling move
+                    if (fromIndex == 4) {
+                        pBestMove.moveToIndex = toIndex > fromIndex ? 6 : 2;
+                    }
+                    else if (fromIndex == 60) {
+                        pBestMove.moveToIndex = toIndex > fromIndex ? 62 : 58;
+                    }
+                }
+                else if (m.type_of() == Stockfish::PROMOTION) {
+                    // Set the promotion piece
+                    pBestMove.promotionPieceType = m.promotion_type();
+                    pBestMove.moveFromIndex = fromIndex;
+                    pBestMove.moveToIndex = toIndex;
+                }
+                else {
+                    pBestMove.moveFromIndex = fromIndex;
+                    pBestMove.moveToIndex = toIndex;
+                }
+
+                 
             }
             else {
-                pBestMove.moveFromIndex = fromIndex;
-                pBestMove.moveToIndex = toIndex;
+                pBestMove.error = searchError;
             }
+
+            pStatistics.EndTime = std::chrono::steady_clock::now();
+            pStatistics.DurationMS = std::chrono::duration_cast<std::chrono::milliseconds>(pStatistics.EndTime - pStatistics.StartTime);
+            pBestMove.cancelled = _cancel;
+
+
         }
-        else {
-            pBestMove.error = searchError;
+
+
+        /// <summary>
+        /// Reset
+        /// </summary>
+        /// <returns></returns>
+        void Cancel() {
+            _cancel = true;
+            Engine::mainUCI->engine.stop();
         }
 
-        pStatistics.EndTime = std::chrono::steady_clock::now();
-        pStatistics.DurationMS = std::chrono::duration_cast<std::chrono::milliseconds>(pStatistics.EndTime - pStatistics.StartTime);
-        pBestMove.cancelled = _cancel;
+        /// <summary>
+        /// Clears the cache
+        /// </summary>
+        /// <returns></returns>
+        void ClearCache()
+        {
+            Engine::mainUCI->engine.search_clear();
+        }
 
-
-    }
-
-
-    /// <summary>
-    /// Reset
-    /// </summary>
-    /// <returns></returns>
-    void Cancel() {
-        _cancel = true;        
-        Engine::mainUCI->threads.stop = true;
-    }
-
-    /// <summary>
-    /// Clears the cache
-    /// </summary>
-    /// <returns></returns>
-    void ClearCache()
-    {
-        Engine::mainUCI->search_clear();
     }
 
 }
-
-

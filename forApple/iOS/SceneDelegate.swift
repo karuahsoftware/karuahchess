@@ -135,7 +135,6 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
                 let navBarHeight = navController.navigationBar.frame.height
                 Device.instance.tileSize = SceneDelegate.getTileSize(pSize: size, pStatusBarHeight: statusBarHeight, pNavBarHeight: navBarHeight, pSafeArea: safearea)
                 Device.instance.isLandScape = size.width > size.height
-                BoardViewModel.instance.pieceEditToolVM.close() // Close the edit tool if it is open as it is not positioned correctly when window resizes
             }
         }
     }

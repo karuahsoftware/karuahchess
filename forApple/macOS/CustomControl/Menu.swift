@@ -19,7 +19,8 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 import SwiftUI
 
 class Menu : NSObject {
-    @ObservedObject var menuSettingsVM : MenuSettingsViewModel = MenuSettingsViewModel()
+    @ObservedObject private var menuSettingsVM : MenuSettingsViewModel = MenuSettingsViewModel.instance
+    
     
     @objc func newGame() {
         let action : ()->Void = {
@@ -54,9 +55,8 @@ class Menu : NSObject {
     }
     
     
-    @objc func hint(_ sender: NSMenuItem) {
-        menuSettingsVM.hintEnabled.toggle()
-        sender.state = menuSettingsVM.hintEnabled ? .on : .off
+    @objc func hintSettings() {
+        MenuSheet.shared.active = .hintSettings
     }
      
     
@@ -183,16 +183,6 @@ class Menu : NSObject {
             
         }
         
-        // Hint
-        do {
-            let menuItem = NSMenuItem(title: "Hint Button", action: #selector(self.hint), keyEquivalent: "")
-            menuItem.image = NSImage(systemSymbolName: "lightbulb", accessibilityDescription: "Hint")
-            menuItem.target = self
-            menuItem.state = menuSettingsVM.hintEnabled ? .on : .off
-            appMenu.addItem(menuItem)
-            
-        }
-        
         appMenu.addItem(NSMenuItem.separator())
         
         // Board settings
@@ -209,6 +199,15 @@ class Menu : NSObject {
             menuItem.image = NSImage(systemSymbolName: "person", accessibilityDescription: "Piece")
             menuItem.target = self
             appMenu.addItem(menuItem)
+        }
+        
+        // Hint
+        do {
+            let menuItem = NSMenuItem(title: "Hint", action: #selector(self.hintSettings), keyEquivalent: "")
+            menuItem.image = NSImage(systemSymbolName: "lightbulb", accessibilityDescription: "Hint")
+            menuItem.target = self
+            appMenu.addItem(menuItem)
+            
         }
         
         // Sound settings

@@ -34,11 +34,18 @@ struct TileView: View {
         
             ZStack {
                 
+                // Edit highlight
+                if tileVM.highlightEdit {
+                   Rectangle()
+                    .fill(Color("Magenta"))
+                    .frame(width: device.tileSize - 1, height: device.tileSize - 1)
+                }
+                
                 // Full highlight magenta
                 if tileVM.highlightFull {
                    Rectangle()
-                        .fill(tileVM.hightlightFullColor)
-                    .frame(width: device.tileSize, height: device.tileSize)
+                    .fill(tileVM.hightlightFullColor)
+                    .frame(width: device.tileSize - 1, height: device.tileSize - 1)
                 }
                 
                 
@@ -46,7 +53,7 @@ struct TileView: View {
                 if tileVM.highlightFullFadeOut && fadeOutModifier.animatableData < 1 {
                    Rectangle()
                     .fill(tileVM.hightlightFullColor)
-                    .frame(width: device.tileSize, height: device.tileSize)
+                    .frame(width: device.tileSize - 1, height: device.tileSize - 1)
                     .modifier(fadeOutModifier)
                     .onAppear() {
                         withAnimation(.easeIn(duration: 5)) {

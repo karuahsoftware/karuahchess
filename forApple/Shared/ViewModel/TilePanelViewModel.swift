@@ -140,6 +140,22 @@ import SwiftUI
         }
     }
     
+    /// Highlights squares in edit mode as per pBits
+    /// - Parameter pBits: Bits to highlight
+    func setHighLightEdit(pBits: UInt64) {
+        if Device.instance.tileSize > 0 {
+            
+            for i in 0...63 {
+                if ((Constants.BITMASK >> i) & pBits) > 0 {
+                    tileList[i].tileVM.highlightEdit = true
+                }
+                else {
+                    tileList[i].tileVM.highlightEdit = false
+                }
+            }
+        }
+    }
+    
     /// Set check indicator
     /// - Parameter pKingIndex: The index of the king
     func setCheckIndicator(pKingIndex: Int) {

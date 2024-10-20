@@ -26,6 +26,7 @@ import SwiftUI
     @Published var highlightFull = false
     @Published var highlightFullFadeOut = false
     @Published var hightlightFullColor = Color("Magenta")
+    @Published var highlightEdit = false
     @Published var checkIndicator = false
     @Published var boardFrame = CGRect()
     @Published var mainFrame = CGRect()
@@ -50,6 +51,10 @@ import SwiftUI
     func setHighLightFullFadeOut(pActive: Bool, pColour: Color) {
         highlightFullFadeOut = pActive
         hightlightFullColor = pColour
+    }
+    
+    func setHighLightEdit(pActive: Bool) {
+        highlightEdit = pActive
     }
     
     func setCheckIndicator(pActive: Bool) {

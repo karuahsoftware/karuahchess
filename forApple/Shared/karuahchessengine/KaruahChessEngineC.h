@@ -21,9 +21,8 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 #ifdef __cplusplus
 #include "cpp/bitboard.h"
+using namespace KaruahChess;
 #endif
-
-
 
 @interface KaruahChessEngineC : NSObject
 #ifdef __cplusplus

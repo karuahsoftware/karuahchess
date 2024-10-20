@@ -73,6 +73,10 @@ class ParameterDataService : ParameterDataServiceProtocol {
                             if let obj = try? JSONDecoder().decode(ParamHint.self, from: data) {
                                 parameters[name] = obj
                             }
+                        case String(describing: ParamHintMove.self):
+                            if let obj = try? JSONDecoder().decode(ParamHintMove.self, from: data) {
+                                parameters[name] = obj
+                            }
                         case String(describing: ParamLevelAuto.self):
                             if let obj = try? JSONDecoder().decode(ParamLevelAuto.self, from: data) {
                                 parameters[name] = obj
