@@ -111,6 +111,9 @@ class SoundSettings(pActivityID: Int) : DialogFragment() {
     }
 
     companion object {
+
+        // A constructor containing pActivityID is in the ActivityFragmentFactory
+
         fun newInstance(pActivityID: Int): SoundSettings {
             val frag = SoundSettings(pActivityID)
             val args = Bundle()

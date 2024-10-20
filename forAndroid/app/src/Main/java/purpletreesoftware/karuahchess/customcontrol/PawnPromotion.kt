@@ -20,20 +20,18 @@ package purpletreesoftware.karuahchess.customcontrol
 
 import android.os.Bundle
 import android.view.*
-import android.widget.ImageButton
-import android.widget.ImageView
 import android.widget.LinearLayout
 import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.ViewModelProvider
-import purpletreesoftware.karuahchess.R
 import purpletreesoftware.karuahchess.common.Constants
 import purpletreesoftware.karuahchess.databinding.FragmentPawnpromotionBinding
 import purpletreesoftware.karuahchess.viewmodel.PawnPromotionViewModel
 
 @ExperimentalUnsignedTypes
 class PawnPromotion : DialogFragment() {
+    private var _binding: FragmentPawnpromotionBinding? = null
+    private val binding get() = _binding!!
     private var _pawnPromotionListener: OnPawnPromotionInteractionListener? = null
-    private lateinit var fragmentBinding: FragmentPawnpromotionBinding
     private lateinit var pawnPromotionVM: PawnPromotionViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -44,7 +42,9 @@ class PawnPromotion : DialogFragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         // Inflate the layout for this fragment
-        fragmentBinding = FragmentPawnpromotionBinding.inflate(inflater, container, false)
+        // Inflate the layout for this fragment
+        val fragmentBinding = FragmentPawnpromotionBinding.inflate(inflater, container, false)
+        _binding = fragmentBinding
         return fragmentBinding.root
     }
 
@@ -56,60 +56,70 @@ class PawnPromotion : DialogFragment() {
         val buttonSize = pawnPromotionVM.buttonSize.value
 
         if (promotionColour != null && buttonSize != null) {
-            createPieceButtons(promotionColour, buttonSize)
+            setPieceButtons(buttonSize)
+            if (promotionColour == Constants.BLACKPIECE) {
+                binding.blackPieceLinearLayout.visibility = View.VISIBLE
+                binding.whitePieceLinearLayout.visibility = View.GONE
+            }
+            else {
+                binding.blackPieceLinearLayout.visibility = View.GONE
+                binding.whitePieceLinearLayout.visibility = View.VISIBLE
+            }
         }
     }
 
     /**
      * Create piece buttons
      */
-    private fun createPieceButtons(pColour : Int, pButtonSize: Float) {
-        val promotionList : List<Char>
-        val promotionLayout = fragmentBinding.pawnPromotionLinearLayout
-        promotionLayout.removeAllViews()
+    private fun setPieceButtons(pButtonSize: Float) {
 
-        if (pColour == Constants.BLACKPIECE) {
-            promotionList = listOf('r', 'n', 'b', 'q')
-        }
-        else {
-            promotionList = listOf('R', 'N', 'B', 'Q')
-        }
-
+        // Set Button size
         val params = LinearLayout.LayoutParams(pButtonSize.toInt(), pButtonSize.toInt())
+        params.setMargins(3,3,3,3)
 
-        for (fen in promotionList)
-        {
-            val pieceBtn = ImageButton(this.context, null, R.style.ButtonCustomStyle)
-            pieceBtn.layoutParams = params
-            pieceBtn.setImageResource(getImage(fen))
-            pieceBtn.adjustViewBounds = false
-            pieceBtn.scaleType = ImageView.ScaleType.FIT_CENTER
-            pieceBtn.setPadding(0,0,0,0)
-            pieceBtn.tag = fen
-            pieceBtn.setOnClickListener {
-                _pawnPromotionListener?.onPawnPromotionClick(fen,this)
-            }
-            promotionLayout.addView(pieceBtn)
+        binding.blackRookImageButton.layoutParams = params
+        binding.blackKnightImageButton.layoutParams = params
+        binding.blackBishopImageButton.layoutParams = params
+        binding.blackQueenImageButton.layoutParams = params
+
+        binding.whiteRookImageButton.layoutParams = params
+        binding.whiteKnightImageButton.layoutParams = params
+        binding.whiteBishopImageButton.layoutParams = params
+        binding.whiteQueenImageButton.layoutParams = params
+
+        // Set button listeners
+        // Black Pieces
+        binding.blackRookImageButton.setOnClickListener{
+            _pawnPromotionListener?.onPawnPromotionClick('r',this)
         }
 
-    }
+        binding.blackKnightImageButton.setOnClickListener{
+            _pawnPromotionListener?.onPawnPromotionClick('n',this)
+        }
 
+        binding.blackBishopImageButton.setOnClickListener{
+            _pawnPromotionListener?.onPawnPromotionClick('b',this)
+        }
 
-    /**
-     * Gets tile image from [pSpin]
-     */
-    private fun getImage(pFen: Char): Int {
+        binding.blackQueenImageButton.setOnClickListener{
+            _pawnPromotionListener?.onPawnPromotionClick('q',this)
+        }
 
-        return when (pFen) {
-            'N' -> R.drawable.whiteknight
-            'B' -> R.drawable.whitebishop
-            'R' -> R.drawable.whiterook
-            'Q' -> R.drawable.whitequeen
-            'n' -> R.drawable.blackknight
-            'b' -> R.drawable.blackbishop
-            'r' -> R.drawable.blackrook
-            'q' -> R.drawable.blackqueen
-            else -> 0
+        // White Pieces
+        binding.whiteRookImageButton.setOnClickListener{
+            _pawnPromotionListener?.onPawnPromotionClick('R',this)
+        }
+
+        binding.whiteKnightImageButton.setOnClickListener{
+            _pawnPromotionListener?.onPawnPromotionClick('N',this)
+        }
+
+        binding.whiteBishopImageButton.setOnClickListener{
+            _pawnPromotionListener?.onPawnPromotionClick('B',this)
+        }
+
+        binding.whiteQueenImageButton.setOnClickListener{
+            _pawnPromotionListener?.onPawnPromotionClick('Q',this)
         }
 
     }

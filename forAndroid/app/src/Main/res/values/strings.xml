@@ -4,7 +4,7 @@
     <string name="about_info">Karuah Chess is a chess playing program.\nCopyright © 2020 Karuah Software\n\nFind Karuah Chess on;</string>
     <string name="social_f_url">https://www.facebook.com/KaruahChess</string>
     <string name="social_t_url">https://x.com/karuahsoftware</string>
-    <string name="other_infoA">Karuah Chess uses StockFish 16.1 with neural network version nn-b1a57edbea57.nnue (Big) and nn-baff1ede1f90.nnue (Small).\n</string>
+    <string name="other_infoA">Karuah Chess uses StockFish 17 with neural network version nn-1111cefa1111.nnue (Big) and nn-37f18f62d772.nnue (Small).\n</string>
     <string name="other_infoB">You can find out more about StockFish at https://stockfishchess.org.\n</string>
     <string name="other_infoC">The full source code for Karuah Chess is available at <a href="https://github.com/karuahsoftware/karuahchess">https://github.com/karuahsoftware/karuahchess </a>.\n</string>
     <string name="license_title"><b>Karuah Chess is distributed under the GNU General Public License Version 3 (GPLv3).</b></string>

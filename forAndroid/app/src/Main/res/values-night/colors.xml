@@ -21,4 +21,5 @@
     <color name="colorMango">#F4BB44</color>
     <color name="colorEmeraldGreen">#03A65A</color>
     <color name="colorIcon">#CECECE</color>
+    <color name="colorEditFab">#E91E63</color>
 </resources>

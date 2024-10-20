@@ -24,7 +24,9 @@
 #include <chrono>
 #include <cstddef>
 #include <cstdint>
+#include <cstdio>
 #include <iosfwd>
+#include <optional>
 #include <string>
 #include <vector>
 
@@ -34,16 +36,13 @@
 namespace Stockfish {
 
 std::string engine_info(bool to_uci = false);
+
 // Preloads the given address in L1/L2 cache. This is a non-blocking
 // function that doesn't stall the CPU waiting for data to be loaded from memory,
 // which can be quite slow.
-void prefetch(void* addr);
-void* std_aligned_alloc(size_t alignment, size_t size);
-void  std_aligned_free(void* ptr);
-// memory aligned by page size, min alignment: 4096 bytes
-void* aligned_large_pages_alloc(size_t size);
-// nop if mem == nullptr
-void aligned_large_pages_free(void* mem);
+void prefetch(const void* addr);
+
+size_t str_to_size_t(const std::string& s);
 
 using TimePoint = std::chrono::milliseconds::rep;  // A value in milliseconds
 static_assert(sizeof(TimePoint) == sizeof(int64_t), "TimePoint should be 64 bits");
@@ -53,24 +52,32 @@ inline TimePoint now() {
       .count();
 }
 
+inline std::vector<std::string> split(const std::string& s, const std::string& delimiter) {
+    std::vector<std::string> res;
+
+    if (s.empty())
+        return res;
+
+    size_t begin = 0;
+    for (;;)
+    {
+        const size_t end = s.find(delimiter, begin);
+        if (end == std::string::npos)
+            break;
+
+        res.emplace_back(s.substr(begin, end - begin));
+        begin = end + delimiter.size();
+    }
+
+    res.emplace_back(s.substr(begin));
+
+    return res;
+}
 
 enum SyncCout {
     IO_LOCK,
     IO_UNLOCK
 };
-
-// Get the first aligned element of an array.
-// ptr must point to an array of size at least `sizeof(T) * N + alignment` bytes,
-// where N is the number of elements in the array.
-template<uintptr_t Alignment, typename T>
-T* align_ptr_up(T* ptr) {
-    static_assert(alignof(T) < Alignment);
-
-    const uintptr_t ptrint = reinterpret_cast<uintptr_t>(reinterpret_cast<char*>(ptr));
-    return reinterpret_cast<T*>(
-      reinterpret_cast<char*>((ptrint + (Alignment - 1)) / Alignment * Alignment));
-}
-
 
 // True if and only if the binary is compiled on a little-endian machine
 static inline const union {
@@ -156,17 +163,16 @@ inline uint64_t mul_hi64(uint64_t a, uint64_t b) {
 
 namespace Utility {
 
-    template<typename T, typename Predicate>
-    void move_to_front(std::vector<T>& vec, Predicate pred) {
-        auto it = std::find_if(vec.begin(), vec.end(), pred);
+template<typename T, typename Predicate>
+void move_to_front(std::vector<T>& vec, Predicate pred) {
+    auto it = std::find_if(vec.begin(), vec.end(), pred);
 
-        if (it != vec.end())
-        {
-            std::rotate(vec.begin(), it, it + 1);
-        }
+    if (it != vec.end())
+    {
+        std::rotate(vec.begin(), it, it + 1);
     }
 }
-
+}
 
 }  // namespace Stockfish
 

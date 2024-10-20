@@ -22,17 +22,17 @@ import android.content.ClipData
 import android.content.ClipDescription
 import android.content.Context
 import android.graphics.Color
-import android.util.AttributeSet
-import android.view.View
-import androidx.constraintlayout.widget.ConstraintLayout
-import androidx.constraintlayout.widget.ConstraintSet
-import androidx.core.content.ContextCompat
-import android.view.animation.AnimationUtils
-import android.graphics.drawable.GradientDrawable
 import android.graphics.drawable.Drawable
+import android.graphics.drawable.GradientDrawable
+import android.util.AttributeSet
 import android.view.DragEvent
 import android.view.HapticFeedbackConstants
 import android.view.LayoutInflater
+import android.view.View
+import android.view.animation.AnimationUtils
+import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.constraintlayout.widget.ConstraintSet
+import androidx.core.content.ContextCompat
 import purpletreesoftware.karuahchess.R
 import purpletreesoftware.karuahchess.R.color
 import purpletreesoftware.karuahchess.common.Constants
@@ -204,7 +204,7 @@ class TilePanel: ConstraintLayout {
             }
             else {
                 for (tile in _tileList) {
-                     tile.piece.clearAnimation()
+                    tile.piece.clearAnimation()
                 }
                 _shakeEnabled = false
             }
@@ -305,6 +305,26 @@ class TilePanel: ConstraintLayout {
                     _tileList[i].highlight.setImageDrawable(square)
                 } else {
                     _tileList[i].highlight.setImageResource(0)
+                }
+                sqId = sqId shr 1
+            }
+        }
+    }
+
+    /**
+     * Show drag destination square
+     */
+    fun setHighlightEdit(pBits: ULong) {
+        if (tileSize > 0) {
+            val size = (tileSize - 2)
+            var sqId: ULong = 0b10000000_00000000_00000000_00000000_00000000_00000000_00000000_00000000uL
+
+            for (i in 0..63) {
+                if ((sqId and pBits) != 0uL) {
+                    val square: Drawable = getRectangle(size, color.colorMagenta)
+                    _tileList[i].highlightEdit.setImageDrawable(square)
+                } else {
+                    _tileList[i].highlightEdit.setImageResource(0)
                 }
                 sqId = sqId shr 1
             }
@@ -565,5 +585,5 @@ class TilePanel: ConstraintLayout {
         fun onTileMoveAction(pFromTile: Tile?,pToTile: Tile?)
     }
 
-
 }
+

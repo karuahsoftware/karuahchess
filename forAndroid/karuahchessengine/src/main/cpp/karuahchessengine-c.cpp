@@ -27,6 +27,8 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #include "sf_evaluate.h"
 #include <unordered_map>
 
+using namespace KaruahChess;
+
 std::unordered_map<int, BitBoard*> MainBoardMap;
 std::unordered_map<int, BitBoard*> SearchBoardMap;
 
@@ -42,15 +44,11 @@ Java_purpletreesoftware_karuahchess_engine_KaruahChessEngineC_initialise (
         jobject pAssetMgr,
         jint pId)
 {
-
-    // Initialise the main components of the engine without the NNUE
-    Engine::init();
-
     // Initialise with the NNUE file, if not already previously loaded
     if (!(Engine::nnueLoadedBig && Engine::nnueLoadedSmall))
     {
-        const char* nnueFileNameBig = "nn-b1a57edbea57.nnue";
-        const char* nnueFileNameSmall = "nn-baff1ede1f90.nnue";
+        const char* nnueFileNameBig = "nn-1111cefa1111.nnue";
+        const char* nnueFileNameSmall = "nn-37f18f62d772.nnue";
 
         AAssetManager *mgr = AAssetManager_fromJava(pEnv, pAssetMgr);
         AAsset *nnueAssetBig = AAssetManager_open(mgr,nnueFileNameBig, AASSET_MODE_BUFFER);
@@ -885,9 +883,6 @@ Java_purpletreesoftware_karuahchess_engine_KaruahChessEngineC_searchStart (
 
         jclass mSearchOptions = pEnv->GetObjectClass(pSearchOptions);
 
-        jfieldID randomiseFirstMoveFieldID = pEnv->GetFieldID(mSearchOptions, "randomiseFirstMove","Z");
-        options.randomiseFirstMove = pEnv->GetBooleanField(pSearchOptions, randomiseFirstMoveFieldID);
-
         jfieldID limitSkillLevelFieldID = pEnv->GetFieldID(mSearchOptions, "limitSkillLevel","I");
         options.limitSkillLevel = pEnv->GetIntField(pSearchOptions, limitSkillLevelFieldID);
 
@@ -903,6 +898,11 @@ Java_purpletreesoftware_karuahchess_engine_KaruahChessEngineC_searchStart (
         jfieldID limitThreadsFieldID = pEnv->GetFieldID(mSearchOptions, "limitThreads","I");
         options.limitThreads = pEnv->GetIntField(pSearchOptions, limitThreadsFieldID);
 
+        jfieldID randomiseFirstMoveFieldID = pEnv->GetFieldID(mSearchOptions, "randomiseFirstMove","Z");
+        options.randomiseFirstMove = pEnv->GetBooleanField(pSearchOptions, randomiseFirstMoveFieldID);
+
+        jfieldID alternateMoveFieldID = pEnv->GetFieldID(mSearchOptions, "alternateMove","Z");
+        options.alternateMove = pEnv->GetBooleanField(pSearchOptions, alternateMoveFieldID);
 
         // Search for a move
         Search::GetBestMove(*searchItr->second, options, bestMove, statistics);
@@ -920,8 +920,6 @@ Java_purpletreesoftware_karuahchess_engine_KaruahChessEngineC_searchStart (
         pEnv->SetIntField(mResultObj, moveFromIndexFieldID, bestMove.moveFromIndex);
         pEnv->SetIntField(mResultObj, moveToIndexFieldID, bestMove.moveToIndex);
         pEnv->SetIntField(mResultObj, promotionPieceTypeFieldID, bestMove.promotionPieceType);
-
-
 
         if (bestMove.cancelled) {
             pEnv->SetBooleanField(mResultObj, cancelledFieldID, JNI_TRUE);

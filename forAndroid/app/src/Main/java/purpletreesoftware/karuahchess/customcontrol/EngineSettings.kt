@@ -310,6 +310,9 @@ class EngineSettings(pActivityID: Int) : DialogFragment() {
     }
 
     companion object {
+
+        // A constructor containing pActivityID is in the ActivityFragmentFactory
+
         fun newInstance(pActivityID: Int): EngineSettings {
             val frag = EngineSettings(pActivityID)
             val args = Bundle()

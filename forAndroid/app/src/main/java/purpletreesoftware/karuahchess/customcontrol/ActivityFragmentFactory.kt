@@ -46,6 +46,9 @@ class ActivityFragmentFactory(private val pActivityID: Int): FragmentFactory() {
         else if (className == SoundSettings::class.java.name) {
             return SoundSettings(pActivityID)
         }
+        else if (className == HintSettings::class.java.name) {
+            return HintSettings(pActivityID)
+        }
         return super.instantiate(classLoader, className)
     }
 

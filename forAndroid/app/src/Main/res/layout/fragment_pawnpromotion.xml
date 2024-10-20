@@ -9,17 +9,130 @@
     <TextView android:id="@+id/promotionTitleText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Pawn promotion -> Select a piece"
+        android:text="Pawn promotion -> Select piece"
         android:layout_marginTop="0dp"
         style="@style/TextAppearance.MaterialComponents.Headline6"
         />
 
-    <LinearLayout android:id="@+id/pawnPromotionLinearLayout"
+    <LinearLayout android:id="@+id/blackPieceLinearLayout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="0dp"
         android:orientation="horizontal"
-        android:padding="10dp">
+        android:padding="0dp">
+
+        <ImageButton
+            android:id="@+id/blackRookImageButton"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:src="@drawable/blackrook"
+            android:adjustViewBounds="false"
+            android:scaleType="fitCenter"
+            android:layout_gravity="center"
+            android:padding="1dp"
+            android:background="@color/colorButtonDialogTint"
+            android:foreground="?attr/selectableItemBackground"
+            />
+
+        <ImageButton
+            android:id="@+id/blackKnightImageButton"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:src="@drawable/blackknight"
+            android:adjustViewBounds="false"
+            android:scaleType="fitCenter"
+            android:layout_gravity="center"
+            android:padding="1dp"
+            android:background="@color/colorButtonDialogTint"
+            android:foreground="?attr/selectableItemBackground"
+            />
+
+        <ImageButton
+            android:id="@+id/blackBishopImageButton"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:src="@drawable/blackbishop"
+            android:adjustViewBounds="false"
+            android:scaleType="fitCenter"
+            android:layout_gravity="center"
+            android:padding="1dp"
+            android:background="@color/colorButtonDialogTint"
+            android:foreground="?attr/selectableItemBackground"
+            />
+
+        <ImageButton
+            android:id="@+id/blackQueenImageButton"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:src="@drawable/blackqueen"
+            android:adjustViewBounds="false"
+            android:scaleType="fitCenter"
+            android:layout_gravity="center"
+            android:padding="1dp"
+            android:background="@color/colorButtonDialogTint"
+            android:foreground="?attr/selectableItemBackground"
+            />
+
+    </LinearLayout>
+    <LinearLayout android:id="@+id/whitePieceLinearLayout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="0dp"
+        android:orientation="horizontal"
+        android:padding="0dp">
+
+        <ImageButton
+            android:id="@+id/whiteRookImageButton"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:src="@drawable/whiterook"
+            android:adjustViewBounds="false"
+            android:scaleType="fitCenter"
+            android:layout_gravity="center"
+            android:padding="1dp"
+            android:background="@color/colorButtonDialogTint"
+            android:foreground="?attr/selectableItemBackground"
+            />
+
+        <ImageButton
+            android:id="@+id/whiteKnightImageButton"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:src="@drawable/whiteknight"
+            android:adjustViewBounds="false"
+            android:scaleType="fitCenter"
+            android:layout_gravity="center"
+            android:padding="1dp"
+            android:background="@color/colorButtonDialogTint"
+            android:foreground="?attr/selectableItemBackground"
+            />
+
+        <ImageButton
+            android:id="@+id/whiteBishopImageButton"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:src="@drawable/whitebishop"
+            android:adjustViewBounds="false"
+            android:scaleType="fitCenter"
+            android:layout_gravity="center"
+            android:padding="1dp"
+            android:background="@color/colorButtonDialogTint"
+            android:foreground="?attr/selectableItemBackground"
+            />
+
+        <ImageButton
+            android:id="@+id/whiteQueenImageButton"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:src="@drawable/whitequeen"
+            android:adjustViewBounds="false"
+            android:scaleType="fitCenter"
+            android:layout_gravity="center"
+            android:padding="1dp"
+            android:background="@color/colorButtonDialogTint"
+            android:foreground="?attr/selectableItemBackground"
+            />
+
     </LinearLayout>
 
 </LinearLayout>

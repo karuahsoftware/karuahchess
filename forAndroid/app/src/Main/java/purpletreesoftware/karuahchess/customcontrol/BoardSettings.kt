@@ -174,6 +174,9 @@ class BoardSettings(pActivityID: Int) : DialogFragment() {
     }
 
     companion object {
+
+        // A constructor containing pActivityID is in the ActivityFragmentFactory
+
         fun newInstance(pActivityID: Int): BoardSettings {
             val frag = BoardSettings(pActivityID)
             val args = Bundle()

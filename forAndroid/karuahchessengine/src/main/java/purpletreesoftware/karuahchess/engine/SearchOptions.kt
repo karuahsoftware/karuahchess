@@ -25,5 +25,6 @@ class SearchOptions {
     var limitMoveDuration: Int = 0
     var limitThreads: Int = 1
     var randomiseFirstMove: Boolean = false
+    var alternateMove: Boolean = false
 
 }

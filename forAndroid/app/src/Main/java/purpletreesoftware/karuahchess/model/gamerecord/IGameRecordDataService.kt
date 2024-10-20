@@ -19,6 +19,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 package purpletreesoftware.karuahchess.model.gamerecord
 
 import purpletreesoftware.karuahchess.database.TableName
+import java.util.SortedMap
 
 
 @ExperimentalUnsignedTypes
@@ -48,5 +49,6 @@ interface IGameRecordDataService {
 
     fun recordCount(): Int
 
+    fun gameHistory(): SortedMap<Int, GameRecordArray>
 
 }

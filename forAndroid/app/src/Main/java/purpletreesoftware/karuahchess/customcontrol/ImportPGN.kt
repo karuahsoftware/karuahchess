@@ -375,10 +375,10 @@ class ImportPGN(pActivityID: Int) : DialogFragment() {
 
     }
 
-
-
-
     companion object {
+
+        // A constructor containing pActivityID is in the ActivityFragmentFactory
+
         fun newInstance(pActivityID: Int): ImportPGN {
             val frag = ImportPGN(pActivityID)
             val args = Bundle()

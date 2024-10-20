@@ -224,6 +224,9 @@ class ClockSettings(pActivityID: Int) : DialogFragment() {
     }
 
     companion object {
+
+        // A constructor containing pActivityID is in the ActivityFragmentFactory
+
         fun newInstance(pActivityID: Int): ClockSettings {
             val frag = ClockSettings(pActivityID)
             val args = Bundle()

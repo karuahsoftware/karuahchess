@@ -42,16 +42,10 @@
                     android:orderInCategory="105"
                     android:icon="@drawable/ic_highlight"
                     app:showAsAction="never" />
-                <item android:id="@+id/action_hint"
-                    android:title="Hint"
-                    android:checkable="true"
-                    android:orderInCategory="106"
-                    android:icon="@drawable/ic_lightbulb"
-                    app:showAsAction="never" />
                 <item android:id="@+id/action_navigator"
                     android:title="Navigator"
                     android:checkable="true"
-                    android:orderInCategory="107"
+                    android:orderInCategory="106"
                     android:icon="@drawable/ic_movenav"
                     app:showAsAction="never" />
 
@@ -60,24 +54,27 @@
                 <item android:id="@+id/action_boardsettings"
                     android:title="Board"
                     android:checkable="false"
-                    android:orderInCategory="108"
+                    android:orderInCategory="107"
                     android:icon="@drawable/ic_board"
                     app:showAsAction="never" />
-
                 <item android:id="@+id/action_piecesettings"
                     android:title="Piece"
                     android:checkable="false"
-                    android:orderInCategory="109"
+                    android:orderInCategory="108"
                     android:icon="@drawable/ic_piece"
                     app:showAsAction="never" />
-
+                <item android:id="@+id/action_hint"
+                    android:title="Hint"
+                    android:checkable="false"
+                    android:orderInCategory="109"
+                    android:icon="@drawable/ic_lightbulb"
+                    app:showAsAction="never" />
                 <item android:id="@+id/action_soundsettings"
                       android:title="Sound"
                       android:checkable="false"
                       android:orderInCategory="110"
                       android:icon="@drawable/ic_sound"
                       app:showAsAction="never" />
-
         </group>
         <group android:id="@+id/grp4">
                 <item android:id="@+id/action_edit"

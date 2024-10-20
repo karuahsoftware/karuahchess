@@ -26,16 +26,23 @@ add_library(KaruahChessEngine-C
         src/main/cpp/search.cpp
         src/main/cpp/sf_bitboard.h
         src/main/cpp/sf_bitboard.cpp
+        src/main/cpp/sf_engine.h
+        src/main/cpp/sf_engine.cpp
         src/main/cpp/sf_evaluate.h
         src/main/cpp/sf_evaluate.cpp
+        src/main/cpp/sf_memory.h
+        src/main/cpp/sf_memory.cpp
         src/main/cpp/sf_misc.h
         src/main/cpp/sf_misc.cpp
         src/main/cpp/sf_movegen.h
         src/main/cpp/sf_movegen.cpp
         src/main/cpp/sf_movepick.h
         src/main/cpp/sf_movepick.cpp
+        src/main/cpp/sf_numa.h
         src/main/cpp/sf_position.h
         src/main/cpp/sf_position.cpp
+        src/main/cpp/sf_score.h
+        src/main/cpp/sf_score.cpp
         src/main/cpp/sf_search.h
         src/main/cpp/sf_search.cpp
         src/main/cpp/sf_thread.h
@@ -48,13 +55,16 @@ add_library(KaruahChessEngine-C
         src/main/cpp/sf_types.h
         src/main/cpp/sf_uci.h
         src/main/cpp/sf_uci.cpp
+        src/main/cpp/sf_ucioption.h
         src/main/cpp/sf_ucioption.cpp
-        src/main/cpp/nnue/evaluate_nnue.cpp
-        src/main/cpp/nnue/evaluate_nnue.h
+        src/main/cpp/nnue/network.h
+        src/main/cpp/nnue/network.cpp
         src/main/cpp/nnue/nnue_accumulator.h
         src/main/cpp/nnue/nnue_architecture.h
         src/main/cpp/nnue/nnue_common.h
         src/main/cpp/nnue/nnue_feature_transformer.h
+        src/main/cpp/nnue/nnue_misc.h
+        src/main/cpp/nnue/nnue_misc.cpp
         src/main/cpp/nnue/features/half_ka_v2_hm.cpp
         src/main/cpp/nnue/features/half_ka_v2_hm.h
         src/main/cpp/nnue/layers/affine_transform.h
@@ -82,16 +92,23 @@ add_library(KaruahChessEngine-C1
         src/main/cpp/search.cpp
         src/main/cpp/sf_bitboard.h
         src/main/cpp/sf_bitboard.cpp
+        src/main/cpp/sf_engine.h
+        src/main/cpp/sf_engine.cpp
         src/main/cpp/sf_evaluate.h
         src/main/cpp/sf_evaluate.cpp
+        src/main/cpp/sf_memory.h
+        src/main/cpp/sf_memory.cpp
         src/main/cpp/sf_misc.h
         src/main/cpp/sf_misc.cpp
         src/main/cpp/sf_movegen.h
         src/main/cpp/sf_movegen.cpp
         src/main/cpp/sf_movepick.h
         src/main/cpp/sf_movepick.cpp
+        src/main/cpp/sf_numa.h
         src/main/cpp/sf_position.h
         src/main/cpp/sf_position.cpp
+        src/main/cpp/sf_score.h
+        src/main/cpp/sf_score.cpp
         src/main/cpp/sf_search.h
         src/main/cpp/sf_search.cpp
         src/main/cpp/sf_thread.h
@@ -104,13 +121,16 @@ add_library(KaruahChessEngine-C1
         src/main/cpp/sf_types.h
         src/main/cpp/sf_uci.h
         src/main/cpp/sf_uci.cpp
+        src/main/cpp/sf_ucioption.h
         src/main/cpp/sf_ucioption.cpp
-        src/main/cpp/nnue/evaluate_nnue.cpp
-        src/main/cpp/nnue/evaluate_nnue.h
+        src/main/cpp/nnue/network.h
+        src/main/cpp/nnue/network.cpp
         src/main/cpp/nnue/nnue_accumulator.h
         src/main/cpp/nnue/nnue_architecture.h
         src/main/cpp/nnue/nnue_common.h
         src/main/cpp/nnue/nnue_feature_transformer.h
+        src/main/cpp/nnue/nnue_misc.h
+        src/main/cpp/nnue/nnue_misc.cpp
         src/main/cpp/nnue/features/half_ka_v2_hm.cpp
         src/main/cpp/nnue/features/half_ka_v2_hm.h
         src/main/cpp/nnue/layers/affine_transform.h

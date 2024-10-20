@@ -28,7 +28,6 @@ import android.view.Window
 import androidx.fragment.app.DialogFragment
 import purpletreesoftware.karuahchess.databinding.FragmentPiecesettingsBinding
 import purpletreesoftware.karuahchess.model.parameter.ParameterDataService
-import purpletreesoftware.karuahchess.model.parameterobj.ParamComputerMoveFirst
 import purpletreesoftware.karuahchess.model.parameterobj.ParamMoveSpeed
 import purpletreesoftware.karuahchess.model.parameterobj.ParamPromoteAuto
 
@@ -81,10 +80,8 @@ class PieceSettings(pActivityID: Int) : DialogFragment() {
 
         binding.promoteAutoCheckBox.isChecked = ParameterDataService.getInstance(activityID).get(ParamPromoteAuto::class.java).enabled
 
-
         // Done button listener
         binding.doneButton.setOnClickListener { dismiss() }
-
 
     }
 
@@ -115,6 +112,9 @@ class PieceSettings(pActivityID: Int) : DialogFragment() {
 
 
     companion object {
+
+        // A constructor containing pActivityID is in the ActivityFragmentFactory
+
         fun newInstance(pActivityID: Int): PieceSettings {
             val frag = PieceSettings(pActivityID)
             val args = Bundle()

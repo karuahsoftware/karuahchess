@@ -29,6 +29,7 @@ class Tile: FrameLayout  {
 
         piece = ImageView(context)
         highlight = ImageView(context)
+        highlightEdit = ImageView(context)
         checkIndicator = ImageView(context)
         panel = pTilePanel
 
@@ -42,27 +43,30 @@ class Tile: FrameLayout  {
             FrameLayout.LayoutParams.MATCH_PARENT
         )
 
+        highlightEdit.layoutParams = FrameLayout.LayoutParams(
+            FrameLayout.LayoutParams.MATCH_PARENT,
+            FrameLayout.LayoutParams.MATCH_PARENT
+        )
+
         highlight.scaleType = ImageView.ScaleType.CENTER
+        highlightEdit.scaleType = ImageView.ScaleType.CENTER
         checkIndicator.scaleType = ImageView.ScaleType.CENTER
 
         this.layoutParams = FrameLayout.LayoutParams(0,0)
 
         this.addView(checkIndicator)
         this.addView(highlight)
+        this.addView(highlightEdit)
         this.addView(piece)
 
     }
 
     val index: Int
-
     var spin: Int = 0
-
     val piece: ImageView
-
     val highlight: ImageView
-
+    val highlightEdit: ImageView
     val checkIndicator: ImageView
-
     val panel: TilePanel
 
 

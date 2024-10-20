@@ -29,6 +29,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #include <filesystem>
 #include <istream>
 
+namespace KaruahChess {
 	namespace Engine {
 
 		using namespace std;
@@ -36,9 +37,9 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 		bool SFInitialised = false;
 		bool NNUEInitialised = false;
 		unsigned int threadLimit = 0;
-		
+
 		char* nnueFileBufferBig;
-        long nnueFileBufferSizeBig = 0;
+		long nnueFileBufferSizeBig = 0;
 		string nnueFileNameBig;
 		bool nnueLoadedBig = false;
 
@@ -48,35 +49,13 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 		bool nnueLoadedSmall = false;
 
 		EngineError engineErr;
-				
-		std::unique_ptr<Stockfish::UCI> mainUCI;
 
-		// Initialise the engine
-		void init() {
+		std::unique_ptr<Stockfish::UCIEngine> mainUCI;
 
-			// Initialise Karuah Chess
-			helper::init();
-
-			// Initialise Stockfish
-			if (!SFInitialised) {
-
-				mainUCI = std::make_unique<Stockfish::UCI>();
-				Stockfish::Bitboards::init();
-				Stockfish::Position::init();
-				
-				setThreads(1);
-
-				SFInitialised = true;
-			}
-
-		}
 
 		// Initialise the engine with NNUE
 		void init(string pNNUEFileNameBig, char* pNNUEFileBufferBig, long pNNUEFileBufferSizeBig, string pNNUEFileNameSmall, char* pNNUEFileBufferSmall, long pNNUEFileBufferSizeSmall) {
 
-			// Initiliase the engine
-			init();
-						
 			nnueFileNameBig = pNNUEFileNameBig;
 			nnueFileBufferBig = pNNUEFileBufferBig;
 			nnueFileBufferSizeBig = pNNUEFileBufferSizeBig;
@@ -85,9 +64,21 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 			nnueFileBufferSmall = pNNUEFileBufferSmall;
 			nnueFileBufferSizeSmall = pNNUEFileBufferSizeSmall;
 
-			Stockfish::Eval::NNUE::load_networks();
+			// Initialise Karuah Chess
+			helper::init();
 
-			
+			// Initialise Stockfish
+			if (!SFInitialised) {
+
+				Stockfish::Bitboards::init();
+				Stockfish::Position::init();
+				mainUCI = std::make_unique<Stockfish::UCIEngine>();
+
+				setThreads(1);
+
+				SFInitialised = true;
+			}
+
 		}
 
 
@@ -96,17 +87,19 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 			// Limit the maximum threads to at least one and always one less than the maximum
 			// so that some capacity is left over for the application
-			unsigned int newThreadLimit = thread::hardware_concurrency() > 1 ? std::min(std::thread::hardware_concurrency() - 1, pRequestMaxThreads): 1;
+			unsigned int newThreadLimit = thread::hardware_concurrency() > 1 ? std::min(std::thread::hardware_concurrency() - 1, pRequestMaxThreads) : 1;
 
 			// Check that thread limit is in the valid range, otherwise just set it to 1
 			if (newThreadLimit < 1 || newThreadLimit > 512) newThreadLimit = 1;
 
 
 			if (threadLimit != newThreadLimit) {
-				
-				Engine::mainUCI->options["Threads"] = std::to_string(newThreadLimit);
+
+				Engine::mainUCI->engine_options()["Threads"] = std::to_string(newThreadLimit);
 			}
 		}
-		
+
 
 	}
+
+}

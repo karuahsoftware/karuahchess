@@ -143,7 +143,7 @@
         </LinearLayout>
 
         <LinearLayout
-            android:id="@+id/floatingActionButtonLayout"
+            android:id="@+id/floatingActionButtonMainLayout"
             android:orientation="horizontal"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -182,6 +182,41 @@
                 android:layout_margin="@dimen/fabMargin"
                 android:elevation="8dp"
                 app:maxImageSize="@dimen/fabMaxImageSize"
+                />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/floatingActionButtonEditToolLayout"
+            android:orientation="horizontal"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|end">
+
+            <com.google.android.material.floatingactionbutton.FloatingActionButton
+                android:id="@+id/editTileAction"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:fabSize="@integer/fabSize"
+                android:src="@drawable/ic_piece"
+                android:layout_margin="@dimen/fabMargin"
+                android:elevation="8dp"
+                app:maxImageSize="@dimen/fabMaxImageSize"
+                app:tint="@android:color/white"
+                app:backgroundTint="@color/colorEditFab"
+                />
+
+            <com.google.android.material.floatingactionbutton.FloatingActionButton
+                android:id="@+id/editEraseAction"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:fabSize="@integer/fabSize"
+                android:src="@drawable/ic_delete"
+                android:layout_margin="@dimen/fabMargin"
+                android:elevation="8dp"
+                app:maxImageSize="@dimen/fabMaxImageSize"
+                app:tint="@android:color/white"
+                app:backgroundTint="@color/colorEditFab"
                 />
 
         </LinearLayout>

@@ -346,6 +346,14 @@ class GameRecordDataService(pActivityID: Int): IGameRecordDataService{
         return gameRecordDict.count()
     }
 
+    /**
+    * Gets the game history
+    */
+    override fun gameHistory(): SortedMap<Int, GameRecordArray>
+    {
+        val history: SortedMap<Int, GameRecordArray> = gameRecordDict.toSortedMap();
+        return history;
+    }
 
 
     companion object  {

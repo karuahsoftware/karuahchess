@@ -1,0 +1,10 @@
+Title: nn-1111cefa1111.nnue
+Description: The file nn-1111cefa1111.nnue is a trained neural network file. This is the big neural network file as defined by EvalFileDefaultNameBig.
+Source: https://tests.stockfishchess.org/nns
+Description: The file nn-1111cefa1111.nnue is distributed under a CC0 license (https://creativecommons.org/share-your-work/public-domain/cc0/).
+
+
+
+
+
+ 
