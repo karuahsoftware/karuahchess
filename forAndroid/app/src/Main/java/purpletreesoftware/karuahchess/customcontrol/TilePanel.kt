@@ -47,7 +47,7 @@ class TilePanel: ConstraintLayout {
     private val _shakeAnimation = AnimationUtils.loadAnimation(this.context, R.anim.shake)
     private var _binding: TilepanelBinding? = null
     private val binding get() = _binding!!
-
+    private var largePawns = false
 
     // Creates a new drag event listener
     private val _tileDragListen = View.OnDragListener { v, event ->
@@ -455,13 +455,13 @@ class TilePanel: ConstraintLayout {
      */
     fun getImage(pSpin: Int): Int {
         return when (pSpin) {
-            1 -> R.drawable.whitepawn
+            1 -> if(largePawns) R.drawable.whitepawnlarge else R.drawable.whitepawn
             2 -> R.drawable.whiteknight
             3 -> R.drawable.whitebishop
             4 -> R.drawable.whiterook
             5 -> R.drawable.whitequeen
             6 -> R.drawable.whiteking0
-            -1 -> R.drawable.blackpawn
+            -1 -> if(largePawns) R.drawable.blackpawnlarge else R.drawable.blackpawn
             -2 -> R.drawable.blackknight
             -3 -> R.drawable.blackbishop
             -4 -> R.drawable.blackrook
@@ -570,6 +570,19 @@ class TilePanel: ConstraintLayout {
         border.setStroke(1, pDarkSqColour) //black border with full opacity
         this.foreground = border
 
+    }
+
+    /**
+     * Set large pawn size
+     */
+    fun setLargePawns(pEnable: Boolean) {
+        if (largePawns != pEnable) {
+            largePawns = pEnable
+            for (tileIndex in 0..63) {
+                val tile = _tileList[tileIndex]
+                if (tile.spin == 1 || tile.spin == -1) tile.piece.setImageResource(getImage(tile.spin))
+            }
+        }
     }
 
     /**

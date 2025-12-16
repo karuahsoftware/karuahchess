@@ -88,13 +88,23 @@
             android:layout_marginBottom="0dp"
             />
 
+        <CheckBox android:id="@+id/largePawnCheckBox"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Large Pawns"
+            style="@style/TextAppearance.MaterialComponents.Body1"
+            app:layout_constraintTop_toBottomOf="@id/promoteAutoCheckBox"
+            app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginTop="0dp"
+            android:layout_marginBottom="0dp"
+            />
 
         <androidx.constraintlayout.widget.Barrier
             android:id="@+id/bottomBarrier"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:barrierDirection="bottom"
-            app:constraint_referenced_ids="promoteAutoCheckBox"
+            app:constraint_referenced_ids="largePawnCheckBox"
             />
 
         <Button

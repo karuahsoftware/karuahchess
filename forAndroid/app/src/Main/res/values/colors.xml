@@ -12,12 +12,16 @@
     <color name="colorRed">#FF0000</color>
     <color name="colorMagenta">#E91E63</color>
     <color name="colorBurlyWood">#DEB887</color>
-    <color name="colorButtonSelected">#AAADFC</color>
     <color name="colorButtonDefault">#D6D8D7</color>
     <color name="colorButtonDefaultText">#FF1C1C1C</color>
     <color name="colorButtonDefaultTextFade">#781C1C1C</color>
     <color name="colorButtonDialogText">#333333</color>
     <color name="colorButtonDialogTint">#CCCCCC</color>
+    <color name="colorButtonNav">#F7F7F7</color>
+    <color name="colorButtonNavBorder">#CACACA</color>
+    <color name="colorButtonNavText">#888888</color>
+    <color name="colorButtonNavSelected">#AAADFC</color>
+    <color name="colorButtonNavTextSelected">#FEFEFE</color>
     <color name="colorMango">#F4BB44</color>
     <color name="colorEmeraldGreen">#03A65A</color>
     <color name="colorIcon">#565656</color>

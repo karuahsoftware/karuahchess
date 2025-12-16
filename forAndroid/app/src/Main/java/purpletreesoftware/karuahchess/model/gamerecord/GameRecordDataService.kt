@@ -19,13 +19,11 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 package purpletreesoftware.karuahchess.model.gamerecord
 
 import android.content.ContentValues
-import android.content.Context
 import purpletreesoftware.karuahchess.common.App
 import purpletreesoftware.karuahchess.database.DatabaseHelper
 import purpletreesoftware.karuahchess.database.TableName
 import purpletreesoftware.karuahchess.engine.KaruahChessEngine
 import java.util.*
-import kotlin.collections.ArrayList
 
 
 @ExperimentalUnsignedTypes
@@ -69,6 +67,7 @@ class GameRecordDataService(pActivityID: Int): IGameRecordDataService{
                 val id = dbCursor.getInt(dbCursor.getColumnIndex("Id"))
                 val boardSquareStr = dbCursor.getString(dbCursor.getColumnIndex("BoardSquareStr"))
                 val gameStateStr = dbCursor.getString(dbCursor.getColumnIndex("GameStateStr"))
+                val moveSANStr = dbCursor.getString(dbCursor.getColumnIndex("MoveSANStr"))
                 board.setBoard(boardSquareStr)
                 board.setState(gameStateStr)
 
@@ -76,6 +75,7 @@ class GameRecordDataService(pActivityID: Int): IGameRecordDataService{
                 recArray.id = id
                 recArray.boardArray = board.getBoardArray()
                 recArray.stateArray = board.getStateArray()
+                recArray.moveSAN = moveSANStr
                 gameRecordDict.put(id, recArray)
             }
         }
@@ -131,7 +131,7 @@ class GameRecordDataService(pActivityID: Int): IGameRecordDataService{
     /**
      * Record the current state of the game as a record
      */
-    override fun recordGameState(pWhiteClockOffset: Int, pBlackClockOffset: Int): Long
+    override fun recordGameState(pWhiteClockOffset: Int, pBlackClockOffset: Int, pMoveSAN: String): Long
     {
         var result = 0L
 
@@ -148,6 +148,7 @@ class GameRecordDataService(pActivityID: Int): IGameRecordDataService{
         gameRecordArray.id = nextId
         gameRecordArray.boardArray = currentGame.getBoardArray()
         gameRecordArray.stateArray = currentGame.getStateArray()
+        gameRecordArray.moveSAN = pMoveSAN
 
         if (!gameRecordDict.containsKey(gameRecordArray.id)) {
 
@@ -160,6 +161,7 @@ class GameRecordDataService(pActivityID: Int): IGameRecordDataService{
             contentValues.put("Id", nextId)
             contentValues.put("BoardSquareStr", boardSquareStr)
             contentValues.put("GameStateStr", gameStateStr)
+            contentValues.put("MoveSANStr", pMoveSAN)
 
             result = db.insert("${table.GameRecord}", null, contentValues)
 
@@ -191,6 +193,7 @@ class GameRecordDataService(pActivityID: Int): IGameRecordDataService{
             contentValues.put("Id", pGameRecordArray.id)
             contentValues.put("BoardSquareStr", boardSquareStr)
             contentValues.put("GameStateStr", gameStateStr)
+            contentValues.put("MoveSANStr", "")
             result = db.update("${table.GameRecord}", contentValues, "Id=?", arrayOf(pGameRecordArray.id.toString()))
 
 
@@ -224,7 +227,7 @@ class GameRecordDataService(pActivityID: Int): IGameRecordDataService{
         currentGame.reset()
 
         // Create record of default setup
-        recordGameState(pWhiteClockOffset, pBlackClockOffset)
+        recordGameState(pWhiteClockOffset, pBlackClockOffset, "")
     }
 
     /**
@@ -355,6 +358,21 @@ class GameRecordDataService(pActivityID: Int): IGameRecordDataService{
         return history;
     }
 
+    /**
+     * Determines the active move color for a specific record
+    */
+    override fun getActiveMoveColour(pId: Int): Int {
+        val rec: GameRecordArray = gameRecordDict[pId] ?: return 0
+        return rec.stateArray[0]
+    }
+
+    /**
+     * Get the game status for a specific record
+    */
+    override fun getStateGameStatus(pId: Int): Int {
+        val rec: GameRecordArray = gameRecordDict[pId] ?: return -1
+        return rec.stateArray[5]
+    }
 
     companion object  {
         private val instanceMap = mutableMapOf<Int, GameRecordDataService>()

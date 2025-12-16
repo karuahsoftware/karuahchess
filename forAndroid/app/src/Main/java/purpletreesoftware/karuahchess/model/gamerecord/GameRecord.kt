@@ -25,4 +25,6 @@ class GameRecord: java.io.Serializable {
     var boardSquareStr: String = ""
 
     var gameStateStr: String = ""
+
+    var moveSANStr: String = ""
 }

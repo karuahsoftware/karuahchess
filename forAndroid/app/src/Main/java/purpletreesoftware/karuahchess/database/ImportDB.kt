@@ -77,6 +77,8 @@ class ImportDB {
                                 gameRec.boardSquareStr = xmlParser.nextText()
                             } else if (element == "GameStateStr") {
                                 gameRec.gameStateStr = xmlParser.nextText()
+                            } else if (element == "MoveSANStr") {
+                                gameRec.moveSANStr = xmlParser.nextText()
                             }
                         }
                     }
@@ -97,7 +99,7 @@ class ImportDB {
                     contentValues.put("Id", gameRecord.id)
                     contentValues.put("BoardSquareStr", gameRecord.boardSquareStr)
                     contentValues.put("GameStateStr", gameRecord.gameStateStr)
-
+                    contentValues.put("MoveSANStr", gameRecord.moveSANStr)
                     result += db.insert("${table.GameRecord}", null, contentValues)
 
                 }

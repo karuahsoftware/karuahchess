@@ -22,4 +22,5 @@ class MoveResult {
         var success: Boolean = false
         var returnMessage: String = ""
         var moveDataStr: String = ""
+        var moveSAN: String = ""
 }

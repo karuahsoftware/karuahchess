@@ -33,7 +33,7 @@ interface IGameRecordDataService {
 
     fun get(): GameRecordArray?
 
-    fun recordGameState(pWhiteClockOffset: Int, pBlackClockOffset: Int): Long
+    fun recordGameState(pWhiteClockOffset: Int, pBlackClockOffset: Int, pMoveSAN: String): Long
 
     fun updateGameState(pGameRecordArray: GameRecordArray): Int
 
@@ -50,5 +50,9 @@ interface IGameRecordDataService {
     fun recordCount(): Int
 
     fun gameHistory(): SortedMap<Int, GameRecordArray>
+
+    fun getActiveMoveColour(pId: Int): Int
+
+    fun getStateGameStatus(pId: Int): Int
 
 }

@@ -18,7 +18,6 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 package purpletreesoftware.karuahchess
 
-import android.R.bool
 import android.content.DialogInterface
 import android.content.Intent
 import android.content.pm.PackageManager
@@ -46,7 +45,6 @@ import androidx.core.content.FileProvider
 import androidx.core.view.MenuCompat
 import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.ViewModelProvider
-import androidx.recyclerview.widget.SortedList
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -73,6 +71,7 @@ import purpletreesoftware.karuahchess.customcontrol.ClockSettings
 import purpletreesoftware.karuahchess.customcontrol.EngineSettings
 import purpletreesoftware.karuahchess.customcontrol.HintSettings
 import purpletreesoftware.karuahchess.customcontrol.ImportPGN
+import purpletreesoftware.karuahchess.customcontrol.MoveNavigatorPGN
 import purpletreesoftware.karuahchess.customcontrol.PawnPromotion
 import purpletreesoftware.karuahchess.customcontrol.PieceEditTool
 import purpletreesoftware.karuahchess.customcontrol.PieceSettings
@@ -100,6 +99,7 @@ import purpletreesoftware.karuahchess.model.parameterobj.ParamComputerMoveFirst
 import purpletreesoftware.karuahchess.model.parameterobj.ParamComputerPlayer
 import purpletreesoftware.karuahchess.model.parameterobj.ParamHint
 import purpletreesoftware.karuahchess.model.parameterobj.ParamHintMove
+import purpletreesoftware.karuahchess.model.parameterobj.ParamLargePawn
 import purpletreesoftware.karuahchess.model.parameterobj.ParamLevelAuto
 import purpletreesoftware.karuahchess.model.parameterobj.ParamLimitAdvanced
 import purpletreesoftware.karuahchess.model.parameterobj.ParamLimitDepth
@@ -171,9 +171,22 @@ open class MainActivity(pActivityID: Int) : AppCompatActivity(), TilePanel.OnTil
     private val clockBlackRemainingNanoKEY = "clockblackremaining"
     private val clockPausedKEY = "clockpaused"
 
-
-
     // File Picker
+    private var pendingExportFile: java.io.File? = null
+    private val createGameExportDocLauncher =
+        registerForActivityResult(ActivityResultContracts.CreateDocument("application/gzip")) { uri: Uri? ->
+            val src = pendingExportFile
+            pendingExportFile = null
+            if (uri == null || src == null) return@registerForActivityResult
+            try {
+                contentResolver.openOutputStream(uri)?.use { out ->
+                    src.inputStream().use { inp -> inp.copyTo(out) }
+                }
+                showMessage("Game saved to device.", "", Toast.LENGTH_SHORT)
+            } catch (e: Exception) {
+                showMessage("Could not save file. ${e.message}", "Could not save file.", Toast.LENGTH_LONG)
+            }
+        }
     private val loadGameRecordFromFileUriLauncher = registerForActivityResult(ActivityResultContracts.GetContent()) { fileUri: Uri? ->
         if (fileUri != null) loadGameRecordFromFileUri(fileUri)
     }
@@ -287,6 +300,9 @@ open class MainActivity(pActivityID: Int) : AppCompatActivity(), TilePanel.OnTil
 
             // Apply board colour
             applyBoardColour()
+
+            // Set large pawns
+            setLargePawns()
 
             // Clock
             val clockEnabled = ParameterDataService.getInstance(activityID).get(ParamClock::class.java).enabled
@@ -460,17 +476,13 @@ open class MainActivity(pActivityID: Int) : AppCompatActivity(), TilePanel.OnTil
                 true
             }
             R.id.action_navigator -> {
-                val navParam = ParameterDataService.getInstance(activityID).get(ParamNavigator::class.java)
-                navParam.enabled = !item.isChecked
-                item.isChecked = navParam.enabled
-                ParameterDataService.getInstance(activityID).set(navParam)
+                val isChecked = !item.isChecked
+                item.isChecked = isChecked
+                setMoveNavigatorPanel(isChecked)
 
-                refreshNavigation(pReload = true, pScroll = true)
-
-                if(navParam.enabled) showMessage("${item.title} is enabled", "", Toast.LENGTH_SHORT)
+                if(isChecked) showMessage("${item.title} is enabled", "", Toast.LENGTH_SHORT)
                 else showMessage("${item.title} is disabled", "", Toast.LENGTH_SHORT)
 
-                resizeBoard()
                 true
             }
             R.id.action_boardsettings -> {
@@ -633,7 +645,7 @@ open class MainActivity(pActivityID: Int) : AppCompatActivity(), TilePanel.OnTil
                 if (mResult.success) {
                     record.boardArray = bufferTempBoard.getBoardArray()
                     record.stateArray = bufferTempBoard.getStateArray()
-
+                    record.moveSAN = ""
                     BoardSquareDataService.getInstance(activityID).update(binding.boardPanelLayout,record)
                     GameRecordDataService.getInstance(activityID).updateGameState(record)
                     binding.boardPanelLayout.shakeRefresh()
@@ -661,6 +673,7 @@ open class MainActivity(pActivityID: Int) : AppCompatActivity(), TilePanel.OnTil
                 if (mResult.success) {
                     record.boardArray = bufferTempBoard.getBoardArray()
                     record.stateArray = bufferTempBoard.getStateArray()
+                    record.moveSAN = ""
                     BoardSquareDataService.getInstance(activityID).update(binding.boardPanelLayout,record)
                     GameRecordDataService.getInstance(activityID).updateGameState(record)
                     binding.boardPanelLayout.shakeRefresh()
@@ -740,7 +753,7 @@ open class MainActivity(pActivityID: Int) : AppCompatActivity(), TilePanel.OnTil
                 BoardSquareDataService.getInstance(activityID).update(binding.boardPanelLayout, GameRecordDataService.getInstance(activityID).getCurrentGame())
 
                 // Record game state
-                recordCurrentGameState()
+                recordCurrentGameState(moveResult.moveSAN)
 
                 // Check the clock
                 checkChessClock()
@@ -946,7 +959,7 @@ open class MainActivity(pActivityID: Int) : AppCompatActivity(), TilePanel.OnTil
                 BoardSquareDataService.getInstance(activityID).update(binding.boardPanelLayout, GameRecordDataService.getInstance(activityID).getCurrentGame())
 
                 // Record game state
-                recordCurrentGameState()
+                recordCurrentGameState(moveResult.moveSAN)
 
                 // Check the clock
                 checkChessClock()
@@ -1494,7 +1507,7 @@ open class MainActivity(pActivityID: Int) : AppCompatActivity(), TilePanel.OnTil
     /**
      * Records the current state of the game
      */
-    private suspend fun recordCurrentGameState()
+    private suspend fun recordCurrentGameState(pMoveSAN: String)
     {
         var whiteClock: Int = 0
         var blackClock: Int = 0
@@ -1507,7 +1520,7 @@ open class MainActivity(pActivityID: Int) : AppCompatActivity(), TilePanel.OnTil
         }
 
         // Record current game state
-        val success = GameRecordDataService.getInstance(activityID).recordGameState(whiteClock, blackClock)
+        val success = GameRecordDataService.getInstance(activityID).recordGameState(whiteClock, blackClock, pMoveSAN)
         if (success > 0)
         {
             // Ensure game record position is set to max value
@@ -1638,6 +1651,16 @@ open class MainActivity(pActivityID: Int) : AppCompatActivity(), TilePanel.OnTil
     }
 
     /**
+     * Show move navigator pgn dialog
+     */
+    fun showMoveNavigatorPGNDialog(pPGN: String) {
+
+        val fm = supportFragmentManager
+        val moveNavigatorPGN = MoveNavigatorPGN.newInstance(activityID, pPGN)
+        moveNavigatorPGN.show(fm, null)
+    }
+
+    /**
      * Show the about dialog
      */
     private fun showAboutDialog() {
@@ -1669,6 +1692,20 @@ open class MainActivity(pActivityID: Int) : AppCompatActivity(), TilePanel.OnTil
      */
     private fun loadGameRecordFromFileUri(pFileUri: Uri) {
         try {
+
+            // Validate mime type
+            val mime = contentResolver.getType(pFileUri)
+            val allowed = setOf("application/gzip", "application/x-gzip", "text/xml", "application/xml")
+            if (!mime.isNullOrBlank() && mime !in allowed) {
+                showMessage(
+                    "Unsupported file type: $mime",
+                    "Unsupported file type: $mime",
+                    Toast.LENGTH_LONG
+                )
+                return
+            }
+
+            // Do the import
             stopSearchJob()
             val file: InputStream? = contentResolver.openInputStream(pFileUri)
             val importDB = ImportDB()
@@ -1695,24 +1732,40 @@ open class MainActivity(pActivityID: Int) : AppCompatActivity(), TilePanel.OnTil
 
     }
 
-
     /**
      * Save game to xml file
      */
     private fun saveGameRecordAsFile() {
         try {
-            // Export data
+            // Export to a temp file as before
             val exportDB = ExportDB()
             val file = exportDB.export(ExportDB.ExportTypeEnum.GameXML, this, activityID)
-            val sharedFileUri: Uri = FileProvider.getUriForFile(this, "purpletreesoftware.karuahchess.exportdata", file)
 
-            // Send file via intent
-            val intent = Intent(Intent.ACTION_SEND)
-            intent.type = "application/gzip"
-            intent.putExtra(Intent.EXTRA_STREAM, sharedFileUri)
-            startActivity(Intent.createChooser(intent, "Send file to"))
-        }
-        catch (e: Throwable) {
+            // Offer options: Share or Save locally
+            MaterialAlertDialogBuilder(this, R.style.Theme_MaterialComponents_DayNight_Dialog_Alert)
+                .setTitle("Save game")
+                .setItems(arrayOf("Share...", "Save locally...")) { _, which ->
+                    when (which) {
+                        0 -> {
+                            // Share (existing behavior)
+                            val sharedFileUri: Uri =
+                                FileProvider.getUriForFile(this, "purpletreesoftware.karuahchess.exportdata", file)
+                            val intent = Intent(Intent.ACTION_SEND).apply {
+                                type = "application/gzip"
+                                putExtra(Intent.EXTRA_STREAM, sharedFileUri)
+                                addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+                            }
+                            startActivity(Intent.createChooser(intent, "Send file to"))
+                        }
+                        1 -> {
+                            // Save locally (SAF)
+                            pendingExportFile = file
+                            createGameExportDocLauncher.launch(file.name) // suggests filename
+                        }
+                    }
+                }
+                .show()
+        } catch (e: Throwable) {
             showMessage("Could not export file. An error occurred - ${e.message}", "Could not export file.", Toast.LENGTH_LONG)
         }
     }
@@ -1788,13 +1841,14 @@ open class MainActivity(pActivityID: Int) : AppCompatActivity(), TilePanel.OnTil
      * Loads the move navigator
      */
     private fun refreshNavigation(pReload: Boolean, pScroll: Boolean) {
+
         // Refresh the navigator control
         val navParam = ParameterDataService.getInstance(activityID).get(ParamNavigator::class.java)
         if(navParam.enabled) {
             binding.navigatorLayout.show()
             if (pReload) {
-                val recIdList = GameRecordDataService.getInstance(activityID).getAllRecordIDList()
-                binding.navigatorLayout.load(recIdList, BoardSquareDataService.getInstance(activityID).gameRecordCurrentValue)
+                binding.navigatorLayout.syncNavButtons()
+                binding.navigatorLayout.setSelected(BoardSquareDataService.getInstance(activityID).gameRecordCurrentValue)
             }
             else {
                 binding.navigatorLayout.setSelected(BoardSquareDataService.getInstance(activityID).gameRecordCurrentValue)
@@ -1879,7 +1933,9 @@ open class MainActivity(pActivityID: Int) : AppCompatActivity(), TilePanel.OnTil
             startPieceAnimation(true, kingFallSeq)
 
             // Record current game state
-            recordCurrentGameState()
+            var turn = GameRecordDataService.getInstance(activityID).currentGame.getStateActiveColour()
+            var comment = if (turn == 1) { "{White resigns.}" } else { "{Black resigns.}" }
+            recordCurrentGameState(comment)
 
             // Check the chess clock
             checkChessClock()
@@ -1922,7 +1978,9 @@ open class MainActivity(pActivityID: Int) : AppCompatActivity(), TilePanel.OnTil
             startPieceAnimation(true, kingFallSeq)
 
             // Record current game state
-            recordCurrentGameState()
+            var turn = GameRecordDataService.getInstance(activityID).currentGame.getStateActiveColour()
+            var comment = if (turn == 1) { "{White lost on time.}" } else { "{Black lost on time.}" }
+            recordCurrentGameState(comment)
 
         }
 
@@ -2004,12 +2062,33 @@ open class MainActivity(pActivityID: Int) : AppCompatActivity(), TilePanel.OnTil
     }
 
     /**
+     * Set move navigator panel
+     */
+    fun setMoveNavigatorPanel(pEnabled: Boolean) {
+        val navParam = ParameterDataService.getInstance(activityID).get(ParamNavigator::class.java)
+        if (navParam.enabled != pEnabled) {
+            navParam.enabled = pEnabled
+            ParameterDataService.getInstance(activityID).set(navParam)
+            refreshNavigation(pReload = true, pScroll = true)
+            resizeBoard()
+        }
+    }
+
+    /**
      * Apply board colour
      */
     fun applyBoardColour() {
         val darkSquareColourParam = ParameterDataService.getInstance(activityID).get(ParamColourDarkSquares::class.java)
         val darkSqColour = Color.argb(darkSquareColourParam.a, darkSquareColourParam.r, darkSquareColourParam.g, darkSquareColourParam.b)
         binding.boardPanelLayout.applyBoardColour(darkSqColour)
+    }
+
+    /**
+     * Set large pawns
+     */
+    fun setLargePawns() {
+        val largePawn: Boolean = ParameterDataService.getInstance(activityID).get(ParamLargePawn::class.java).enabled
+        binding.boardPanelLayout.setLargePawns(largePawn)
     }
 
     /**
@@ -2259,10 +2338,6 @@ open class MainActivity(pActivityID: Int) : AppCompatActivity(), TilePanel.OnTil
             outState.putBoolean(clockPausedKEY, binding.clockLayout.isPaused())
         }
 
-
     }
-
-
-
 
 }

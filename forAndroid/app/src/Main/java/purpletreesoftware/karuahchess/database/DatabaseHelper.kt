@@ -75,7 +75,7 @@ class DatabaseHelper private constructor(context: Context) : SQLiteOpenHelper(co
 
         val table = TableName(pActivityID)
         pDatabase.execSQL("CREATE TABLE IF NOT EXISTS ${table.Parameter} (Name TEXT PRIMARY KEY NOT NULL, Value BLOB NOT NULL)")
-        pDatabase.execSQL("CREATE TABLE IF NOT EXISTS ${table.GameRecord} (Id INTEGER PRIMARY KEY NOT NULL, BoardSquareStr TEXT NOT NULL, GameStateStr TEXT NOT NULL)")
+        pDatabase.execSQL("CREATE TABLE IF NOT EXISTS ${table.GameRecord} (Id INTEGER PRIMARY KEY NOT NULL, BoardSquareStr TEXT NOT NULL, GameStateStr TEXT NOT NULL, MoveSANStr TEXT NULL)")
 
     }
 
@@ -129,7 +129,7 @@ class DatabaseHelper private constructor(context: Context) : SQLiteOpenHelper(co
 
     companion object {
 
-        private const val DATABASE_NAME : String = "KaruahChessV12.sqlite"
+        private const val DATABASE_NAME : String = "KaruahChessV13.sqlite"
         private const val DATABASE_VERSION : Int = 1
         private var instance: DatabaseHelper? = null
         val DB_OK: Int = 0

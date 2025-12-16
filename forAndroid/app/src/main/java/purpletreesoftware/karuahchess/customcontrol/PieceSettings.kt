@@ -26,8 +26,10 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.Window
 import androidx.fragment.app.DialogFragment
+import purpletreesoftware.karuahchess.MainActivity
 import purpletreesoftware.karuahchess.databinding.FragmentPiecesettingsBinding
 import purpletreesoftware.karuahchess.model.parameter.ParameterDataService
+import purpletreesoftware.karuahchess.model.parameterobj.ParamLargePawn
 import purpletreesoftware.karuahchess.model.parameterobj.ParamMoveSpeed
 import purpletreesoftware.karuahchess.model.parameterobj.ParamPromoteAuto
 
@@ -79,6 +81,7 @@ class PieceSettings(pActivityID: Int) : DialogFragment() {
         }
 
         binding.promoteAutoCheckBox.isChecked = ParameterDataService.getInstance(activityID).get(ParamPromoteAuto::class.java).enabled
+        binding.largePawnCheckBox.isChecked = ParameterDataService.getInstance(activityID).get(ParamLargePawn::class.java).enabled
 
         // Done button listener
         binding.doneButton.setOnClickListener { dismiss() }
@@ -95,18 +98,30 @@ class PieceSettings(pActivityID: Int) : DialogFragment() {
      */
     private fun save(){
 
-        // Save the move speed parameter
+        val mainActivity = activity as MainActivity
+
+        // Move speed parameter
         val moveSpeed = ParameterDataService.getInstance(activityID).get(ParamMoveSpeed::class.java)
         if (moveSpeed.speed != binding.moveSpeedSlider.value.toInt()) {
             moveSpeed.speed = binding.moveSpeedSlider.value.toInt()
             ParameterDataService.getInstance(activityID).set(moveSpeed)
         }
 
+        // Auto Promote
         val promoteAuto = ParameterDataService.getInstance(activityID).get(ParamPromoteAuto::class.java)
         if (promoteAuto.enabled != binding.promoteAutoCheckBox.isChecked) {
             promoteAuto.enabled = binding.promoteAutoCheckBox.isChecked
             ParameterDataService.getInstance(activityID).set(promoteAuto)
         }
+
+        // Large Pawns
+        val largePawn = ParameterDataService.getInstance(activityID).get(ParamLargePawn::class.java)
+        if (largePawn.enabled != binding.largePawnCheckBox.isChecked) {
+            largePawn.enabled = binding.largePawnCheckBox.isChecked
+            ParameterDataService.getInstance(activityID).set(largePawn)
+        }
+
+        mainActivity.setLargePawns()
 
     }
 

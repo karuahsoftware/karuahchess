@@ -35,6 +35,7 @@ import purpletreesoftware.karuahchess.engine.KaruahChessEngine
 import purpletreesoftware.karuahchess.engine.MoveResult
 import purpletreesoftware.karuahchess.model.gamerecord.GameRecordArray
 import purpletreesoftware.karuahchess.model.gamerecord.GameRecordDataService
+import kotlin.text.Regex
 
 
 @ExperimentalUnsignedTypes
@@ -91,7 +92,7 @@ class ImportPGN(pActivityID: Int) : DialogFragment() {
         var pgnGameFilterA: String = binding.importPGNEditText.text.toString()
 
         // Remove header comments
-        pgnGameFilterA =  Regex("(?s)\\[.*\\]").replace(pgnGameFilterA, "")
+        pgnGameFilterA =  Regex("(?s)\\[.*?\\]\\s*").replace(pgnGameFilterA, "")
 
         // Remove any curly bracket comments in game string
         pgnGameFilterA =  Regex("(?s)\\{.*?\\}").replace(pgnGameFilterA, "")
@@ -105,6 +106,9 @@ class ImportPGN(pActivityID: Int) : DialogFragment() {
             pgnGameFilterB = pgnGameFilterB + Regex(";(.*)?$").replace(line, "") + " "
         }
 
+        // Remove Numeric Annotation Glyphs
+        pgnGameFilterB = Regex("(\\$\\d+)|[!?]+").replace(pgnGameFilterB, "")
+
         val pgnGame = pgnGameFilterB
         val success = processGame(pgnGame)
         if (success) {
@@ -112,6 +116,7 @@ class ImportPGN(pActivityID: Int) : DialogFragment() {
             mainActivity.uiScope.launch(Dispatchers.Main) {
                 mainActivity.binding.clockLayout.setClock(0, 0)
                 mainActivity.navigateMaxRecord()
+                mainActivity.setMoveNavigatorPanel(true)
                 dismiss()
             }
         }
@@ -133,13 +138,27 @@ class ImportPGN(pActivityID: Int) : DialogFragment() {
         pgnGameStr = Regex("[ ]{2,}").replace(pgnGameStr, " ")
         pgnGameStr = pgnGameStr.trim()
 
-        val gameParseA = Regex("[0-9]?[0-9]?[0-9]\\.").replace(pgnGameStr, "|")
-        val gameParseB = gameParseA.split('|')
+        // Capture move numbers as tokens too (group keeps delimiters in the result array)
+        // Tokens will look like: "", "1.", "e4 e5", "2.", "Nf3", "2...", "Nc6", ...
+        val moveTokens = Regex("([0-9]{1,3}(?:\\.{3}|\\.))").split(pgnGameStr)
+
         _board.reset()
+
+        // Determine starting colour: if first move number is written with '...'
+        // (e.g. "1...e5") then Black is to move; otherwise White to move.
+        if (Regex("^\\s*[0-9]{1,3}\\.\\.\\.").containsMatchIn(pgnGameStr))
+        {
+            _board.setStateActiveColour(Constants.BLACKPIECE);
+        }
+        else
+        {
+            _board.setStateActiveColour(Constants.WHITEPIECE);
+        }
+
 
         // Loop through game moves
         var id = 1
-        var moveNumber = 1
+        var currentMoveNumberToken = "";
 
         // Add start record
         val gameRecList = ArrayList<GameRecordArray>()
@@ -147,37 +166,46 @@ class ImportPGN(pActivityID: Int) : DialogFragment() {
         startRecord.id = id
         startRecord.boardArray = _board.getBoardArray()
         startRecord.stateArray = _board.getStateArray()
+        startRecord.moveSAN = "";
         gameRecList.add(startRecord)
         id++
 
-        // Add all moves in the PGN string
+        // Iterate over tokens (move numbers + move groups)
         try {
-            for (move in gameParseB)
+            for (tokenRaw in moveTokens)
             {
-                if (move.isNotEmpty())
+                if (tokenRaw.isBlank()) continue;
+                val token = tokenRaw.trim();
+
+                // If this token IS a move number, store it and continue to next token
+                if (Regex("^[0-9]{1,3}(?:\\.{3}|\\.)$").containsMatchIn(pgnGameStr))
                 {
-                    val halfMoveArray = move.trim().split(' ').toTypedArray()
-                    for (halfMove in halfMoveArray)
+                    currentMoveNumberToken = token; // e.g. "12." or "12..."
+                    continue;
+                }
+
+                // Otherwise this token holds one or more SAN half-moves separated by spaces
+                val halfMoveArray = token.trim().split(' ').toTypedArray()
+                for (halfMove in halfMoveArray)
+                {
+                    if (halfMove.length == 0) continue
+                    val moveResult = movePGN(halfMove, _board, true)
+                    if (!moveResult.success)
                     {
-                        if (halfMove.trim() == "") continue
-                        val moveResult = movePGN(halfMove, _board, true)
-                        if (!moveResult.success)
-                        {
-                            binding.importErrorTextView.append("Import failed. Error occurred at move $moveNumber : $move")
-                            binding.importErrorTextView.append(moveResult.returnMessage)
-                            return false
-                        }
+                        binding.importErrorTextView.append("Import failed. Error occurred at move $currentMoveNumberToken : $halfMove")
+                        binding.importErrorTextView.append(moveResult.returnMessage)
 
-                        val gamerec = GameRecordArray()
-                        gamerec.id = id
-                        gamerec.boardArray = _board.getBoardArray()
-                        gamerec.stateArray = _board.getStateArray()
-                        gameRecList.add(gamerec)
-
-                        id++
+                        return false
                     }
-                    moveNumber++
 
+                    val gamerec = GameRecordArray()
+                    gamerec.id = id
+                    gamerec.boardArray = _board.getBoardArray()
+                    gamerec.stateArray = _board.getStateArray()
+                    gamerec.moveSAN = halfMove
+                    gameRecList.add(gamerec)
+
+                    id++
                 }
             }
 
@@ -187,7 +215,7 @@ class ImportPGN(pActivityID: Int) : DialogFragment() {
                 return false
             }
 
-            // Loads the game in to the database
+            // Load the game into DB
             loadGameIntoDatabase(gameRecList)
         }
         catch(ex: Exception)
@@ -322,7 +350,7 @@ class ImportPGN(pActivityID: Int) : DialogFragment() {
         }
         else if (Regex("^[O][-][O][-][O][\\+]?[#]?$").matches(pPGNValue))
         {
-            // King side castle
+            // Queen side castle
             var castlingAvailableQueenSide = false
             if (pBoard.getStateActiveColour() == Constants.WHITEPIECE) castlingAvailableQueenSide = (pBoard.getStateCastlingAvailability() and 0b000001) > 0
             else if (pBoard.getStateActiveColour() == Constants.BLACKPIECE) castlingAvailableQueenSide = (pBoard.getStateCastlingAvailability() and 0b000100) > 0
@@ -360,7 +388,7 @@ class ImportPGN(pActivityID: Int) : DialogFragment() {
                 contentValues.put("Id", gameRecord.id)
                 contentValues.put("BoardSquareStr", boardSquareStr)
                 contentValues.put("GameStateStr", gameStateStr)
-
+                contentValues.put("MoveSANStr", gameRecord.moveSAN)
                 db.insert("${table.GameRecord}", null, contentValues)
 
             }

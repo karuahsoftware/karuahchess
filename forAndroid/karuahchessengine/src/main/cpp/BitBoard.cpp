@@ -73,6 +73,7 @@ namespace KaruahChess {
 		StateWhiteClockOffset = 0;
 		StateBlackClockOffset = 0;
 		ReturnMessage = "";
+		MoveSAN = "";
 
 		MoveData[0] = -1;
 		MoveData[1] = -1;

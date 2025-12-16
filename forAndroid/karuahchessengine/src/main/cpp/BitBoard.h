@@ -78,6 +78,7 @@ namespace KaruahChess {
 
 		int MoveData[4];
 		std::string ReturnMessage;
+		std::string MoveSAN;
 
 		int StateActiveColour;
 		int StateGameStatus;
@@ -87,6 +88,8 @@ namespace KaruahChess {
 		int StateFullMoveCount;
 		int StateWhiteClockOffset;
 		int StateBlackClockOffset;
+
+		
 
 		// Constructor
 		BitBoard();

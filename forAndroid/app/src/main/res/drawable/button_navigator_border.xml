@@ -1,0 +1,16 @@
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Border -->
+    <item>
+        <shape android:shape="rectangle">
+            <corners android:radius="6dp" />
+            <solid android:color="@color/colorButtonNavBorder" />
+        </shape>
+    </item>
+    <!-- Inner fill inset: left 1dp, top 1dp, right 3dp, bottom 3dp -->
+    <item android:left="1dp" android:top="1dp" android:right="3dp" android:bottom="3dp">
+        <shape android:shape="rectangle">
+            <corners android:radius="6dp" />
+            <solid android:color="@color/colorButtonNav" />
+        </shape>
+    </item>
+</layer-list>

@@ -634,6 +634,8 @@ Java_purpletreesoftware_karuahchess_engine_KaruahChessEngineC1_move (
                                                          "Ljava/lang/String;");
         jfieldID moveDataStrFieldID = pEnv->GetFieldID(mResultClass, "moveDataStr",
                                                        "Ljava/lang/String;");
+        jfieldID moveSANFieldID = pEnv->GetFieldID(mResultClass, "moveSAN",
+                                                   "Ljava/lang/String;");
 
         if (success) {
             pEnv->SetBooleanField(mResultObj, successFieldID, JNI_TRUE);
@@ -649,6 +651,9 @@ Java_purpletreesoftware_karuahchess_engine_KaruahChessEngineC1_move (
                                   std::to_string(boardItr->second->MoveData[3]);
         jstring jMoveDataStr = pEnv->NewStringUTF(moveDataStr.c_str());
         pEnv->SetObjectField(mResultObj, moveDataStrFieldID, jMoveDataStr);
+
+        jstring jMoveSAN = pEnv->NewStringUTF(boardItr->second->MoveSAN.c_str());
+        pEnv->SetObjectField(mResultObj, moveSANFieldID, jMoveSAN);
 
         return mResultObj;
     }
@@ -775,7 +780,7 @@ Java_purpletreesoftware_karuahchess_engine_KaruahChessEngineC1_findFromIndex (
         }
 
         int fromIndex = MoveRules::FindFromIndex(*boardItr->second, pToIndex, pSpin,
-                                                 validFromIndexesVector);
+                                                 validFromIndexesVector, true);
 
         return fromIndex;
     }

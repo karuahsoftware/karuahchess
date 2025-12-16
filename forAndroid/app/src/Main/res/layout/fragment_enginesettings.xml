@@ -55,49 +55,16 @@
             android:padding="0dp"
             />
 
-        <CheckBox android:id="@+id/computerMoveFirstCheckBox"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Computer moves first"
-            style="@style/TextAppearance.MaterialComponents.Body1"
-            app:layout_constraintTop_toBottomOf="@id/computerPlayerEnabledCheckBox"
-            app:layout_constraintStart_toStartOf="parent"
-            android:layout_marginTop="0dp"
-            android:layout_marginBottom="0dp"
-            />
-
-        <CheckBox android:id="@+id/randomiseFirstMoveCheckBox"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Randomise first computer move"
-            style="@style/TextAppearance.MaterialComponents.Body1"
-            app:layout_constraintTop_toBottomOf="@id/computerMoveFirstCheckBox"
-            app:layout_constraintStart_toStartOf="parent"
-            android:layout_marginTop="0dp"
-            android:layout_marginBottom="0dp"
-            />
-
-        <CheckBox android:id="@+id/levelAutoCheckBox"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Increase strength after checkmate win"
-            style="@style/TextAppearance.MaterialComponents.Body1"
-            app:layout_constraintTop_toBottomOf="@id/randomiseFirstMoveCheckBox"
-            app:layout_constraintStart_toStartOf="parent"
-            android:layout_marginTop="0dp"
-            android:layout_marginBottom="0dp"
-            />
-
         <TextView android:id="@+id/skillLevelTitleText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Strength"
+            android:text="Computer strength"
             style="@style/TextAppearance.MaterialComponents.Body1"
-            app:layout_constraintTop_toBottomOf="@id/levelAutoCheckBox"
+            app:layout_constraintTop_toBottomOf="@id/computerPlayerEnabledCheckBox"
             app:layout_constraintStart_toStartOf="parent"
-            android:layout_marginTop="10dp"
+            android:layout_marginTop="7dp"
+            android:layout_marginStart="5dp"
             android:layout_marginBottom="0dp"
-            android:paddingTop="5dp"
             />
 
         <Spinner
@@ -107,21 +74,77 @@
             android:popupElevation="3dp"
             android:spinnerMode="dropdown"
             style="@style/TextAppearance.MaterialComponents.Body1"
-            app:layout_constraintTop_toBottomOf="@id/levelAutoCheckBox"
-            app:layout_constraintStart_toEndOf="@id/skillLevelTitleText"
-            android:layout_marginTop="10dp"
+            app:layout_constraintTop_toBottomOf="@id/skillLevelTitleText"
+            app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginTop="0dp"
             android:layout_marginStart="5dp"
             android:layout_marginBottom="0dp"
             android:background="@drawable/bordergreen"
             android:padding="5dp"
+            android:minWidth="150dp"
             />
+
+        <CheckBox android:id="@+id/levelAutoCheckBox"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Auto increase strength"
+            style="@style/TextAppearance.MaterialComponents.Body1"
+            app:layout_constraintTop_toBottomOf="@id/skillLevelSpinner"
+            app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginStart="0dp"
+            android:layout_marginTop="0dp"
+            android:layout_marginBottom="0dp"
+            />
+
+        <TextView android:id="@+id/computerColourTitleText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Computer colour"
+            style="@style/TextAppearance.MaterialComponents.Body1"
+            app:layout_constraintTop_toBottomOf="@id/levelAutoCheckBox"
+            app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginTop="7dp"
+            android:layout_marginStart="5dp"
+            android:layout_marginBottom="0dp"
+            />
+
+        <ImageButton android:id="@+id/computerMoveFirstButton"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:adjustViewBounds="true"
+            android:scaleType="fitCenter"
+            android:layout_gravity="center"
+            app:layout_constraintTop_toBottomOf="@id/computerColourTitleText"
+            app:layout_constraintStart_toStartOf="parent"
+            />
+
+
+        <androidx.constraintlayout.widget.Barrier
+            android:id="@+id/computerMoveFirstBarrier"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:barrierDirection="bottom"
+            app:constraint_referenced_ids="computerMoveFirstButton" />
+
+        <CheckBox android:id="@+id/randomiseFirstMoveCheckBox"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Make the first computer move more random"
+            style="@style/TextAppearance.MaterialComponents.Body1"
+            app:layout_constraintTop_toBottomOf="@id/computerMoveFirstBarrier"
+            app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginTop="0dp"
+            android:layout_marginBottom="0dp"
+            />
+
+
 
         <androidx.constraintlayout.widget.Barrier
             android:id="@+id/advancedBarrier"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:barrierDirection="bottom"
-            app:constraint_referenced_ids="skillLevelSpinner,skillLevelTitleText" />
+            app:constraint_referenced_ids="randomiseFirstMoveCheckBox" />
 
         <CheckBox android:id="@+id/computerAdvancedSettingsCheckBox"
             android:layout_width="wrap_content"

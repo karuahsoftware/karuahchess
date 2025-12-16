@@ -16,12 +16,8 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-package purpletreesoftware.karuahchess.model.gamerecord
+package purpletreesoftware.karuahchess.model.parameterobj
 
-@ExperimentalUnsignedTypes
-class GameRecordArray {
-    var id: Int = 0
-    var boardArray: ULongArray =  ULongArray(276)
-    var stateArray: IntArray = IntArray(8)
-    var moveSAN: String = ""
+class ParamLargePawn :  java.io.Serializable{
+    var enabled: Boolean = false
 }

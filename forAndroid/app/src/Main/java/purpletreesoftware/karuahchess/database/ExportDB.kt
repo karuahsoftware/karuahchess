@@ -53,20 +53,25 @@ class ExportDB {
 
                     xmlDoc.startTag(null, "GameRecord")
 
-                        // Id
-                        xmlDoc.startTag(null, "Id")
-                        xmlDoc.text(dbCursor.getInt(dbCursor.getColumnIndex("Id")).toString())
-                        xmlDoc.endTag(null, "Id")
+                    // Id
+                    xmlDoc.startTag(null, "Id")
+                    xmlDoc.text(dbCursor.getInt(dbCursor.getColumnIndex("Id")).toString())
+                    xmlDoc.endTag(null, "Id")
 
-                        // BoardSquareStr
-                        xmlDoc.startTag(null, "BoardSquareStr")
-                        xmlDoc.text(dbCursor.getString(dbCursor.getColumnIndex("BoardSquareStr")))
-                        xmlDoc.endTag(null, "BoardSquareStr")
+                    // BoardSquareStr
+                    xmlDoc.startTag(null, "BoardSquareStr")
+                    xmlDoc.text(dbCursor.getString(dbCursor.getColumnIndex("BoardSquareStr")))
+                    xmlDoc.endTag(null, "BoardSquareStr")
 
-                        // BoardSquareStr
-                        xmlDoc.startTag(null, "GameStateStr")
-                        xmlDoc.text(dbCursor.getString(dbCursor.getColumnIndex("GameStateStr")))
-                        xmlDoc.endTag(null, "GameStateStr")
+                    // GameStateStr
+                    xmlDoc.startTag(null, "GameStateStr")
+                    xmlDoc.text(dbCursor.getString(dbCursor.getColumnIndex("GameStateStr")))
+                    xmlDoc.endTag(null, "GameStateStr")
+
+                    // MoveSANStr
+                    xmlDoc.startTag(null, "MoveSANStr")
+                    xmlDoc.text(dbCursor.getString(dbCursor.getColumnIndex("MoveSANStr")))
+                    xmlDoc.endTag(null, "MoveSANStr")
 
                     xmlDoc.endTag(null, "GameRecord")
 

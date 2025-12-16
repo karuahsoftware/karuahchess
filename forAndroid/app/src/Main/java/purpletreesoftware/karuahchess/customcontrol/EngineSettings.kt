@@ -32,6 +32,7 @@ import android.widget.ArrayAdapter
 import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.DialogFragment
 import purpletreesoftware.karuahchess.MainActivity
+import purpletreesoftware.karuahchess.R
 import purpletreesoftware.karuahchess.common.Constants
 import purpletreesoftware.karuahchess.common.InputFilterRange
 import purpletreesoftware.karuahchess.common.Strength
@@ -47,6 +48,7 @@ class EngineSettings(pActivityID: Int) : DialogFragment() {
     private var _binding: FragmentEnginesettingsBinding? = null
     private val binding get() = _binding!!
     private val activityID = pActivityID
+    private var computerMoveFirstDialogValue: Boolean = false
 
     override fun onStart() {
         super.onStart()
@@ -89,12 +91,15 @@ class EngineSettings(pActivityID: Int) : DialogFragment() {
         binding.computerPlayerEnabledCheckBox.isChecked = ParameterDataService.getInstance(activityID).get(ParamComputerPlayer::class.java).enabled
         binding.computerPlayerEnabledCheckBox.setOnClickListener { setControlState() }
 
-        binding.computerMoveFirstCheckBox.isChecked = ParameterDataService.getInstance(activityID).get(ParamComputerMoveFirst::class.java).enabled
+        computerMoveFirstDialogValue = ParameterDataService.getInstance(activityID).get(ParamComputerMoveFirst::class.java).enabled
+        setComputerMoveFirstButton()
+        binding.computerMoveFirstButton.setOnClickListener {
+            computerMoveFirstDialogValue = !computerMoveFirstDialogValue
+            setComputerMoveFirstButton()
+        }
 
         binding.randomiseFirstMoveCheckBox.isChecked = ParameterDataService.getInstance(activityID).get(ParamRandomiseFirstMove::class.java).enabled
-
         binding.levelAutoCheckBox.isChecked = ParameterDataService.getInstance(activityID).get(ParamLevelAuto::class.java).enabled
-
         binding.computerAdvancedSettingsCheckBox.isChecked = ParameterDataService.getInstance(activityID).get(ParamLimitAdvanced::class.java).enabled
         binding.computerAdvancedSettingsCheckBox.setOnClickListener { setControlState() }
 
@@ -186,8 +191,8 @@ class EngineSettings(pActivityID: Int) : DialogFragment() {
         }
 
         val computerMoveFirst = ParameterDataService.getInstance(activityID).get(ParamComputerMoveFirst::class.java)
-        if (computerMoveFirst.enabled != binding.computerMoveFirstCheckBox.isChecked) {
-            computerMoveFirst.enabled = binding.computerMoveFirstCheckBox.isChecked
+        if (computerMoveFirst.enabled != computerMoveFirstDialogValue) {
+            computerMoveFirst.enabled = computerMoveFirstDialogValue
             ParameterDataService.getInstance(activityID).set(computerMoveFirst)
         }
 
@@ -249,7 +254,6 @@ class EngineSettings(pActivityID: Int) : DialogFragment() {
 
         val computerPlayer = binding.computerPlayerEnabledCheckBox.isChecked
         if (computerPlayer) {
-            binding.computerMoveFirstCheckBox.isEnabled = true
             binding.randomiseFirstMoveCheckBox.isEnabled = true
             binding.levelAutoCheckBox.isEnabled = true
             binding.skillLevelTitleText.isEnabled = true
@@ -257,8 +261,10 @@ class EngineSettings(pActivityID: Int) : DialogFragment() {
             binding.computerAdvancedSettingsCheckBox.isEnabled = true
             advanced = binding.computerAdvancedSettingsCheckBox.isEnabled && binding.computerAdvancedSettingsCheckBox.isChecked == true
             advancedOpacity = if (advanced) 1.0F else 0.38F
+            binding.computerColourTitleText.isEnabled = true
+            binding.computerMoveFirstButton.isEnabled = true
+            binding.computerMoveFirstButton.alpha = 1.0F
         } else {
-            binding.computerMoveFirstCheckBox.isEnabled = false
             binding.randomiseFirstMoveCheckBox.isEnabled = false
             binding.levelAutoCheckBox.isEnabled = false
             binding.skillLevelTitleText.isEnabled = false
@@ -266,6 +272,9 @@ class EngineSettings(pActivityID: Int) : DialogFragment() {
             binding.computerAdvancedSettingsCheckBox.isEnabled = false
             advanced = false
             advancedOpacity = 0.38F
+            binding.computerColourTitleText.isEnabled = false
+            binding.computerMoveFirstButton.isEnabled = false
+            binding.computerMoveFirstButton.alpha = 0.38F
         }
 
         // Advanced Settings
@@ -287,8 +296,10 @@ class EngineSettings(pActivityID: Int) : DialogFragment() {
      * Reset to default values
      */
     private fun resetToDefault() {
+
+        computerMoveFirstDialogValue = ParamComputerMoveFirst().enabled
+
         binding.computerPlayerEnabledCheckBox.isChecked = ParamComputerPlayer().enabled
-        binding.computerMoveFirstCheckBox.isChecked = ParamComputerMoveFirst().enabled
         binding.randomiseFirstMoveCheckBox.isChecked = ParamRandomiseFirstMove().enabled
         binding.levelAutoCheckBox.isChecked = ParamLevelAuto().enabled
         binding.skillLevelSpinner.setSelection(ParamLimitSkillLevel().level)
@@ -298,7 +309,20 @@ class EngineSettings(pActivityID: Int) : DialogFragment() {
         binding.moveDurationLimitValueEditText.error = null
         binding.threadsLimitSlider.value = ParamLimitThreads().threads.toFloat()
 
+        setComputerMoveFirstButton()
         setControlState()
+    }
+
+    /**
+     * Sets the computer move first image
+     */
+    private fun setComputerMoveFirstButton() {
+        if (computerMoveFirstDialogValue) {
+            binding.computerMoveFirstButton.setImageResource(R.drawable.whitepawnlarge)
+        }
+        else {
+            binding.computerMoveFirstButton.setImageResource(R.drawable.blackpawnlarge)
+        }
     }
 
     /**

@@ -8,14 +8,13 @@
     android:padding="0dp"
     >
 
-
     <FrameLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/moveNavFrame"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="0dp"
-        android:padding="0dp"
+        android:padding="2dp"
         android:orientation="horizontal"
         android:layout_weight="1"
         >
@@ -29,90 +28,32 @@
         android:layout_margin="0dp"
         android:padding="0dp"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-
-            />
-
-        <com.google.android.material.imageview.ShapeableImageView
-            android:id="@+id/leftNavImage"
-            android:layout_width="@dimen/navButtonWidthHalf"
-            android:layout_height="@dimen/navButtonWidth"
-            android:src="@drawable/ic_chevron_left"
-            android:layout_gravity="start"
-            android:scaleType="centerCrop"
-            android:alpha="0.2"
-            android:visibility="visible"
-            />
-
-        <com.google.android.material.imageview.ShapeableImageView
-            android:id="@+id/rightNavImage"
-            android:layout_width="@dimen/navButtonWidthHalf"
-            android:layout_height="@dimen/navButtonWidth"
-            android:src="@drawable/ic_chevron_right"
-            android:layout_gravity="end"
-            android:scaleType="centerCrop"
-            android:alpha="0.2"
-            android:visibility="visible"
-            />
-
-        <com.google.android.material.imageview.ShapeableImageView
-            android:id="@+id/upNavImage"
-            android:layout_width="@dimen/navButtonWidth"
-            android:layout_height="@dimen/navButtonWidthHalf"
-            android:src="@drawable/ic_chevron_left"
-            android:layout_gravity="top"
-            android:scaleType="centerCrop"
-            android:rotation="90"
-            android:alpha="0.2"
-            android:visibility="visible"
-            />
-
-        <com.google.android.material.imageview.ShapeableImageView
-            android:id="@+id/downNavImage"
-            android:layout_width="@dimen/navButtonWidth"
-            android:layout_height="@dimen/navButtonWidthHalf"
-            android:src="@drawable/ic_chevron_right"
-            android:layout_gravity="bottom"
-            android:scaleType="centerCrop"
-            android:rotation="90"
-            android:alpha="0.2"
-            android:visibility="visible"
-            />
+         />
     </FrameLayout>
 
     <ImageButton android:id="@+id/leftNavPreviousButton"
         xmlns:android="http://schemas.android.com/apk/res/android"
-        style="@style/ButtonNavigatorNextStyle"
-        android:src="@drawable/ic_previous"
+        style="@style/ButtonNavigatorControlStyle"
+        android:src="@drawable/ic_chevron_left"
         android:adjustViewBounds="true"
         android:scaleType="fitCenter"
         />
 
     <ImageButton android:id="@+id/rightNavNextButton"
         xmlns:android="http://schemas.android.com/apk/res/android"
-        style="@style/ButtonNavigatorNextStyle"
-        android:src="@drawable/ic_next"
+        style="@style/ButtonNavigatorControlStyle"
+        android:src="@drawable/ic_chevron_right"
         android:adjustViewBounds="true"
         android:scaleType="fitCenter"
         />
 
-    <ImageButton android:id="@+id/upNavNextButton"
+    <ImageButton android:id="@+id/viewPGNTextButton"
         xmlns:android="http://schemas.android.com/apk/res/android"
-        style="@style/ButtonNavigatorNextStyle"
-        android:rotation="-90"
-        android:src="@drawable/ic_next"
-        android:adjustViewBounds="false"
-        android:scaleType="fitCenter"
-        />
-
-    <ImageButton android:id="@+id/downNavPreviousButton"
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        style="@style/ButtonNavigatorNextStyle"
-        android:rotation="-90"
-        android:src="@drawable/ic_previous"
+        style="@style/ButtonNavigatorControlStyle"
+        android:src="@drawable/ic_pgn_text"
         android:adjustViewBounds="true"
         android:scaleType="fitCenter"
         />
-
 
 </LinearLayout>
 
