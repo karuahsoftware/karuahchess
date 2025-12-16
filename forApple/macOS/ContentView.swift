@@ -98,6 +98,8 @@ struct ContentView: View {
                     HintSettings(pMenuSheet: menuSheet)
                 case .soundSettings:
                     SoundSettings(pMenuSheet: menuSheet)
+                case .importPGNView:
+                    ImportPGN(pMenuSheet: menuSheet)
                 case .about:
                     AboutView(pMenuSheet: menuSheet)
                 }

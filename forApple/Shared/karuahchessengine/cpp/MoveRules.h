@@ -21,14 +21,14 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #include "bitboard.h"
 
 namespace KaruahChess {
-	namespace MoveRules {
-		extern bool IsCheckMate(BitBoard& pBoard);
-		extern bool IsStaleMate(BitBoard& pBoard);
-		extern bool Move(const int pFromIndex, const int pToIndex, BitBoard& pBoard, const helper::PawnPromotionEnum pPawnPromotionPiece, const bool pValidateEnabled, const bool pCommit);
-		extern bool Arrange(const int pFromIndex, const int pToIndex, BitBoard& pBoard);
-		extern bool ArrangeUpdate(const char pFen, const int pToIndex, BitBoard& pBoard);
-		extern int FindFromIndex(BitBoard& pBoard, const int pToIndex, const int pSpin, const std::vector<int> pValidFromIndexes);
-		extern bool IsPawnPromotion(const int pFromIndex, const int pToIndex, BitBoard& pBoard);
-	}
+    namespace MoveRules {
+        extern bool IsCheckMate(BitBoard& pBoard);
+        extern bool IsStaleMate(BitBoard& pBoard);
+        extern bool Move(const int pFromIndex, const int pToIndex, BitBoard& pBoard, const helper::PawnPromotionEnum pPawnPromotionPiece, const bool pValidateEnabled, const bool pCommit);
+        extern bool Arrange(const int pFromIndex, const int pToIndex, BitBoard& pBoard);
+        extern bool ArrangeUpdate(const char pFen, const int pToIndex, BitBoard& pBoard);
+        extern int FindFromIndex(BitBoard& pBoard, const int pToIndex, const int pSpin, const std::vector<int> pValidFromIndexes, bool pTestMove);
+        extern bool IsPawnPromotion(const int pFromIndex, const int pToIndex, BitBoard& pBoard);
+    }
 
 }

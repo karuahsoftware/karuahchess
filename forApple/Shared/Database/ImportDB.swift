@@ -18,7 +18,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 import SQLite3
 
-
+@MainActor
 class ImportDB {
     enum ImportTypeEnum {case GameXML}
     
@@ -26,14 +26,7 @@ class ImportDB {
         var result = 0
         
         if pImportType == ImportTypeEnum.GameXML {
-            let uncompressedData: Data
-            if isGZipped(pData: pFile) {
-                // TODO: Unzip the data
-                uncompressedData = pFile
-            }
-            else {
-                uncompressedData = pFile
-            }
+            let uncompressedData: Data = pFile
             
             let gameRecordDelegate = GameRecordParser()
             let parser = XMLParser(data: uncompressedData)
@@ -61,11 +54,12 @@ class ImportDB {
                 do {
                     // Insert records in to the database
                     for gameRecord in gameRecList {
-                        let sqlStr = "insert into GameRecord(Id, BoardSquareStr, GameStateStr) values (?,?,?)"
+                        let sqlStr = "insert into GameRecord(Id, BoardSquareStr, GameStateStr, MoveSANStr) values (?,?,?,?)"
                         if sqlite3_prepare_v2(db, sqlStr, -1, &cursor, nil) == SQLITE_OK {
                             sqlite3_bind_int(cursor, 1, Int32(gameRecord.id))
                             sqlite3_bind_text(cursor, 2, (gameRecord.boardSquareStr as NSString).utf8String, -1, Constants.SQLITE_TRANSIENT)
                             sqlite3_bind_text(cursor, 3, (gameRecord.gameStateStr as NSString).utf8String, -1, Constants.SQLITE_TRANSIENT)
+                            sqlite3_bind_text(cursor, 4, (gameRecord.moveSANStr as NSString).utf8String, -1, Constants.SQLITE_TRANSIENT)
                             if sqlite3_step(cursor) == SQLITE_DONE {
                                 result += Int(sqlite3_changes(db))
                             }
@@ -88,8 +82,4 @@ class ImportDB {
         return result
     }
     
-    // Checks if data is compressed
-    private func isGZipped(pData: Data) -> Bool{
-        return pData.starts(with: [0x1f, 0x8b])
-    }
 }

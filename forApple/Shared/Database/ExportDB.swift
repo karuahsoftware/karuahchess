@@ -19,6 +19,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 import SQLite3
 import AppleArchive
 
+@MainActor
 class ExportDB {
     enum ExportTypeEnum {case GameXML}
     
@@ -35,18 +36,20 @@ class ExportDB {
             var cursor : OpaquePointer?
             let db = KaruahChessDB.openDBConnection()
             
-            let sqlStr = "select Id, BoardSquareStr, GameStateStr from GameRecord order by id"
+            let sqlStr = "select Id, BoardSquareStr, GameStateStr, MoveSANStr from GameRecord order by id"
             if sqlite3_prepare_v2(db, sqlStr, -1, &cursor, nil) == SQLITE_OK {
                 while sqlite3_step(cursor) == SQLITE_ROW {
                  
                     if let idXml = ("    <Id>" + String(sqlite3_column_int(cursor, 0)) + "</Id>\n").data(using: .utf8),
                        let boardSquareStrXml = ("    <BoardSquareStr>" + String(cString: sqlite3_column_text(cursor, 1)) + "</BoardSquareStr>\n").data(using: .utf8),
-                       let GameStateStrXml = ("    <GameStateStr>" + String(cString: sqlite3_column_text(cursor, 2)) + "</GameStateStr>\n").data(using: .utf8)
+                       let GameStateStrXml = ("    <GameStateStr>" + String(cString: sqlite3_column_text(cursor, 2)) + "</GameStateStr>\n").data(using: .utf8),
+                       let MoveSANStrXml = ("    <MoveSANStr>" + String(cString: sqlite3_column_text(cursor, 3)) + "</MoveSANStr>\n").data(using: .utf8)
                     {
                         xmlData.append("  <GameRecord>\n".data(using: .utf8)!)
                         xmlData.append(idXml)
                         xmlData.append(boardSquareStrXml)
                         xmlData.append(GameStateStrXml)
+                        xmlData.append(MoveSANStrXml)
                         xmlData.append("  </GameRecord>\n".data(using: .utf8)!)
                     }
                 }

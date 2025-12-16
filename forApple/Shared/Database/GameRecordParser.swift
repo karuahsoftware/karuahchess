@@ -32,7 +32,7 @@ class GameRecordParser: NSObject, XMLParserDelegate {
             inRecord = true
             newRecord = GameRecord()
         }
-        else if inRecord && (elementName == "Id" ||  elementName == "BoardSquareStr" || elementName == "GameStateStr") {
+        else if inRecord && (elementName == "Id" ||  elementName == "BoardSquareStr" || elementName == "GameStateStr" || elementName == "MoveSANStr") {
             inField = true
         }
     }
@@ -45,7 +45,7 @@ class GameRecordParser: NSObject, XMLParserDelegate {
             inField = false
             gameRecordItems.append(newRecord)
         }
-        else if inRecord && (elementName == "Id" || elementName == "BoardSquareStr" || elementName == "GameStateStr") {
+        else if inRecord && (elementName == "Id" || elementName == "BoardSquareStr" || elementName == "GameStateStr" || elementName == "MoveSANStr") {
             inField = false
         }
         
@@ -59,6 +59,7 @@ class GameRecordParser: NSObject, XMLParserDelegate {
             case "Id" : newRecord.id = Int(trimmedString) ?? 0
             case "BoardSquareStr" : newRecord.boardSquareStr = trimmedString
             case "GameStateStr" : newRecord.gameStateStr = trimmedString
+            case "MoveSANStr" : newRecord.moveSANStr = trimmedString
             default: break
             }
         }

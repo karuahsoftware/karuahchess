@@ -24,7 +24,7 @@ struct TileAnimationMoveFadeModifier: AnimatableModifier {
     var moveFrom: CGPoint
     var moveTo: CGPoint
     
-    var animatableData: CGFloat {
+    nonisolated var animatableData: CGFloat {
         get {complete}
         set {
             complete = newValue

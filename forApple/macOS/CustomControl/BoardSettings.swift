@@ -53,7 +53,7 @@ struct BoardSettings: View {
                         }
                     }
                     .pickerStyle(DefaultPickerStyle())
-                    
+                    .fixedSize(horizontal: true, vertical: true)
                     
                     VStack(alignment: .leading, spacing: 3) {
                         Text("Orientation").font(.body).padding(.top, 10).padding(.leading, 0)
@@ -69,7 +69,7 @@ struct BoardSettings: View {
                                        Image(systemName: "arrow.clockwise")
                                            .resizable()
                                            .aspectRatio(contentMode: .fit)
-                                          
+                                           .frame(width:24, height: 24)
                                    }
                                    .controlSize(.large)
                                    

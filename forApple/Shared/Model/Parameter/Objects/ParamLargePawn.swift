@@ -16,27 +16,11 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-import SwiftUI
-
-actor HintActor {
+class ParamLargePawn : ParamProtocol {
+    var enabled : Bool
     
-    let hintBoard: KaruahChessEngineC = KaruahChessEngineC()
-    
-    func setGame(pGame: GameRecordArray) {
-        hintBoard.setBoardArray(pGame.boardArray)
-        hintBoard.setStateArray(pGame.stateArray)
-    }
-    
-    func searchStart(pSearchOptions: SearchOptions) -> SearchResult {
-        return hintBoard.searchStart(pSearchOptions) as? SearchResult ?? SearchResult(pMoveFromIndex: -1, pMoveToIndex: -1, pPromotionPieceType: 0, pCancelled: false, pError: 0, pErrorMessage: "")
-    }
-    
-    func getGameStatus() -> Int {
-        return Int(hintBoard.getStateGameStatus())
-    }
-    
-    func cancelSearch() {
-        hintBoard.cancelSearch()
+    required init() {
+        enabled = false // Default value
     }
     
 }

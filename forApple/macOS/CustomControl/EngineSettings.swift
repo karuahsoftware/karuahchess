@@ -46,37 +46,59 @@ struct EngineSettings: View {
                         .imageScale(.large)
                         Text("Engine Settings").font(.headline)
                         ActivityIndicatorView(activityIndicatorVM: BoardViewModel.instance.activityIndicatorVM).frame(width:35, height:35)
-                    }.padding(.bottom, 10)
+                    }
                     
                     Toggle(isOn: $engineSettingsVM.computerPlayerEnabled) {
                         Text("Computer player enabled")
                             .font(.body)
-                    }
+                    }.padding(.bottom, 7)
                         
                     Group {
-                        Toggle(isOn: $engineSettingsVM.computerMovesFirst) {
-                            Text("Computer moves first")
-                                .font(.body)
-                        }
                         
-                        Toggle(isOn: $engineSettingsVM.randomiseFirstMove) {
-                            Text("Randomise first computer move")
-                                .font(.body)
-                        }
-                        
-                        Toggle(isOn: $engineSettingsVM.levelAuto) {
-                            Text("Increase strength after win")
-                                .font(.body)
-                        }
-                        
-                    
-                        Picker(selection: $engineSettingsVM.limitSkillLevel, label: Text("Strength").font(.body).opacity(!$engineSettingsVM.computerPlayerEnabled.wrappedValue ? 0.5 : 1)) {
+                        Picker(selection: $engineSettingsVM.limitSkillLevel, label: Text("Computer strength").font(.body).opacity(!$engineSettingsVM.computerPlayerEnabled.wrappedValue ? 0.5 : 1)) {
                             ForEach(0 ..< Constants.strengthList.count, id: \.self) {
                                 Text(Constants.strengthList[$0].label).tag($0)
                             }
                         }
                         .pickerStyle(DefaultPickerStyle())
+                        .fixedSize(horizontal: true, vertical: true)
                         
+                        Toggle(isOn: $engineSettingsVM.levelAuto) {
+                            Text("Auto increase strength")
+                                .font(.body)
+                        }.padding(.bottom)
+                                  
+                        
+                        Button(action: {
+                            engineSettingsVM.computerMovesFirstToggle()
+                               }){
+                                   VStack(spacing: 0) {
+                                       Text("Computer colour").font(.body)
+                                       if $engineSettingsVM.computerMovesFirst.wrappedValue {
+                                           Image("WhitePawnLarge")
+                                               .resizable()
+                                               .aspectRatio(contentMode: .fit)
+                                               .frame(width:60, height: 60)
+                                               .padding(.bottom)
+                                               .opacity(!$engineSettingsVM.computerPlayerEnabled.wrappedValue ? 0.5 : 1)
+                                       }
+                                       else {
+                                           Image("BlackPawnLarge")
+                                               .resizable()
+                                               .aspectRatio(contentMode: .fit)
+                                               .frame(width:60, height: 60)
+                                               .padding(.bottom)
+                                               .opacity(!$engineSettingsVM.computerPlayerEnabled.wrappedValue ? 0.5 : 1)
+                                       }
+                                   }
+                                      
+                               }.padding(.bottom)
+                        
+                        Toggle(isOn: $engineSettingsVM.randomiseFirstMove) {
+                            Text("Make the first computer move more random")
+                                .font(.body)
+                        }
+                                                
                         
                         Toggle(isOn: $engineSettingsVM.limitAdvanced) {
                             Text("Advanced search settings")
@@ -130,7 +152,7 @@ struct EngineSettings: View {
                 
             } // Scrollview
             
-            Divider()
+            Divider().padding(.top)
             
             HStack {
                 Button(action: {
@@ -143,14 +165,14 @@ struct EngineSettings: View {
                     BoardViewModel.instance.stopSearchJob()
                 }){
                     Text("Stop search")
-                }
+                }.buttonStyle(.bordered)
                 
                 Button(action: {
                     limitMoveDurationIsFocused = false
                     engineSettingsVM.resetToDefault()
                 }){
                     Text("Reset to default")
-                }
+                }.buttonStyle(.bordered)
             }
                
         }

@@ -18,15 +18,15 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 import SwiftUI
 
-struct AnimationCompletionObserverModifier<Value>: AnimatableModifier where Value: VectorArithmetic {
+struct AnimationCompletionObserverModifier<Value: Sendable>: AnimatableModifier where Value: VectorArithmetic {
 
-    var animatableData: Value {
+    nonisolated var animatableData: Value {
         didSet {
             notifyCompletionIfFinished()
         }
     }
 
-    private var targetValue: Value
+    nonisolated private var targetValue: Value
 
     private var completion: () -> Void
 
@@ -36,7 +36,7 @@ struct AnimationCompletionObserverModifier<Value>: AnimatableModifier where Valu
         targetValue = observedValue
     }
 
-    private func notifyCompletionIfFinished() {
+    nonisolated private func notifyCompletionIfFinished() {
         guard animatableData == targetValue else { return }
 
         DispatchQueue.main.async {

@@ -232,6 +232,7 @@ using namespace helper;
     mResult.success = success;
     mResult.returnMessage = [NSString stringWithUTF8String:MainBoard.ReturnMessage.c_str()];
     mResult.moveDataStr = [NSString stringWithFormat:@"%d|%d|%d|%d", MainBoard.MoveData[0], MainBoard.MoveData[1], MainBoard.MoveData[2], MainBoard.MoveData[3]];
+    mResult.moveSAN = [NSString stringWithUTF8String:MainBoard.MoveSAN.c_str()];
     return mResult;
 }
 
@@ -272,7 +273,7 @@ using namespace helper;
     for(id validFromIndexObj in pValidFromIndexes) {
         validFromIndexesVector.push_back([validFromIndexObj intValue]);
     }
-    int fromIndex = MoveRules::FindFromIndex(MainBoard, pToIndex, pSpin, validFromIndexesVector);
+    int fromIndex = MoveRules::FindFromIndex(MainBoard, pToIndex, pSpin, validFromIndexesVector, true);
     return fromIndex;
 }
 
@@ -325,13 +326,11 @@ using namespace helper;
     Search::GetBestMove(SearchBoard, options, bestMove, statistics);
     
     // Copy the values to result
-    SearchResult *result = [[SearchResult alloc]init];
-    result.moveFromIndex = bestMove.moveFromIndex;
-    result.moveToIndex = bestMove.moveToIndex;
-    result.promotionPieceType = bestMove.promotionPieceType;
-    result.cancelled = bestMove.cancelled;
-    result.error = bestMove.error;
-    result.errorMessage = [NSString stringWithUTF8String:helper::SearchErrorMessage.at(bestMove.error).c_str()];
+    SearchResult *result = [[SearchResult alloc] initWithPMoveFromIndex:bestMove.moveFromIndex
+                                                 pMoveToIndex:bestMove.moveToIndex
+                                                 pPromotionPieceType:bestMove.promotionPieceType
+                                                 pCancelled:bestMove.cancelled pError:bestMove.error
+                                                 pErrorMessage:[NSString stringWithUTF8String:helper::SearchErrorMessage.at(bestMove.error).c_str()]];
     return result;
 }
 

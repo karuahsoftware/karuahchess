@@ -49,7 +49,12 @@ struct PieceSettings: View {
                     Toggle(isOn: $pieceSettingsVM.promoteAuto) {
                         Text("Promote Pawn automatically")
                             .font(.body)
-                    }.padding(.top)
+                    }
+                    
+                    Toggle(isOn: $pieceSettingsVM.largePawn) {
+                        Text("Large Pawns")
+                            .font(.body)
+                    }
                     
                     Spacer().frame(maxWidth: .infinity)
                  

@@ -19,7 +19,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 import SwiftUI
 
 class MenuSheet: ObservableObject {
-    static let shared = MenuSheet()
+    @MainActor static let shared = MenuSheet()
     
     @Published var active: Sheets?
     
@@ -29,6 +29,7 @@ class MenuSheet: ObservableObject {
         case pieceSettings
         case hintSettings
         case soundSettings
+        case importPGNView
         case about
         
         var id: Int {

@@ -18,11 +18,12 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 import SwiftUI
 
+
 struct TileFadeOutModifier: AnimatableModifier {
     
     var complete: Double
     
-    var animatableData: Double {
+    nonisolated var animatableData: Double {
         get {complete}
         set {
             complete = newValue

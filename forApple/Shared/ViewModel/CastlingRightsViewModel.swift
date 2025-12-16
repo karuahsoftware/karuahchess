@@ -100,14 +100,9 @@ import SwiftUI
 
        // Save the values
        if (success) {
-            let updatedRecord = GameRecordArray()
-            updatedRecord.id = recordId
-            updatedRecord.boardArray = board.getBoardArraySafe()
-            updatedRecord.stateArray = board.getStateArraySafe()
-
-            
-        _ = GameRecordDataService.instance.updateGameState(pGameRecordArray: updatedRecord)
-            BoardViewModel.instance.updateBoardIndicators(pRecord: updatedRecord)
+           let updatedRecord = GameRecordArray(pId: recordId, pBoardArray: board.getBoardArraySafe(), pStateArray: board.getStateArraySafe(), pMoveSAN: "")
+           _ = GameRecordDataService.instance.updateGameState(pGameRecordArray: updatedRecord)
+           BoardViewModel.instance.updateBoardIndicators(pRecord: updatedRecord)
        }
        else {
             BoardViewModel.instance.showMessage(pTextFull: "Error, cannot set castling rights as Rook or King position is not valid for castling.", pTextShort: "", pDurationms: Constants.TOAST_LONG)

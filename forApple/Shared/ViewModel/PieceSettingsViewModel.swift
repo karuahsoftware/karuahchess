@@ -37,8 +37,16 @@ import SwiftUI
         }
     }
     
-    
-     
+    @Published var largePawn: Bool = ParameterDataService.instance.get(pParameterClass: ParamLargePawn.self).enabled {
+        didSet {
+        let parameter = ParamLargePawn()
+        parameter.enabled = largePawn
+        _ = ParameterDataService.instance.set(pObj: parameter)
+        BoardViewModel.instance.tilePanelVM.refreshPawns()
+        BoardViewModel.instance.tileAnimationVM.visible = false
+        }
+    }
+         
 }
 
 

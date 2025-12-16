@@ -18,7 +18,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 import SwiftUI
 
-class PawnPromotionViewModel: ObservableObject {
+@MainActor class PawnPromotionViewModel: ObservableObject {
     @Published var visible : Bool = false
     var promotionPiece: Int = 0
     var colour: Int = 0

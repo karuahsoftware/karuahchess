@@ -22,7 +22,7 @@ struct TileAnimationPutModifier: AnimatableModifier {
     @ObservedObject private var device : Device = Device.instance
     var complete: CGFloat
     
-    var animatableData: CGFloat {
+    nonisolated var animatableData: CGFloat {
         get {complete}
         set {
             complete = newValue

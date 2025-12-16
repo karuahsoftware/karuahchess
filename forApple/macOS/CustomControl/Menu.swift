@@ -18,6 +18,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 import SwiftUI
 
+@MainActor
 class Menu : NSObject {
     @ObservedObject private var menuSettingsVM : MenuSettingsViewModel = MenuSettingsViewModel.instance
     
@@ -94,6 +95,10 @@ class Menu : NSObject {
         }
     }
     
+    @objc func importPGN() {
+        MenuSheet.shared.active = .importPGNView
+    }
+    
     @objc func loadGame() {
         BoardViewModel.instance.showFileImporter = true
     }
@@ -113,8 +118,7 @@ class Menu : NSObject {
             window.makeKeyAndOrderFront(nil)
         }
     }
-    
-    
+        
     @objc func quit() {
         NSApplication.shared.terminate(self)
     }
@@ -160,7 +164,6 @@ class Menu : NSObject {
             menuItem.target = self
             menuItem.state = menuSettingsVM.coordinatesEnabled ? .on : .off
             appMenu.addItem(menuItem)
-            
         }
         
         // Highlight Moves
@@ -170,7 +173,6 @@ class Menu : NSObject {
             menuItem.target = self
             menuItem.state = menuSettingsVM.moveHighlightEnabled ? .on : .off
             appMenu.addItem(menuItem)
-            
         }
         
         // Navigator
@@ -180,7 +182,6 @@ class Menu : NSObject {
             menuItem.target = self
             menuItem.state = menuSettingsVM.navigatorEnabled ? .on : .off
             appMenu.addItem(menuItem)
-            
         }
         
         appMenu.addItem(NSMenuItem.separator())
@@ -245,6 +246,14 @@ class Menu : NSObject {
             appMenu.addItem(menuItem)
         }
         
+        // Import PGN
+        do {
+            let menuItem = NSMenuItem(title: "Import PGN", action: #selector(self.importPGN), keyEquivalent: "")
+            menuItem.image = NSImage(systemSymbolName: "square.and.arrow.down", accessibilityDescription: "Import PGN")
+            menuItem.target = self
+            appMenu.addItem(menuItem)
+        }
+        
         // Load game
         do {
             let menuItem = NSMenuItem(title: "Load Game", action: #selector(self.loadGame), keyEquivalent: "")
@@ -286,6 +295,39 @@ class Menu : NSObject {
             menuItem.target = self
             appMenu.addItem(menuItem)
         }
+        
+        // Edit menu for copy paste commands to work
+        let editRoot = NSMenuItem(title: "Edit", action: nil, keyEquivalent: "")
+        mainMenu.addItem(editRoot)
+        let editMenu = NSMenu(title: "Edit")
+        
+        do {
+            let menuItem = NSMenuItem(title: "Cut", action: #selector(NSText.cut(_:)), keyEquivalent: "x")
+            menuItem.target = nil
+            editMenu.addItem(menuItem)
+        }
+        
+        do {
+            let menuItem = NSMenuItem(title: "Copy", action: #selector(NSText.copy(_:)), keyEquivalent: "c")
+            menuItem.target = nil
+            editMenu.addItem(menuItem)
+        }
+        
+        do {
+            let menuItem = NSMenuItem(title: "Paste", action: #selector(NSText.paste(_:)), keyEquivalent: "v")
+            menuItem.target = nil
+            editMenu.addItem(menuItem)
+        }
+        
+        editMenu.addItem(NSMenuItem.separator())
+
+        do {
+            let menuItem = NSMenuItem(title: "Select All", action: #selector(NSText.selectAll(_:)), keyEquivalent: "a")
+            menuItem.target = nil
+            editMenu.addItem(menuItem)
+        }
+        
+        editRoot.submenu = editMenu
         
         return mainMenu
     }

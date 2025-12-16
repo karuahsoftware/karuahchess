@@ -16,8 +16,16 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-class GameRecordArray {
-    var id: Int = 0
-    var boardArray = [UInt64]()
-    var stateArray = [Int32]()
+final class GameRecordArray: Sendable {
+    let id: Int
+    let boardArray: [UInt64]
+    let stateArray: [Int32]
+    let moveSAN: String
+    
+    init(pId: Int, pBoardArray: [UInt64], pStateArray: [Int32], pMoveSAN: String) {
+        self.id = pId
+        self.boardArray = pBoardArray
+        self.stateArray = pStateArray
+        self.moveSAN = pMoveSAN
+    }
 }

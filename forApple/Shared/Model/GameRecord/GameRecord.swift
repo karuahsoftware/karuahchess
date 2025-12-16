@@ -20,4 +20,5 @@ class GameRecord {
     var id: Int = 0
     var boardSquareStr : String = ""
     var gameStateStr : String = ""
+    var moveSANStr : String = ""
 }

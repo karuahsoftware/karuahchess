@@ -20,8 +20,8 @@ import SwiftUI
 import UniformTypeIdentifiers
 
 struct ExportFileDocument: FileDocument {
-    static var readableContentTypes = [UTType.gzip, UTType.xml]
-    static var writableContentTypes = [UTType.gzip]
+    static let readableContentTypes = [UTType.gzip, UTType.xml]
+    static let writableContentTypes = [UTType.gzip]
     
     var fileData: Data
     var fileName: String = ""

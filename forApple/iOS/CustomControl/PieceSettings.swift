@@ -32,11 +32,15 @@ struct PieceSettings: View {
                 Slider(value: $pieceSettingsVM.moveSpeed, in: 0...6, step:1) {
                     EmptyView()
                 }
-            }
+            }.padding([.top, .bottom])
             
             Toggle(isOn: $pieceSettingsVM.promoteAuto) {
                 Text("Promote Pawn automatically")
-            }.padding(.top)
+            }
+            
+            Toggle(isOn: $pieceSettingsVM.largePawn) {
+                Text("Large Pawns")
+            }
             
             Spacer()
                 .frame(maxWidth: .infinity)

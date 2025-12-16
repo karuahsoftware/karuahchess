@@ -26,7 +26,7 @@ struct TileFrameBoardPreference: Equatable {
 struct TileFrameBoardPreferenceKey: PreferenceKey {
     typealias Value = [TileFrameBoardPreference]
     
-    static var defaultValue: [TileFrameBoardPreference] = []
+    static let defaultValue: [TileFrameBoardPreference] = []
     
     static func reduce(value: inout [TileFrameBoardPreference], nextValue: () -> [TileFrameBoardPreference]) {
         value.append(contentsOf: nextValue())

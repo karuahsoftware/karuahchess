@@ -103,6 +103,10 @@ import SwiftUI
         }
     }
     
+    // Toggles the computer moves first value
+    func computerMovesFirstToggle() {
+        computerMovesFirst = !computerMovesFirst
+    }
     
     /// Resets the values to their default
     func resetToDefault() {

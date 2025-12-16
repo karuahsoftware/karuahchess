@@ -20,12 +20,19 @@ import SwiftUI
 
 actor SearchActor {
     
-    func searchStart(pSearchOptions: SearchOptions) -> SearchResult {
-        return GameRecordDataService.instance.currentGame.searchStart(pSearchOptions) as? SearchResult ?? SearchResult()
+    let searchBoard: KaruahChessEngineC = KaruahChessEngineC()
+    
+    func setGame(pGame: GameRecordArray) {
+        searchBoard.setBoardArray(pGame.boardArray)
+        searchBoard.setStateArray(pGame.stateArray)
     }
     
-    nonisolated func cancelSearch() {
-        GameRecordDataService.instance.currentGame.cancelSearch()
+    func searchStart(pSearchOptions: SearchOptions) -> SearchResult {
+        return searchBoard.searchStart(pSearchOptions) as? SearchResult ?? SearchResult(pMoveFromIndex: -1, pMoveToIndex: -1, pPromotionPieceType: 0, pCancelled: false, pError: 0, pErrorMessage: "")
+    }
+    
+    func cancelSearch() {
+        searchBoard.cancelSearch()
     }
     
 }

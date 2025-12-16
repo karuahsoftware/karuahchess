@@ -21,7 +21,7 @@ protocol GameRecordDataServiceProtocol {
     func getCurrentGame() -> GameRecordArray
     func get(pId: Int) -> GameRecordArray?
     func get() -> GameRecordArray?
-    func recordGameState(pWhiteClockOffset: Int, pBlackClockOffset: Int) -> Int
+    func recordGameState(pWhiteClockOffset: Int, pBlackClockOffset: Int, pMoveSAN: String) -> Int
     func updateGameState(pGameRecordArray: GameRecordArray) -> Int
     func reset()
     func undo() -> Bool
@@ -29,4 +29,6 @@ protocol GameRecordDataServiceProtocol {
     func getMaxId() -> Int
     func getAllRecordIDList() -> [Int]
     func gameHistory() -> [Int: GameRecordArray]
+    func getActiveMoveColour(pId: Int) -> Int
+    func getStateGameStatus(pId: Int) -> Int
 }

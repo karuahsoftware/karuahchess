@@ -20,13 +20,13 @@ import SwiftUI
 import SQLite3
 
 class KaruahChessDB {
-    private static let dbname = "KaruahChessV5.sqlite"
+    private static let dbname = "KaruahChessV7.sqlite"
     
     
     // Create the database if it does not exist
     static func createIfNotExists() {
-        execute(pQuery: "CREATE TABLE IF NOT EXISTS Parameter (Name STRING PRIMARY KEY NOT NULL, Value BLOB NOT NULL);")
-        execute(pQuery: "CREATE TABLE IF NOT EXISTS GameRecord (Id INTEGER PRIMARY KEY NOT NULL, BoardSquareStr STRING NOT NULL, GameStateStr STRING NOT NULL);")
+        execute(pQuery: "CREATE TABLE IF NOT EXISTS Parameter (Name TEXT PRIMARY KEY NOT NULL, Value BLOB NOT NULL);")
+        execute(pQuery: "CREATE TABLE IF NOT EXISTS GameRecord (Id INTEGER PRIMARY KEY NOT NULL, BoardSquareStr TEXT NOT NULL, GameStateStr TEXT NOT NULL, MoveSANStr TEXT);")
     }
     
     // Get a database connection

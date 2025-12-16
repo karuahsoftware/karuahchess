@@ -63,7 +63,7 @@ using namespace KaruahChess;
 - (NSObject * _Nonnull) move:(const int32_t)pFromIndex :(const int32_t)pToIndex :(const int32_t)pPawnPromotionPiece :(const bool)pValidateEnabled :(const bool)pCommit;
 - (NSObject * _Nonnull) arrange:(const int32_t)pFromIndex :(const int32_t)pToIndex;
 - (NSObject * _Nonnull) arrangeUpdate:(const char)pFen :(const int32_t)pToIndex;
-- (int32_t) findFromIndex:(const int32_t)pToIndex :(const int32_t)pSpin :(NSArray<NSNumber *> * _Nonnull)pValidFromIndexes;
+- (int32_t) findFromIndex:(const int32_t)pToIndex :(const int32_t)pSpin :(NSArray<NSNumber *> * _Nonnull)pValidFromIndexes NS_SWIFT_NAME(findFromIndex(pToIndex:pSpin:pValidFromIndexes:));
 - (int32_t) getSpinFromPieceName:(const NSString * _Nonnull)pPieceName;
 - (NSString * _Nonnull) getPieceNameFromChar:(const char)pFenChar NS_SWIFT_NAME(getPieceNameFromChar(pFenChar:));
 - (char) getFENCharFromSpin:(const int32_t)pSpin NS_SWIFT_NAME(getFENCharFromSpin(pSpin:));

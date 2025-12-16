@@ -59,7 +59,7 @@ import AVFoundation
     }
     
     enum MoveTypeEnum : Int { case None = 0, Normal = 1, Enpassant = 2, Castle = 3, Promotion = 4}
-    enum BoardStatusEnum : Int { case Ready = 0, Checkmate = 1, Stalemate = 2, Resigned = 3}
+    enum BoardStatusEnum : Int { case Ready = 0, Checkmate = 1, Stalemate = 2, Resigned = 3, TimeExpired = 4}
     enum PawnPromotionEnum : Int { case Knight = 2, Bishop = 3, Rook = 4, Queen = 5}
     enum PieceTypeEnum : Int { case Empty = 0, Pawn = 1, Knight = 2, Bishop = 3, Rook = 4, Queen = 5, King = 6}
    
@@ -219,10 +219,10 @@ import AVFoundation
                 editBufferBoard.setStateArray(record.stateArray)
                 let result : MoveResult = editBufferBoard.arrange(Int32(pFromIndex), Int32(pToIndex)) as? MoveResult ?? MoveResult()
                 if result.success {
-                    record.boardArray = editBufferBoard.getBoardArraySafe()
-                    record.stateArray = editBufferBoard.getStateArraySafe()
-                    BoardSquareDataService.instance.update(pTilePanelVM: tilePanelVM, pRecord: record)
-                    _ = GameRecordDataService.instance.updateGameState(pGameRecordArray: record)
+                    let editedRecord = GameRecordArray(pId: record.id, pBoardArray: editBufferBoard.getBoardArraySafe(), pStateArray: editBufferBoard.getStateArraySafe(), pMoveSAN: "")
+                    BoardSquareDataService.instance.update(pTilePanelVM: tilePanelVM, pRecord: editedRecord)
+                    _ = GameRecordDataService.instance.updateGameState(pGameRecordArray: editedRecord)
+                    refreshNavigator(pReload: true)
                 }
                 else {
                     showMessage(pTextFull: result.returnMessage, pTextShort: "", pDurationms: Constants.TOAST_SHORT)
@@ -241,10 +241,10 @@ import AVFoundation
                 editBufferBoard.setStateArray(record.stateArray)
                 let result : MoveResult = editBufferBoard.arrangeUpdate(Int8(pFen.asciiValue ?? 0), Int32(pToIndex)) as? MoveResult ?? MoveResult()
                 if result.success {
-                    record.boardArray = editBufferBoard.getBoardArraySafe()
-                    record.stateArray = editBufferBoard.getStateArraySafe()
-                    BoardSquareDataService.instance.update(pTilePanelVM: tilePanelVM, pRecord: record)
-                    _ = GameRecordDataService.instance.updateGameState(pGameRecordArray: record)
+                    let editedRecord = GameRecordArray(pId: record.id, pBoardArray: editBufferBoard.getBoardArraySafe(), pStateArray: editBufferBoard.getStateArraySafe(), pMoveSAN: "")
+                    BoardSquareDataService.instance.update(pTilePanelVM: tilePanelVM, pRecord: editedRecord)
+                    _ = GameRecordDataService.instance.updateGameState(pGameRecordArray: editedRecord)
+                    refreshNavigator(pReload: true)
                 }
                 else {
                     showMessage(pTextFull: result.returnMessage, pTextShort: "", pDurationms: Constants.TOAST_SHORT)
@@ -312,7 +312,7 @@ import AVFoundation
                 playPieceMoveSoundEffect()
                 
                 // Record the game state
-                await recordCurrentGameState()
+                await recordCurrentGameState(pMoveSAN: moveResult.moveSAN)
                 
                 // Update score if checkmate occurred
                 if gameStatusBeforeMove == BoardStatusEnum.Ready.rawValue && Int(GameRecordDataService.instance.currentGame.getStateGameStatus()) == BoardStatusEnum.Checkmate.rawValue {
@@ -376,8 +376,11 @@ import AVFoundation
             searchOptions.randomiseFirstMove = ParameterDataService.instance.get(pParameterClass: ParamRandomiseFirstMove.self).enabled
             searchOptions.alternateMove = isRepeatMove()
             
-            let topMove = await srchActor.searchStart(pSearchOptions: searchOptions)
-            _ = await doMoveOnBoard(topMove: topMove)
+            if let game = GameRecordDataService.instance.get(pId: BoardSquareDataService.instance.gameRecordCurrentValue) {
+                await srchActor.setGame(pGame: game)
+                let topMove = await srchActor.searchStart(pSearchOptions: searchOptions)
+                _ = await doMoveOnBoard(topMove: topMove)
+            }
             
             self.activityIndicatorVM.enabled = false
             computerMoveProcessing = false
@@ -389,11 +392,12 @@ import AVFoundation
     
     /// Find the best move for a board layout
     private func startHintTask(pRecord: GameRecordArray) async {
-        hintBoardActor.hintBoard.setBoardArray(pRecord.boardArray)
-        hintBoardActor.hintBoard.setStateArray(pRecord.stateArray)
+        await Task {
+            await hintBoardActor.setGame(pGame: pRecord)
+        }.value
         
         let arrangeBoardEnabled = ParameterDataService.instance.get(pParameterClass: ParamArrangeBoard.self).enabled
-        let boardStatus = Int(hintBoardActor.hintBoard.getStateGameStatus())
+        let boardStatus = await hintBoardActor.getGameStatus()
         
         if boardStatus == 0 && (!computerMoveProcessing) && (!computerHintProcessing) && (!arrangeBoardEnabled) {
             lockPanel = true
@@ -488,7 +492,7 @@ import AVFoundation
                 playPieceMoveSoundEffect()
                 
                 // Record the game state
-                await recordCurrentGameState()
+                await recordCurrentGameState(pMoveSAN: moveResult.moveSAN)
                 
                 // Update score if checkmate occurred
                 if gameStatusBeforeMove == BoardStatusEnum.Ready.rawValue && GameRecordDataService.instance.currentGame.getStateGameStatus() == BoardStatusEnum.Checkmate.rawValue {
@@ -609,21 +613,19 @@ import AVFoundation
     /// Set the board to the max record
     private func navigateMaxRecord() async {
         let maxId = GameRecordDataService.instance.getMaxId()
-        
         await navigateGameRecord(pRecId: maxId, pAnimate: false)
         
         // Refresh shake animation
         //TODO: boardLayout.shakeRefresh()
         
         // Load the move navigator
-        let navParam = ParameterDataService.instance.get(pParameterClass: ParamNavigator.self)
-        loadNavigator(pEnabled: navParam.enabled)
+        refreshNavigator(pReload: true)
     }
     
     /// Navigate to requested game record
     /// - Parameters:
     ///   - pRecId: The record Id to which to navigate
-    ///   - pAnimate: Animate the navigation or not
+    ///   - pAnimate: Animate the navigation or notee
     func navigateGameRecord(pRecId: Int, pAnimate: Bool) async {
             
         if pRecId > 0 {
@@ -662,8 +664,8 @@ import AVFoundation
     
     
     /// Records the current state of the game
-    private func recordCurrentGameState() async {
-        let success = GameRecordDataService.instance.recordGameState(pWhiteClockOffset: 0, pBlackClockOffset: 0)
+    private func recordCurrentGameState(pMoveSAN: String) async {
+        let success = GameRecordDataService.instance.recordGameState(pWhiteClockOffset: 0, pBlackClockOffset: 0, pMoveSAN: pMoveSAN)
         if (success > 0) {
             
             // Ensure game record position is set to max value
@@ -726,10 +728,11 @@ import AVFoundation
         Task(priority: .userInitiated) {
             await pawnPromotionVM.cancel()
             await move.clear()
+            await hintBoardActor.cancelSearch()
+            await srchActor.cancelSearch()
         }
         
-        hintBoardActor.cancelSearch()
-        srchActor.cancelSearch()
+        
     }
     
     
@@ -880,7 +883,9 @@ import AVFoundation
                 GameRecordDataService.instance.currentGame.setStateGameStatus(Int32(BoardStatusEnum.Resigned.rawValue))
                
                 // Record the current game state
-                await recordCurrentGameState()
+                let turn = Int(GameRecordDataService.instance.currentGame.getStateActiveColour())
+                let comment = turn == Constants.WHITEPIECE ? "{White resigns.}" : "{Black resigns.}"
+                await recordCurrentGameState(pMoveSAN: comment)
                    
                 
                 // Do animation, display message
@@ -965,9 +970,11 @@ import AVFoundation
             
             // Flip direction
             board.setStateActiveColour(board.getStateActiveColour() * (-1))
-            record.stateArray = board.getStateArraySafe()
-            _ = GameRecordDataService.instance.updateGameState(pGameRecordArray: record)
-            updateBoardIndicators(pRecord: record)
+            
+            let editedRecord = GameRecordArray(pId: record.id, pBoardArray: record.boardArray, pStateArray: board.getStateArraySafe(), pMoveSAN: "")
+            _ = GameRecordDataService.instance.updateGameState(pGameRecordArray: editedRecord)
+            updateBoardIndicators(pRecord: editedRecord)
+            refreshNavigator(pReload: true)
         }
     }
     
@@ -995,30 +1002,42 @@ import AVFoundation
     func loadGame(_ pUrl: URL) async {
         
         stopSearchJob()
-
-        if let fileData = try? Data(contentsOf: pUrl) {
-            // Uncompress the file if it is compressed
-            let compressor = CompressionC()
-            let uncompressedFile = compressor.isGZip(fileData) ? compressor.gUnZip(fileData) : fileData
-            
-            // Do the import
-            let importDB = ImportDB()
-            let result = importDB.importData(uncompressedFile, ImportDB.ImportTypeEnum.GameXML)
-            if result > 0 {
-                Task(priority: .userInitiated) {
-                    await navigateMaxRecord()
+        
+        let fileAccessGranted = pUrl.startAccessingSecurityScopedResource()
+        if fileAccessGranted {
+            do {
+                let fileData = try Data(contentsOf: pUrl)
+                // Uncompress the file if it is compressed
+                let compressor = CompressionC()
+                let uncompressedFile = compressor.isGZip(fileData) ? compressor.gUnZip(fileData) : fileData
+                
+                // Do the import
+                let importDB = ImportDB()
+                let result = importDB.importData(uncompressedFile, ImportDB.ImportTypeEnum.GameXML)
+                if result > 0 {
+                    Task(priority: .userInitiated) {
+                        await navigateMaxRecord()
+                    }
+                    showMessage(pTextFull: "Game successfully loaded", pTextShort: "", pDurationms: Constants.TOAST_SHORT)
                 }
-                showMessage(pTextFull: "Game successfully loaded", pTextShort: "", pDurationms: Constants.TOAST_SHORT)
+                else if result == -1 {
+                    showMessage(pTextFull: "Invalid file", pTextShort: "", pDurationms: Constants.TOAST_LONG)
+                }
+                else {
+                    showMessage(pTextFull: "Unable to load game. No records found", pTextShort: "", pDurationms: Constants.TOAST_LONG)
+                }
             }
-            else if result == -1 {
-                showMessage(pTextFull: "Invalid file", pTextShort: "", pDurationms: Constants.TOAST_LONG)
+            catch let error
+            {
+                showMessage(pTextFull: "Error loading file. \(error.localizedDescription)", pTextShort: "", pDurationms: Constants.TOAST_LONG)
             }
-            else {
-                showMessage(pTextFull: "Unable to load game. No records found", pTextShort: "", pDurationms: Constants.TOAST_LONG)
-            }
-        } else
+            
+            pUrl.stopAccessingSecurityScopedResource()
+            
+        }
+        else
         {
-            showMessage(pTextFull: "Error loading file", pTextShort: "", pDurationms: Constants.TOAST_LONG)
+            showMessage(pTextFull: "Unable to read file, access was not granted.", pTextShort: "", pDurationms: Constants.TOAST_LONG)
         }
         
     }
@@ -1031,16 +1050,21 @@ import AVFoundation
         Device.instance.boardCoordPadding = pCoordPanelEnabled ? 18 : 0
         SceneDelegate.refreshTileSize()
         #elseif os(macOS)
-        Device.instance.navigationHeight = pNavigationEnabled ? 35 : 0
+        Device.instance.navigationHeight = pNavigationEnabled ? 50 : 0
         Device.instance.boardCoordPadding = pCoordPanelEnabled ? 14 : 0
         MainWindowController.refreshTileSize()
         #endif
     }
     
     /// Loads the move navigator
-    func loadNavigator(pEnabled: Bool) {
-        if pEnabled {
-            navigatorVM.recordIdList = GameRecordDataService.instance.getAllRecordIDList()
+    func refreshNavigator(pReload: Bool) {
+        let navParam = ParameterDataService.instance.get(pParameterClass: ParamNavigator.self)
+        
+        if navParam.enabled {
+            if pReload {
+                navigatorVM.recordIdList = GameRecordDataService.instance.getAllRecordIDList()
+                
+            }
             navigatorVM.enabled = true
         }
         else {

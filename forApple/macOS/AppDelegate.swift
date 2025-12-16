@@ -18,7 +18,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 import SwiftUI
 
-class AppDelegate: NSObject, NSApplicationDelegate {
+@MainActor class AppDelegate: NSObject, NSApplicationDelegate {
     let mainWindowController = MainWindowController()
     let menu = Menu()
     

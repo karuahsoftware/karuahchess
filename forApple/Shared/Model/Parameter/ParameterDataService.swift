@@ -21,7 +21,7 @@ import SQLite3
 class ParameterDataService : ParameterDataServiceProtocol {
     private var parameters: [String: ParamProtocol]
     
-    static let instance = ParameterDataService()
+    @MainActor static let instance = ParameterDataService()
   
     /// Constructor
     private init() {
@@ -75,6 +75,10 @@ class ParameterDataService : ParameterDataServiceProtocol {
                             }
                         case String(describing: ParamHintMove.self):
                             if let obj = try? JSONDecoder().decode(ParamHintMove.self, from: data) {
+                                parameters[name] = obj
+                            }
+                        case String(describing: ParamLargePawn.self):
+                            if let obj = try? JSONDecoder().decode(ParamLargePawn.self, from: data) {
                                 parameters[name] = obj
                             }
                         case String(describing: ParamLevelAuto.self):

@@ -70,7 +70,10 @@
 		3A6EEC5E25D64871005B637F /* MenuSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A6EEC5D25D64871005B637F /* MenuSheet.swift */; };
 		3A6EEC6625D65504005B637F /* EngineSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A6EEC6525D65504005B637F /* EngineSettings.swift */; };
 		3A70B2CB2A10ED2C0077A662 /* PieceSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A70B2CA2A10ED2C0077A662 /* PieceSettings.swift */; };
+		3A757C412EDAF9D40063DF0C /* ImportPGN.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A757C402EDAF9D40063DF0C /* ImportPGN.swift */; };
 		3A7816FC27708D4800DCE7E6 /* SoundSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A7816FB27708D4800DCE7E6 /* SoundSettings.swift */; };
+		3A7976772D5610DF00189644 /* ParamLargePawn.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A7976762D5610DF00189644 /* ParamLargePawn.swift */; };
+		3A7976782D5610DF00189644 /* ParamLargePawn.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A7976762D5610DF00189644 /* ParamLargePawn.swift */; };
 		3A7A4D072C26B9C900E5BCF1 /* ParamHintMove.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A7A4D062C26B9C900E5BCF1 /* ParamHintMove.swift */; };
 		3A7A4D082C26B9C900E5BCF1 /* ParamHintMove.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A7A4D062C26B9C900E5BCF1 /* ParamHintMove.swift */; };
 		3A7A4D0A2C26BAEE00E5BCF1 /* HintSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A7A4D092C26BAEE00E5BCF1 /* HintSettings.swift */; };
@@ -85,6 +88,9 @@
 		3A96EDC02945DEC0008A05DF /* Strength.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A96EDBE2945DEC0008A05DF /* Strength.swift */; };
 		3AA1DBA02A0FAF8000B242D0 /* AnimationCompletionObserverModifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AA1DB9F2A0FAF8000B242D0 /* AnimationCompletionObserverModifier.swift */; };
 		3AA1DBA12A0FAF8000B242D0 /* AnimationCompletionObserverModifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AA1DB9F2A0FAF8000B242D0 /* AnimationCompletionObserverModifier.swift */; };
+		3AA550362EC730BE00E6A4FA /* ImportPGN.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AA550352EC730BE00E6A4FA /* ImportPGN.swift */; };
+		3AA5503B2EC7329F00E6A4FA /* ImportPGNProcessor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AA5503A2EC7329F00E6A4FA /* ImportPGNProcessor.swift */; };
+		3AA5503C2EC7329F00E6A4FA /* ImportPGNProcessor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AA5503A2EC7329F00E6A4FA /* ImportPGNProcessor.swift */; };
 		3AA5A1DB25D4EF6A00CD2121 /* Menu.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AA5A1DA25D4EF6A00CD2121 /* Menu.swift */; };
 		3AC1DD2525D22D7F0054F636 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AC1DD2425D22D7F0054F636 /* AppDelegate.swift */; };
 		3AC2C8EF25E65C30004E1744 /* GameRecordParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AC2C8EE25E65C30004E1744 /* GameRecordParser.swift */; };
@@ -325,7 +331,9 @@
 		3A6EEC5D25D64871005B637F /* MenuSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuSheet.swift; sourceTree = "<group>"; };
 		3A6EEC6525D65504005B637F /* EngineSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EngineSettings.swift; sourceTree = "<group>"; };
 		3A70B2CA2A10ED2C0077A662 /* PieceSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PieceSettings.swift; sourceTree = "<group>"; };
+		3A757C402EDAF9D40063DF0C /* ImportPGN.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImportPGN.swift; sourceTree = "<group>"; };
 		3A7816FB27708D4800DCE7E6 /* SoundSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SoundSettings.swift; sourceTree = "<group>"; };
+		3A7976762D5610DF00189644 /* ParamLargePawn.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ParamLargePawn.swift; sourceTree = "<group>"; };
 		3A7A4D062C26B9C900E5BCF1 /* ParamHintMove.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ParamHintMove.swift; sourceTree = "<group>"; };
 		3A7A4D092C26BAEE00E5BCF1 /* HintSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HintSettings.swift; sourceTree = "<group>"; };
 		3A7A4D0B2C26D42A00E5BCF1 /* HintSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HintSettings.swift; sourceTree = "<group>"; };
@@ -334,6 +342,8 @@
 		3A9536B02C8DB73000E95B2D /* PieceSelectButtonStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PieceSelectButtonStyle.swift; sourceTree = "<group>"; };
 		3A96EDBE2945DEC0008A05DF /* Strength.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Strength.swift; sourceTree = "<group>"; };
 		3AA1DB9F2A0FAF8000B242D0 /* AnimationCompletionObserverModifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnimationCompletionObserverModifier.swift; sourceTree = "<group>"; };
+		3AA550352EC730BE00E6A4FA /* ImportPGN.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImportPGN.swift; sourceTree = "<group>"; };
+		3AA5503A2EC7329F00E6A4FA /* ImportPGNProcessor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImportPGNProcessor.swift; sourceTree = "<group>"; };
 		3AA5A1DA25D4EF6A00CD2121 /* Menu.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Menu.swift; sourceTree = "<group>"; };
 		3AC1DD2425D22D7F0054F636 /* AppDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		3AC2C8EE25E65C30004E1744 /* GameRecordParser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameRecordParser.swift; sourceTree = "<group>"; };
@@ -514,6 +524,7 @@
 				3A6EEC6525D65504005B637F /* EngineSettings.swift */,
 				3AF7931325B6F65A00A86A35 /* FloatingActionView.swift */,
 				3A7A4D0B2C26D42A00E5BCF1 /* HintSettings.swift */,
+				3A757C402EDAF9D40063DF0C /* ImportPGN.swift */,
 				3AF7931D25B6F65A00A86A35 /* MenuView.swift */,
 				3A7816FB27708D4800DCE7E6 /* SoundSettings.swift */,
 			);
@@ -527,6 +538,7 @@
 				3A2785EF288A33F8001F4FE6 /* BoardSettings.swift */,
 				3AF7930D25B6F65A00A86A35 /* EngineSettings.swift */,
 				3A7A4D092C26BAEE00E5BCF1 /* HintSettings.swift */,
+				3AA550352EC730BE00E6A4FA /* ImportPGN.swift */,
 				3AA5A1DA25D4EF6A00CD2121 /* Menu.swift */,
 				3A6EEC5D25D64871005B637F /* MenuSheet.swift */,
 				3ACE50ED2A0D0775004E68FF /* PieceSettings.swift */,
@@ -763,6 +775,7 @@
 				3A04D29025E502FA00FB2B58 /* ExportDB.swift */,
 				3AC2C8EE25E65C30004E1744 /* GameRecordParser.swift */,
 				3AF58D5E25FA32CE008AAAD1 /* ImportDB.swift */,
+				3AA5503A2EC7329F00E6A4FA /* ImportPGNProcessor.swift */,
 				3AF7930825B6F65A00A86A35 /* KaruahChessDB.swift */,
 			);
 			path = Database;
@@ -854,6 +867,7 @@
 				3A159E0226D0FFF1001100CC /* ParamLevelAuto.swift */,
 				3A8061B2288BF5A100F7729C /* ParamHint.swift */,
 				3A7A4D062C26B9C900E5BCF1 /* ParamHintMove.swift */,
+				3A7976762D5610DF00189644 /* ParamLargePawn.swift */,
 				3A159E0526D1002B001100CC /* ParamLimitAdvanced.swift */,
 				3A159E0826D10091001100CC /* ParamLimitDepth.swift */,
 				3AF7933025B6F65A00A86A35 /* ParamLimitSkillLevel.swift */,
@@ -1039,6 +1053,7 @@
 				3AF7937B25B6F65A00A86A35 /* ParamMoveHighlight.swift in Sources */,
 				3AF7937F25B6F65A00A86A35 /* ParamComputerMoveFirst.swift in Sources */,
 				3A422D9127771A4B00327D4B /* CompressionC.mm in Sources */,
+				3A7976782D5610DF00189644 /* ParamLargePawn.swift in Sources */,
 				3AF792FD25B6F63800A86A35 /* Constants.swift in Sources */,
 				3A159E0C26D100E9001100CC /* ParamLimitMoveDuration.swift in Sources */,
 				3AF793A525B6F65A00A86A35 /* DirectionIndicatorViewModel.swift in Sources */,
@@ -1115,6 +1130,7 @@
 				3AF7939125B6F65A00A86A35 /* ParameterDataServiceProtocol.swift in Sources */,
 				3A25B9212772FE03007AF2E1 /* ExportFileDocument.swift in Sources */,
 				3AF7936725B6F65A00A86A35 /* TileAnimationView.swift in Sources */,
+				3AA5503B2EC7329F00E6A4FA /* ImportPGNProcessor.swift in Sources */,
 				3AF7936B25B6F65A00A86A35 /* MenuView.swift in Sources */,
 				3A6916E72A751AC8003BF8A2 /* ParamPromoteAuto.swift in Sources */,
 				3A8061B3288BF5A100F7729C /* ParamHint.swift in Sources */,
@@ -1142,6 +1158,7 @@
 				3AF7937725B6F65A00A86A35 /* Parameter.swift in Sources */,
 				3AF7935D25B6F65A00A86A35 /* TileAnimationMoveModifier.swift in Sources */,
 				3AF7936D25B6F65A00A86A35 /* TileAnimationPutModifier.swift in Sources */,
+				3A757C412EDAF9D40063DF0C /* ImportPGN.swift in Sources */,
 				3AF7939525B6F65A00A86A35 /* BoardAnimation.swift in Sources */,
 				3ACE50F32A0D0835004E68FF /* ParamMoveText.swift in Sources */,
 			);
@@ -1206,6 +1223,7 @@
 				3AF7938E25B6F65A00A86A35 /* ParamVoiceCommand.swift in Sources */,
 				3AF7937425B6F65A00A86A35 /* GameRecordDataServiceProtocol.swift in Sources */,
 				3A0C4E8425FE2531003B9111 /* GameRecord.swift in Sources */,
+				3AA550362EC730BE00E6A4FA /* ImportPGN.swift in Sources */,
 				3ACE50F72A0D09EE004E68FF /* PieceSettingsViewModel.swift in Sources */,
 				3A2930542772B4EB00F34565 /* SearchActor.swift in Sources */,
 				3AF7935A25B6F65A00A86A35 /* TileShakeEffect.swift in Sources */,
@@ -1224,6 +1242,7 @@
 				3AF7935625B6F65A00A86A35 /* ToastView.swift in Sources */,
 				3AF7938A25B6F65A00A86A35 /* ParamBoardCoord.swift in Sources */,
 				3AF7939225B6F65A00A86A35 /* ParameterDataServiceProtocol.swift in Sources */,
+				3A7976772D5610DF00189644 /* ParamLargePawn.swift in Sources */,
 				3AF58D6025FA32CE008AAAD1 /* ImportDB.swift in Sources */,
 				3ACDE04E2C85CCDC004C3880 /* PieceEditSelectViewModel.swift in Sources */,
 				3ACD31802CBA67FC0060B1C5 /* network.cpp in Sources */,
@@ -1255,6 +1274,7 @@
 				3ACD31692CBA67760060B1C5 /* bitboard.cpp in Sources */,
 				3ACD313E2CBA67030060B1C5 /* sf_uci.cpp in Sources */,
 				3ACD313F2CBA67030060B1C5 /* sf_score.cpp in Sources */,
+				3AA5503C2EC7329F00E6A4FA /* ImportPGNProcessor.swift in Sources */,
 				3ACD31402CBA67030060B1C5 /* sf_memory.cpp in Sources */,
 				3ACD31412CBA67030060B1C5 /* sf_evaluate.cpp in Sources */,
 				3ACD31422CBA67030060B1C5 /* sf_timeman.cpp in Sources */,
@@ -1294,7 +1314,7 @@
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
-				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_MODULES = YES;
 				CLANG_ENABLE_OBJC_ARC = YES;
@@ -1325,7 +1345,7 @@
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
-				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_OPTIMIZATION_LEVEL = 0;
@@ -1354,7 +1374,7 @@
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
-				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_MODULES = YES;
 				CLANG_ENABLE_OBJC_ARC = YES;
@@ -1385,7 +1405,7 @@
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
-				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
 				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
@@ -1405,30 +1425,30 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				CLANG_CXX_LANGUAGE_STANDARD = "gnu++17";
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
 				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
 				CODE_SIGN_ENTITLEMENTS = "Karuah Chess.entitlements";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 30;
+				CURRENT_PROJECT_VERSION = 34;
 				DEVELOPMENT_TEAM = JQA45NT8J5;
 				ENABLE_PREVIEWS = YES;
 				GCC_PREPROCESSOR_DEFINITIONS_NOT_USED_IN_PRECOMPS = USE_POPCNT;
 				INFOPLIST_FILE = iOS/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "Karuah Chess";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.board-games";
-				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.6;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.30;
+				MARKETING_VERSION = 1.34;
 				PRODUCT_BUNDLE_IDENTIFIER = karuahsoftware.karuahchess;
 				PRODUCT_NAME = "Karuah Chess";
 				SCAN_ALL_SOURCE_FILES_FOR_INCLUDES = NO;
 				SDKROOT = iphoneos;
 				SWIFT_OBJC_BRIDGING_HEADER = "Shared/karuahchess-Bridging-Header.h";
 				SWIFT_PRECOMPILE_BRIDGING_HEADER = NO;
-				SWIFT_VERSION = 5.0;
+				SWIFT_VERSION = 6.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
@@ -1438,11 +1458,11 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				CLANG_CXX_LANGUAGE_STANDARD = "gnu++17";
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
 				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
 				CODE_SIGN_ENTITLEMENTS = "Karuah Chess.entitlements";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 30;
+				CURRENT_PROJECT_VERSION = 34;
 				DEVELOPMENT_TEAM = JQA45NT8J5;
 				ENABLE_PREVIEWS = YES;
 				GCC_PREPROCESSOR_DEFINITIONS_NOT_USED_IN_PRECOMPS = (
@@ -1452,19 +1472,19 @@
 				INFOPLIST_FILE = iOS/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "Karuah Chess";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.board-games";
-				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.6;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.30;
+				MARKETING_VERSION = 1.34;
 				PRODUCT_BUNDLE_IDENTIFIER = karuahsoftware.karuahchess;
 				PRODUCT_NAME = "Karuah Chess";
 				SCAN_ALL_SOURCE_FILES_FOR_INCLUDES = NO;
 				SDKROOT = iphoneos;
 				SWIFT_OBJC_BRIDGING_HEADER = "Shared/karuahchess-Bridging-Header.h";
 				SWIFT_PRECOMPILE_BRIDGING_HEADER = NO;
-				SWIFT_VERSION = 5.0;
+				SWIFT_VERSION = 6.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VALIDATE_PRODUCT = YES;
 			};
@@ -1479,10 +1499,11 @@
 				CODE_SIGN_ENTITLEMENTS = macOS/macOS.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 30;
+				CURRENT_PROJECT_VERSION = 34;
 				DEVELOPMENT_TEAM = JQA45NT8J5;
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
 				GCC_PREPROCESSOR_DEFINITIONS_NOT_USED_IN_PRECOMPS = USE_POPCNT;
 				INFOPLIST_FILE = macOS/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "Karuah Chess";
@@ -1491,15 +1512,15 @@
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
-				MACOSX_DEPLOYMENT_TARGET = 12.0;
-				MARKETING_VERSION = 1.30;
+				MACOSX_DEPLOYMENT_TARGET = 14.6;
+				MARKETING_VERSION = 1.34;
 				OTHER_LDFLAGS = "";
 				PRODUCT_BUNDLE_IDENTIFIER = karuahsoftware.karuahchess;
 				PRODUCT_NAME = "Karuah Chess";
 				SDKROOT = macosx;
 				SWIFT_OBJC_BRIDGING_HEADER = "Shared/karuahchess-Bridging-Header.h";
 				SWIFT_PRECOMPILE_BRIDGING_HEADER = NO;
-				SWIFT_VERSION = 5.0;
+				SWIFT_VERSION = 6.0;
 			};
 			name = Debug;
 		};
@@ -1512,10 +1533,11 @@
 				CODE_SIGN_ENTITLEMENTS = macOS/macOS.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 30;
+				CURRENT_PROJECT_VERSION = 34;
 				DEVELOPMENT_TEAM = JQA45NT8J5;
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
 				GCC_PREPROCESSOR_DEFINITIONS_NOT_USED_IN_PRECOMPS = (
 					USE_POPCNT,
 					NDEBUG,
@@ -1527,14 +1549,14 @@
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
-				MACOSX_DEPLOYMENT_TARGET = 12.0;
-				MARKETING_VERSION = 1.30;
+				MACOSX_DEPLOYMENT_TARGET = 14.6;
+				MARKETING_VERSION = 1.34;
 				PRODUCT_BUNDLE_IDENTIFIER = karuahsoftware.karuahchess;
 				PRODUCT_NAME = "Karuah Chess";
 				SDKROOT = macosx;
 				SWIFT_OBJC_BRIDGING_HEADER = "Shared/karuahchess-Bridging-Header.h";
 				SWIFT_PRECOMPILE_BRIDGING_HEADER = NO;
-				SWIFT_VERSION = 5.0;
+				SWIFT_VERSION = 6.0;
 			};
 			name = Release;
 		};

@@ -23,4 +23,5 @@ import SwiftUI
     @objc var success: Bool = false
     @objc var returnMessage: String = ""
     @objc var moveDataStr: String = ""
+    @objc var moveSAN: String = ""
 }

@@ -18,11 +18,20 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 import SwiftUI
 
-@objc class SearchResult: NSObject {
-    @objc var moveFromIndex: Int32 = -1
-    @objc var moveToIndex: Int32 = -1
-    @objc var promotionPieceType: Int32 = 0
-    @objc var cancelled: Bool = false
-    @objc var error: Int = 0
-    @objc var errorMessage: String = ""
+@objc final class SearchResult: NSObject, Sendable {
+    @objc let moveFromIndex: Int32
+    @objc let moveToIndex: Int32
+    @objc let promotionPieceType: Int32
+    @objc let cancelled: Bool
+    @objc let error: Int
+    @objc let errorMessage: String
+    
+    @objc init(pMoveFromIndex: Int32, pMoveToIndex: Int32, pPromotionPieceType: Int32, pCancelled: Bool, pError: Int, pErrorMessage: String) {
+        moveFromIndex = pMoveFromIndex
+        moveToIndex = pMoveToIndex
+        promotionPieceType = pPromotionPieceType
+        cancelled = pCancelled
+        error = pError
+        errorMessage = pErrorMessage
+    }
 }

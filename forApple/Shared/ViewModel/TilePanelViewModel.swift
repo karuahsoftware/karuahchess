@@ -21,7 +21,8 @@ import SwiftUI
 @MainActor class TilePanelViewModel: ObservableObject {
     
     @Published var tileList : [TileView]
-    
+  
+
     /// Constructor
     init() {
         tileList = [TileView]()
@@ -46,13 +47,10 @@ import SwiftUI
         if(pIndex >= 0 && pIndex <= 63 && pSpin >= -6 && pSpin <= 6){
             let tile = tileList[pIndex]
             if (tile.tileVM.spin != pSpin) {
-                
                 tile.tileVM.pieceName = getImageName(pSpin: pSpin)
                 tile.tileVM.spin = pSpin
-                
             }
         }
-        
     }
     
     
@@ -72,19 +70,21 @@ import SwiftUI
     /// Get image name of spin
     /// - Parameter pSpin: Spin to get
     func getImageName(pSpin: Int) -> String {
+        let largePawn = PieceSettingsViewModel.instance.largePawn
+        
         switch pSpin {
             case 6: return "WhiteKing"
             case 5: return "WhiteQueen"
             case 4: return "WhiteRook"
             case 3: return "WhiteBishop"
             case 2: return "WhiteKnight"
-            case 1: return "WhitePawn"
+            case 1: return largePawn ? "WhitePawnLarge" : "WhitePawn"
             case -6: return "BlackKing"
             case -5: return "BlackQueen"
             case -4: return "BlackRook"
             case -3: return "BlackBishop"
             case -2: return "BlackKnight"
-            case -1: return "BlackPawn"
+            case -1: return largePawn ? "BlackPawnLarge" : "BlackPawn"
             default: return ""
         }
     }
@@ -168,5 +168,16 @@ import SwiftUI
             }
         }
     }
+    
+    /// Refresh board piece images
+    func refreshPawns() {
+        for i in 0...63{
+            let tile = tileList[i]
+            if tile.tileVM.spin == 1 || tile.tileVM.spin == -1 {
+               tile.tileVM.pieceName = getImageName(pSpin: tile.tileVM.spin)
+            }
+        }
+    }
+    
     
 }

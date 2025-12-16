@@ -65,7 +65,7 @@ import SwiftUI
             parameter.enabled = navigatorEnabled
             _ = ParameterDataService.instance.set(pObj: parameter)
             BoardViewModel.instance.navigatorVM.enabled = parameter.enabled
-            BoardViewModel.instance.loadNavigator(pEnabled: parameter.enabled)
+            BoardViewModel.instance.refreshNavigator(pReload: true)
         }
     }
     

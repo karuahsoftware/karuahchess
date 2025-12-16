@@ -291,6 +291,22 @@ struct MenuView: View {
 
                 
             Section {
+                NavigationLink(destination: ImportPGN(showMenu: $showMenu)) {
+                    Label() {
+                        Text("Import PGN")
+                    } icon: {
+                        Image(systemName: "square.and.arrow.down")
+                            .resizable()
+                            .aspectRatio(contentMode: .fit)
+                            .font(Font.system(.headline))
+                            .padding(3)
+                            .frame(width: 28, height: 28)
+                            .background(Color.gray)
+                            .foregroundColor(Color.white)
+                            .cornerRadius(6)
+                    }
+                }
+                                
                 Button(action: {
                                self.showMenu = false
                                BoardViewModel.instance.showFileImporter = true

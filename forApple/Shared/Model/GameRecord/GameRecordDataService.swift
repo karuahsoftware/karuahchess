@@ -26,7 +26,7 @@ class GameRecordDataService : GameRecordDataServiceProtocol {
     private var tempBoardB: KaruahChessEngineC
     private var tempBoardC: KaruahChessEngineC
     
-    static let instance = GameRecordDataService()
+    @MainActor static let instance = GameRecordDataService()
     
     /// Constructor
     init() {
@@ -51,20 +51,17 @@ class GameRecordDataService : GameRecordDataServiceProtocol {
         var cursor : OpaquePointer?
         let db = KaruahChessDB.openDBConnection()
         
-        let sqlStr = "select Id, BoardSquareStr, GameStateStr from GameRecord order by id"
+        let sqlStr = "select Id, BoardSquareStr, GameStateStr, MoveSANStr from GameRecord order by id"
         if sqlite3_prepare_v2(db, sqlStr, -1, &cursor, nil) == SQLITE_OK {
             while sqlite3_step(cursor) == SQLITE_ROW {
                 let id : Int = Int(sqlite3_column_int(cursor, 0))
                 let boardSquareStr : String =  String(cString: sqlite3_column_text(cursor, 1))
                 let gameStateStr : String = String(cString: sqlite3_column_text(cursor, 2))
+                let moveSANStr: String = String(cString: sqlite3_column_text(cursor, 3))
                 board.setBoard(boardSquareStr)
                 board.setState(gameStateStr)
                 
-                let recArray = GameRecordArray()
-                recArray.id = id
-                
-                recArray.boardArray = board.getBoardArraySafe()
-                recArray.stateArray = board.getStateArraySafe()
+                let recArray = GameRecordArray(pId: id, pBoardArray: board.getBoardArraySafe(), pStateArray: board.getStateArraySafe(), pMoveSAN: moveSANStr)
                 
                 gameRecordDict[recArray.id] = recArray
                 
@@ -91,10 +88,7 @@ class GameRecordDataService : GameRecordDataServiceProtocol {
     /// Gets the current game as an array
     /// - Returns: Game record array
     func getCurrentGame() -> GameRecordArray {
-        let recArray = GameRecordArray()
-        recArray.id = -1
-        recArray.boardArray = currentGame.getBoardArraySafe()
-        recArray.stateArray = currentGame.getStateArraySafe()
+        let recArray = GameRecordArray(pId: -1, pBoardArray: currentGame.getBoardArraySafe(), pStateArray: currentGame.getStateArraySafe(), pMoveSAN: "")
         return recArray
     }
     
@@ -124,7 +118,7 @@ class GameRecordDataService : GameRecordDataServiceProtocol {
     ///   - pWhiteClockOffset: White clock offset
     ///   - pBlackClockOffset: Black clock offset
     /// - Returns: Number of records inserted - should be 1
-    func recordGameState(pWhiteClockOffset: Int, pBlackClockOffset: Int) -> Int {
+    func recordGameState(pWhiteClockOffset: Int, pBlackClockOffset: Int, pMoveSAN: String) -> Int {
         var result: Int = 0
         
         // Set the clocks
@@ -135,11 +129,9 @@ class GameRecordDataService : GameRecordDataServiceProtocol {
         let nextId = getMaxId() + 1
         let boardSquareStr: NSString = currentGame.getBoard() as NSString
         let gameStateStr: NSString = currentGame.getState() as NSString
+        let moveSANStr: NSString = pMoveSAN as NSString
         
-        let gameRecordArray = GameRecordArray()
-        gameRecordArray.id = nextId
-        gameRecordArray.boardArray = currentGame.getBoardArraySafe()
-        gameRecordArray.stateArray = currentGame.getStateArraySafe()
+        let gameRecordArray = GameRecordArray(pId: nextId, pBoardArray: currentGame.getBoardArraySafe(), pStateArray: currentGame.getStateArraySafe(), pMoveSAN: pMoveSAN)
         
         if(gameRecordDict[gameRecordArray.id] == nil) {
             // Add record to dictionary
@@ -149,11 +141,12 @@ class GameRecordDataService : GameRecordDataServiceProtocol {
             var cursor : OpaquePointer?
             let db = KaruahChessDB.openDBConnection()
             
-            let sqlStr = "insert into GameRecord(Id, BoardSquareStr, GameStateStr) values (?,?,?)"
+            let sqlStr = "insert into GameRecord(Id, BoardSquareStr, GameStateStr, MoveSANStr) values (?,?,?,?)"
             if sqlite3_prepare_v2(db, sqlStr, -1, &cursor, nil) == SQLITE_OK {
                 sqlite3_bind_int(cursor, 1, Int32(nextId))
                 sqlite3_bind_text(cursor, 2, boardSquareStr.utf8String, -1, Constants.SQLITE_TRANSIENT)
                 sqlite3_bind_text(cursor, 3, gameStateStr.utf8String, -1, Constants.SQLITE_TRANSIENT)
+                sqlite3_bind_text(cursor, 4, moveSANStr.utf8String, -1, Constants.SQLITE_TRANSIENT)
                 if sqlite3_step(cursor) == SQLITE_DONE {
                     result = Int(sqlite3_changes(db))
                 }
@@ -180,6 +173,7 @@ class GameRecordDataService : GameRecordDataServiceProtocol {
             tempBoardC.setStateArray(pGameRecordArray.stateArray)
             let boardSquareStr: NSString = tempBoardC.getBoard() as NSString
             let gameStateStr: NSString = tempBoardC.getState() as NSString
+            let moveSANStr: NSString = pGameRecordArray.moveSAN as NSString
             
             // Update record in dictionary
             gameRecordDict[pGameRecordArray.id] = pGameRecordArray
@@ -188,11 +182,12 @@ class GameRecordDataService : GameRecordDataServiceProtocol {
             var cursor : OpaquePointer?
             let db = KaruahChessDB.openDBConnection()
             
-            let sqlStr = "update GameRecord set BoardSquareStr = ?, GameStateStr = ? where Id = ?"
+            let sqlStr = "update GameRecord set BoardSquareStr = ?, GameStateStr = ?, MoveSANStr = ? where Id = ?"
             if sqlite3_prepare_v2(db, sqlStr, -1, &cursor, nil) == SQLITE_OK {
                 sqlite3_bind_text(cursor, 1, boardSquareStr.utf8String, -1, Constants.SQLITE_TRANSIENT)
                 sqlite3_bind_text(cursor, 2, gameStateStr.utf8String, -1, Constants.SQLITE_TRANSIENT)
-                sqlite3_bind_int(cursor, 3, Int32(pGameRecordArray.id))
+                sqlite3_bind_text(cursor, 3, moveSANStr.utf8String, -1, Constants.SQLITE_TRANSIENT)
+                sqlite3_bind_int(cursor, 4, Int32(pGameRecordArray.id))
                 if sqlite3_step(cursor) == SQLITE_DONE {
                     result = Int(sqlite3_changes(db))
                 }
@@ -236,7 +231,7 @@ class GameRecordDataService : GameRecordDataServiceProtocol {
         currentGame.reset()
         
         // Create record of default setup
-        _ = recordGameState(pWhiteClockOffset: 0, pBlackClockOffset: 0)
+        _ = recordGameState(pWhiteClockOffset: 0, pBlackClockOffset: 0, pMoveSAN: "")
         
         
     }
@@ -374,4 +369,23 @@ class GameRecordDataService : GameRecordDataServiceProtocol {
         return gameRecordDict
     }
     
+    /// Determines the active move colour for a specific record
+    /// - Returns: The active move colour
+    func getActiveMoveColour(pId: Int) -> Int {
+        if let rec = gameRecordDict[pId], !rec.stateArray.isEmpty {
+                return Int(rec.stateArray[0])
+        }
+        
+        return 0
+    }
+    
+    /// Get the game status for a specific record
+    /// - Returns: The game status
+    func getStateGameStatus(pId: Int) -> Int {
+        if let rec = gameRecordDict[pId], !rec.stateArray.isEmpty {
+                return Int(rec.stateArray[5])
+        }
+        
+        return -1
+    }
 }

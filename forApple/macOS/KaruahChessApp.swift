@@ -36,6 +36,7 @@ struct KaruahChessApp: App {
             .padding(2)
         }
     }
+    
 }
 
 

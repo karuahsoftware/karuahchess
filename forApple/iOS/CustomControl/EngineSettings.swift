@@ -46,27 +46,44 @@ struct EngineSettings: View {
             Group {
                 
                 Section {
-                    Toggle(isOn: $engineSettingsVM.computerMovesFirst) {
-                        Text("Computer moves first")
-                            .opacity(getComputerPlayerEnabledOpacity())
-                    }
-                    
-                    Toggle(isOn: $engineSettingsVM.randomiseFirstMove) {
-                        Text("Randomise first computer move")
-                            .opacity(getComputerPlayerEnabledOpacity())
-                    }
-                    
-                    Toggle(isOn: $engineSettingsVM.levelAuto) {
-                        Text("Increase strength after win")
-                            .opacity(getComputerPlayerEnabledOpacity())
-                    }
-                    
-                    Picker(selection: $engineSettingsVM.limitSkillLevel, label: Text("Strength").font(.body).opacity(!$engineSettingsVM.computerPlayerEnabled.wrappedValue ? 0.5 : 1)) {
+                    Picker(selection: $engineSettingsVM.limitSkillLevel, label: Text("Computer strength").font(.body).opacity(!$engineSettingsVM.computerPlayerEnabled.wrappedValue ? 0.5 : 1)) {
                         ForEach(0 ..< Constants.strengthList.count, id: \.self) {
                             Text(Constants.strengthList[$0].label).tag($0)
                         }
                     }
                     .pickerStyle(DefaultPickerStyle())
+                    
+                    Toggle(isOn: $engineSettingsVM.levelAuto) {
+                        Text("Auto increase strength")
+                            .opacity(getComputerPlayerEnabledOpacity())
+                    }
+                                                                                
+                    Button(action: {
+                        engineSettingsVM.computerMovesFirstToggle()
+                           }){
+                               Text("Computer colour").opacity(getComputerPlayerEnabledOpacity())
+                               if $engineSettingsVM.computerMovesFirst.wrappedValue {
+                                   Image("WhitePawnLarge")
+                                       .resizable()
+                                       .aspectRatio(contentMode: .fit)
+                                       .frame(width:60, height: 60)
+                                       .opacity(getComputerPlayerEnabledOpacity())
+                               }
+                               else {
+                                   Image("BlackPawnLarge")
+                                       .resizable()
+                                       .aspectRatio(contentMode: .fit)
+                                       .frame(width:60, height: 60)
+                                       .opacity(getComputerPlayerEnabledOpacity())
+                               }
+                                  
+                           }
+                    
+                    Toggle(isOn: $engineSettingsVM.randomiseFirstMove) {
+                        Text("Make the first computer move more random")
+                            .opacity(getComputerPlayerEnabledOpacity())
+                    }
+                    
                 }
     
                 Section {
@@ -127,43 +144,18 @@ struct EngineSettings: View {
                 
             }.disabled(!$engineSettingsVM.computerPlayerEnabled.wrappedValue)
             
-            Button(action: {
-                BoardViewModel.instance.stopSearchJob()
-            }){
-                Label() {
-                    Text("Stop Search")
-                } icon: {
-                    Image(systemName: "stop.fill")
-                        .resizable()
-                        .aspectRatio(contentMode: .fit)
-                        .font(Font.system(.headline))
-                        .padding(8)
-                        .frame(width: 28, height: 28)
-                        .background(Color.red)
-                        .foregroundColor(Color.white)
-                        .cornerRadius(6)
-                }
+            HStack {
+                Button(action: {
+                    BoardViewModel.instance.stopSearchJob()
+                }){ Text("Stop Search") }
+                    .buttonStyle(.bordered)
+                
+                Button(action: {
+                    limitMoveDurationIsFocused = false
+                    engineSettingsVM.resetToDefault()
+                }){ Text("Reset to default")}
+                    .buttonStyle(.bordered)
             }
-            
-            Button(action: {
-                limitMoveDurationIsFocused = false
-                engineSettingsVM.resetToDefault()
-            }){
-                Label() {
-                    Text("Reset to default")
-                } icon: {
-                    Image(systemName: "restart.circle")
-                        .resizable()
-                        .aspectRatio(contentMode: .fit)
-                        .font(Font.system(.headline))
-                        .padding(3)
-                        .frame(width: 28, height: 28)
-                        .background(Color.gray)
-                        .foregroundColor(Color.white)
-                        .cornerRadius(6)
-                }
-            }
-            
             Spacer()
                 .frame(maxWidth: .infinity)
                     

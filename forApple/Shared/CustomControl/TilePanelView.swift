@@ -20,11 +20,12 @@ import SwiftUI
 
 struct TilePanelView: View {
     
-    @ObservedObject var tilePanelVM : TilePanelViewModel
     
+    @ObservedObject var tilePanelVM : TilePanelViewModel
     
     /// View
     var body: some View {
+        
         
         VStack(spacing: 0) {
             ForEach(0 ..< 8) {row in
@@ -36,12 +37,16 @@ struct TilePanelView: View {
             }
         }.onPreferenceChange(TileFrameBoardPreferenceKey.self){preferences in
             for p in preferences {
-                tilePanelVM.tileList[p.tileIndex].tileVM.boardFrame = p.tileFrame
+                Task {@MainActor in
+                    tilePanelVM.tileList[p.tileIndex].tileVM.boardFrame = p.tileFrame
+                }
             }
         }
         .onPreferenceChange(TileFrameMainPreferenceKey.self){preferences in
             for p in preferences {
-                tilePanelVM.tileList[p.tileIndex].tileVM.mainFrame = p.tileFrame
+                Task {@MainActor in
+                    tilePanelVM.tileList[p.tileIndex].tileVM.mainFrame = p.tileFrame
+                }
             }
         }
     }

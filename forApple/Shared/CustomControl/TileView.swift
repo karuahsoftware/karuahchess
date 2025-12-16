@@ -120,7 +120,7 @@ struct TileView: View {
                 // Piece
                 GeometryReader {geo in
                    if !tileVM.pieceName.isEmpty && tileVM.visible {
-                    
+                       
                         Image(tileVM.pieceName)
                         .resizable()
                         .aspectRatio(contentMode: .fill)
@@ -143,7 +143,7 @@ struct TileView: View {
                                 shakeComplete = tileVM.editMode ? 1.0 : 0.0
                             }
                         }
-                        .onChange(of: tileVM.editMode) {newValue in
+                        .onChange(of: tileVM.editMode) { _, newValue in
                             withAnimation(newValue ? Animation.easeIn(duration: 0.1).repeatForever(autoreverses: true) : Animation.linear(duration: 0)) {
                                shakeComplete = newValue ? 1.0 : 0.0
                             }
@@ -232,8 +232,8 @@ struct TileView: View {
                     if let data = item as? Data {
                         if let fromIndex = Int(String(decoding: data, as: UTF8.self)) {
                             Task(priority: .userInitiated) {
-                                let fromTile = BoardViewModel.instance.tilePanelVM.getTile(pIndex: fromIndex)
-                                let toTile = BoardViewModel.instance.tilePanelVM.getTile(pIndex: toIndex)
+                                let fromTile = await BoardViewModel.instance.tilePanelVM.getTile(pIndex: fromIndex)
+                                let toTile = await BoardViewModel.instance.tilePanelVM.getTile(pIndex: toIndex)
                                 await BoardViewModel.instance.onTileMoveAction(pFromTile: fromTile, pToTile: toTile)
                             }
                         }

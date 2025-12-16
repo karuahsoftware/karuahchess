@@ -21,7 +21,7 @@ import SwiftUI
 struct TileAnimationTakeModifier: AnimatableModifier {
     var complete: CGFloat
     
-    var animatableData: CGFloat {
+    nonisolated var animatableData: CGFloat {
         get {complete}
         set {
             complete = newValue

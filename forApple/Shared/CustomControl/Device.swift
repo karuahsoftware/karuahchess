@@ -18,6 +18,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 import SwiftUI
 
+@MainActor 
 final internal class Device: ObservableObject {
     static let instance = Device()
     
