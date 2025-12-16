@@ -9,12 +9,14 @@
         <ResourceDictionary x:Key="Light">
             <Color x:Key="PieceButtonDialogBackground">#DDDDDD</Color>
             <Color x:Key="PieceButtonDialogBackgroundPointerOver">#BBBBBB</Color>
-            <Color x:Key="PieceButtonDialogBackgroundPressed">#999999</Color>            
+            <Color x:Key="PieceButtonDialogBackgroundPressed">#999999</Color>
+            <SolidColorBrush x:Key="NavBorderBrush" Color="#55000000"/>                        
         </ResourceDictionary>
         <ResourceDictionary x:Key="Dark">
             <Color x:Key="PieceButtonDialogBackground">#999999</Color>
             <Color x:Key="PieceButtonDialogBackgroundPointerOver">#777777</Color>
             <Color x:Key="PieceButtonDialogBackgroundPressed">#555555</Color>
+            <SolidColorBrush x:Key="NavBorderBrush" Color="#BBFFFFFF"/>            
         </ResourceDictionary>
     </ResourceDictionary.ThemeDictionaries>
 
@@ -22,35 +24,19 @@
     <Color x:Key="MainActionButtonBackground">#4CAF50</Color>
     <Color x:Key="MainActionButtonBackgroundPressed">#3D8C40</Color>
 
-    <Color x:Key="EditActionButtonBackgroundPointerOver">#C64470</Color>
-    <Color x:Key="EditActionButtonBackground">#E91E63</Color>
-    <Color x:Key="EditActionButtonBackgroundPressed">#BA184F</Color>
+    <Color x:Key="OtherActionButtonBackgroundPointerOver">#C64470</Color>
+    <Color x:Key="OtherActionButtonBackground">#E91E63</Color>
+    <Color x:Key="OtherActionButtonBackgroundPressed">#BA184F</Color>
 
-    <!-- Styles -->    
-    <Style x:Key="ButtonNavScrollLeftStyle" TargetType="RepeatButton" BasedOn="{StaticResource DefaultRepeatButtonStyle}">
-        <Setter Property="BorderThickness" Value="1"/>
-        <Setter Property="Margin" Value="0,0,1,0" />
-        <Setter Property="Height" Value="32" />
-        <Setter Property="Width" Value="25" />
-        <Setter Property="Padding" Value="0,4,0,5" />
-    </Style>
-
-    <Style x:Key="ButtonNavScrollRightStyle" TargetType="RepeatButton" BasedOn="{StaticResource DefaultRepeatButtonStyle}">
-        <Setter Property="BorderThickness" Value="1"/>
-        <Setter Property="Margin" Value="1,0,0,0" />
-        <Setter Property="Height" Value="32" />
-        <Setter Property="Width" Value="25" />
-        <Setter Property="Padding" Value="0,4,0,5" />
-    </Style>
-
-    <Style x:Key="ButtonNavNextStyle" TargetType="Button" BasedOn="{StaticResource DefaultButtonStyle}">
+    <!-- Styles -->        
+    <Style x:Key="ButtonNavControlStyle" TargetType="Button" BasedOn="{StaticResource DefaultButtonStyle}">
         <Setter Property="BorderThickness" Value="1"/>
         <Setter Property="Margin" Value="1,0,0,0" />
         <Setter Property="Height" Value="32" />
         <Setter Property="Width" Value="32" />
         <Setter Property="Padding" Value="0,4,0,5" />        
     </Style>
-
+    
     <Style x:Key="PieceSelectButtonStyle" TargetType="Button" BasedOn="{StaticResource DefaultButtonStyle}">
         <Setter Property="BorderThickness" Value="1" />        
         <Setter Property="Height" Value="60" />
@@ -64,12 +50,13 @@
         <Setter Property="Width" Value="80" />        
     </Style>
 
-    <Style x:Key="ButtonNavStyle" TargetType="ToggleButton" BasedOn="{StaticResource DefaultToggleButtonStyle}">
-        <Setter Property="BorderThickness" Value="1"/>
-        <Setter Property="Margin" Value="0,0,1,0" />
+    <Style x:Key="ButtonNavStyle" TargetType="ToggleButton" BasedOn="{StaticResource DefaultToggleButtonStyle}">        
+        <Setter Property="Margin" Value="0,0,2,0" />
         <Setter Property="Height" Value="32" />
-        <Setter Property="Width" Value="32" />
-        <Setter Property="Padding" Value="0,0,0,0" />
+        <Setter Property="MinWidth" Value="32" />
+        <Setter Property="Padding" Value="6,0,6,0" />
+        <Setter Property="BorderBrush" Value="{ThemeResource NavBorderBrush}"/>
+        <Setter Property="BorderThickness" Value="1,1,3,3"/>
     </Style>
     
     <Style x:Key="TilePanelStyle" TargetType="tilepanel:TilePanel">

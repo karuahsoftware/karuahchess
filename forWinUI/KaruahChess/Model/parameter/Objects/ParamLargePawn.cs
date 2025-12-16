@@ -16,27 +16,26 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-using KaruahChessEngine;
 using System;
+using System.Runtime.Serialization;
 
-
-namespace KaruahChess.Model
+namespace KaruahChess.Model.ParameterObjects
 {
-
-    public interface IBoardSquareDataService
+    [DataContract]
+    public class ParamLargePawn
     {
+        [DataMember]
+        public bool Enabled { get; set; }
 
-        void Load(double pSquareSize, bool pLargePawn, GameRecordArray pBoard);
-               
-        int Update(GameRecordArray pBoard, bool pChangeVisible);
-
-        BoardSquare Get(int pBoardSquareID);
-               
-        void ShowAllHidden();
-
-        void Hide(int pBoardSquareId);
-
-        String GetDescription(int pBoardSquareID);
+        public ParamLargePawn()
+        {
+            // Set default value
+            Enabled = false;
+        }
     }
-
 }
+
+
+
+
+

@@ -345,6 +345,7 @@ namespace winrt::KaruahChessEngine::implementation
 		mResult.success = success;
 		mResult.returnMessage = to_hstring(MainBoard.ReturnMessage);
 		mResult.moveDataStr = winrt::to_hstring(MainBoard.MoveData[0]) + winrt::to_hstring("|") + winrt::to_hstring(MainBoard.MoveData[1]) + winrt::to_hstring("|") + winrt::to_hstring(MainBoard.MoveData[2]) + winrt::to_hstring("|") + winrt::to_hstring(MainBoard.MoveData[3]);
+		mResult.moveSAN = to_hstring(MainBoard.MoveSAN);
 		return mResult;
 	}
 
@@ -401,7 +402,7 @@ namespace winrt::KaruahChessEngine::implementation
 			validFromIndexesVector.push_back(validFromIndex);
 		}
 
-		int fromIndex = MoveRules::FindFromIndex(MainBoard, pToIndex, pSpin, validFromIndexesVector);
+		int fromIndex = MoveRules::FindFromIndex(MainBoard, pToIndex, pSpin, validFromIndexesVector, true);
 		
 		return fromIndex;
 	}

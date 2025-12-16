@@ -37,6 +37,7 @@ namespace KaruahChessEngine
 		Boolean success;
 		String returnMessage;
 		String moveDataStr;
+		String moveSAN;
 	};
 
 	struct SearchOptions

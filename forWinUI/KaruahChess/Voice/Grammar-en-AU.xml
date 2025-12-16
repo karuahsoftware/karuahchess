@@ -13,12 +13,15 @@
       <item>
         <ruleref uri="#moveRuleB"/>
       </item>
-      <item>
-        <ruleref uri="#pieceRule"/>
-      </item>
-      <item>
-        <ruleref uri="#helpRule"/>
-      </item>
+	  <item>
+		<ruleref uri="#confirmRule"/>
+	  </item>
+	  <item>
+		<ruleref uri="#cancelRule"/>
+	  </item>
+	  <item>
+		<ruleref uri="#startRule"/>
+	  </item>
     </one-of>
   </rule>
 
@@ -135,13 +138,29 @@
         <item>Pawn</item>
       </one-of>    
   </rule>
+      
+ 
+  <!-- The following rules recognise the confirm command. -->
+  <rule id="confirmRule">
+	 <one-of>
+		<item>Confirm</item>
+		<item>Yes</item>
+	 </one-of>
+   </rule>
 
-  
-  <!-- The following rules recognize piece names. -->
-  <rule id="helpRule">    
-    <one-of>
-      <item>Help</item>      
-    </one-of>
-  </rule>
-  
+	<!-- The following rules recognise the cancel command. -->
+	<rule id="cancelRule">
+		<one-of>
+			<item>Cancel</item>
+			<item>No</item>
+		</one-of>
+	</rule>
+	
+	<!-- The following rules recognise the start command. -->
+	<rule id="startRule">
+		<one-of>
+			<item>Start</item>
+		</one-of>
+	</rule>
+
 </grammar>

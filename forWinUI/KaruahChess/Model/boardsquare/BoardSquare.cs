@@ -127,7 +127,7 @@ namespace KaruahChess.Model
         /// Sets boardquare based on FEN character
         /// </summary>
         /// <param name="pFENChar"></param>
-        public void SetFEN(Char pFENChar, double pSquareSize)
+        public void SetFEN(Char pFENChar, double pSquareSize, bool pLargePawn)
         {
             var FENLowerChar = Char.ToLower(pFENChar);
 
@@ -163,21 +163,21 @@ namespace KaruahChess.Model
             else PieceColour = Piece.ColourEnum.White;
 
             // Set piece and square size
-            SetPiece(pSquareSize);
+            SetPiece(pSquareSize, pLargePawn);
 
         }
 
         /// <summary>
         /// Sets the piece on the square
         /// </summary>       
-        private void SetPiece(double pSquareSize)
+        private void SetPiece(double pSquareSize, bool pLargePawn)
         {
             if (Piece == null)
             {
                 Piece = new Piece();
                 Piece.StyleTemplate = new PieceStyleTemplate();
             }
-            Piece.SetType(PieceType, PieceColour, pSquareSize, pSquareSize);
+            Piece.SetType(PieceType, PieceColour, pSquareSize, pSquareSize, pLargePawn);
         }
 
         /// <summary>

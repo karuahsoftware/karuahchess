@@ -23,6 +23,7 @@ using KaruahChess.Common;
 using KaruahChess.Model.ParameterObjects;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Media.Imaging;
 
 
 namespace KaruahChess.CustomControl
@@ -34,6 +35,7 @@ namespace KaruahChess.CustomControl
         readonly List<Strength> strengthList = Constants.strengthList;
         readonly string moveDurationLimitToolTip = "Valid values are 1 to " + 600000.ToString("N0") + ". Leave blank for no limit.";
         bool dataSaved = false;
+        bool computerMoveFirst;
 
         /// <summary>
         /// Constructor
@@ -50,7 +52,7 @@ namespace KaruahChess.CustomControl
 
             // Set initial values
             ComputerPlayerCheckBox.IsChecked = _boardVM.ComputerPlayerEnabled;
-            ComputerMoveFirstCheckBox.IsChecked = _boardVM.ComputerMoveFirstEnabled;
+            SetComputerColour(_boardVM.ComputerMoveFirstEnabled);            
             RandomiseFirstMoveCheckBox.IsChecked = _boardVM.RandomiseFirstMoveEnabled;
             ComputerSkillLevelCombo.SelectedIndex = Math.Clamp(_boardVM.LimitSkillLevel, 0, Constants.strengthList.Count - 1);
             LevelAutoCheckBox.IsChecked = _boardVM.LevelAutoEnabled;
@@ -91,7 +93,7 @@ namespace KaruahChess.CustomControl
         private void Save()
         {
             _boardVM.ComputerPlayerEnabled = ComputerPlayerCheckBox.IsChecked == true;
-            _boardVM.ComputerMoveFirstEnabled = ComputerMoveFirstCheckBox.IsChecked == true;
+            _boardVM.ComputerMoveFirstEnabled = computerMoveFirst;
             _boardVM.RandomiseFirstMoveEnabled = RandomiseFirstMoveCheckBox.IsChecked == true;
             _boardVM.LevelAutoEnabled = LevelAutoCheckBox.IsChecked == true;
             _boardVM.LimitSkillLevel = ComputerSkillLevelCombo.SelectedIndex;
@@ -139,8 +141,8 @@ namespace KaruahChess.CustomControl
         /// </summary>
         private void ResetToDefault_Click(ContentDialog SenderDialog, ContentDialogButtonClickEventArgs DialogEventArgs)
         {
-            ComputerPlayerCheckBox.IsChecked = new ParamComputerPlayer().Enabled;
-            ComputerMoveFirstCheckBox.IsChecked = new ParamComputerMoveFirst().Enabled;
+            ComputerPlayerCheckBox.IsChecked = new ParamComputerPlayer().Enabled;            
+            SetComputerColour(new ParamComputerMoveFirst().Enabled);
             RandomiseFirstMoveCheckBox.IsChecked = new ParamRandomiseFirstMove().Enabled;
             ComputerSkillLevelCombo.SelectedIndex = Math.Clamp(new ParamLimitSkillLevel().level, 0, Constants.strengthList.Count - 1);
             LevelAutoCheckBox.IsChecked = new ParamLevelAuto().Enabled;
@@ -177,8 +179,6 @@ namespace KaruahChess.CustomControl
         private void ComputerAdvancedSettingsCheckBox_Click(object sender, RoutedEventArgs e)
         {
             SetControlState();
-
-
         }
 
 
@@ -193,7 +193,8 @@ namespace KaruahChess.CustomControl
             var ComputerPlayer = ComputerPlayerCheckBox.IsChecked == true;
             if (ComputerPlayer)
             {
-                ComputerMoveFirstCheckBox.IsEnabled = true;
+                btnComputerColour.IsEnabled = true;
+                ComputerColourImage.Opacity = 1.0;
                 RandomiseFirstMoveCheckBox.IsEnabled = true;
                 LevelAutoCheckBox.IsEnabled = true;
                 ComputerSkillLevelCombo.IsEnabled = true;
@@ -205,7 +206,8 @@ namespace KaruahChess.CustomControl
             }
             else
             {
-                ComputerMoveFirstCheckBox.IsEnabled = false;
+                btnComputerColour.IsEnabled = false;
+                ComputerColourImage.Opacity = 0.5;
                 RandomiseFirstMoveCheckBox.IsEnabled = false;
                 LevelAutoCheckBox.IsEnabled = false;
                 ComputerSkillLevelCombo.IsEnabled = false;
@@ -257,6 +259,30 @@ namespace KaruahChess.CustomControl
             {
                 MoveDurationLimitErrorText.Text = "";
                 MoveDurationLimitErrorText.Visibility = Visibility.Collapsed;
+            }
+        }
+
+        // Computer colour click handler
+        private void btnComputerColour_Click(object sender, RoutedEventArgs e)
+        {
+            SetComputerColour(!computerMoveFirst);
+        }
+
+        // Set computer colour
+        private void SetComputerColour(bool pComputerMoveFirst)
+        {
+            computerMoveFirst = pComputerMoveFirst;
+            if (pComputerMoveFirst)
+            {
+                ComputerColourImage.Source = new BitmapImage(new Uri("ms-appx:///Pieces/Images/WhitePawnLarge.png"));
+                ComputerColourImage.Width = 60;
+                ComputerColourImage.Height = 60;
+            }
+            else
+            {
+                ComputerColourImage.Source = new BitmapImage(new Uri("ms-appx:///Pieces/Images/BlackPawnLarge.png"));
+                ComputerColourImage.Width = 60;
+                ComputerColourImage.Height = 60;
             }
         }
 

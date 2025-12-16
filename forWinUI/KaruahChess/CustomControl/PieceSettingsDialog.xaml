@@ -22,6 +22,7 @@
                 <TextBlock x:Name="MoveSpeedTitleText" Margin="0,10,0,0" HorizontalAlignment="Left">Piece Move Speed</TextBlock>
                 <Slider x:Name="MoveSpeedSlider" Margin="3,0,15,0" Minimum="0" Maximum="6" HorizontalAlignment="Left"  Width="140" TickFrequency="1" TickPlacement="TopLeft" StepFrequency="1" SnapsTo="StepValues" IsThumbToolTipEnabled="True"/>
                 <CheckBox x:Name="PromoteAutoCheckBox" Margin="0,10,0,0" Content="Promote Pawn automatically" />
+                <CheckBox x:Name="LargePawnCheckBox" Margin="0,10,0,0" Content="Large Pawns" />
             </StackPanel>
         </ScrollViewer>
 

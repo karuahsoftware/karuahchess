@@ -13,29 +13,28 @@
         <ResourceDictionary x:Name="CustomStyleDefaultResourceDictionary">
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="ms-appx:///Common/Styles.xaml"/>
-            </ResourceDictionary.MergedDictionaries>
+            </ResourceDictionary.MergedDictionaries>           
         </ResourceDictionary>
     </UserControl.Resources>
 
-    <Grid PointerEntered="NavGrid_PointerEntered" PointerExited="NavGrid_PointerExited">
+    <Grid>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="Auto" />
-            <ColumnDefinition Width="*" />
-            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="*" />            
             <ColumnDefinition Width="Auto" />
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
 
-        <RepeatButton x:Name="LeftScrollBtn" Grid.Row="0" Grid.Column="0" Content="&#xE76B;" FontFamily="Segoe MDL2 Assets" Style="{StaticResource ButtonNavScrollLeftStyle}"  Click="LeftScrollBtn_Click" Opacity="0.31"/>
-        <ScrollViewer x:Name="navigatorScoll" Padding="0,0,0,0" Grid.Row="0" Grid.Column="1" HorizontalScrollMode="Enabled" HorizontalScrollBarVisibility="Hidden" VerticalScrollMode="Disabled" VerticalScrollBarVisibility="Hidden" >
-        <StackPanel x:Name="navigatorStack" Orientation="Horizontal" />
-        </ScrollViewer>
-        <RepeatButton x:Name="RightScrollBtn" Grid.Row="0" Grid.Column="2" Content="&#xE76C;" FontFamily="Segoe MDL2 Assets" Style="{StaticResource ButtonNavScrollRightStyle}" Click="RightScrollBtn_Click"  Opacity="0.31" />
-        <StackPanel x:Name="navigatorNextStack" Orientation="Horizontal" Grid.Row="0" Grid.Column="3">
-            <Button x:Name="backButton" Style="{StaticResource ButtonNavNextStyle}" Content="&#xE892;" FontFamily="Segoe MDL2 Assets" Click="BackBtn_Click" />
-            <Button x:Name="forwardButton" Style="{StaticResource ButtonNavNextStyle}" Content="&#xE893;" FontFamily="Segoe MDL2 Assets" Click="ForwardBtn_Click"  />
+        <ScrollViewer x:Name="navigatorScoll" Grid.Row="0" Grid.Column="0" HorizontalScrollMode="Enabled" HorizontalScrollBarVisibility="Visible" VerticalScrollMode="Disabled" VerticalScrollBarVisibility="Hidden" VerticalAlignment="Top" PreviewKeyDown="NavigatorScroll_PreviewKeyDown">
+            <StackPanel x:Name="navigatorStack" Orientation="Horizontal" Margin="0,0,0,14"/>
+        </ScrollViewer>             
+
+        <StackPanel x:Name="navigatorNextStack" Orientation="Horizontal" Grid.Row="0" Grid.Column="1" VerticalAlignment="Top">
+            <Button x:Name="backButton" Style="{StaticResource ButtonNavControlStyle}" Content="&#xE76B;" FontFamily="Segoe MDL2 Assets" Click="BackBtn_Click" />
+            <Button x:Name="forwardButton" Style="{StaticResource ButtonNavControlStyle}" Content="&#xE76C;" FontFamily="Segoe MDL2 Assets" Click="ForwardBtn_Click"  />
+            <Button x:Name="viewPGNButton" Style="{StaticResource ButtonNavControlStyle}" Content="&#xF0E3;" FontFamily="Segoe MDL2 Assets" Click="ViewPGNBtn_Click"  />
         </StackPanel>
     </Grid>
 

@@ -16,15 +16,18 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-using System;
+using KaruahChess.Common;
+using KaruahChess.Database;
+using KaruahChess.Model;
+using KaruahChessEngine;
+using Microsoft.Data.Sqlite;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
-using KaruahChess.Model;
-using Microsoft.Data.Sqlite;
-using KaruahChess.Database;
-using KaruahChessEngine;
-using KaruahChess.Common;
+using Microsoft.UI.Xaml.Documents;
+using SQLitePCL;
+using System;
 using System.Collections.Generic;
+using System.Text;
 using System.Text.RegularExpressions;
 
 namespace KaruahChess.CustomControl
@@ -110,7 +113,7 @@ namespace KaruahChess.CustomControl
             String pgnGameFilterA = ImportPGNTextBox.Text;
 
             // Remove header comments
-            pgnGameFilterA = Regex.Replace(pgnGameFilterA, @"(?s)\[.*\]", "");
+            pgnGameFilterA = Regex.Replace(pgnGameFilterA, @"(?s)\[.*?\]\s*", "");
 
             // Remove any curly bracket comments in game string
             pgnGameFilterA = Regex.Replace(pgnGameFilterA, "(?s){.*?}", " ");
@@ -118,12 +121,15 @@ namespace KaruahChess.CustomControl
 
             // Remove line breaks
             string[] lines = pgnGameFilterA.Split(new[] { "\r\n", "\r", "\n" }, StringSplitOptions.None);
-            string pgnGameFilterB = string.Empty;
+            string pgnGameFilterB = string.Empty;            
             foreach (string line in lines)
             {
                 // Remove semicolon comments
                 pgnGameFilterB = pgnGameFilterB + Regex.Replace(line, @";(.*)?$", "") + " ";
             }
+
+            // Remove Numeric Annotation Glyphs
+            pgnGameFilterB = Regex.Replace(pgnGameFilterB, @"(\$\d+)|[!?]+", "");
 
             var pgnGame = pgnGameFilterB;
             var success = ProcessGame(pgnGame);
@@ -132,6 +138,7 @@ namespace KaruahChess.CustomControl
                 if (_boardVM != null)
                 {
                     _boardVM.NavigateMaxRecord();
+                    _boardVM.NavigatorEnabled = true;
                 }
             }
 
@@ -161,60 +168,83 @@ namespace KaruahChess.CustomControl
                 pPGNGameStr = regex.Replace(pPGNGameStr, "");
             }
 
+
+
             // Replace multi spaces            
             regex = new Regex("[ ]{2,}");
             pPGNGameStr = regex.Replace(pPGNGameStr, " ");
             pPGNGameStr = pPGNGameStr.Trim();
 
-            var gameParseA = Regex.Replace(pPGNGameStr, @"[0-9]?[0-9]?[0-9]\.", "|");
-            var gameParseB = gameParseA.Split('|');
-
+            // Capture move numbers as tokens too (group keeps delimiters in the result array)
+            // Tokens will look like: "", "1.", "e4 e5", "2.", "Nf3", "2...", "Nc6", ...
+            var moveTokens = Regex.Split(pPGNGameStr, @"([0-9]{1,3}(?:\.{3}|\.))");
+            
             _board.Reset();
 
-            string rtnMsg = string.Empty;
+            // Determine starting colour: if first move number is written with '...'
+            // (e.g. "1...e5") then Black is to move; otherwise White to move.            
+            if (Regex.IsMatch(pPGNGameStr, @"^\s*[0-9]{1,3}\.\.\."))
+            {
+                _board.SetStateActiveColour(Constants.BLACKPIECE);
+            }
+            else
+            {
+                _board.SetStateActiveColour(Constants.WHITEPIECE);
+            }
+                       
 
             // Loop through game moves
             int id = 1;
-            int moveNumber = 1;
-
+            string currentMoveNumberToken = "";
+            
             // Add start record
             List<GameRecordArray> gameRecList = new List<GameRecordArray>();
             GameRecordArray startRecord = new GameRecordArray();
             startRecord.Id = id;
             _board.GetBoardArray(startRecord.BoardArray);
-            _board.GetStateArray(startRecord.StateArray);
+            _board.GetStateArray(startRecord.StateArray);            
+            startRecord.MoveSAN = string.Empty;
             gameRecList.Add(startRecord);
+            
             id++;
 
-            // Add all moves in the PGN string
+            // Iterate over tokens (move numbers + move groups)
             try
             {
-                foreach (var move in gameParseB)
+                for (int i = 0; i < moveTokens.Length; i++)
                 {
-                    if (move.Length > 0)
+                    var tokenRaw = moveTokens[i];
+                    if (string.IsNullOrWhiteSpace(tokenRaw)) continue;
+                    var token = tokenRaw.Trim();
+
+                    // If this token IS a move number, store it and continue to next token
+                    if (Regex.IsMatch(token, @"^[0-9]{1,3}(?:\.{3}|\.)$"))
                     {
-                        string[] halfMoveArray = move.Trim().Split(' ');
-                        foreach (var halfMove in halfMoveArray)
+                        currentMoveNumberToken = token; // e.g. "12." or "12..."
+                        continue;
+                    }
+
+                    // Otherwise this token holds one or more SAN half-moves separated by spaces
+                    string[] halfMoveArray = token.Split(' ', StringSplitOptions.RemoveEmptyEntries);
+                    foreach (var halfMove in halfMoveArray)
+                    {
+                        if (halfMove.Length == 0) continue;
+
+                        bool success = MovePGN(halfMove, _board, true);
+                        if (!success)
                         {
-                            if (halfMove.Trim() == "") continue;
-                            bool success = MovePGN(halfMove, _board, true);
-                            if (!success)
-                            {
-                                ImportErrorText.Text += "Import failed. Error occurred at move " + moveNumber + ": " + move + Environment.NewLine;
-                                ImportErrorText.Text += rtnMsg;
-                                return false;
-                            }
-
-                            GameRecordArray gamerec = new GameRecordArray();
-                            gamerec.Id = id;
-                            _board.GetBoardArray(gamerec.BoardArray);
-                            _board.GetStateArray(gamerec.StateArray);
-                            gameRecList.Add(gamerec);
-
-                            id++;
+                            ImportErrorText.Text += "Import failed. Error occurred at move " + currentMoveNumberToken + " with movetext " + halfMove + Environment.NewLine;                            
+                            return false;
                         }
-                        moveNumber++;
 
+                        GameRecordArray gamerec = new GameRecordArray();
+                        gamerec.Id = id;
+                        _board.GetBoardArray(gamerec.BoardArray);
+                        _board.GetStateArray(gamerec.StateArray);
+                        gamerec.MoveSAN = halfMove;
+                        gameRecList.Add(gamerec);                        
+
+                        id++;
                     }
                 }
 
@@ -224,9 +254,9 @@ namespace KaruahChess.CustomControl
                     return false;
                 }
 
-                // Loads the game in to the database
+                // Load the game into DB
                 LoadGameIntoDatabase(gameRecList);
-
+                                
             }
             catch (Exception ex)
             {
@@ -368,7 +398,7 @@ namespace KaruahChess.CustomControl
             }
             else if (Regex.IsMatch(pPGNValue, @"^[O][-][O][-][O][\+]?[#]?$"))
             {
-                // King side castle                
+                // Queen side castle                
                 bool castlingAvailableQueenSide = false;
                 if (pBoard.GetStateActiveColour() == Constants.WHITEPIECE) castlingAvailableQueenSide = (pBoard.GetStateCastlingAvailability() & 0b000001) > 0;
                 else if (pBoard.GetStateActiveColour() == Constants.BLACKPIECE) castlingAvailableQueenSide = (pBoard.GetStateCastlingAvailability() & 0b000100) > 0;
@@ -420,11 +450,14 @@ namespace KaruahChess.CustomControl
 
                             using (var command = connection.CreateCommand())
                             {
-                                command.CommandText = $"INSERT INTO {KaruahChessDB.GameRecordTableName} (Id, BoardSquareStr, GameStateStr) Values (@Id, @BoardSquareStr, @GameStateStr);";
+                               
+                                command.CommandText = $"INSERT INTO {KaruahChessDB.GameRecordTableName} (Id, BoardSquareStr, GameStateStr, MoveSANStr) Values (@Id, @BoardSquareStr, @GameStateStr, @MoveSANStr);";
                                 command.Parameters.Add(new SqliteParameter("@Id", gr.Id));
                                 command.Parameters.Add(new SqliteParameter("@BoardSquareStr", boardSquareStr));
                                 command.Parameters.Add(new SqliteParameter("@GameStateStr", gameStateStr));
+                                command.Parameters.Add(new SqliteParameter("@MoveSANStr", gr.MoveSAN));
                                 command.ExecuteNonQuery();
+                               
                             }
 
                         }

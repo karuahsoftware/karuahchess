@@ -168,6 +168,14 @@ namespace KaruahChess.Model
                 {
                     _parameters.Add(param.Name, param.Value.Deserialize<ParamHintMove>());
                 }
+                else if (param.Name == typeof(ParamLargePawn).Name)
+                {
+                    _parameters.Add(param.Name, param.Value.Deserialize<ParamLargePawn>());
+                }
+                else if (param.Name == typeof(ParamVoiceCommand).Name)
+                {
+                    _parameters.Add(param.Name, param.Value.Deserialize<ParamVoiceCommand>());
+                }
             }
 
 

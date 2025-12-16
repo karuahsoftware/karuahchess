@@ -1,0 +1,75 @@
+﻿<UserControl
+    x:Class="KaruahChess.CustomControl.ActionButtons"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"   
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    d:DesignHeight="300"
+    d:DesignWidth="400"
+    x:Name="rootUserControl">
+
+    <StackPanel x:Name="MainActionButtons" Orientation="{x:Bind ActionButtonsOrientation, Mode=OneWay}" Grid.Row="1" Margin="0,0,0,0" Canvas.ZIndex="11" HorizontalAlignment="Right" VerticalAlignment="Bottom" Spacing="10">
+        <Button x:Name="NewBtn" CornerRadius="50" Padding="7" Click="btnNewGame_Click">
+            <Button.Resources>
+                <SolidColorBrush x:Key="ButtonBackgroundPointerOver" Color="{StaticResource MainActionButtonBackgroundPointerOver}"/>
+                <SolidColorBrush x:Key="ButtonBackground" Color="{StaticResource MainActionButtonBackground}"/>
+                <SolidColorBrush x:Key="ButtonBackgroundPressed" Color="{StaticResource MainActionButtonBackgroundPressed}"/>
+            </Button.Resources>
+            <FontIcon FontSize="24" FontWeight="ExtraBold" FontFamily="Segoe MDL2 Assets" Glyph="&#xEB44;"/>
+        </Button>
+        <Button x:Name="LastBtn" CornerRadius="50" Padding="7" Click="btnLastMove_Click">
+            <Button.Resources>
+                <SolidColorBrush x:Key="ButtonBackgroundPointerOver" Color="{StaticResource MainActionButtonBackgroundPointerOver}"/>
+                <SolidColorBrush x:Key="ButtonBackground" Color="{StaticResource MainActionButtonBackground}"/>
+                <SolidColorBrush x:Key="ButtonBackgroundPressed" Color="{StaticResource MainActionButtonBackgroundPressed}"/>
+            </Button.Resources>
+            <FontIcon FontSize="24" FontFamily="Segoe MDL2 Assets" Glyph="&#xE7B3;"/>
+        </Button>
+        <Button x:Name="HintBtn" CornerRadius="50" Padding="7" Click="btnHint_Click">
+            <Button.Resources>
+                <SolidColorBrush x:Key="ButtonBackgroundPointerOver" Color="{StaticResource MainActionButtonBackgroundPointerOver}"/>
+                <SolidColorBrush x:Key="ButtonBackground" Color="{StaticResource MainActionButtonBackground}"/>
+                <SolidColorBrush x:Key="ButtonBackgroundPressed" Color="{StaticResource MainActionButtonBackgroundPressed}"/>
+            </Button.Resources>
+            <FontIcon FontSize="24" FontFamily="Segoe MDL2 Assets" Glyph="&#xEA80;"/>
+        </Button>
+
+        <Button x:Name="editAddPiecesBtn" CornerRadius="50" Padding="7" Click="btnAddPiecesDialog_Click">
+            <Button.Resources>
+                <SolidColorBrush x:Key="ButtonBackgroundPointerOver" Color="{StaticResource OtherActionButtonBackgroundPointerOver}"/>
+                <SolidColorBrush x:Key="ButtonBackground" Color="{StaticResource OtherActionButtonBackground}"/>
+                <SolidColorBrush x:Key="ButtonBackgroundPressed" Color="{StaticResource OtherActionButtonBackgroundPressed}"/>
+            </Button.Resources>
+            <FontIcon FontSize="24" FontWeight="ExtraBold" FontFamily="Segoe MDL2 Assets" Glyph="&#xE13D;" Foreground="White"/>
+        </Button>
+        <Button x:Name="editEraseBtn" CornerRadius="50" Padding="7" Click="btnEditEraseSelection_Click">
+            <Button.Resources>
+                <SolidColorBrush x:Key="ButtonBackgroundPointerOver" Color="{StaticResource OtherActionButtonBackgroundPointerOver}"/>
+                <SolidColorBrush x:Key="ButtonBackground" Color="{StaticResource OtherActionButtonBackground}"/>
+                <SolidColorBrush x:Key="ButtonBackgroundPressed" Color="{StaticResource OtherActionButtonBackgroundPressed}"/>
+            </Button.Resources>
+            <FontIcon FontSize="24" FontFamily="Segoe MDL2 Assets" Glyph="&#xE75C;" Foreground="White"/>
+        </Button>
+       
+        <Button x:Name="startListenBtn" CornerRadius="50" Padding="7" Click="btnStartVoiceListen_Click">
+            <Button.Resources>
+                <SolidColorBrush x:Key="ButtonBackgroundPointerOver" Color="{StaticResource OtherActionButtonBackgroundPointerOver}"/>
+                <SolidColorBrush x:Key="ButtonBackground" Color="{StaticResource OtherActionButtonBackground}"/>
+                <SolidColorBrush x:Key="ButtonBackgroundPressed" Color="{StaticResource OtherActionButtonBackgroundPressed}"/>
+            </Button.Resources>
+            <FontIcon FontSize="24" FontWeight="ExtraBold" FontFamily="Segoe MDL2 Assets" Glyph="&#xF12E;" Foreground="White"/>
+        </Button>
+
+        <Button x:Name="nextBtn" CornerRadius="50" Padding="7" Click="btnNext_Click">
+            <Button.Resources>
+                <SolidColorBrush x:Key="ButtonBackgroundPointerOver" Color="{StaticResource MainActionButtonBackgroundPointerOver}"/>
+                <SolidColorBrush x:Key="ButtonBackground" Color="{StaticResource MainActionButtonBackground}"/>
+                <SolidColorBrush x:Key="ButtonBackgroundPressed" Color="{StaticResource MainActionButtonBackgroundPressed}"/>
+            </Button.Resources>
+            <FontIcon FontSize="24" FontWeight="ExtraBold" FontFamily="Segoe MDL2 Assets" Glyph="&#xE76C;"/>
+        </Button>
+        
+    </StackPanel>
+
+</UserControl>

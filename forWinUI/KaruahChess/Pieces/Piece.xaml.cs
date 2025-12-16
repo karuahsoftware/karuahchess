@@ -33,7 +33,7 @@ namespace KaruahChess.Pieces
         //Properties
         private double _pieceWidth;
         private double _pieceHeight;
-
+        private bool _largePawn;
         public enum TypeEnum { Empty = 0, Pawn = 1, Knight = 2, Bishop = 3, Rook = 4, Queen = 5, King = 6}
         
         public TypeEnum Type { get; private set; }
@@ -55,7 +55,7 @@ namespace KaruahChess.Pieces
             this.InitializeComponent();
 
             // Set default value
-            SetType(TypeEnum.Empty, ColourEnum.None, 0, 0);
+            SetType(TypeEnum.Empty, ColourEnum.None, 0, 0, false);
             SetEllipseVisibility(Visibility.Collapsed, null, false);
 
             
@@ -142,7 +142,7 @@ namespace KaruahChess.Pieces
         /// <param name="pColour">Piece colour</param>
         public void SetType(TypeEnum pType, ColourEnum pColour)
         {
-            SetType(pType, pColour, _pieceWidth, _pieceHeight);
+            SetType(pType, pColour, _pieceWidth, _pieceHeight, _largePawn);
         }
 
 
@@ -153,10 +153,11 @@ namespace KaruahChess.Pieces
         /// <param name="pColour">Piece colour</param>
         /// <param name="pWidth">Width of image</param>
         /// <param name="pHeight">Height of image</param>        
-        public void SetType(TypeEnum pType, ColourEnum pColour, double pWidth, double pHeight)
+        public void SetType(TypeEnum pType, ColourEnum pColour, double pWidth, double pHeight, bool pLargePawn)
         {
             _pieceWidth = pWidth;
             _pieceHeight = pHeight;
+            _largePawn = pLargePawn;
 
             Type = pType;
             Colour = pColour;
@@ -205,7 +206,7 @@ namespace KaruahChess.Pieces
             }
             else
             {
-                var img = GetImage(pType, pColour, pWidth, pHeight);
+                var img = GetImage(pType, pColour, pWidth, pHeight, pLargePawn);
                 PieceImage.Source = img;
                 PieceImage.Width = pHeight;
                 PieceImage.Height = pHeight;
@@ -223,7 +224,19 @@ namespace KaruahChess.Pieces
 
         }
 
-       
+        /// <summary>
+        /// Refresh the piece image
+        /// </summary>
+        public void RefreshPiece(bool pLargePawn)
+        {
+            _largePawn = pLargePawn;
+            var img = GetImage(Type, Colour, _pieceWidth, _pieceHeight, pLargePawn);
+            PieceImage.Source = img;
+            PieceImage.Width = _pieceWidth;
+            PieceImage.Height = _pieceHeight;
+            PieceImage.Visibility = Visibility.Visible;
+            ImageData = img;
+        }
 
         /// <summary>
         /// Start the ellipse storyboard if not empty
@@ -290,7 +303,7 @@ namespace KaruahChess.Pieces
         /// <param name="pWidth"></param>
         /// <param name="pHeight"></param>
         /// <returns></returns>
-        public static BitmapImage GetImage(char pFen, double pWidth, double pHeight)
+        public static BitmapImage GetImage(char pFen, double pWidth, double pHeight, bool pLargePawn)
         {
             var FENLowerChar = Char.ToLower(pFen);
             TypeEnum pieceType;
@@ -327,7 +340,7 @@ namespace KaruahChess.Pieces
             else if (FENLowerChar == pFen) pieceColour = Piece.ColourEnum.Black;
             else pieceColour = Piece.ColourEnum.White;
 
-            return GetImage(pieceType, pieceColour, pWidth, pHeight);
+            return GetImage(pieceType, pieceColour, pWidth, pHeight, pLargePawn);
         }
         
 
@@ -337,7 +350,7 @@ namespace KaruahChess.Pieces
         /// <param name="pType"></param>
         /// <param name="pColour"></param>
         /// <returns></returns>
-        public static BitmapImage GetImage(TypeEnum pType, ColourEnum pColour, double pWidth, double pHeight)
+        public static BitmapImage GetImage(TypeEnum pType, ColourEnum pColour, double pWidth, double pHeight, bool pLargePawn)
         {
             BitmapImage imgData;
 
@@ -382,7 +395,7 @@ namespace KaruahChess.Pieces
             }
             else if (pType == TypeEnum.Pawn && pColour == ColourEnum.Black)
             {
-                var img = new BitmapImage(new Uri("ms-appx:///Pieces/Images/BlackPawn.png"));
+                var img = pLargePawn ? new BitmapImage(new Uri("ms-appx:///Pieces/Images/BlackPawnLarge.png")) : new BitmapImage(new Uri("ms-appx:///Pieces/Images/BlackPawn.png"));
                 img.DecodePixelWidth = (int)pWidth;
                 img.DecodePixelHeight = (int)pHeight;                
                 imgData = img;
@@ -424,7 +437,7 @@ namespace KaruahChess.Pieces
             }
             else if (pType == TypeEnum.Pawn && pColour == ColourEnum.White)
             {
-                var img = new BitmapImage(new Uri("ms-appx:///Pieces/Images/WhitePawn.png"));
+                var img = pLargePawn ? new BitmapImage(new Uri("ms-appx:///Pieces/Images/WhitePawnLarge.png")) : new BitmapImage(new Uri("ms-appx:///Pieces/Images/WhitePawn.png"));
                 img.DecodePixelWidth = (int)pWidth;
                 img.DecodePixelHeight = (int)pHeight;                
                 imgData = img;

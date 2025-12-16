@@ -22,8 +22,8 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Data.Sqlite;
 using KaruahChessEngine;
-using KaruahChess.Common;
-using System.Collections;
+
+
 
 namespace KaruahChess.Model
 {
@@ -84,6 +84,7 @@ namespace KaruahChess.Model
                         int Id = Convert.ToInt32(reader["Id"]);
                         String boardSquareStr = Convert.ToString(reader["BoardSquareStr"]);
                         String gameStateStr = Convert.ToString(reader["GameStateStr"]);
+                        String moveSANStr = Convert.ToString(reader["MoveSANStr"]);
                         board.SetBoard(boardSquareStr);
                         board.SetState(gameStateStr);
 
@@ -91,6 +92,8 @@ namespace KaruahChess.Model
                         recArray.Id = Id;
                         board.GetBoardArray(recArray.BoardArray);
                         board.GetStateArray(recArray.StateArray);
+                        recArray.MoveSAN = moveSANStr;
+
                         _gameRecordDict.Add(Id, recArray);
                     }
                 
@@ -162,7 +165,7 @@ namespace KaruahChess.Model
         /// Record the current state of the game as a record
         /// </summary>
         /// <returns></returns>
-        public int RecordGameState(int pWhiteClockOffset, int pBlackClockOffset)
+        public int RecordGameState(int pWhiteClockOffset, int pBlackClockOffset, string pMoveSAN)
         {
             int result = 0;
 
@@ -180,6 +183,7 @@ namespace KaruahChess.Model
             gameRecordArray.Id = nextId;
             CurrentGame.GetBoardArray(gameRecordArray.BoardArray);
             CurrentGame.GetStateArray(gameRecordArray.StateArray);
+            gameRecordArray.MoveSAN = pMoveSAN;
 
             if (!_gameRecordDict.ContainsKey(gameRecordArray.Id)) {
 
@@ -190,10 +194,11 @@ namespace KaruahChess.Model
                 var connection = KaruahChessDB.GetDBConnection();                
                     using (var command = connection.CreateCommand())
                     {
-                        command.CommandText = $"INSERT INTO {KaruahChessDB.GameRecordTableName} (Id, BoardSquareStr, GameStateStr) Values (@Id, @BoardSquareStr, @GameStateStr);";                    
+                        command.CommandText = $"INSERT INTO {KaruahChessDB.GameRecordTableName} (Id, BoardSquareStr, GameStateStr, MoveSANStr) Values (@Id, @BoardSquareStr, @GameStateStr, @MoveSANStr);";                    
                         command.Parameters.Add(new SqliteParameter("@Id", nextId));
                         command.Parameters.Add(new SqliteParameter("@BoardSquareStr", boardSquareStr));
                         command.Parameters.Add(new SqliteParameter("@GameStateStr", gameStateStr));                    
+                        command.Parameters.Add(new SqliteParameter("@MoveSANStr", gameRecordArray.MoveSAN));
                         result = command.ExecuteNonQuery();
                         transactionId++;                
                     }
@@ -222,17 +227,19 @@ namespace KaruahChess.Model
 
                 // Add record to dictionary
                 _gameRecordDict[pGameRecordArray.Id] = pGameRecordArray;
-
-                // Add record to database
+                
+                // Single DB connection for both updates
                 var connection = KaruahChessDB.GetDBConnection();
                 using (var command = connection.CreateCommand())
                 {
-                    command.CommandText = $"Update {KaruahChessDB.GameRecordTableName} set BoardSquareStr=@BoardSquareStr, GameStateStr=@GameStateStr where id=@Id;";
+                    // Update current record (board/state + cleared SAN)
+                    command.CommandText = $"Update {KaruahChessDB.GameRecordTableName} set BoardSquareStr=@BoardSquareStr, GameStateStr=@GameStateStr, MoveSANStr=@MoveSANStr where id=@Id;";
                     command.Parameters.Add(new SqliteParameter("@Id", pGameRecordArray.Id));
                     command.Parameters.Add(new SqliteParameter("@BoardSquareStr", boardSquareStr));
                     command.Parameters.Add(new SqliteParameter("@GameStateStr", gameStateStr));
+                    command.Parameters.Add(new SqliteParameter("@MoveSANStr", string.Empty));
                     result = command.ExecuteNonQuery();
-                    transactionId++;
+                    transactionId++;                    
                 }
                 connection.Close();
 
@@ -273,7 +280,7 @@ namespace KaruahChess.Model
             CurrentGame.Reset();
 
             // Create record of default setup
-            RecordGameState(pWhiteClockOffset, pBlackClockOffset);
+            RecordGameState(pWhiteClockOffset, pBlackClockOffset, string.Empty);
         }
 
         /// <summary>
@@ -446,6 +453,41 @@ namespace KaruahChess.Model
             }
 
             return history;
+        }
+
+
+        /// <summary>
+        /// Determines the active move color for a specific record
+        /// </summary>  
+        public int GetActiveMoveColour(int pId)
+        {
+            if (_gameRecordDict.ContainsKey(pId))
+            {
+                GameRecordArray rec = _gameRecordDict[pId];
+                return rec.StateArray[0];
+            }
+            else
+            {
+                return 0;
+            }           
+        }
+
+
+
+        /// <summary>
+        /// Get the game status for a specific record
+        /// </summary>  
+        public int GetStateGameStatus(int pId)
+        {
+            if (_gameRecordDict.ContainsKey(pId))
+            {
+                GameRecordArray rec = _gameRecordDict[pId];
+                return rec.StateArray[5];
+            }
+            else
+            {
+                return -1;
+            }
         }
 
     }

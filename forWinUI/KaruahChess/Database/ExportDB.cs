@@ -85,6 +85,11 @@ namespace KaruahChess.Database
                                 xmlWriter.WriteString(Convert.ToString(reader["GameStateStr"]));
                                 xmlWriter.WriteEndElement();
 
+                                // Write the MoveSANStr
+                                xmlWriter.WriteStartElement("MoveSANStr");
+                                xmlWriter.WriteString(Convert.ToString(reader["MoveSANStr"]));
+                                xmlWriter.WriteEndElement();
+
                                 xmlWriter.WriteEndElement();  // GameRecord
 
                             }

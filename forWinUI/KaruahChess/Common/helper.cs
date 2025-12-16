@@ -87,7 +87,7 @@ namespace KaruahChess.Common
         {
             return !pBool;
         }
-
+                
 
         public static Dictionary<int, String> BoardCoordinateDict = new Dictionary<int, String>()
         {

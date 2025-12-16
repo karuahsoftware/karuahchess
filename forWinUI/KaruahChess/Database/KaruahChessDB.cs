@@ -26,7 +26,7 @@ namespace KaruahChess.Database
 {
     public static class KaruahChessDB
     {        
-        public static readonly string dbname = "KaruahChessV14.sqlite";
+        public static readonly string dbname = "KaruahChessV15.sqlite";
         public static readonly string dbpath = Path.Combine(Windows.Storage.ApplicationData.Current.LocalFolder.Path, dbname);
         public static readonly string connectionString = "Filename=" + dbpath + ";";
 
@@ -96,7 +96,7 @@ namespace KaruahChess.Database
         private static void CreateTablesIfNotExists()
         {
             ExecuteNonQuery($"CREATE TABLE IF NOT EXISTS {ParameterTableName} (Name TEXT PRIMARY KEY NOT NULL, Value BLOB NOT NULL);");
-            ExecuteNonQuery($"CREATE TABLE IF NOT EXISTS {GameRecordTableName} (Id INTEGER PRIMARY KEY NOT NULL, BoardSquareStr TEXT NOT NULL, GameStateStr TEXT NOT NULL);");
+            ExecuteNonQuery($"CREATE TABLE IF NOT EXISTS {GameRecordTableName} (Id INTEGER PRIMARY KEY NOT NULL, BoardSquareStr TEXT NOT NULL, GameStateStr TEXT NOT NULL, MoveSANStr TEXT);");
         }
 
 

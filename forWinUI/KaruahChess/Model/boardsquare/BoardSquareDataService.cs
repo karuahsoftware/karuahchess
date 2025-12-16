@@ -31,6 +31,7 @@ namespace KaruahChess.Model
         private HashSet<int> _hiddenSquares = new HashSet<int>();
 
         public double SquareSize { get; set; }
+        public bool LargePawn { get; set; }
 
         KaruahChessEngineClass _tempboard;
 
@@ -62,9 +63,10 @@ namespace KaruahChess.Model
         /// Loads squares in to the observable collection
         /// </summary>
         /// <param name="pSquareSize">The pixel width of the Tile. Height is set to the same value.</param>        
-        public void Load(double pSquareSize, GameRecordArray pRec)
+        public void Load(double pSquareSize, bool pLargePawn, GameRecordArray pRec)
         {
             SquareSize = pSquareSize;
+            LargePawn = pLargePawn;
             _tempboard.SetBoardArray(pRec.BoardArray);
             _tempboard.SetStateArray(pRec.StateArray);
 
@@ -74,7 +76,7 @@ namespace KaruahChess.Model
                 var bsquare = new BoardSquare();
                 bsquare.Index = i;
                 char fen = _tempboard.GetFENCharFromSpin(_tempboard.GetSpin(i));
-                bsquare.SetFEN(fen, pSquareSize);
+                bsquare.SetFEN(fen, pSquareSize, pLargePawn);
                 boardSquareList.Add(bsquare);
             }
 
@@ -113,7 +115,7 @@ namespace KaruahChess.Model
                                 _hiddenSquares.Add(sqIndex);
                             }
                         }
-                        currentSq.SetFEN(fenSq, SquareSize);
+                        currentSq.SetFEN(fenSq, SquareSize, LargePawn);
                         updateCount++;
                     }
                 }

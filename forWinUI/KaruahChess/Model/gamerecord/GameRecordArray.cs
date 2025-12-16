@@ -25,5 +25,6 @@ namespace KaruahChess.Model
         public int Id;
         public UInt64[] BoardArray = new UInt64[276];
         public Int32[] StateArray = new Int32[8];
+        public string MoveSAN = string.Empty;
     }
 }

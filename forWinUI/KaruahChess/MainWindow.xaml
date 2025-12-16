@@ -23,9 +23,10 @@
             <CommandBar.Content>
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Stretch" >
                     <Border x:Name="DirectionIndicator" CornerRadius="0" Width="30" Height="30" Margin="1,0,0,0" Background="{x:Bind BoardVM.DirectionColour, Mode=OneWay}" BorderThickness="1" BorderBrush="{x:Bind BoardVM.BorderColour, Mode=OneWay}" HorizontalAlignment="Right" VerticalAlignment="Stretch" IsHitTestVisible="False" >
-                        <ProgressRing x:Name="MoveProgress" IsActive="{x:Bind BoardVM.IsComputerProcessing(BoardVM.ComputerMoveProcessing, BoardVM.ComputerHintProcessing), Mode=OneWay}" Foreground="{x:Bind BoardVM.OpposingColour, Mode=OneWay}" Width="25" Height="25" Margin="0" Padding="0"/>
+                        <ProgressRing x:Name="ProcessingIndicator" IsActive="{x:Bind BoardVM.IsComputerProcessing(BoardVM.ComputerMoveProcessing, BoardVM.ComputerHintProcessing, BoardVM.ComputerVoiceProcessing), Mode=OneWay}" Foreground="{x:Bind BoardVM.OpposingColour, Mode=OneWay}" Width="25" Height="25" Margin="0" Padding="0"/>
                     </Border>
-                    <customcontrol:LevelIndicator  x:Name="LevelIndicatorControl" VerticalAlignment="Center" Margin="0,0,0,3" Padding="0" />
+                    <customcontrol:LevelIndicator  x:Name="LevelIndicatorControl" VerticalAlignment="Center" Margin="0,0,0,3" Padding="0" Visibility="{x:Bind BoardVM.LevelIndicatorVisible(BoardVM.VoiceIndicatorState), Mode=OneWay}"  />
+                    <customcontrol:VoiceListenIndicator  x:Name="VoiceListenIndicatorControl" IndicatorState="{x:Bind BoardVM.VoiceIndicatorState, Mode=OneWay}" IndicatorSpokenText="{x:Bind BoardVM.VoiceIndicatorSpokenText, Mode=OneWay}" VerticalAlignment="Center" Margin="0,0,0,3" Padding="0" />
                 </StackPanel>
             </CommandBar.Content>
 
@@ -59,12 +60,7 @@
                 </AppBarButton>
                 <AppBarButton Icon="Audio" Label="Sound" Click="BoardVM.btnSoundSettings_Click" />
                 <AppBarSeparator/>
-                <AppBarToggleButton Icon="Microphone" Label="Voice Commands" ToolTipService.ToolTip="Move pieces with your voice" Checked="BoardVM.btnStartVoiceListen_Checked" Unchecked="BoardVM.btnStartVoiceListen_Unchecked" />
-                <AppBarButton Label="Voice Help" ToolTipService.ToolTip="Open help page for voice commands."  Click="BoardVM.btnVoiceHelp_Click" >
-                    <AppBarButton.Icon>
-                        <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE946;"/>
-                    </AppBarButton.Icon>
-                </AppBarButton>
+                <AppBarButton Label="Voice Commands" Click="BoardVM.btnVoiceCommand_Click" Icon="Microphone" />
                 <AppBarSeparator/>
                 <AppBarToggleButton Icon="Edit" Label="Edit" IsChecked="{x:Bind BoardVM.ArrangeBoardEnabled, Mode=TwoWay}" Click="BoardVM.btnArrangeBoard_Click" >
                     <AppBarToggleButton.KeyboardAccelerators>
@@ -86,51 +82,7 @@
 
         </CommandBar>
 
-        <StackPanel x:Name="MainActionButtons" Orientation="{x:Bind BoardVM.MainControlOrientation, Mode=OneWay}" Grid.Row="1" Margin="0,0,0,0" Canvas.ZIndex="11" HorizontalAlignment="Right" VerticalAlignment="Bottom" Spacing="10" Visibility="{x:Bind BoardVM.MainActionButtonsVisiblility(BoardVM.ArrangeBoardEnabled), Mode=OneWay}">
-            <Button x:Name="NewBtn" CornerRadius="50" Padding="7" Click="BoardVM.btnNewGame_Click">
-                <Button.Resources>
-                    <SolidColorBrush x:Key="ButtonBackgroundPointerOver" Color="{StaticResource MainActionButtonBackgroundPointerOver}"/>
-                    <SolidColorBrush x:Key="ButtonBackground" Color="{StaticResource MainActionButtonBackground}"/>
-                    <SolidColorBrush x:Key="ButtonBackgroundPressed" Color="{StaticResource MainActionButtonBackgroundPressed}"/>
-                </Button.Resources>
-                <FontIcon FontSize="24" FontWeight="ExtraBold" FontFamily="Segoe MDL2 Assets" Glyph="&#xEB44;"/>
-            </Button>
-            <Button x:Name="LastBtn" CornerRadius="50" Padding="7" Click="BoardVM.btnLastMove_Click">
-                <Button.Resources>
-                    <SolidColorBrush x:Key="ButtonBackgroundPointerOver" Color="{StaticResource MainActionButtonBackgroundPointerOver}"/>
-                    <SolidColorBrush x:Key="ButtonBackground" Color="{StaticResource MainActionButtonBackground}"/>
-                    <SolidColorBrush x:Key="ButtonBackgroundPressed" Color="{StaticResource MainActionButtonBackgroundPressed}"/>
-                </Button.Resources>
-                <FontIcon FontSize="24" FontFamily="Segoe MDL2 Assets" Glyph="&#xE7B3;"/>
-            </Button>
-            <Button x:Name="HintBtn" CornerRadius="50" Padding="7" Click="BoardVM.btnHint_Click" Visibility="{x:Bind BoardVM.GetVisibility(BoardVM.HintEnabled), Mode=OneWay}">
-                <Button.Resources>
-                    <SolidColorBrush x:Key="ButtonBackgroundPointerOver" Color="{StaticResource MainActionButtonBackgroundPointerOver}"/>
-                    <SolidColorBrush x:Key="ButtonBackground" Color="{StaticResource MainActionButtonBackground}"/>
-                    <SolidColorBrush x:Key="ButtonBackgroundPressed" Color="{StaticResource MainActionButtonBackgroundPressed}"/>
-                </Button.Resources>
-                <FontIcon FontSize="24" FontFamily="Segoe MDL2 Assets" Glyph="&#xEA80;"/>
-            </Button>
-        </StackPanel>
-
-        <StackPanel x:Name="EditActionButtons" Orientation="{x:Bind BoardVM.MainControlOrientation, Mode=OneWay}" Grid.Row="1" Margin="0,0,0,0" Canvas.ZIndex="11" HorizontalAlignment="Right" VerticalAlignment="Bottom" Spacing="10" Visibility="{x:Bind BoardVM.GetVisibility(BoardVM.ArrangeBoardEnabled), Mode=OneWay}">
-            <Button x:Name="editTileBtn" CornerRadius="50" Padding="7" Click="BoardVM.btnAddPiecesDialog_Click">
-                <Button.Resources>
-                    <SolidColorBrush x:Key="ButtonBackgroundPointerOver" Color="{StaticResource EditActionButtonBackgroundPointerOver}"/>
-                    <SolidColorBrush x:Key="ButtonBackground" Color="{StaticResource EditActionButtonBackground}"/>
-                    <SolidColorBrush x:Key="ButtonBackgroundPressed" Color="{StaticResource EditActionButtonBackgroundPressed}"/>
-                </Button.Resources>
-                <FontIcon FontSize="24" FontWeight="ExtraBold" FontFamily="Segoe MDL2 Assets" Glyph="&#xE13D;" Foreground="White"/>
-            </Button>
-            <Button x:Name="editEraseBtn" CornerRadius="50" Padding="7" Click="BoardVM.btnEditEraseSelection_Click">
-                <Button.Resources>
-                    <SolidColorBrush x:Key="ButtonBackgroundPointerOver" Color="{StaticResource EditActionButtonBackgroundPointerOver}"/>
-                    <SolidColorBrush x:Key="ButtonBackground" Color="{StaticResource EditActionButtonBackground}"/>
-                    <SolidColorBrush x:Key="ButtonBackgroundPressed" Color="{StaticResource EditActionButtonBackgroundPressed}"/>
-                </Button.Resources>
-                <FontIcon FontSize="24" FontFamily="Segoe MDL2 Assets" Glyph="&#xE75C;" Foreground="White"/>                
-            </Button>            
-        </StackPanel>
+        <customcontrol:ActionButtons x:Name="ActionButtonsControl" ActionButtonsOrientation="{x:Bind BoardVM.MainControlOrientation, Mode=OneWay}" EditEnabled="{x:Bind BoardVM.ArrangeBoardEnabled, Mode=OneWay}" VoiceEnabled="{x:Bind BoardVM.VoiceCommandEnabled, Mode=OneWay}" HintEnabled="{x:Bind BoardVM.HintEnabled, Mode=OneWay}" Grid.Row="1" Margin="0,0,0,0" Canvas.ZIndex="11" HorizontalAlignment="Right" VerticalAlignment="Bottom" Visibility="{x:Bind BoardVM.ActionButtonVisible(BoardVM.ComputerVoiceProcessing), Mode=OneWay}" />
 
         <StackPanel Orientation="Vertical" Grid.Row="1" HorizontalAlignment="Left" Width="{x:Bind BoardVM.BoardWidth, Mode=OneWay}">
             <Canvas x:Name="BoardCanvas"  Canvas.ZIndex="10" Width="{x:Bind BoardVM.BoardWidth, Mode=OneWay}" Height="{x:Bind BoardVM.BoardWidth, Mode=OneWay}" HorizontalAlignment="Left">

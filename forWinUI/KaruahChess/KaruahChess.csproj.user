@@ -5,6 +5,9 @@
     <None Update="App.xaml">
       <SubType>Designer</SubType>
     </None>
+    <Page Update="CustomControl\VoiceListenIndicator.xaml">
+      <SubType>Designer</SubType>
+    </Page>
     <Page Update="CustomControl\PieceEditDialog.xaml">
       <SubType>Designer</SubType>
     </Page>
@@ -25,7 +28,10 @@
     <Page Update="CustomControl\EngineSettingsDialog.xaml">
       <SubType>Designer</SubType>
     </Page>
-    <Page Update="CustomControl\VoiceHelpDialog.xaml">
+    <Page Update="CustomControl\ActionButtons.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="CustomControl\VoiceCommandDialog.xaml">
       <SubType>Designer</SubType>
     </Page>
     <Page Update="CustomControl\ImportPGNDialog.xaml">

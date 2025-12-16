@@ -39,7 +39,7 @@ namespace KaruahChess.CustomControl
             boardVM = pBoardVM;
 
             var imageSize = 70;
-            KingImage.Source = Piece.GetImage(pPieceType, pColour, imageSize, imageSize);
+            KingImage.Source = Piece.GetImage(pPieceType, pColour, imageSize, imageSize, boardVM.LargePawnEnabled);
             KingImage.Width = imageSize;
             KingImage.Height = imageSize;
 

@@ -52,7 +52,6 @@ namespace KaruahChess {
 					return false;
 				}
 
-
 				// Validate from move
 				if ((pBoard.GetOccupied(pBoard.StateActiveColour) & helper::BITMASK >> pFromIndex) == 0)
 				{
@@ -68,8 +67,59 @@ namespace KaruahChess {
 					return false;
 				}
 
-
 			}
+
+			
+			// Disambiguation for PGN			
+			auto toSq = helper::BoardCoordinateDict.at(pToIndex);     // e.g. "e4"
+			auto fromSq = helper::BoardCoordinateDict.at(pFromIndex); // e.g. "e2"
+			std::string disamb;						
+			std::vector<int> none;
+			int findRes = FindFromIndex(pBoard, pToIndex, origFromSpin, none, false);
+
+			if (findRes == -2)
+			{
+				// Ambiguous: try file, then rank, else full square
+				int fromFile = pFromIndex % 8;
+				int fromRank = pFromIndex / 8;
+
+				std::vector<int> byFile;
+				std::vector<int> byRank;
+				byFile.reserve(8);
+				byRank.reserve(8);
+
+				// Build candidate lists by file and by rank for this piece type
+				for (int i = 0; i < 64; ++i)
+				{
+					if (pBoard.GetSpin(i) == origFromSpin)
+					{
+						if ((i % 8) == fromFile) byFile.push_back(i);
+						if ((i / 8) == fromRank) byRank.push_back(i);
+					}
+				}
+
+				int fileRes = FindFromIndex(pBoard, pToIndex, origFromSpin, byFile, false);
+				if (fileRes == pFromIndex)
+				{
+					// File uniquely identifies
+					disamb.push_back(fromSq[0]);
+				}
+				else
+				{
+					int rankRes = FindFromIndex(pBoard, pToIndex, origFromSpin, byRank, false);
+					if (rankRes == pFromIndex)
+					{
+						// Rank uniquely identifies
+						disamb.push_back(fromSq[1]);
+					}
+					else
+					{
+						// Need full square
+						disamb += fromSq;
+					}
+				}
+			}
+			
 
 
 			// Do the move
@@ -78,15 +128,18 @@ namespace KaruahChess {
 
 
 			// Check for pawn promotion
+			bool didPromotion = false;
 			if (origFromSpin == helper::WHITE_PAWN_SPIN && pToIndex >= 0 && pToIndex <= 7)
 			{
 				int pawnPromotion = (int)pPawnPromotionPiece * pBoard.StateActiveColour;
 				pBoard.Update(pToIndex, pawnPromotion);
+				didPromotion = true;
 			}
 			else if (origFromSpin == helper::BLACK_PAWN_SPIN && pToIndex >= 56 && pToIndex <= 63)
 			{
 				int pawnPromotion = (int)pPawnPromotionPiece * pBoard.StateActiveColour;
 				pBoard.Update(pToIndex, pawnPromotion);
+				didPromotion = true;
 			}
 
 			// Variables
@@ -160,7 +213,6 @@ namespace KaruahChess {
 			else
 			{
 
-
 				// Update EnPassant potential
 				int distance = pFromIndex - pToIndex;
 				if ((distance == 16 || distance == -16) && (origFromSpin == helper::WHITE_PAWN_SPIN || origFromSpin == helper::BLACK_PAWN_SPIN))
@@ -179,7 +231,7 @@ namespace KaruahChess {
 					pBoard.StateFullMoveCount += 1;
 				}
 
-				// Increment half move count if no piece was captured or a pawn was not advanced. Used for fity move rule.
+				// Increment half move count if no piece was captured or a pawn was not advanced. Used for fifty move rule.
 				if (origToSpin != 0 || origFromSpin == helper::WHITE_PAWN_SPIN || origFromSpin == helper::BLACK_PAWN_SPIN)
 				{
 					pBoard.StateHalfMoveCount = 0;
@@ -241,6 +293,96 @@ namespace KaruahChess {
 				pBoard.MoveData[1] = pToIndex;
 				pBoard.MoveData[2] = origFromSpin;
 				pBoard.MoveData[3] = origToSpin;
+								
+
+				// Determine piece letter (empty for pawns)
+				char pieceChar = '\0';
+				int absSpin = origFromSpin < 0 ? -origFromSpin : origFromSpin;
+				if (absSpin == helper::WHITE_KING_SPIN) pieceChar = 'K';
+				else if (absSpin == helper::WHITE_QUEEN_SPIN) pieceChar = 'Q';
+				else if (absSpin == helper::WHITE_ROOK_SPIN) pieceChar = 'R';
+				else if (absSpin == helper::WHITE_BISHOP_SPIN) pieceChar = 'B';
+				else if (absSpin == helper::WHITE_KNIGHT_SPIN) pieceChar = 'N';
+				// Pawns => pieceChar stays '\0'
+
+				bool isCapture = (origToSpin != 0) || enPassant;
+
+				// Promotion?				
+				char promoChar = '\0';				
+				if (didPromotion)
+				{
+					switch (pPawnPromotionPiece)
+					{
+					case helper::PawnPromotionEnum::Queen:  promoChar = 'Q'; break;
+					case helper::PawnPromotionEnum::Rook:   promoChar = 'R'; break;
+					case helper::PawnPromotionEnum::Bishop: promoChar = 'B'; break;
+					case helper::PawnPromotionEnum::Knight: promoChar = 'N'; break;
+					default: promoChar = 'Q'; break;
+					}
+				}
+
+				std::string san;
+
+				if (castle)
+				{
+					// Determine side by files
+					int fromFile = pFromIndex % 8;
+					int toFile = pToIndex % 8;
+					san = (toFile > fromFile) ? "O-O" : "O-O-O";
+				}
+				else
+				{
+					if (pieceChar == '\0')
+					{
+						// Pawn moves
+						if (isCapture)
+						{
+							// File letter of the from square + 'x' + to							
+							san.push_back(fromSq[0]);
+							san.push_back('x');
+							san += toSq;
+						}
+						else
+						{
+							// Just destination square
+							san = toSq;
+						}
+
+						if (didPromotion)
+						{
+							san.push_back('=');
+							san.push_back(promoChar);
+						}
+					}
+					else
+					{
+						// Pieces: letter + optional 'x' + destination (no disambiguation here)
+						san.push_back(pieceChar);
+												
+						// Append disambiguation if any
+						if (!disamb.empty()) san += disamb;
+
+						if (isCapture) san.push_back('x');
+
+						san += toSq;
+					}
+
+				}
+
+				// Check/mate suffix
+				if (pBoard.StateGameStatus == 1)
+				{
+					// Checkmate as determined above
+					san.push_back('#');
+				}
+				else if (pBoard.IsKingCheck(pBoard.StateActiveColour))
+				{
+					// Opponent is in check after this move
+					san.push_back('+');
+				}
+
+				pBoard.MoveSAN = san;
+
 
 			}
 
@@ -488,6 +630,9 @@ namespace KaruahChess {
 			else if (pToIndex == 0) pBoard.StateCastlingAvailability = pBoard.StateCastlingAvailability & 0b111011;
 			// Kings cannot be removed or changed to another piece so not updating castling availability for king changes here
 
+			// Clear the PGN san as it is likely not valid after an arrange update
+			pBoard.MoveSAN = "";
+
 			return status;
 		}
 
@@ -495,7 +640,7 @@ namespace KaruahChess {
 		/// Searches for a possible from move index from the supplied spin values
 		/// </summary>
 		/// <returns>-2 if ambiguous move or -1 if move not found, otherwise returns move index</returns>
-		int FindFromIndex(BitBoard& pBoard, const int pToIndex, const int pSpin, const std::vector<int> pValidFromIndexes)
+		int FindFromIndex(BitBoard& pBoard, const int pToIndex, const int pSpin, const std::vector<int> pValidFromIndexes, bool pTestMove)
 		{
 			uint64_t occupied = pBoard.GetOccupiedBySpin(pSpin);
 			std::vector<int> possibleList;
@@ -509,10 +654,17 @@ namespace KaruahChess {
 					for (int j = 0; j < 64; j++)
 					{
 						if (((helper::BITMASK >> j) & potSq) > 0 && j == pToIndex)
-						{
-							// Test the move before adding
-							if (Move(fromIndex, pToIndex, pBoard, helper::PawnPromotionEnum::Queen, true, false))
-							{
+						{	
+							if (pTestMove) {
+								// Test the move before adding
+								if (Move(fromIndex, pToIndex, pBoard, helper::PawnPromotionEnum::Queen, true, false))
+								{
+									possibleList.push_back(fromIndex);
+									break;
+								}
+							}
+							else {
+								// Don't test the move before adding
 								possibleList.push_back(fromIndex);
 								break;
 							}

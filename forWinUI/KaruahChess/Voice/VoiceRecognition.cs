@@ -16,45 +16,40 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
+using KaruahChess.Common;
+using KaruahChessEngine;
+using Microsoft.UI.Dispatching;
 using System;
 using System.Collections.Generic;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Windows.Globalization;
 using Windows.Media.Capture;
 using Windows.Media.SpeechRecognition;
 using Windows.Storage;
-using System.Text.RegularExpressions;
-using Windows.UI.Core;
-using KaruahChess.Common;
-using KaruahChessEngine;
-using Microsoft.UI.Dispatching;
+
 
 namespace KaruahChess.Voice
 {
     public class VoiceRecognition
     {
-        public SpeechRecognizer SpeechRecogniserObj{get; private set;}
-        public bool Listening { get; private set; }
-
-        public bool Complete { get; private set; }
-
-        public SpeechRecognizerState State { get; private set; }
-
-        private Action<List<int>, String> MoveFunctionA { get; set; }
-        private Func<bool, Task> HelpFunction { get; set; }
-
-        private Action<List<string>, String> MoveFunctionB { get; set; }
-
-        private Action<List<char>, String> PieceFindFunction { get; set; }
-
+        public SpeechRecognizer SpeechRecogniserObj{get; private set;}                
+        private bool Listening { get; set; }
+        private Func<List<int>, String, Task> MoveFunctionA { get; set; }
+        private Func<List<string>, String, Task> MoveFunctionB { get; set; }
+        private Action<SpeechRecognizerState> VoiceIndicatorStateFunction { get; set; }
+        private Action<string> VoiceIndicatorSpokenTextFunction { get; set; }
+        private Func<Task> StartMoveVoiceAction { get; set; }
         public static HashSet<String> SupportedLanguages { get; private set; } = new HashSet<string> { "en-AU", "en-CA", "en-GB", "en-IN", "en-NZ", "en-US" };
-
         public int Ignore { get; set; }
-
-
-        private KaruahChessEngineClass _tempBoard = new KaruahChessEngineClass();
-
+               
+        
         private DispatcherQueue mainDispatcherQueue = DispatcherQueue.GetForCurrentThread();
+        
+        private List<int> confirmMoveset = null;        
+        private List<string> confirmMoveCommandB = null;
+        private string confirmText = "";
+        
 
         /// <summary>
         /// Check Microphone permissions
@@ -62,6 +57,7 @@ namespace KaruahChess.Voice
         /// <returns></returns>
         public static async Task<bool> CheckMicrophonePermission()
         {
+           
             try { 
                 MediaCaptureInitializationSettings settings = new MediaCaptureInitializationSettings();
                 settings.StreamingCaptureMode = StreamingCaptureMode.Audio;
@@ -69,8 +65,7 @@ namespace KaruahChess.Voice
                 MediaCapture capture = new MediaCapture();
 
                 await capture.InitializeAsync(settings);
-                
-                
+                                
             }
             catch (UnauthorizedAccessException)
             {
@@ -85,38 +80,45 @@ namespace KaruahChess.Voice
         /// </summary>
         /// <param name="pLanguage"></param>
         /// <returns></returns>
-        public async Task Initialise(Language pLanguage, Action<List<int>, String> pMoveFunctionA, Action<List<string>, String> pMoveFunctionB, Action<List<char>, String> pPieceFunction, Func<bool, Task> pHelpFunction)
+        public async Task Initialise(Language pLanguage, Func<List<int>, String, Task> pMoveFunctionA, Func<List<string>, String, Task> pMoveFunctionB, Action<SpeechRecognizerState> pVoiceIndicatorStateFunction, Action<string> pVoiceIndicatorSpokenTextFunction, Func<Task> pStartMoveVoiceAction)
         {
-            // Stop first incase object already exists
-            Stop();
+            if (Listening)
+            {
+                Stop();
+            }
+            else
+            {
+                // Set the action functions
+                MoveFunctionA = pMoveFunctionA;
+                MoveFunctionB = pMoveFunctionB;
+                VoiceIndicatorStateFunction = pVoiceIndicatorStateFunction;
+                VoiceIndicatorSpokenTextFunction = pVoiceIndicatorSpokenTextFunction;
+                StartMoveVoiceAction = pStartMoveVoiceAction;
+                                               
+                // Create an instance of SpeechRecognizer.
+                SpeechRecogniserObj = new SpeechRecognizer(pLanguage);
+                string languageTag = pLanguage.LanguageTag;
 
-            // Set the action functions
-            MoveFunctionA = pMoveFunctionA;
-            MoveFunctionB = pMoveFunctionB;
-            PieceFindFunction = pPieceFunction;
-            HelpFunction = pHelpFunction;
-
-            // Create an instance of SpeechRecognizer.
-            SpeechRecogniserObj = new SpeechRecognizer(pLanguage);
-            string languageTag = pLanguage.LanguageTag;
-
-            // Add a grammar file constraint to the recognizer.
-            var storageFile = await StorageFile.GetFileFromApplicationUriAsync(new Uri("ms-appx:///Voice/Grammar-" + languageTag + ".xml"));
-            var grammarFileConstraintMoveRule = new SpeechRecognitionGrammarFileConstraint(storageFile);            
-            SpeechRecogniserObj.Constraints.Add(grammarFileConstraintMoveRule);         
-            await SpeechRecogniserObj.CompileConstraintsAsync();
+                // Add a grammar file constraint to the recognizer.
+                var storageFile = await StorageFile.GetFileFromApplicationUriAsync(new Uri("ms-appx:///Voice/Grammar-" + languageTag + ".xml"));
+                var grammarFileConstraintMoveRule = new SpeechRecognitionGrammarFileConstraint(storageFile);
+                SpeechRecogniserObj.Constraints.Add(grammarFileConstraintMoveRule);
+                await SpeechRecogniserObj.CompileConstraintsAsync();
 
 
-            // Start recognition.
-            SpeechRecogniserObj.StateChanged += SpeechRecognizerObj_StateChanged;
-            SpeechRecogniserObj.ContinuousRecognitionSession.Completed += ContinuousRecognitionSession_Completed;
-            SpeechRecogniserObj.ContinuousRecognitionSession.ResultGenerated += ContinuousRecognitionSession_ResultGenerated;
+                // Start recognition.
+                SpeechRecogniserObj.StateChanged += SpeechRecognizerObj_StateChanged;
+                SpeechRecogniserObj.ContinuousRecognitionSession.Completed += ContinuousRecognitionSession_Completed;
+                SpeechRecogniserObj.ContinuousRecognitionSession.ResultGenerated += ContinuousRecognitionSession_ResultGenerated;
+                
+
+                // Not awaited so that function return is not delayed
+                await SpeechRecogniserObj.ContinuousRecognitionSession.StartAsync();
+                Listening = true;
+            }
             
-            // Start listening
-            await SpeechRecogniserObj.ContinuousRecognitionSession.StartAsync();
-            Listening = true;
         }
-
+                    
         /// <summary>
         /// Stop recogniser
         /// </summary>
@@ -124,20 +126,25 @@ namespace KaruahChess.Voice
         {
             if (SpeechRecogniserObj != null)
             {
+                VoiceIndicatorStateFunction?.Invoke(SpeechRecognizerState.Idle);
+
                 // cleanup prior to re-initializing.
                 SpeechRecogniserObj.StateChanged -= SpeechRecognizerObj_StateChanged;
                 SpeechRecogniserObj.ContinuousRecognitionSession.Completed -= ContinuousRecognitionSession_Completed;
                 SpeechRecogniserObj.ContinuousRecognitionSession.ResultGenerated -= ContinuousRecognitionSession_ResultGenerated;
 
                 this.SpeechRecogniserObj.Dispose();
-                this.SpeechRecogniserObj = null;
-
-               
+                this.SpeechRecogniserObj = null;               
             }
 
-        }
+            confirmMoveset = null;
+            confirmMoveCommandB = null;
+            confirmText = "";
+            VoiceIndicatorSpokenTextFunction("");
 
-         
+            Listening = false;
+
+        }
 
 
         /// <summary>
@@ -147,50 +154,71 @@ namespace KaruahChess.Voice
         /// <param name="args"></param>
         private void ContinuousRecognitionSession_ResultGenerated(SpeechContinuousRecognitionSession sender, SpeechContinuousRecognitionResultGeneratedEventArgs args)
         {
-            if ((Ignore == 0) && (args.Result.Confidence == SpeechRecognitionConfidence.Medium || args.Result.Confidence == SpeechRecognitionConfidence.High))
-            {                
-                var text = args.Result.Text;
-                                
-                var moveset = GetMoveSetFromText(text);
-                if (moveset.Count > 0)
+            if ((Ignore == 0) && (args.Result.Confidence == SpeechRecognitionConfidence.Low || args.Result.Confidence == SpeechRecognitionConfidence.Medium || args.Result.Confidence == SpeechRecognitionConfidence.High))
+            {
+                mainDispatcherQueue.TryEnqueue(async () =>
                 {
-                    mainDispatcherQueue.TryEnqueue(() =>
-                    {
-                        MoveFunctionA(moveset, text);
-                    });
-                    return;
-                }
+                    var text = args.Result.Text;
 
-                var fenList = GetFENFromText(text);
-                if (fenList.Count > 0)
-                {
-                    mainDispatcherQueue.TryEnqueue(() =>
-                    {
-                        PieceFindFunction(fenList, text);
-                    });
-                    return;
-                }
-                
-                var moveCommandB = GetMoveCommandBFromText(text);
-                if (moveCommandB.Count == 3)
-                {
-                    mainDispatcherQueue.TryEnqueue(() =>
-                    {
-                        MoveFunctionB(moveCommandB, text);
-                    });
-                    return;
-                }
-                
-                if (text == "Help")
-                {
-                    mainDispatcherQueue.TryEnqueue(() =>
-                    {
-                        HelpFunction(true);
-                    });
-                    return;
-                }
+                    if (confirmMoveset == null && confirmMoveCommandB == null)
+                    {                        
 
-               
+                        var moveset = GetMoveSetFromText(text);
+                        if (moveset.Count > 0)
+                        {
+                            VoiceIndicatorSpokenTextFunction(text + ", yes to proceed?");
+                            confirmMoveset = moveset;
+                            confirmText = text;
+                                                        
+                            return;
+                        }
+
+                        var moveCommandB = GetMoveCommandBFromText(text);
+                        if (moveCommandB.Count == 3)
+                        {
+                            VoiceIndicatorSpokenTextFunction(text + ", yes to proceed?");
+                            confirmMoveCommandB = moveCommandB;
+                            confirmText = text;
+
+                            return;
+                        }
+
+                        if (text == "Start")
+                        {
+                            await StartMoveVoiceAction();
+                            return;
+                        }
+                    }
+                    else
+                    {
+                        if (text == "Confirm" || text == "Yes")
+                        {
+                            if (confirmMoveset != null)
+                            {
+                                VoiceIndicatorSpokenTextFunction("");
+                                await MoveFunctionA(confirmMoveset, confirmText);                                
+                                confirmMoveset = null;
+
+                            }
+                            else if (confirmMoveCommandB != null)
+                            {
+                                VoiceIndicatorSpokenTextFunction("");
+                                await MoveFunctionB(confirmMoveCommandB, confirmText);                                
+                                confirmMoveCommandB = null;
+                            }
+                            
+                            return;
+                        }
+                        else if (text == "Cancel" || text == "No")
+                        {
+                            VoiceIndicatorSpokenTextFunction("");
+                            confirmText = "";
+                            confirmMoveset = null;
+                            confirmMoveCommandB = null;
+                        }
+                    }
+                });
+
             }
         }
 
@@ -202,11 +230,7 @@ namespace KaruahChess.Voice
         /// <param name="args"></param>
         private void ContinuousRecognitionSession_Completed(SpeechContinuousRecognitionSession sender, SpeechContinuousRecognitionCompletedEventArgs args)
         {
-            if (args.Status != SpeechRecognitionResultStatus.Success)
-            {
-                Complete = true;
-                Listening = false;
-            }
+            Listening = false;
         }
 
         /// <summary>
@@ -216,8 +240,11 @@ namespace KaruahChess.Voice
         /// <param name="args"></param>
         private void SpeechRecognizerObj_StateChanged(SpeechRecognizer sender, SpeechRecognizerStateChangedEventArgs args)
         {
-            State = args.State;
-            
+
+            mainDispatcherQueue.TryEnqueue(() =>
+            {
+                VoiceIndicatorStateFunction?.Invoke(args.State);
+            });
         }
 
         /// <summary>
@@ -304,122 +331,6 @@ namespace KaruahChess.Voice
             return returnCommand;
         }
 
-        /// <summary>
-        /// Gets piece spin from text
-        /// </summary>
-        /// <param name="pSpeechText"></param>
-        /// <returns></returns>
-        private List<char> GetFENFromText(string pSpeechText)
-        {
-            List<char> returnList = new List<char>(2);
-
-            
-            if (Regex.IsMatch(pSpeechText, "King$", RegexOptions.IgnoreCase))
-            {
-                if (Regex.IsMatch(pSpeechText, "^White", RegexOptions.IgnoreCase))
-                {                    
-                    returnList.Add(_tempBoard.GetFENCharFromSpin(Constants.WHITE_KING_SPIN));
-                }
-                else if (Regex.IsMatch(pSpeechText, "^Black", RegexOptions.IgnoreCase))
-                {                   
-                    returnList.Add(_tempBoard.GetFENCharFromSpin(Constants.BLACK_KING_SPIN));
-                }
-                else
-                {
-                    returnList.Add(_tempBoard.GetFENCharFromSpin(Constants.WHITE_KING_SPIN));
-                    returnList.Add(_tempBoard.GetFENCharFromSpin(Constants.BLACK_KING_SPIN));
-                }
-            }
-            else if (Regex.IsMatch(pSpeechText, "Queen$", RegexOptions.IgnoreCase))
-            {
-                if (Regex.IsMatch(pSpeechText, "^White", RegexOptions.IgnoreCase))
-                {
-                    returnList.Add(_tempBoard.GetFENCharFromSpin(Constants.WHITE_QUEEN_SPIN));
-                }
-                else if (Regex.IsMatch(pSpeechText, "^Black", RegexOptions.IgnoreCase))
-                {
-                    returnList.Add(_tempBoard.GetFENCharFromSpin(Constants.BLACK_QUEEN_SPIN));
-                }   
-                else
-                {
-                    returnList.Add(_tempBoard.GetFENCharFromSpin(Constants.WHITE_QUEEN_SPIN));
-                    returnList.Add(_tempBoard.GetFENCharFromSpin(Constants.BLACK_QUEEN_SPIN));
-                }
-
-            }
-            else if (Regex.IsMatch(pSpeechText, "Rook$", RegexOptions.IgnoreCase))
-            {
-                if (Regex.IsMatch(pSpeechText, "^White", RegexOptions.IgnoreCase))
-                {
-                    returnList.Add(_tempBoard.GetFENCharFromSpin(Constants.WHITE_ROOK_SPIN));
-                }
-                else if (Regex.IsMatch(pSpeechText, "^Black", RegexOptions.IgnoreCase))
-                {
-                    returnList.Add(_tempBoard.GetFENCharFromSpin(Constants.BLACK_ROOK_SPIN));
-                }
-                else
-                {
-                    returnList.Add(_tempBoard.GetFENCharFromSpin(Constants.WHITE_ROOK_SPIN));
-                    returnList.Add(_tempBoard.GetFENCharFromSpin(Constants.BLACK_ROOK_SPIN));
-                }
-            }
-            else if (Regex.IsMatch(pSpeechText, "Bishop$", RegexOptions.IgnoreCase))
-            {
-                if (Regex.IsMatch(pSpeechText, "^White", RegexOptions.IgnoreCase))
-                {
-                    returnList.Add(_tempBoard.GetFENCharFromSpin(Constants.WHITE_BISHOP_SPIN));
-                }
-                else if (Regex.IsMatch(pSpeechText, "^Black", RegexOptions.IgnoreCase))
-                {
-                    returnList.Add(_tempBoard.GetFENCharFromSpin(Constants.BLACK_BISHOP_SPIN));
-                } 
-                else
-                {
-                    returnList.Add(_tempBoard.GetFENCharFromSpin(Constants.WHITE_BISHOP_SPIN));
-                    returnList.Add(_tempBoard.GetFENCharFromSpin(Constants.BLACK_BISHOP_SPIN));
-                }
-
-            }
-            else if (Regex.IsMatch(pSpeechText, "Knight$", RegexOptions.IgnoreCase))
-            {
-                if (Regex.IsMatch(pSpeechText, "^White", RegexOptions.IgnoreCase))
-                {
-                    returnList.Add(_tempBoard.GetFENCharFromSpin(Constants.WHITE_KNIGHT_SPIN));
-                }
-                else if (Regex.IsMatch(pSpeechText, "^Black", RegexOptions.IgnoreCase))
-                {
-                    returnList.Add(_tempBoard.GetFENCharFromSpin(Constants.BLACK_KNIGHT_SPIN));
-                }
-                else
-                {
-                    returnList.Add(_tempBoard.GetFENCharFromSpin(Constants.WHITE_KNIGHT_SPIN));
-                    returnList.Add(_tempBoard.GetFENCharFromSpin(Constants.BLACK_KNIGHT_SPIN));
-                }
-               
-            }
-            else if (Regex.IsMatch(pSpeechText, "Pawn$", RegexOptions.IgnoreCase))
-            {
-                if (Regex.IsMatch(pSpeechText, "^White", RegexOptions.IgnoreCase))
-                {
-                    returnList.Add(_tempBoard.GetFENCharFromSpin(Constants.WHITE_PAWN_SPIN));
-                }
-                else if (Regex.IsMatch(pSpeechText, "^Black", RegexOptions.IgnoreCase))
-                {
-                    returnList.Add(_tempBoard.GetFENCharFromSpin(Constants.BLACK_PAWN_SPIN));
-                }
-                else
-                {
-                    returnList.Add(_tempBoard.GetFENCharFromSpin(Constants.WHITE_PAWN_SPIN));
-                    returnList.Add(_tempBoard.GetFENCharFromSpin(Constants.BLACK_PAWN_SPIN));
-                }
-                
-            }
-
-            return returnList;
-        }
-
-
-
-
-        }
+        
+    }
 }

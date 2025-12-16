@@ -31,7 +31,7 @@ namespace KaruahChess.Model
 
         GameRecordArray Get();
 
-        int RecordGameState(int pWhiteClockOffset, int pBlackClockOffset);
+        int RecordGameState(int pWhiteClockOffset, int pBlackClockOffset, string pMoveSAN);
         int UpdateGameState(GameRecordArray pGameRecordArray);
 
         void Reset(int pWhiteClockOffset, int pBlackClockOffset);
@@ -48,5 +48,9 @@ namespace KaruahChess.Model
         int RecordCount();
 
         SortedList<int, GameRecordArray> GameHistory();
+
+        int GetActiveMoveColour(int pId);
+        
+        int GetStateGameStatus(int pId);
     }
 }

@@ -16,9 +16,10 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-using Microsoft.UI.Xaml;
-using KaruahChess.ViewModel;
 
+using KaruahChess.ViewModel;
+using Microsoft.UI.Xaml;
+using System;
 
 namespace KaruahChess
 {    
@@ -28,14 +29,16 @@ namespace KaruahChess
         public MainWindow()
         {
 
-            
-
             // Initialise the Board view model
             BoardVM = new BoardViewModel(this);
                        
 
             this.InitializeComponent();
 
+            // Subscribe to events
+            this.Activated += MainWindow_Activated;
+            this.VisibilityChanged += MainWindow_VisibilityChanged;
+            this.Closed += MainWindow_Closed;
 
 
             // Set Control reference                                 
@@ -51,15 +54,49 @@ namespace KaruahChess
             BoardVM.SetMoveNavigatorControl(MoveNavigatorControl);
 
             LevelIndicatorControl.SetBoardVM(BoardVM);
-            BoardVM.SetLevelIndicatorControl(LevelIndicatorControl);
+            
+            ActionButtonsControl.SetBoardVM(BoardVM);
 
             BoardVM.PostInit();
-
+        
         }
 
+        
 
         //Propeties          
         public BoardViewModel BoardVM { get; set; }
+
+        /// <summary>
+        /// Main window activated event
+        /// </summary>        
+        private void MainWindow_Activated(object sender, WindowActivatedEventArgs args)
+        {
+            if (args.WindowActivationState == WindowActivationState.Deactivated)
+            {
+                // Stop voice recogntion if running
+                BoardVM.StopVoiceListen();
+            }            
+        }
+
+        /// <summary>
+        /// Main window visibility event
+        /// </summary>        
+        private void MainWindow_VisibilityChanged(object sender, WindowVisibilityChangedEventArgs args)
+        {
+            // Stop voice recogntion if running
+            BoardVM.StopVoiceListen();
+        }
+
+        /// <summary>
+        /// Main window closed event
+        /// </summary>        
+        private void MainWindow_Closed(object sender, WindowEventArgs args)
+        {
+            // Clean up when the window is closed
+            // Stop voice recogntion if running
+            BoardVM.StopVoiceListen();
+
+        }
 
 
     }

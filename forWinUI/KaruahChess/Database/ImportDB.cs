@@ -65,10 +65,11 @@ namespace KaruahChess.Database
                                 {
                                     using (var command = connection.CreateCommand())
                                     {
-                                        command.CommandText = $"INSERT INTO {KaruahChessDB.GameRecordTableName} (Id, BoardSquareStr, GameStateStr) Values (@Id, @BoardSquareStr, @GameStateStr);";
+                                        command.CommandText = $"INSERT INTO {KaruahChessDB.GameRecordTableName} (Id, BoardSquareStr, GameStateStr, MoveSANStr) Values (@Id, @BoardSquareStr, @GameStateStr, @MoveSANStr);";
                                         command.Parameters.Add(new SqliteParameter("@Id", gr.Element("Id").Value));
                                         command.Parameters.Add(new SqliteParameter("@BoardSquareStr", gr.Element("BoardSquareStr").Value));
                                         command.Parameters.Add(new SqliteParameter("@GameStateStr", gr.Element("GameStateStr").Value));                                        
+                                        command.Parameters.Add(new SqliteParameter("@MoveSANStr", gr.Element("MoveSANStr")?.Value ?? string.Empty));
                                         command.ExecuteNonQuery();
                                     }
 

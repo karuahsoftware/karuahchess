@@ -21,11 +21,8 @@
         <ScrollViewer x:Name="MainTextScrollViewer" Grid.Row="1" Grid.Column="0">
             <StackPanel Orientation="Vertical" Margin="0,0,20,0">
                 <CheckBox x:Name="ComputerPlayerCheckBox" Content="Computer player enabled" Click="ComputerPlayerCheckBox_Click" />
-                <CheckBox x:Name="ComputerMoveFirstCheckBox" Content="Computer moves first" />
-                <CheckBox x:Name="RandomiseFirstMoveCheckBox" Content="Randomise first computer move" />
-                <CheckBox x:Name="LevelAutoCheckBox" Content="Increase strength after win"/>
-                <StackPanel Orientation="Horizontal" Margin="0,10,0,0">
-                    <TextBlock x:Name="ComputerSkillLevelTitleText" Text="Strength" />
+                <StackPanel Orientation="Vertical" Margin="0,10,0,0">
+                    <TextBlock x:Name="ComputerSkillLevelTitleText" Text="Computer strength" />
                     <ComboBox x:Name="ComputerSkillLevelCombo" Margin="3,0,0,0" ItemsSource="{x:Bind strengthList}">
                         <ComboBox.ItemTemplate>
                             <DataTemplate x:DataType="common:Strength">
@@ -34,7 +31,17 @@
                         </ComboBox.ItemTemplate>
                     </ComboBox>
                 </StackPanel>
+                <CheckBox x:Name="LevelAutoCheckBox" Content="Auto increase strength"/>
 
+                <Button x:Name="btnComputerColour" Margin="0,10,0,0" VerticalAlignment="Top" Click="btnComputerColour_Click">
+                    <StackPanel Orientation="Vertical">
+                        <TextBlock Text="Computer colour" />
+                        <Image x:Name="ComputerColourImage" />
+                    </StackPanel>
+                </Button>
+
+                <CheckBox x:Name="RandomiseFirstMoveCheckBox" Margin="0,5,0,0" Content="Make the first computer move more random" />
+                
                 <CheckBox x:Name="ComputerAdvancedSettingsCheckBox" Margin="0,20,0,0" Content="Advanced search settings" Click="ComputerAdvancedSettingsCheckBox_Click"/>
 
                 <Grid x:Name="AdvancedSettingsGrid" Margin="0,10,0,0">

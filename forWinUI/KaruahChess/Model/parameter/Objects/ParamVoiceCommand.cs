@@ -17,39 +17,25 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
 using System;
-using KaruahChess.Common;
-using Microsoft.UI.Xaml;
-using Microsoft.UI.Xaml.Controls;
+using System.Runtime.Serialization;
 
-
-namespace KaruahChess.CustomControl
+namespace KaruahChess.Model.ParameterObjects
 {
-    public sealed partial class VoiceHelpDialog : Page
+    [DataContract]
+    public class ParamVoiceCommand
     {
-        
-        /// <summary>
-        /// Constructor
-        /// </summary>
-        public VoiceHelpDialog()
+        [DataMember]
+        public bool Enabled { get; set; }
+
+        public ParamVoiceCommand()
         {
-            this.InitializeComponent();
-                             
+            // Set default value
+            Enabled = false;
         }
-
-
-        public ContentDialog CreateDialog()
-        {
-            var dialog = new ContentDialog
-            {
-                Content = this,
-                PrimaryButtonText = "Close"
-            };
-                       
-
-            return dialog;
-        }
-        
-               
-
     }
 }
+
+
+
+
+

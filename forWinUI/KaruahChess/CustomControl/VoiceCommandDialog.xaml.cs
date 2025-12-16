@@ -16,32 +16,29 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-using System;
-using KaruahChess.Common;
-using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
+using System;
+
 
 
 namespace KaruahChess.CustomControl
 {
-    public sealed partial class PieceSettingsDialog : Page
+    public sealed partial class VoiceCommandDialog : Page
     {
-        
+
         ViewModel.BoardViewModel _boardVM;
-               
 
         /// <summary>
         /// Constructor
         /// </summary>
-        public PieceSettingsDialog(ViewModel.BoardViewModel pBoardVM)
-        {
+        public VoiceCommandDialog(ViewModel.BoardViewModel pBoardVM)
+        {            
             this.InitializeComponent();
             _boardVM = pBoardVM;
 
             // Set initial values
-            MoveSpeedSlider.Value = Math.Clamp(_boardVM.moveSpeed, MoveSpeedSlider.Minimum, MoveSpeedSlider.Maximum);
-            PromoteAutoCheckBox.IsChecked = _boardVM.PromoteAutoEnabled;
-            LargePawnCheckBox.IsChecked = _boardVM.LargePawnEnabled;
+            VoiceCommandEnabledCheckBox.IsChecked = _boardVM.VoiceCommandEnabled;
+            
         }
 
 
@@ -57,15 +54,16 @@ namespace KaruahChess.CustomControl
 
             return dialog;
         }
+
         
+
         /// <summary>
         /// Saves form values
         /// </summary>
         private void Save()
         {
-            _boardVM.moveSpeed = (int)MoveSpeedSlider.Value;
-            _boardVM.PromoteAutoEnabled = PromoteAutoCheckBox.IsChecked == true;
-            _boardVM.LargePawnEnabled = LargePawnCheckBox.IsChecked == true;
+            _boardVM.VoiceCommandEnabled = VoiceCommandEnabledCheckBox.IsChecked == true;
+     
         }
 
         /// <summary>
@@ -77,6 +75,8 @@ namespace KaruahChess.CustomControl
 
             SenderDialog.PrimaryButtonClick -= Close_Click;
         }
+
+        
 
     }
 }

@@ -27,7 +27,7 @@ namespace KaruahChess {
 		extern bool Move(const int pFromIndex, const int pToIndex, BitBoard& pBoard, const helper::PawnPromotionEnum pPawnPromotionPiece, const bool pValidateEnabled, const bool pCommit);
 		extern bool Arrange(const int pFromIndex, const int pToIndex, BitBoard& pBoard);
 		extern bool ArrangeUpdate(const char pFen, const int pToIndex, BitBoard& pBoard);
-		extern int FindFromIndex(BitBoard& pBoard, const int pToIndex, const int pSpin, const std::vector<int> pValidFromIndexes);
+		extern int FindFromIndex(BitBoard& pBoard, const int pToIndex, const int pSpin, const std::vector<int> pValidFromIndexes, bool pTestMove);
 		extern bool IsPawnPromotion(const int pFromIndex, const int pToIndex, BitBoard& pBoard);
 	}
 
