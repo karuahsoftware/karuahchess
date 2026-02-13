@@ -1,6 +1,6 @@
 /*
   Stockfish, a UCI chess playing engine derived from Glaurung 2.1
-  Copyright (C) 2004-2024 The Stockfish developers (see AUTHORS file)
+  Copyright (C) 2004-2025 The Stockfish developers (see AUTHORS file)
 
   Stockfish is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -39,8 +39,10 @@ using Value = int;
 class UCIEngine {
    public:
     UCIEngine();
+
+   
+    static int         to_cp(Value v, const Position& pos);
     
-    static int         to_cp(Value v, const Position& pos);    
     static std::string square(Square s);
     static std::string move(Move m, bool chess960);
     static std::string wdl(Value v, const Position& pos);
@@ -54,14 +56,16 @@ class UCIEngine {
     // Karuah Chess - Making public so it can be accessed from app
     Engine      engine;
 
-   private:        
+   private:
         
     void          position(std::istringstream& is);
-    void          setoption(std::istringstream& is);    
-
+    void          setoption(std::istringstream& is);
+    
     static void on_update_no_moves(const Engine::InfoShort& info);
     static void on_update_full(const Engine::InfoFull& info, bool showWDL);
-    static void on_iter(const Engine::InfoIter& info);    
+    static void on_iter(const Engine::InfoIter& info);
+    
+    void init_search_update_listeners();
 };
 
 }  // namespace Stockfish

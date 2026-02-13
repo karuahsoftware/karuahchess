@@ -1,6 +1,6 @@
 /*
 Karuah Chess is a chess playing program
-Copyright (C) 2020-2023 Karuah Software
+Copyright (C) 2020-2026 Karuah Software
 
 Karuah Chess is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -115,6 +115,7 @@ namespace KaruahChess {
 		constexpr int NUMA_A_ERROR = 107;
 		constexpr int NUMA_B_ERROR = 108;
 		constexpr int NUMA_C_ERROR = 109;
+		constexpr int OPTION_ADD_ERROR = 110;
 
 
 		// Arrays

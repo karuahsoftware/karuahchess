@@ -22,7 +22,7 @@
                 <TextBlock x:Name="VersionText" TextWrapping="WrapWholeWords" Margin="0,0,0,10"/>
 
                 <TextBlock  TextWrapping="WrapWholeWords" Margin="0,0,0,10"> 
-                    Karuah Chess is a chess playing program.<LineBreak/>Copyright © 2020 Karuah Software
+                    Karuah Chess is a chess playing program.<LineBreak/>Copyright © 2020-2026 Karuah Software
                 </TextBlock>
 
                 <TextBlock  TextWrapping="WrapWholeWords" Margin="0,0,0,0"> 
@@ -39,7 +39,7 @@
                 </StackPanel>
 
                 <TextBlock  TextWrapping="WrapWholeWords" Margin="0,0,0,10">
-                    Karuah Chess uses StockFish 17 with neural network version nn-1111cefa1111.nnue (Big) and nn-37f18f62d772.nnue (Small).
+                    Karuah Chess uses StockFish 17.1 with neural network version nn-1c0000000000.nnue (Big) and nn-37f18f62d772.nnue (Small).
                 </TextBlock>
 
                 <TextBlock  TextWrapping="WrapWholeWords" Margin="0,0,0,10">

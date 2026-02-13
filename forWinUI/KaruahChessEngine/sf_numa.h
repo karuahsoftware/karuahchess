@@ -1,6 +1,6 @@
 /*
   Stockfish, a UCI chess playing engine derived from Glaurung 2.1
-  Copyright (C) 2004-2024 The Stockfish developers (see AUTHORS file)
+  Copyright (C) 2004-2025 The Stockfish developers (see AUTHORS file)
 
   Stockfish is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -15,6 +15,7 @@
   You should have received a copy of the GNU General Public License
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
+
 #ifndef NUMA_H_INCLUDED
 #define NUMA_H_INCLUDED
 
@@ -22,6 +23,7 @@
 #include <atomic>
 #include <cstdint>
 #include <cstdlib>
+#include <functional>
 #include <iostream>
 #include <limits>
 #include <map>
@@ -49,7 +51,6 @@ using NumaIndex = size_t;
 inline CpuIndex get_hardware_concurrency() {
     CpuIndex concurrency = std::thread::hardware_concurrency();
         
-
     return concurrency;
 }
 
@@ -103,9 +104,11 @@ class NumaConfig {
     static NumaConfig from_system([[maybe_unused]] bool respectProcessAffinity = true) {
         NumaConfig cfg = empty();
 
+
         // Fallback for unsupported systems.
         for (CpuIndex c = 0; c < SYSTEM_THREADS_NB; ++c)
             cfg.add_cpu_to_node(NumaIndex{0}, c);
+
 
         // We have to ensure no empty NUMA nodes persist.
         cfg.remove_empty_numa_nodes();
@@ -129,7 +132,7 @@ class NumaConfig {
         NumaIndex n = 0;
         for (auto&& nodeStr : split(s, ":"))
         {
-            auto indices = indices_from_shortened_string(nodeStr);
+            auto indices = indices_from_shortened_string(std::string(nodeStr));
             if (!indices.empty())
             {
                 for (auto idx : indices)
@@ -378,7 +381,7 @@ class NumaConfig {
         if (s.empty())
             return indices;
 
-        for (const std::string& ss : split(s, ","))
+        for (const auto& ss : split(s, ","))
         {
             if (ss.empty())
                 continue;
@@ -386,13 +389,13 @@ class NumaConfig {
             auto parts = split(ss, "-");
             if (parts.size() == 1)
             {
-                const CpuIndex c = CpuIndex{str_to_size_t(parts[0])};
+                const CpuIndex c = CpuIndex{str_to_size_t(std::string(parts[0]))};
                 indices.emplace_back(c);
             }
             else if (parts.size() == 2)
             {
-                const CpuIndex cfirst = CpuIndex{str_to_size_t(parts[0])};
-                const CpuIndex clast  = CpuIndex{str_to_size_t(parts[1])};
+                const CpuIndex cfirst = CpuIndex{str_to_size_t(std::string(parts[0]))};
+                const CpuIndex clast  = CpuIndex{str_to_size_t(std::string(parts[1]))};
                 for (size_t c = cfirst; c <= clast; ++c)
                 {
                     indices.emplace_back(c);

@@ -1,6 +1,6 @@
 /*
   Stockfish, a UCI chess playing engine derived from Glaurung 2.1
-  Copyright (C) 2004-2024 The Stockfish developers (see AUTHORS file)
+  Copyright (C) 2004-2025 The Stockfish developers (see AUTHORS file)
 
   Stockfish is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -39,8 +39,6 @@
 
 namespace Stockfish {
 
-enum Square : int;
-
 class Engine {
    public:
     using InfoShort = Search::InfoShort;
@@ -56,7 +54,9 @@ class Engine {
     Engine& operator=(Engine&&)      = delete;
 
     ~Engine() { wait_for_search_finished(); }
-        
+
+   
+
     // non blocking call to start searching
     void go(Search::LimitsType&);
     // non blocking call to stop searching
@@ -78,14 +78,15 @@ class Engine {
     void set_on_update_no_moves(std::function<void(const InfoShort&)>&&);
     void set_on_update_full(std::function<void(const InfoFull&)>&&);
     void set_on_iter(std::function<void(const InfoIter&)>&&);
-
+    
     // Karuah Chess - including PV vector
     void set_on_bestmove(std::function<void(std::string_view, std::string_view, std::vector<Stockfish::Search::RootMove>)>&&);
+
 
     // network related
 
     void verify_networks() const;
-    void load_networks();    
+    void load_networks();
     
     // utility functions
 
@@ -94,27 +95,31 @@ class Engine {
     const OptionsMap& get_options() const;
     OptionsMap&       get_options();
 
+    int get_hashfull(int maxAge = 0) const;
+
     std::string                            fen() const;
-    void                                   flip();    
+    void                                   flip();
+    
     std::vector<std::pair<size_t, size_t>> get_bound_thread_count_by_numa_node() const;
     std::string                            get_numa_config_as_string() const;
     std::string                            numa_config_information_as_string() const;
+    std::string                            thread_allocation_information_as_string() const;
     std::string                            thread_binding_information_as_string() const;
 
-   private:    
-
+   private:
+    
     NumaReplicationContext numaContext;
 
     Position     pos;
     StateListPtr states;
-    Square       capSq;
 
     OptionsMap                               options;
     ThreadPool                               threads;
     TranspositionTable                       tt;
     LazyNumaReplicated<Eval::NNUE::Networks> networks;
 
-    Search::SearchManager::UpdateContext updateContext;
+    Search::SearchManager::UpdateContext  updateContext;
+    std::function<void(std::string_view)> onVerifyNetworks;
 };
 
 }  // namespace Stockfish

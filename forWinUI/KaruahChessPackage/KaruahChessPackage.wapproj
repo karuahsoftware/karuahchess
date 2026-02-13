@@ -98,10 +98,10 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.8.250916003">
+    <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.8.251106002">
       <IncludeAssets>build</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.26100.6584">
+    <PackageReference Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.26100.7175">
       <IncludeAssets>build</IncludeAssets>
     </PackageReference>
   </ItemGroup>

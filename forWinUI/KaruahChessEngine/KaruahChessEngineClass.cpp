@@ -1,6 +1,6 @@
 ﻿/*
 Karuah Chess is a chess playing program
-Copyright (C) 2020-2023 Karuah Software
+Copyright (C) 2020-2026 Karuah Software
 
 Karuah Chess is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -56,7 +56,7 @@ namespace winrt::KaruahChessEngine::implementation
 	/// </summary>	
 	IAsyncAction KaruahChessEngineClass::LoadNNUE()
 	{
-		const char* nnueFileNameBig = "nn-1111cefa1111.nnue";
+		const char* nnueFileNameBig = "nn-1c0000000000.nnue";
 		const char* nnueFileNameSmall = "nn-37f18f62d772.nnue";
 
 		if (!(Engine::nnueLoadedBig && Engine::nnueLoadedSmall)) 

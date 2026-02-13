@@ -1,6 +1,6 @@
 ﻿/*
 Karuah Chess is a chess playing program
-Copyright (C) 2020-2023 Karuah Software
+Copyright (C) 2020-2026 Karuah Software
 
 Karuah Chess is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -47,11 +47,15 @@ namespace KaruahChess.CustomControl
 
             // Set initial values
             DarkSquareCombo.SelectedIndex = Constants.darkSquareColourList.IndexOf(_boardVM.ColourDarkSquaresARGB);
-            orientationBorder.Background = new SolidColorBrush(_boardVM.ColourDarkSquaresARGB.GetColour());
 
+            OrientationAutoCheckBox.IsChecked = _boardVM.RotateBoardAutoEnabled;
+
+            orientationBorder.Background = new SolidColorBrush(_boardVM.ColourDarkSquaresARGB.GetColour());
             orientationImage.RenderTransformOrigin = new Point(0.5, 0.5);
             orientationImage.RenderTransform = orientationImageTransform;
             orientationImageTransform.Angle = -_boardVM.RotateBoardValue;
+
+            SetControlState();
 
         }
 
@@ -74,6 +78,8 @@ namespace KaruahChess.CustomControl
         /// </summary>
         private void Save()
         {
+            _boardVM.RotateBoardAutoEnabled = OrientationAutoCheckBox.IsChecked == true;
+
             ColourARGB darkSquareColour = DarkSquareCombo.SelectedIndex > -1 ? Constants.darkSquareColourList[DarkSquareCombo.SelectedIndex] : new ParamColourDarkSquares().ARGB();
             _boardVM.ColourDarkSquaresARGB = darkSquareColour;
 
@@ -123,6 +129,29 @@ namespace KaruahChess.CustomControl
             // Adjust the background colour of the board orientation preview when the colour selection changes
             ColourARGB darkSquareColour = DarkSquareCombo.SelectedIndex > -1 ? Constants.darkSquareColourList[DarkSquareCombo.SelectedIndex] : new ParamColourDarkSquares().ARGB();
             orientationBorder.Background = new SolidColorBrush(darkSquareColour.GetColour());
+        }
+
+        /// <summary>
+        /// Orientation auto checkbox click event
+        /// </summary>
+        private void OrientationAutoCheckBox_Click(object sender, RoutedEventArgs e)
+        {
+            SetControlState();
+        }
+
+        /// <summary>
+        /// Sets control visibility depending on options set
+        /// </summary>
+        private void SetControlState()
+        {
+            if (OrientationAutoCheckBox.IsChecked == true)
+            {
+                OrientationManualStackPanel.Visibility = Visibility.Collapsed;
+            }
+            else
+            {
+                OrientationManualStackPanel.Visibility = Visibility.Visible;
+            }
         }
 
     }

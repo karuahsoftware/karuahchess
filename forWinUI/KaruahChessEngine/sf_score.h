@@ -1,6 +1,6 @@
 /*
   Stockfish, a UCI chess playing engine derived from Glaurung 2.1
-  Copyright (C) 2004-2024 The Stockfish developers (see AUTHORS file)
+  Copyright (C) 2004-2025 The Stockfish developers (see AUTHORS file)
 
   Stockfish is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -55,7 +55,11 @@ class Score {
     T get() const {
         return std::get<T>(score);
     }
-       
+
+    template<typename F>
+    decltype(auto) visit(F&& f) const {
+        return std::visit(std::forward<F>(f), score);
+    }
 
    private:
     std::variant<Mate, Tablebase, InternalUnits> score;

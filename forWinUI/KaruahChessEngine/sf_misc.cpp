@@ -1,6 +1,6 @@
 /*
   Stockfish, a UCI chess playing engine derived from Glaurung 2.1
-  Copyright (C) 2004-2024 The Stockfish developers (see AUTHORS file)
+  Copyright (C) 2004-2025 The Stockfish developers (see AUTHORS file)
 
   Stockfish is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -18,7 +18,9 @@
 
 #include "sf_misc.h"
 
+#include <array>
 #include <atomic>
+#include <cassert>
 #include <cctype>
 #include <cmath>
 #include <cstdlib>
@@ -31,6 +33,7 @@
 #include <string_view>
 
 #include "sf_types.h"
+
 #include "engine.h"
 #include "helper.h"
 
@@ -39,7 +42,7 @@ namespace Stockfish {
 namespace {
 
 // Version number or dev.
-constexpr std::string_view version = "17";
+constexpr std::string_view version = "17.1";
 
 
 }  // namespace
@@ -56,7 +59,7 @@ constexpr std::string_view version = "17";
 //
 // For releases (non-dev builds) we only include the version number:
 //      Stockfish version
-std::string engine_info(bool to_uci) {
+std::string engine_version_info() {
     std::stringstream ss;
     ss << "Stockfish " << version << std::setfill('0');
 
@@ -85,10 +88,9 @@ std::string engine_info(bool to_uci) {
 #endif
     }
 
-    ss << (to_uci ? "\nid author " : " by ") << "the Stockfish developers (see AUTHORS file)";
-
     return ss.str();
 }
+
 
 
 #ifdef NO_PREFETCH
@@ -98,18 +100,19 @@ void prefetch(const void*) {}
 #else
 
 void prefetch(const void* addr) {
-
-    #if defined(_MSC_VER) && (defined(_M_X64) || defined(_M_IX86))
-    _mm_prefetch((char const*) addr, _MM_HINT_T0);
-    #elif defined(_MSC_VER) && (defined(_M_ARM) || defined(_M_ARM64))
+      
+#if defined(_MSC_VER) && (defined(_M_X64) || defined(_M_IX86))
+    _mm_prefetch((char const*)addr, _MM_HINT_T0);
+#elif defined(_MSC_VER) && (defined(_M_ARM) || defined(_M_ARM64))
     __prefetch(addr);
-    #else
+#else
     __builtin_prefetch(addr);
-    #endif
+#endif
 
 }
 
 #endif
+
 
 size_t str_to_size_t(const std::string& s) {
     unsigned long long value = std::stoull(s);
@@ -118,6 +121,7 @@ size_t str_to_size_t(const std::string& s) {
         KaruahChess::Engine::engineErr.add(KaruahChess::helper::STR_TO_SIZE_T_ERROR);
     return static_cast<size_t>(value);
 }
+
 
 
 

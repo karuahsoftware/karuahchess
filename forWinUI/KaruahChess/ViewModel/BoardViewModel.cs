@@ -1,6 +1,6 @@
 ﻿/*
 Karuah Chess is a chess playing program
-Copyright (C) 2020-2023 Karuah Software
+Copyright (C) 2020-2026 Karuah Software
 
 Karuah Chess is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -628,6 +628,30 @@ namespace KaruahChess.ViewModel
                     ParameterDataService.instance.Set<ParamRotateBoard>(_rotateBoardValue);                   
                     RaisePropertyChanged(nameof(RotateBoardValue));
                                        
+                }
+            }
+        }
+
+        /// <summary>
+        /// Rotate Board Auto Enabled
+        /// </summary>  
+        private ParamRotateBoardAuto _rotateBoardAutoEnabled;
+        public bool RotateBoardAutoEnabled
+        {
+            get
+            {
+                var paramRotateBoardAutoEnabledObj = ParameterDataService.instance.Get<ParamRotateBoardAuto>();
+                _rotateBoardAutoEnabled = paramRotateBoardAutoEnabledObj;
+                return _rotateBoardAutoEnabled.Enabled;
+            }
+            set
+            {
+                if (_rotateBoardAutoEnabled != null && _rotateBoardAutoEnabled.Enabled != value)
+                {
+                    _rotateBoardAutoEnabled.Enabled = value;
+                    ParameterDataService.instance.Set<ParamRotateBoardAuto>(_rotateBoardAutoEnabled);
+                    
+                    RaisePropertyChanged(nameof(RotateBoardAutoEnabled));
                 }
             }
         }
@@ -2563,7 +2587,8 @@ namespace KaruahChess.ViewModel
                 if (coordEnabled) { 
                     var coordinateWidth = tileRowWidth + boardHorizontalMargin + boardBorderHorizontalThickness;
                     var coordianteHeight = tileRowWidth + boardVerticalMargin + boardBorderVerticalThickness;
-                    coordinatesControl.Draw(tileSize, coordinateWidth, coordianteHeight, RotateBoardValue);
+                    var boardRotation = GetBoardRotation(RotateBoardValue, RotateBoardAutoEnabled, ComputerPlayerEnabled, ComputerMoveFirstEnabled);
+                    coordinatesControl.Draw(tileSize, coordinateWidth, coordianteHeight, boardRotation);
                 }
 
             }
@@ -3575,6 +3600,35 @@ namespace KaruahChess.ViewModel
             }
         }
 
+        /// <summary>
+        /// Determines the board rotation depending on the options set
+        /// </summary>
+        public int GetBoardRotation(int pRotateBoardValue, bool pRotateBoardAutoEnabled, bool pComputerPlayerEnabled, bool pComputerMoveFirstEnabled)
+        {
+            if (pRotateBoardAutoEnabled)
+            {
+                // Auto rotate based on computer player side
+                if (pComputerPlayerEnabled)
+                {
+                    if (pComputerMoveFirstEnabled)
+                    {
+                        return 180;
+                    }
+                    else
+                    {
+                        return 0;
+                    }
+                }
+                else
+                {
+                    return 0;
+                }
+            }
+            else
+            {
+                return pRotateBoardValue;
+            }
+        }
 
     }
 

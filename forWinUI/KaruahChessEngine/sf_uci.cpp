@@ -1,6 +1,6 @@
 /*
   Stockfish, a UCI chess playing engine derived from Glaurung 2.1
-  Copyright (C) 2004-2024 The Stockfish developers (see AUTHORS file)
+  Copyright (C) 2004-2025 The Stockfish developers (see AUTHORS file)
 
   Stockfish is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -22,13 +22,16 @@
 #include <cctype>
 #include <cmath>
 #include <cstdint>
+#include <iterator>
 #include <optional>
 #include <sstream>
 #include <string_view>
 #include <utility>
 #include <vector>
 
+
 #include "sf_engine.h"
+#include "sf_memory.h"
 #include "sf_movegen.h"
 #include "sf_position.h"
 #include "sf_score.h"
@@ -37,6 +40,8 @@
 #include "sf_ucioption.h"
 
 namespace Stockfish {
+
+constexpr auto BenchmarkCommand = "speedtest";
 
 constexpr auto StartFEN = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
 template<typename... Ts>
@@ -47,13 +52,18 @@ struct overload: Ts... {
 template<typename... Ts>
 overload(Ts...) -> overload<Ts...>;
 
-UCIEngine::UCIEngine() :
-    engine()
-{
 
-    engine.get_options().add_info_listener([](const std::optional<std::string>& str) {        
+UCIEngine::UCIEngine() : engine()
+     {
+
+    engine.get_options().add_info_listener([](const std::optional<std::string>& str) {
+        
     });
 
+    init_search_update_listeners();
+}
+
+void UCIEngine::init_search_update_listeners() {
     engine.set_on_iter([](const auto& i) { on_iter(i); });
     engine.set_on_update_no_moves([](const auto& i) { on_update_no_moves(i); });
     engine.set_on_update_full(
@@ -61,6 +71,7 @@ UCIEngine::UCIEngine() :
     
     // Karuah Chess - removed set_on_bestmove as setting this in search.cpp instead    
 }
+
 
 Search::LimitsType UCIEngine::parse_limits(std::istream& is) {
     Search::LimitsType limits;
@@ -101,10 +112,13 @@ Search::LimitsType UCIEngine::parse_limits(std::istream& is) {
     return limits;
 }
 
+
+
 void UCIEngine::setoption(std::istringstream& is) {
     engine.wait_for_search_finished();
     engine.get_options().setoption(is);
 }
+
 
 
 void UCIEngine::position(std::istringstream& is) {
@@ -149,8 +163,8 @@ WinRateParams win_rate_params(const Position& pos) {
     double m = std::clamp(material, 17, 78) / 58.0;
 
     // Return a = p_a(material) and b = p_b(material), see github.com/official-stockfish/WDL_model
-    constexpr double as[] = {-37.45051876, 121.19101539, -132.78783573, 420.70576692};
-    constexpr double bs[] = {90.26261072, -137.26549898, 71.10130540, 51.35259597};
+    constexpr double as[] = {-13.50030198, 40.92780883, -36.82753545, 386.83004070};
+    constexpr double bs[] = {96.53354896, -165.79058388, 90.89679019, 49.29561889};
 
     double a = (((as[0] * m + as[1]) * m + as[2]) * m) + as[3];
     double b = (((bs[0] * m + bs[1]) * m + bs[2]) * m) + bs[3];
@@ -168,6 +182,7 @@ int win_rate_model(Value v, const Position& pos) {
     return int(0.5 + 1000 / (1 + std::exp((a - double(v)) / b)));
 }
 }
+
 
 
 // Turns a Value to an integer centipawn number,
@@ -247,7 +262,7 @@ void UCIEngine::on_update_full(const Engine::InfoFull& info, bool showWDL) {
     ss << " depth " << info.depth                 //
         << " seldepth " << info.selDepth           //
         << " multipv " << info.multiPV;             //
-       
+      
 
     if (showWDL)
         ss << " wdl " << info.wdl;
@@ -260,7 +275,9 @@ void UCIEngine::on_update_full(const Engine::InfoFull& info, bool showWDL) {
        << " hashfull " << info.hashfull  //
        << " tbhits " << info.tbHits      //
        << " time " << info.timeMs        //
-       << " pv " << info.pv;             //        
+       << " pv " << info.pv;             //
+
+    
 }
 
 void UCIEngine::on_iter(const Engine::InfoIter& info) {
@@ -269,7 +286,9 @@ void UCIEngine::on_iter(const Engine::InfoIter& info) {
     ss << "info";
     ss << " depth " << info.depth                     //
        << " currmove " << info.currmove               //
-       << " currmovenumber " << info.currmovenumber;  //        
+       << " currmovenumber " << info.currmovenumber;  //
+
+    
 }
 
 

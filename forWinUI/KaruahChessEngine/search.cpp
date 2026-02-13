@@ -1,6 +1,6 @@
 /*
 Karuah Chess is a chess playing program
-Copyright (C) 2020-2023 Karuah Software
+Copyright (C) 2020-2026 Karuah Software
 
 Karuah Chess is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -40,23 +40,7 @@ namespace KaruahChess {
 
         bool _cancel = false;
 
-
-        /// <summary>
-        /// Sets an option in stock fish if the option is different from the current option
-        /// </summary>
-        void setOption(std::string name, int value) {
-
-            if (Engine::mainUCI->engine_options().count(name)) {
-                double currentValue = Engine::mainUCI->engine_options()[name];
-                double newValue = (double)value;
-
-                if (currentValue != newValue) {
-                    Engine::mainUCI->engine_options()[name] = std::to_string(value);
-                }
-            }
-
-        }
-
+              
 
         /// <summary>
         /// Gets top move for a given board
@@ -84,30 +68,30 @@ namespace KaruahChess {
                 }
 
                 // Thread limit
-                setOption("Threads", pSearchOptions.limitThreads);
+                Engine::setOption("Threads", pSearchOptions.limitThreads);
 
                 // Set options
                 if (pSearchOptions.limitSkillLevel >= -10 && pSearchOptions.limitSkillLevel < 20) {
                     // Set engine strength             
-                    setOption("Skill Level", pSearchOptions.limitSkillLevel);
+                    Engine::setOption("Skill Level", pSearchOptions.limitSkillLevel);
                 }
                 else {
                     // Set engine to max
-                    setOption("Skill Level", 20);
+                    Engine::setOption("Skill Level", 20);
                 }
                                 
                 
                 if (pSearchOptions.randomiseFirstMove && pBoard.StateFullMoveCount < 1) {
                     // For the first move look at 4 different possibilities for openings
                     // to make the game more interesting
-                    setOption("MultiPV", 5);
+                    Engine::setOption("MultiPV", 5);
                 }
                 else if (pSearchOptions.alternateMove) {
                     // Attempt to avoid repetitions
-                    setOption("MultiPV", 2);
+                    Engine::setOption("MultiPV", 2);
                 }
                 else {
-                    setOption("MultiPV", 1);
+                    Engine::setOption("MultiPV", 1);
                 }
 
                 // Get the board position            

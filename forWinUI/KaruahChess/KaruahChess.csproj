@@ -30,7 +30,7 @@
     <None Remove="CustomControl\PieceEditDialog.xaml" />
     <None Remove="CustomControl\SoundSettingsDialog.xaml" />
     <None Remove="ErrorWindow.xaml" />
-    <None Remove="Media\nn-1111cefa1111.nnue" />
+    <None Remove="Media\nn-1c0000000000.nnue" />
     <None Remove="Media\nn-37f18f62d772.nnue" />
     <None Remove="Media\piecesound.wav" />
     <None Remove="Pieces\images\blackbishop.png" />
@@ -53,9 +53,7 @@
     <None Remove="Voice\Grammar-en-US.xml" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Media\nn-1111cefa1111.nnue">
-      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
-    </Content>
+    <Content Include="Media\nn-1c0000000000.nnue" />
     <Content Include="Media\nn-37f18f62d772.nnue" />
     <Content Include="Media\piecesound.wav" />
     <Content Include="Pieces\images\blackbishop.png" />
@@ -79,11 +77,11 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.Data.Sqlite" Version="9.0.9" />
-    <PackageReference Include="Microsoft.Web.WebView2" Version="1.0.3537.50" />
+    <PackageReference Include="Microsoft.Data.Sqlite" Version="10.0.1" />
+    <PackageReference Include="Microsoft.Web.WebView2" Version="1.0.3650.58" />
     <PackageReference Include="Microsoft.Windows.CsWinRT" Version="2.2.0" />
-    <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.8.250916003" />
-    <PackageReference Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.26100.6584" />
+    <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.8.251106002" />
+    <PackageReference Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.26100.7175" />
     <Manifest Include="$(ApplicationManifest)" />
   </ItemGroup>
 

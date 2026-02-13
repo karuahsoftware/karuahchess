@@ -1,6 +1,6 @@
 /*
 Karuah Chess is a chess playing program
-Copyright (C) 2020-2023 Karuah Software
+Copyright (C) 2020-2026 Karuah Software
 
 Karuah Chess is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -94,9 +94,26 @@ namespace KaruahChess {
 
 
 			if (threadLimit != newThreadLimit) {
-
-				Engine::mainUCI->engine_options()["Threads"] = std::to_string(newThreadLimit);
+				setOption("Threads", newThreadLimit);
 			}
+		}
+
+		/// <summary>
+		/// Sets an option in stock fish if the option is different from the current option
+		/// </summary>
+		void setOption(std::string name, int value) {
+
+			auto& options = Engine::mainUCI->engine_options();
+
+			if (options.count(name)) {
+				int currentValue = static_cast<int>(options[name]);
+
+				if (currentValue != value) {
+					std::istringstream is("name " + name + " value " + std::to_string(value));
+					options.setoption(is);
+				}
+			}
+
 		}
 
 

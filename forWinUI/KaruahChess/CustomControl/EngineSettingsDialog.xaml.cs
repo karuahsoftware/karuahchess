@@ -1,6 +1,6 @@
 ﻿/*
 Karuah Chess is a chess playing program
-Copyright (C) 2020-2023 Karuah Software
+Copyright (C) 2020-2026 Karuah Software
 
 Karuah Chess is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -77,7 +77,6 @@ namespace KaruahChess.CustomControl
                 PrimaryButtonText = "Close",
                 SecondaryButtonText = "Stop search",
                 CloseButtonText = "Set to default"
-
             };
 
             dialog.PrimaryButtonClick += Close_Click;
@@ -183,50 +182,19 @@ namespace KaruahChess.CustomControl
 
 
         /// <summary>
-        /// Enables and disables controls depending on options set
+        /// Sets control visibility depending on options set
         /// </summary>
         private void SetControlState()
         {
-            bool advanced = false;
-            double advancedOpacity = 1;
+                       
+            var computerPlayerEnabled = ComputerPlayerCheckBox.IsChecked == true;
+            Visibility basicSettingsVisibility = computerPlayerEnabled ? Visibility.Visible : Visibility.Collapsed;
+            BasicSettingsStackPanel.Visibility = basicSettingsVisibility;
 
-            var ComputerPlayer = ComputerPlayerCheckBox.IsChecked == true;
-            if (ComputerPlayer)
-            {
-                btnComputerColour.IsEnabled = true;
-                ComputerColourImage.Opacity = 1.0;
-                RandomiseFirstMoveCheckBox.IsEnabled = true;
-                LevelAutoCheckBox.IsEnabled = true;
-                ComputerSkillLevelCombo.IsEnabled = true;
-                ComputerSkillLevelTitleText.Opacity = 1.0;
-                ComputerAdvancedSettingsCheckBox.IsEnabled = true;
-                advanced = ComputerAdvancedSettingsCheckBox.IsEnabled && (ComputerAdvancedSettingsCheckBox.IsChecked == true);
-                advancedOpacity = advanced ? 1 : 0.5;
+            bool advancedEnabled = computerPlayerEnabled && ComputerAdvancedSettingsCheckBox.IsChecked == true;
+            AdvancedSettingsGrid.Visibility = advancedEnabled ? Visibility.Visible : Visibility.Collapsed;
 
-            }
-            else
-            {
-                btnComputerColour.IsEnabled = false;
-                ComputerColourImage.Opacity = 0.5;
-                RandomiseFirstMoveCheckBox.IsEnabled = false;
-                LevelAutoCheckBox.IsEnabled = false;
-                ComputerSkillLevelCombo.IsEnabled = false;
-                ComputerSkillLevelTitleText.Opacity = 0.5;
-                ComputerAdvancedSettingsCheckBox.IsEnabled = false;
-                advanced = false;
-                advancedOpacity = 0.5;
-            }
-
-            // Advanced Settings
-            DepthLimitSlider.IsEnabled = advanced;
-            DepthLimitText.Opacity = advancedOpacity;
-            DepthLimitValueText.Opacity = advancedOpacity;
-            MoveDurationLimitTextBox.IsEnabled = advanced;
-            MoveDurationLimitText.Opacity = advancedOpacity;
-            MoveDurationLimitErrorText.Opacity = advancedOpacity;
-            ThreadsSlider.IsEnabled = advanced;
-            ThreadsText.Opacity = advancedOpacity;
-            ThreadsValueText.Opacity = advancedOpacity;
+            
         }
 
 

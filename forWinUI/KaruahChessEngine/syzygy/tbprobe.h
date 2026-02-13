@@ -1,6 +1,6 @@
 /*
   Stockfish, a UCI chess playing engine derived from Glaurung 2.1
-  Copyright (C) 2004-2024 The Stockfish developers (see AUTHORS file)
+  Copyright (C) 2004-2025 The Stockfish developers (see AUTHORS file)
 
   Stockfish is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -59,6 +59,7 @@ enum ProbeState {
     CHANGE_STM        = -1,  // DTZ should check the other side
     ZEROING_BEST_MOVE = 2    // Best move zeroes DTZ (capture or pawn move)
 };
+
 
 
 }  // namespace Stockfish::Tablebases

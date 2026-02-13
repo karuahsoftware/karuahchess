@@ -1,6 +1,6 @@
 /*
   Stockfish, a UCI chess playing engine derived from Glaurung 2.1
-  Copyright (C) 2004-2024 The Stockfish developers (see AUTHORS file)
+  Copyright (C) 2004-2025 The Stockfish developers (see AUTHORS file)
 
   Stockfish is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -24,6 +24,7 @@
 #include <optional>
 #include <type_traits>
 #include <vector>
+
 
 #include "../sf_evaluate.h"
 #include "../sf_memory.h"
@@ -56,7 +57,7 @@ bool read_parameters(std::istream& stream, T& reference) {
 
 // Write evaluation function parameters
 template<typename T>
-bool write_parameters(std::ostream& stream, const T& reference) {
+bool write_parameters(std::ostream& stream, T& reference) {
 
     write_little_endian<std::uint32_t>(stream, T::get_hash_value());
     return reference.write_parameters(stream);
@@ -103,7 +104,6 @@ Network<Arch, Transformer>::operator=(const Network<Arch, Transformer>& other) {
 
 template<typename Arch, typename Transformer>
 void Network<Arch, Transformer>::load() {
-    
     /// Karuah Chess patch for loading NNUE files.
     if (std::is_same_v<Arch, BigNetworkArchitecture> && !KaruahChess::Engine::nnueLoadedBig) {
         KaruahChess::Engine::membuf nnueMemoryBuffer(KaruahChess::Engine::nnueFileBufferBig, KaruahChess::Engine::nnueFileBufferBig + KaruahChess::Engine::nnueFileBufferSizeBig);
@@ -117,8 +117,8 @@ void Network<Arch, Transformer>::load() {
             KaruahChess::Engine::engineErr.add(KaruahChess::helper::NNUE_ERROR);
         }
     }
-    
-    
+
+
     if (std::is_same_v<Arch, SmallNetworkArchitecture> && !KaruahChess::Engine::nnueLoadedSmall) {
         KaruahChess::Engine::membuf nnueMemoryBuffer(KaruahChess::Engine::nnueFileBufferSmall, KaruahChess::Engine::nnueFileBufferSmall + KaruahChess::Engine::nnueFileBufferSizeSmall);
         std::istream nnueStream(&nnueMemoryBuffer);
@@ -131,14 +131,13 @@ void Network<Arch, Transformer>::load() {
             KaruahChess::Engine::engineErr.add(KaruahChess::helper::NNUE_ERROR);
         }
     }
-    
 
 }
-
 
 template<typename Arch, typename Transformer>
 NetworkOutput
 Network<Arch, Transformer>::evaluate(const Position&                         pos,
+                                     AccumulatorStack&                       accumulatorStack,
                                      AccumulatorCaches::Cache<FTDimensions>* cache) const {
     // We manually align the arrays on the stack because with gcc < 9.3
     // overaligning stack variables with alignas() doesn't work correctly.
@@ -158,8 +157,9 @@ Network<Arch, Transformer>::evaluate(const Position&                         pos
 
     ASSERT_ALIGNED(transformedFeatures, alignment);
 
-    const int  bucket     = (pos.count<ALL_PIECES>() - 1) / 4;
-    const auto psqt       = featureTransformer->transform(pos, cache, transformedFeatures, bucket);
+    const int  bucket = (pos.count<ALL_PIECES>() - 1) / 4;
+    const auto psqt =
+      featureTransformer->transform(pos, accumulatorStack, cache, transformedFeatures, bucket);
     const auto positional = network[bucket].propagate(transformedFeatures);
     return {static_cast<Value>(psqt / OutputScale), static_cast<Value>(positional / OutputScale)};
 }
@@ -176,18 +176,14 @@ void Network<Arch, Transformer>::verify() const {
         // This should never happen
         throw std::runtime_error("NNUE file is not loaded.");
     }
+
 }
 
-
-template<typename Arch, typename Transformer>
-void Network<Arch, Transformer>::hint_common_access(
-  const Position& pos, AccumulatorCaches::Cache<FTDimensions>* cache) const {
-    featureTransformer->hint_common_access(pos, cache);
-}
 
 template<typename Arch, typename Transformer>
 NnueEvalTrace
 Network<Arch, Transformer>::trace_evaluate(const Position&                         pos,
+                                           AccumulatorStack&                       accumulatorStack,
                                            AccumulatorCaches::Cache<FTDimensions>* cache) const {
     // We manually align the arrays on the stack because with gcc < 9.3
     // overaligning stack variables with alignas() doesn't work correctly.
@@ -211,7 +207,7 @@ Network<Arch, Transformer>::trace_evaluate(const Position&                      
     for (IndexType bucket = 0; bucket < LayerStacks; ++bucket)
     {
         const auto materialist =
-          featureTransformer->transform(pos, cache, transformedFeatures, bucket);
+          featureTransformer->transform(pos, accumulatorStack, cache, transformedFeatures, bucket);
         const auto positional = network[bucket].propagate(transformedFeatures);
 
         t.psqt[bucket]       = static_cast<Value>(materialist / OutputScale);
@@ -303,14 +299,14 @@ bool Network<Arch, Transformer>::write_parameters(std::ostream&      stream,
     return bool(stream);
 }
 
-// Explicit template instantiation
+// Explicit template instantiations
 
 template class Network<
   NetworkArchitecture<TransformedFeatureDimensionsBig, L2Big, L3Big>,
-  FeatureTransformer<TransformedFeatureDimensionsBig, &StateInfo::accumulatorBig>>;
+  FeatureTransformer<TransformedFeatureDimensionsBig, &AccumulatorState::accumulatorBig>>;
 
 template class Network<
   NetworkArchitecture<TransformedFeatureDimensionsSmall, L2Small, L3Small>,
-  FeatureTransformer<TransformedFeatureDimensionsSmall, &StateInfo::accumulatorSmall>>;
+  FeatureTransformer<TransformedFeatureDimensionsSmall, &AccumulatorState::accumulatorSmall>>;
 
 }  // namespace Stockfish::Eval::NNUE

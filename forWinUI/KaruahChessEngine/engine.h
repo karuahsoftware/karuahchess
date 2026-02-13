@@ -1,6 +1,6 @@
 /*
 Karuah Chess is a chess playing program
-Copyright (C) 2020-2023 Karuah Software
+Copyright (C) 2020-2026 Karuah Software
 
 Karuah Chess is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -59,6 +59,7 @@ namespace KaruahChess {
 
 		extern void init(string pNNUEFileNameBig, char* pNNUEFileBufferBig, long pNNUEFileBufferSizeBig, string pNNUEFileNameSmall, char* pNNUEFileBufferSmall, long pNNUEFileBufferSizeSmall);
 		extern void setThreads(unsigned int pMaxThreads);
+		extern void setOption(std::string name, int value);
 		extern EngineError engineErr;
 
 		extern string nnueFileNameBig;

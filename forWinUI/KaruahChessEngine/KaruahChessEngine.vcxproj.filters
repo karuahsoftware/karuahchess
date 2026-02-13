@@ -37,6 +37,7 @@
     <ClCompile Include="nnue\features\half_ka_v2_hm.cpp" />
     <ClCompile Include="nnue\network.cpp" />
     <ClCompile Include="nnue\nnue_misc.cpp" />
+    <ClCompile Include="nnue\nnue_accumulator.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="sf_ucioption.h" />
@@ -78,6 +79,7 @@
     <ClInclude Include="nnue\nnue_feature_transformer.h" />
     <ClInclude Include="nnue\nnue_misc.h" />
     <ClInclude Include="sf_numa.h" />
+    <ClInclude Include="sf_history.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="KaruahChessEngine.def" />
@@ -86,5 +88,9 @@
   </ItemGroup>
   <ItemGroup>
     <Midl Include="KaruahChessEngineClass.idl" />
+  </ItemGroup>
+  <ItemGroup>
+    <Natvis Include="$(MSBuildThisFileDirectory)..\..\natvis\wil.natvis" />
+    <Natvis Include="$(MSBuildThisFileDirectory)..\..\natvis\wil.natstepfilter" />
   </ItemGroup>
 </Project>
